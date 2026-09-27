@@ -1,0 +1,13 @@
+{
+  "name": "isnad-archive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "أرشيف آليات ومستودعات قسم الإسناد — الدفاع المدني",
+  "scripts": {
+    "start": "node server.js",
+    "new-vehicle": "node tools/new-vehicle.js",
+    "set-password": "node tools/set-password.js",
+    "check": "node tools/check-data.js"
+  },
+  "engines": { "node": ">=18" }
+}
