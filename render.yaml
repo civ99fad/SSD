@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: isnad-archive
+    runtime: node
+    plan: free
+    buildCommand: echo "no build needed"
+    startCommand: node server.js
+    healthCheckPath: /login
+    envVars:
+      - key: SITE_PASSWORD
+        sync: false

@@ -210,14 +210,17 @@ async function handle(req, res) {
     try {
       password = JSON.parse(await readBody(req)).password || '';
     } catch {}
-    const expected = String(readSettings().password ?? '1234');
+    // على الاستضافة تُضبط كلمة المرور من متغير البيئة SITE_PASSWORD
+    const expected = String(process.env.SITE_PASSWORD || readSettings().password || '1234');
     if (!safeEqual(password, expected)) {
       return sendJson(res, 401, { ok: false, error: 'كلمة المرور غير صحيحة' });
     }
     const token = crypto.randomBytes(24).toString('hex');
     sessions.set(token, Date.now() + SESSION_TTL_MS);
     return sendJson(res, 200, { ok: true }, {
-      'Set-Cookie': `${SESSION_COOKIE}=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${SESSION_TTL_MS / 1000}`,
+      'Set-Cookie': `${SESSION_COOKIE}=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${SESSION_TTL_MS / 1000}${
+        req.headers['x-forwarded-proto'] === 'https' ? '; Secure' : ''
+      }`,
     });
   }
 
