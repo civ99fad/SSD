@@ -1,0 +1,60 @@
+{
+  "name": "جمس حوض",
+  "plate": "ا س ل 6245",
+  "make": "جمس",
+  "model": "2005",
+  "code": "0/13",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "سفتي",
+      "1"
+    ],
+    [
+      "جهاز ارسال",
+      "1"
+    ],
+    [
+      "ونان",
+      "1"
+    ],
+    [
+      "استبنة",
+      "1"
+    ],
+    [
+      "طفاية بودرة",
+      "1"
+    ],
+    [
+      "عفريته كاملة",
+      "1"
+    ],
+    [
+      "ونش سحب",
+      "1"
+    ],
+    [
+      "ريموت ونش سحب",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": null,
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "استلام",
+      "date": "١٠/١/١٤٢٧هـ",
+      "title": "سند استلام آلية",
+      "description": "",
+      "file": "89aeb8b8f621bc480ffd7616f9910040.pdf",
+      "fileName": "v13-istilam-1427-01-10.pdf"
+    }
+  ]
+}

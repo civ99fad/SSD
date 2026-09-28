@@ -1,0 +1,60 @@
+{
+  "name": "مرسيدس لوري",
+  "plate": "أ ح و 7056",
+  "make": "مرسيدس",
+  "model": "1982",
+  "code": "0/66",
+  "warehouse": "",
+  "status": "maint",
+  "statusNote": "تهريب زيت",
+  "statusAction": "تم التحويل",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "سفتي صفير",
+      "1"
+    ],
+    [
+      "استبنه",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": null,
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "حركة",
+      "date": "١٧/٤/١٤٤٨هـ",
+      "title": "في الصيانة — تهريب زيت",
+      "description": "الإجراء المتخذ: تم التحويل",
+      "file": null,
+      "fileName": ""
+    },
+    {
+      "type": "تسليم",
+      "date": "١٠/٣/١٤٤٧هـ",
+      "title": "سند تسليم آلية",
+      "description": "",
+      "file": "974d69744f883a670829585aa9e7b9e8.pdf",
+      "fileName": "v66-sanad-1447-03-10.pdf"
+    },
+    {
+      "type": "مستند",
+      "date": "٢٠/١١/١٤٤٦هـ",
+      "title": "تقرير فني – عطل ميكانيكي (الرديتر)",
+      "description": "",
+      "file": "14e531047968d9711255d155159978ab.pdf",
+      "fileName": "v66-doc-1446-11-20.pdf"
+    },
+    {
+      "type": "استلام",
+      "date": "١٦/١١/١٤٤٦هـ",
+      "title": "سند استلام – استبدال ٦ كفرات",
+      "description": "",
+      "file": "3101e7f00d9c77c494df17e96448752b.pdf",
+      "fileName": "v66-istilam-1446-11-16.pdf"
+    }
+  ]
+}

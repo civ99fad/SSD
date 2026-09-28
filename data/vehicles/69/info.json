@@ -1,0 +1,27 @@
+{
+  "name": "عمليات متنقلة",
+  "plate": "د س ي 763",
+  "make": "",
+  "model": "1983",
+  "code": "0/69",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "",
+  "inventory": [],
+  "inventoryNotes": [],
+  "inventoryFile": null,
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "استلام",
+      "date": "١٢/١٢/١٤٤٧هـ",
+      "title": "سند استلام – تحت الكشف",
+      "description": "",
+      "file": "2fa2ce2ac62518f74baebeadd8ddb3e8.pdf",
+      "fileName": "v69-istilam-1447-12-12.pdf"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "دبابات إنقاذ ٤ عجلات (عدد ٢)",
+  "plate": "",
+  "make": "كاواساكي",
+  "model": "",
+  "code": "",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "دباب إنقاذ",
+      "2"
+    ],
+    [
+      "سفتي",
+      "1"
+    ],
+    [
+      "ونان",
+      "1"
+    ],
+    [
+      "بكرة",
+      "1"
+    ],
+    [
+      "خوذة",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": null,
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "تسليم",
+      "date": "١٩/٧/١٤٤٦هـ",
+      "title": "سند تسليم – عدد ٢ دباب إنقاذ",
+      "description": "كسر في الهيكل الأمامي",
+      "file": "e76943c2d007c166f1fcb6efa986a654.pdf",
+      "fileName": "vdabr-sanad-1446-07-19.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "٢٠/٧/١٤٤٧هـ",
+      "title": "محضر – تهريب زيت من الدباب أثناء إرجاعه من مقر الرالي",
+      "description": "",
+      "file": "23f6bbd89f25575a866cf595385418ee.pdf",
+      "fileName": "vdabr-mahdar-1447-07-20.pdf"
+    }
+  ]
+}

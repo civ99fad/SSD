@@ -1,0 +1,40 @@
+{
+  "name": "بوكلين (دقاق + حفار)",
+  "plate": "أ ط ب 190",
+  "make": "سوميتومو",
+  "model": "2006",
+  "code": "0/60",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "جهاز لا سلكي",
+      "1"
+    ],
+    [
+      "شنطة عدة",
+      "1"
+    ],
+    [
+      "شنطة تشحيم",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": "2687d11896c0a75647ad6ad116f106f5.pdf",
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "استلام",
+      "date": "١/٤/١٤٤٥هـ",
+      "title": "سند استلام من الصيانة – تركيب بطاريتين ١٥٠ أمبير",
+      "description": "",
+      "file": "e1025e5e8be62e6513d710840af71ddf.pdf",
+      "fileName": "v60-istilam-1445-04-01.pdf"
+    }
+  ]
+}

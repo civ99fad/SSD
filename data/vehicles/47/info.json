@@ -1,0 +1,108 @@
+{
+  "name": "مرسيدس ونش سحب",
+  "plate": "د ح هـ 277",
+  "make": "مرسيدس",
+  "model": "1981",
+  "code": "0/47",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "سفتي",
+      "1"
+    ],
+    [
+      "ونان",
+      "1"
+    ],
+    [
+      "جهاز ارسال",
+      "1"
+    ],
+    [
+      "استبنة",
+      "1"
+    ],
+    [
+      "حبال",
+      "2"
+    ],
+    [
+      "بلطة",
+      "2"
+    ],
+    [
+      "مقص حديد",
+      "2"
+    ],
+    [
+      "عتله",
+      "1"
+    ],
+    [
+      "خابور",
+      "1"
+    ],
+    [
+      "كريك",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": "bce37c40de0994534bca38d7ddbae155.pdf",
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "استلام",
+      "date": "٢١/١٢/١٤٤٦هـ",
+      "title": "سند استلام من الصيانة – غطاء وماء وتسبيخ الرديتر",
+      "description": "",
+      "file": "0c56dc86a167c531e0f7fef010d5bab5.pdf",
+      "fileName": "v47-istilam-1446-12-21.pdf"
+    },
+    {
+      "type": "مستند",
+      "date": "٢٥/٧/١٤٤٤هـ",
+      "title": "استمارة تسليم (آلية/معدة) – إصلاحات ونش المركبات",
+      "description": "",
+      "file": "fde491ab7437934ac734c5a5c89de27d.pdf",
+      "fileName": "v47-doc-1444-07-25.pdf"
+    },
+    {
+      "type": "مستند",
+      "date": "بدون تاريخ",
+      "title": "استمارة إصلاحات (فحمات فرامل، رديتر، سيور…)",
+      "description": "",
+      "file": "10be4edfc7b66bddc9a23fd9217b5958.pdf",
+      "fileName": "v47-doc-x.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "1425",
+      "title": "ضبط محضر – تحويل ونش المركبات للإصلاح",
+      "description": "",
+      "file": "34c52c59869b4999606171da5c015580.pdf",
+      "fileName": "v47-mahdar-1420-01-30.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "١٥/٩/١٤٣٣هـ",
+      "title": "ضبط محضر – ضربة في الكفر الأيسر",
+      "description": "",
+      "file": "d71fb61abfd1247046ed86486ee3bd44.pdf",
+      "fileName": "v47-mahdar-1433-09-15.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "٤/١/١٤٣٥هـ",
+      "title": "محضر – عدم وجود واصورة السحب الخاصة بسحب الآليات",
+      "description": "",
+      "file": "0bbfca9287fdd51bc89397c128a857ed.pdf",
+      "fileName": "v47-mahdar-1435-01-04.pdf"
+    }
+  ]
+}

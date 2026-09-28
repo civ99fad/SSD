@@ -54,6 +54,13 @@ const ICON = {
   download: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1A1400" stroke-width="2.2" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>`,
 };
 
+const STATUS = { ready: 'جاهزة', down: 'متعطلة بالمقر', maint: 'في الصيانة', away: 'مدعومة لجهة أخرى', none: 'غير محددة' };
+const statusPill = (st) => `<span class="stpill st-${esc(st in STATUS ? st : 'none')}"><i></i>${STATUS[st] || STATUS.none}</span>`;
+const DASH = '<span class="muted-dash">—</span>';
+const fileLink = (url, label = 'عرض المستند') =>
+  url ? `<a class="link-more" href="${esc(url)}" target="_blank" rel="noopener">${esc(label)} ${ICON.arrow}</a>` : '';
+const sharedFile = (name) => (name ? '/files/files/' + encodeURIComponent(name) : null);
+
 async function api(path) {
   const r = await fetch(path, { headers: { Accept: 'application/json' } });
   if (r.status === 401) {
@@ -93,15 +100,15 @@ async function render() {
   const seq = ++renderSeq;
   const path = location.pathname.replace(/\/+$/, '') || '/vehicles';
   const parts = path.split('/').filter(Boolean).map(decodeURIComponent);
-  const section = parts[0] === 'warehouses' ? 'warehouses' : 'vehicles';
+  const section = SECTIONS[parts[0]] ? parts[0] : 'vehicles';
   setActiveNav(section);
   view.innerHTML = '<div class="loading">جارٍ التحميل…</div>';
   try {
     let html;
     if (section === 'vehicles' && parts[1]) html = await vehicleDetail(parts[1]);
     else if (section === 'vehicles') html = await vehiclesList();
-    else if (parts[1]) html = await warehouseDetail(parts[1]);
-    else html = await warehousesList();
+    else if (section === 'warehouses' && parts[1]) html = await warehouseDetail(parts[1]);
+    else html = await SECTIONS[section]();
     if (seq !== renderSeq) return;
     view.innerHTML = html;
     afterRender();
@@ -128,6 +135,7 @@ async function vehiclesList() {
     q: params.get('q') || '',
     model: params.get('model') || '',
     wh: params.get('wh') || '',
+    st: params.get('st') || '',
     page: Math.max(1, Number(params.get('page')) || 1),
   };
 
@@ -138,6 +146,7 @@ async function vehiclesList() {
     const qInput = document.getElementById('q');
     const modelSel = document.getElementById('fModel');
     const whSel = document.getElementById('fWh');
+    const stSel = document.getElementById('fSt');
     const grid = document.getElementById('vehGrid');
     const pagerRow = document.getElementById('pagerRow');
 
@@ -146,13 +155,15 @@ async function vehiclesList() {
       state.q = qInput.value;
       state.model = modelSel.value;
       state.wh = whSel.value;
+      state.st = stSel.value;
 
       const nq = norm(state.q);
       const filtered = vehicles.filter(
         (v) =>
           (!nq || norm(v.name).includes(nq) || norm(v.plate).includes(nq) || norm(v.id).includes(nq)) &&
           (!state.model || String(v.model) === state.model) &&
-          (!state.wh || v.warehouse === state.wh)
+          (!state.wh || v.warehouse === state.wh) &&
+          (!state.st || v.status === state.st)
       );
       const pages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
       state.page = Math.min(state.page, pages);
@@ -172,6 +183,7 @@ async function vehiclesList() {
       if (state.q) qs.set('q', state.q);
       if (state.model) qs.set('model', state.model);
       if (state.wh) qs.set('wh', state.wh);
+      if (state.st) qs.set('st', state.st);
       if (state.page > 1) qs.set('page', state.page);
       const s = qs.toString();
       history.replaceState({}, '', '/vehicles' + (s ? '?' + s : ''));
@@ -180,6 +192,13 @@ async function vehiclesList() {
     qInput.addEventListener('input', () => update(true));
     modelSel.addEventListener('change', () => update(true));
     whSel.addEventListener('change', () => update(true));
+    stSel.addEventListener('change', () => update(true));
+    document.querySelectorAll('[data-stchip]').forEach((b) =>
+      b.addEventListener('click', () => {
+        stSel.value = stSel.value === b.dataset.stchip ? '' : b.dataset.stchip;
+        update(true);
+      })
+    );
     pagerRow.addEventListener('click', (e) => {
       const b = e.target.closest('button[data-page]');
       if (!b || b.disabled) return;
@@ -195,6 +214,8 @@ async function vehiclesList() {
       <h1 class="page-title">الآليات</h1>
       <div class="count-pill">${vehiclesLabel(vehicles.length)}</div>
     </div>
+
+    ${readinessPanel(vehicles)}
 
     <div class="toolbar">
       <div class="search">
@@ -218,17 +239,52 @@ async function vehiclesList() {
         </select>
         ${ICON.chevron}
       </div>
+      <div class="select">
+        <label class="sr-only" for="fSt">الحالة</label>
+        <select id="fSt">
+          <option value="">كل الحالات</option>
+          ${Object.entries(STATUS).map(([k, l]) => `<option value="${k}" ${k === state.st ? 'selected' : ''}>${l}</option>`).join('')}
+        </select>
+        ${ICON.chevron}
+      </div>
     </div>
 
     <div class="veh-grid" id="vehGrid"></div>
     <div class="pager-row" id="pagerRow"></div>`;
 }
 
+function readinessPanel(vehicles) {
+  const c = {};
+  vehicles.forEach((v) => (c[v.status] = (c[v.status] || 0) + 1));
+  const total = vehicles.length || 1;
+  const pct = Math.round(((c.ready || 0) / total) * 100);
+  const order = ['ready', 'maint', 'down', 'away', 'none'].filter((k) => c[k]);
+  return `
+    <section class="card ready-card" aria-label="جاهزية الآليات">
+      <div class="ready-top">
+        <div>
+          <div class="ready-title">نسبة الجاهزية</div>
+          <div class="ready-big">${toArDigits(pct)}٪</div>
+        </div>
+        <div class="ready-chips">
+          ${order
+            .map((k) => `<button type="button" class="ready-chip" data-stchip="${k}">${statusPill(k)}<b>${c[k]}</b></button>`)
+            .join('')}
+        </div>
+      </div>
+      <div class="ready-bar" role="img" aria-label="توزيع حالات الآليات">
+        ${order.map((k) => `<span class="bar-${k}" style="width:${((c[k] / total) * 100).toFixed(2)}%"></span>`).join('')}
+      </div>
+    </section>`;
+}
+
 function vehicleCard(v) {
   const href = `/vehicles/${encodeURIComponent(v.id)}`;
-  const thumb = v.thumb
-    ? `<img class="veh-thumb" src="${esc(v.thumb)}" alt="" loading="lazy">`
-    : `<div class="veh-thumb-empty">${ICON.truck(40, '#B7C1CE')}</div>`;
+  const thumb = `<div class="veh-thumb-wrap">${
+    v.thumb
+      ? `<img class="veh-thumb" src="${esc(v.thumb)}" alt="" loading="lazy">`
+      : `<div class="veh-thumb-empty">${ICON.truck(40, '#B7C1CE')}</div>`
+  }<span class="thumb-status">${statusPill(v.status)}</span></div>`;
   return `
     <a class="card veh-card" href="${href}" data-link>
       ${thumb}
@@ -257,10 +313,11 @@ function pagerButtons(page, pages) {
 
 // ---------- الآليات: التفاصيل ----------
 async function vehicleDetail(id) {
-  const v = await api(`/api/vehicles/${encodeURIComponent(id)}`);
+  const [v, profiles] = await Promise.all([api(`/api/vehicles/${encodeURIComponent(id)}`), api('/api/records/profiles')]);
   if (!v) return notFound('الآلية', '/vehicles', 'الآليات');
+  const myProfiles = profiles.filter((p) => (p.vehicles || []).includes(v.id) || p.vehicle === v.id);
 
-  const galleries = { photos: v.photos, contents: v.contents };
+  const galleries = { photos: v.photos, contents: v.contents, specs: v.specs && v.specs.imageUrl ? [v.specs.imageUrl] : [] };
   afterRender = () => {
     view.querySelectorAll('[data-gallery]').forEach((btn) =>
       btn.addEventListener('click', () => openLightbox(galleries[btn.dataset.gallery], Number(btn.dataset.index)))
@@ -292,6 +349,37 @@ async function vehicleDetail(id) {
       ${infoCell('الرمز', v.code)}
     </section>
 
+    <section class="card status-card" aria-label="حالة الآلية">
+      <div class="status-row">
+        <span class="info-label" style="margin:0">حالة الآلية</span>
+        ${statusPill(v.status)}
+        ${v.statusAction ? `<span class="status-action">${esc(v.statusAction)}</span>` : ''}
+      </div>
+      ${v.statusNote ? `<div class="status-note">${esc(v.statusNote)}</div>` : ''}
+    </section>
+
+    ${
+      (v.review || []).length
+        ? `<section class="card review-box"><b>ملاحظات للمراجعة</b><ul>${v.review.map((r) => `<li>${esc(r)}</li>`).join('')}</ul></section>`
+        : ''
+    }
+
+    ${specsSection(v.specs)}
+
+    ${
+      myProfiles.length
+        ? `<section><h2 class="section-title">الملفات التعريفية</h2>${myProfiles
+            .map(
+              (p) => `<div class="card file-card">
+                <div class="file-icon">${ICON.file}</div>
+                <div style="flex-grow:1;min-width:0"><div class="file-name">${esc(p.title)}</div><div class="file-sub">${esc(p.fileName || '')}</div></div>
+                ${fileLink(sharedFile(p.file), 'عرض الملف')}
+              </div>`
+            )
+            .join('')}</section>`
+        : ''
+    }
+
     <section>
       <h2 class="section-title">صور الآلية</h2>
       ${gallery(v.photos, 'photos', 'لم تُرفع صور للآلية بعد')}
@@ -306,6 +394,7 @@ async function vehicleDetail(id) {
       <div class="inv-head">
         <h2 class="section-title">الجرد</h2>
         ${v.inventoryDate ? `<div class="inv-date">آخر تحديث: ${hijri(v.inventoryDate)}</div>` : ''}
+        ${v.inventoryUrl ? `<span style="margin-inline-start:auto">${fileLink(v.inventoryUrl, 'عرض ورقة الجرد')}</span>` : ''}
       </div>
       ${inventoryTable(v.inventory || [], v.inventoryNotes || [])}
     </section>
@@ -323,6 +412,31 @@ async function vehicleDetail(id) {
           : `<div class="empty">${ICON.image}لم يُرفع نموذج الاستلام والتسليم بعد</div>`
       }
     </section>`;
+}
+
+function specsSection(sp) {
+  if (!sp) return '';
+  const rows = (sp.rows || []).map(([k, val]) => `<div><dt>${esc(k)}</dt><dd>${esc(val)}</dd></div>`).join('');
+  const comps = (sp.compartments || [])
+    .map(
+      (c) => `<div class="card comp-card"><div class="comp-name">${esc(c.name)}</div>
+        <table class="data"><tbody>${c.items
+          .map(([n, q]) => `<tr><td class="name">${esc(n)}</td><td class="qty">${esc(q)}</td></tr>`)
+          .join('')}</tbody></table></div>`
+    )
+    .join('');
+  return `<section>
+    <h2 class="section-title">${esc(sp.title || 'المواصفات الفنية')}</h2>
+    <div class="card specs">
+      <div class="specs-head">
+        ${sp.imageUrl ? `<button type="button" class="specs-img" data-gallery="specs" data-index="0" aria-label="تكبير صورة المواصفات"><img src="${esc(sp.imageUrl)}" alt=""></button>` : ''}
+        ${sp.summary ? `<p class="specs-sum">${esc(sp.summary)}</p>` : ''}
+      </div>
+      ${rows ? `<dl class="specs-dl">${rows}</dl>` : ''}
+      ${comps ? `<details class="specs-comps"><summary>محتويات الأدراج (${toArDigits((sp.compartments || []).length)})</summary><div class="comps">${comps}</div></details>` : ''}
+      ${sp.uncertain ? `<div class="specs-unc">${esc(sp.uncertain)}</div>` : ''}
+    </div>
+  </section>`;
 }
 
 function infoCell(label, value) {
@@ -378,7 +492,7 @@ function inventoryTable(items, notes) {
 
 function timeline(history) {
   if (!history.length) return `<div class="empty">لا توجد سجلات للآلية بعد</div>`;
-  const cls = (t) => (t === 'استلام' ? 't-receive' : t === 'تسليم' ? 't-deliver' : 't-report');
+  const cls = (t) => (t === 'استلام' ? 't-receive' : t === 'تسليم' ? 't-deliver' : t === 'حركة' ? 't-status' : 't-report');
   return `<div class="card timeline">${history
     .map(
       (h) => `
@@ -389,6 +503,7 @@ function timeline(history) {
             <span class="tl-badge">${esc(h.type || 'محضر')}</span>
             <span class="tl-date">${hijri(h.date)}</span>
           </div>
+          ${h.title ? `<div class="tl-title">${esc(h.title)}</div>` : ''}
           ${h.description ? `<div class="tl-desc">${esc(h.description)}</div>` : ''}
           ${h.url ? `<a class="link-more" href="${esc(h.url)}" target="_blank" rel="noopener">عرض المستند ${ICON.arrow}</a>` : ''}
         </div>
@@ -485,8 +600,296 @@ async function warehouseDetail(id) {
                 .join('')}</tbody>
             </table></div></div>`
         : `<div class="empty">${ICON.house(22, '#B7C1CE')}لم تُسجّل محتويات لهذا المستودع بعد</div>`
+    }
+
+    ${
+      (w.custody || []).length
+        ? `<section><h2 class="section-title">العُهد</h2><div class="card table-card"><div class="table-scroll">
+            <table class="data wh">
+              <thead><tr><th class="n">م</th><th>الصنف</th><th class="qty">العدد</th></tr></thead>
+              <tbody>${w.custody
+                .map(([n, q], i) => `<tr><td class="n">${i + 1}</td><td class="name">${esc(n)}</td><td class="qty">${esc(q)}</td></tr>`)
+                .join('')}</tbody>
+            </table></div></div></section>`
+        : ''
     }`;
 }
+
+// ================= الأقسام الإضافية =================
+const pageHead = (title, count) =>
+  `<div class="page-head"><h1 class="page-title">${title}</h1>${count != null ? `<div class="count-pill">${count}</div>` : ''}</div>`;
+const pill = (text, cls = 'p-neutral') => `<span class="pill ${cls}">${esc(text)}</span>`;
+const emptyBox = (t) => `<div class="empty">${t}</div>`;
+const table = (heads, rows) =>
+  `<div class="card table-card"><div class="table-scroll"><table class="data rec"><thead><tr>${heads
+    .map((h) => `<th>${h}</th>`)
+    .join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div></div>`;
+const multiline = (t) => esc(t || '').replace(/\n/g, '<br>');
+const vehLink = (id, vmap) =>
+  id ? `<a class="link-more" href="/vehicles/${encodeURIComponent(id)}" data-link>${esc((vmap[id] && vmap[id].name) || id)}</a>` : '';
+
+// تبويبات بسيطة داخل الصفحة
+function tabs(key, list, current) {
+  return `<div class="tabs" role="tablist">${list
+    .map(
+      ([k, l, n]) =>
+        `<a role="tab" class="tab${k === current ? ' on' : ''}" href="?${key}=${k}" data-link aria-selected="${k === current}">${esc(l)}${
+          n != null ? ` <b>${n}</b>` : ''
+        }</a>`
+    )
+    .join('')}</div>`;
+}
+const qp = (k, d) => new URLSearchParams(location.search).get(k) || d;
+const vehMap = async () => Object.fromEntries((await api('/api/vehicles')).map((v) => [v.id, v]));
+
+// ---------- الملفات التعريفية ----------
+async function profilesPage() {
+  const [list, vmap] = await Promise.all([api('/api/records/profiles'), vehMap()]);
+  afterRender = () => {};
+  return `${pageHead('الملفات التعريفية', toArDigits(list.length) + ' ملف')}
+    ${
+      list.length
+        ? `<div class="doc-list">${list
+            .map(
+              (p) => `<div class="card doc-card">
+                <div class="file-icon">${ICON.file}</div>
+                <div class="doc-body">
+                  <div class="file-name">${esc(p.title)}</div>
+                  ${p.note ? `<div class="doc-note">${multiline(p.note)}</div>` : ''}
+                  ${
+                    (p.vehicles || []).length
+                      ? `<div class="doc-meta">الآليات: ${(p.vehicles || []).map((id) => vehLink(id, vmap)).join('، ')}</div>`
+                      : ''
+                  }
+                </div>
+                ${fileLink(sharedFile(p.file), 'عرض الملف')}
+              </div>`
+            )
+            .join('')}</div>`
+        : emptyBox('لا توجد ملفات تعريفية')
+    }`;
+}
+
+// ---------- تقارير الرجيع ----------
+async function returnsPage() {
+  const [list, vmap] = await Promise.all([api('/api/records/returns'), vehMap()]);
+  afterRender = () => {};
+  return `${pageHead('تقارير الرجيع', toArDigits(list.length) + ' تقرير')}
+    ${
+      list.length
+        ? `<div class="doc-list">${list
+            .map(
+              (r) => `<div class="card doc-card">
+                <div class="file-icon">${ICON.file}</div>
+                <div class="doc-body">
+                  <div class="file-name">${esc(r.title)}</div>
+                  <div class="doc-meta">${[r.date && esc(r.date), r.num && 'رقم ' + esc(r.num)].filter(Boolean).join(' · ')}${
+                    r.vehicle ? ' · ' + vehLink(r.vehicle, vmap) : ''
+                  }</div>
+                  ${r.items ? `<div class="doc-note"><b>الأصناف:</b><br>${multiline(r.items)}</div>` : ''}
+                  ${r.rec ? `<div class="doc-note"><b>التوصية:</b> ${multiline(r.rec)}</div>` : ''}
+                  ${r.note ? `<div class="doc-note">${multiline(r.note)}</div>` : ''}
+                </div>
+                ${fileLink(sharedFile(r.file), 'عرض التقرير')}
+              </div>`
+            )
+            .join('')}</div>`
+        : emptyBox('لا توجد تقارير رجيع')
+    }`;
+}
+
+// ---------- أعطال المبنى ----------
+const FSTAT = { open: ['مفتوح', 'p-bad'], prog: ['قيد المعالجة', 'p-mid'], done: ['تم الإصلاح', 'p-ok'] };
+const FTYPE = { elec: 'كهرباء', plumb: 'سباكة وتسريبات', ac: 'تكييف وتهوية', civil: 'إنشائي ومباني', doors: 'أبواب ونوافذ', safety: 'أنظمة السلامة والإطفاء', comms: 'اتصالات وشبكات', other: 'أخرى' };
+async function faultsPage() {
+  const list = await api('/api/records/faults');
+  const f = qp('f', 'all');
+  const cnt = (k) => list.filter((x) => x.status === k).length;
+  const shown = list.filter((x) => f === 'all' || x.status === f);
+  const galleries = {};
+  afterRender = () => {
+    view.querySelectorAll('[data-gallery]').forEach((btn) =>
+      btn.addEventListener('click', () => openLightbox(galleries[btn.dataset.gallery], Number(btn.dataset.index)))
+    );
+  };
+  return `${pageHead('أعطال المبنى', toArDigits(list.length) + ' عطل')}
+    ${tabs('f', [['all', 'الكل', list.length], ['open', 'مفتوح', cnt('open')], ['prog', 'قيد المعالجة', cnt('prog')], ['done', 'تم الإصلاح', cnt('done')]], f)}
+    ${
+      shown.length
+        ? `<div class="doc-list">${shown
+            .map((x) => {
+              const [sl, sc] = FSTAT[x.status] || FSTAT.open;
+              galleries[x.id] = (x.photos || []).map(sharedFile);
+              return `<div class="card fault-card">
+                <div class="fault-top">
+                  <div class="file-name">${esc(x.title)}</div>
+                  ${pill(sl, sc)} ${pill(FTYPE[x.type] || 'أخرى')}
+                </div>
+                <div class="doc-meta">${[x.location, x.date, x.reporter && 'المُبلّغ: ' + x.reporter].filter(Boolean).map(esc).join(' · ')}</div>
+                ${x.desc ? `<div class="doc-note">${multiline(x.desc)}</div>` : ''}
+                ${
+                  galleries[x.id].length
+                    ? `<div class="gallery small">${galleries[x.id]
+                        .map((src, i) => `<button type="button" data-gallery="${esc(x.id)}" data-index="${i}" aria-label="تكبير الصورة"><img src="${esc(src)}" alt="" loading="lazy"></button>`)
+                        .join('')}</div>`
+                    : ''
+                }
+                ${
+                  (x.actions || []).length
+                    ? `<ul class="actions">${x.actions
+                        .map((a) => `<li><span class="tl-date">${esc(a.date || '')}</span> ${esc(a.text)}${a.close ? ' ' + pill('إغلاق', 'p-ok') : ''}</li>`)
+                        .join('')}</ul>`
+                    : ''
+                }
+              </div>`;
+            })
+            .join('')}</div>`
+        : emptyBox('لا توجد أعطال بهذا التصنيف')
+    }`;
+}
+
+// ---------- الكادر البشري ----------
+const HST = { present: ['موجود', 'p-ok'], absent: ['غياب', 'p-bad'], lateP: ['تأخير بإذن', 'p-mid'], lateN: ['تأخير بدون إذن', 'p-bad'], leave: ['إجازة', 'p-in'], permit: ['رخصة', 'p-in'], support: ['دعم وردية', 'p-sup'], course: ['دورة', 'p-mid'], assign: ['تكليف', 'p-mid'], attach: ['إلحاق', 'p-mid'] };
+const SHN = { 1: 'الوردية الأولى', 2: 'الوردية الثانية', 3: 'الوردية الثالثة' };
+async function staffPage() {
+  const tab = qp('t', 'team');
+  const [staff, absences, missions, misdocs] = await Promise.all([
+    api('/api/records/staff'),
+    api('/api/records/absences'),
+    api('/api/records/missions'),
+    api('/api/records/misdocs'),
+  ]);
+  afterRender = () => {};
+  let body = '';
+  if (tab === 'team') {
+    const present = staff.filter((p) => !p.status || p.status === 'present' || p.status === 'support').length;
+    body =
+      `<div class="card ready-card"><div class="ready-top"><div><div class="ready-title">الموجود من الكادر</div><div class="ready-big">${toArDigits(present)} / ${toArDigits(staff.length)}</div></div></div></div>` +
+      ['1', '2', '3']
+        .map((k) => {
+          const ps = staff.filter((p) => String(p.shift || '1') === k);
+          if (!ps.length) return '';
+          return `<section><h2 class="section-title">${SHN[k]} <span class="muted-dash">(${toArDigits(ps.length)})</span></h2>${table(
+            ['م', 'الرتبة', 'الاسم', 'الرقم العسكري', 'التخصص', 'الحالة', 'الفترة / ملاحظة'],
+            ps.map((p, i) => {
+              const [sl, sc] = HST[p.status] || HST.present;
+              const per = p.status && p.status !== 'present' ? [p.from && 'من ' + p.from, p.to && 'إلى ' + p.to].filter(Boolean).join(' ') : '';
+              const lbl = p.status === 'support' && p.toShift ? `${sl} ← ${SHN[p.toShift] || ''}` : sl;
+              return `<tr><td class="n">${i + 1}</td><td>${esc(p.rank || '')}</td><td class="name">${esc(p.name)}</td><td>${esc(p.num || '')}</td><td>${esc(p.spec || '')}</td><td>${pill(lbl, sc)}</td><td class="muted-cell">${esc([per, p.note].filter(Boolean).join(' — ')) || DASH}</td></tr>`;
+            })
+          )}</section>`;
+        })
+        .join('');
+  } else if (tab === 'abs') {
+    body = absences.length
+      ? table(
+          ['التاريخ', 'الاسم', 'النوع', 'الإجراء المتخذ', 'المحضر'],
+          absences.map(
+            (a) => `<tr><td>${esc(a.date || '')}</td><td class="name">${esc(a.pN || '')}</td><td>${pill(a.kind === 'late' ? 'تأخير' : 'غياب', a.kind === 'late' ? 'p-mid' : 'p-bad')}</td><td>${esc(a.action || '')}${a.note ? `<div class="muted-cell">${esc(a.note)}</div>` : ''}</td><td>${fileLink(sharedFile(a.file), 'عرض') || DASH}</td></tr>`
+          )
+        )
+      : emptyBox('لا توجد غيابات أو تأخيرات');
+  } else {
+    body = ['ext', 'int']
+      .map((k) => {
+        const ms = missions.filter((m) => (m.kind === 'int' ? 'int' : 'ext') === k);
+        const next = ms.find((m) => !m.done);
+        const md = misdocs[k];
+        return `<section><h2 class="section-title">${k === 'ext' ? 'المهمات الخارجية' : 'المهمات الداخلية'}</h2>
+          ${md && md.file ? `<div class="card file-card"><div class="file-icon">${ICON.file}</div><div style="flex-grow:1"><div class="file-name">${esc(md.title || 'بيان الترتيب')}</div></div>${fileLink(sharedFile(md.file), 'عرض البيان')}</div>` : ''}
+          ${
+            ms.length
+              ? table(
+                  ['م', 'الفردان', 'انتهت المهمة', 'التاريخ', 'الموقع', 'سبب المهمة'],
+                  ms.map(
+                    (m, i) => `<tr${m === next ? ' class="next-row"' : ''}><td class="n">${i + 1}</td><td class="name">${esc(m.aN || '')} <span class="muted-dash">و</span> ${esc(m.bN || '')}${m === next ? ' ' + pill('الدور القادم', 'p-mid') : ''}</td><td>${m.done ? pill('✓ تمت', 'p-ok') : DASH}</td><td>${esc(m.date || '') || DASH}</td><td>${esc(m.location || '') || DASH}</td><td>${esc(m.reason || '') || DASH}</td></tr>`
+                  )
+                )
+              : emptyBox('لا يوجد ترتيب بعد')
+          }</section>`;
+      })
+      .join('');
+  }
+  return `${pageHead('الكادر البشري', toArDigits(staff.length) + ' فرد')}
+    ${tabs('t', [['team', 'الأفراد والورديات', staff.length], ['abs', 'الغيابات والتأخيرات', absences.length], ['mis', 'المهمات', missions.length]], tab)}
+    ${body}`;
+}
+
+// ---------- المعاملات ----------
+async function txPage() {
+  const tab = qp('t', 'letters');
+  const [letters, ptx] = await Promise.all([api('/api/records/letters'), api('/api/records/ptx')]);
+  afterRender = () => {};
+  const st = (s) => (s === 'done' ? pill('منتهية', 'p-ok') : pill('قيد الإجراء', 'p-mid'));
+  const body =
+    tab === 'letters'
+      ? letters.length
+        ? `<div class="doc-list">${letters
+            .map(
+              (l) => `<div class="card doc-card">
+                <div class="file-icon">${ICON.file}</div>
+                <div class="doc-body">
+                  <div class="fault-top"><div class="file-name">${esc(l.subject)}</div>${pill(l.dir === 'in' ? 'وارد' : 'صادر', 'p-in')} ${st(l.status)}</div>
+                  <div class="doc-meta">${[l.date, l.num && 'رقم ' + l.num, l.party].filter(Boolean).map(esc).join(' · ')}</div>
+                  ${l.note ? `<div class="doc-note">${multiline(l.note)}</div>` : ''}
+                </div>
+                ${fileLink(sharedFile(l.file), 'عرض الخطاب')}
+              </div>`
+            )
+            .join('')}</div>`
+        : emptyBox('لا توجد خطابات')
+      : ptx.length
+      ? `<div class="doc-list">${ptx
+          .map(
+            (t) => `<div class="card doc-card">
+              <div class="file-icon">${ICON.file}</div>
+              <div class="doc-body">
+                <div class="fault-top"><div class="file-name">${esc(t.type || 'معاملة')} — ${esc(t.pN || '')}</div>${st(t.status)}</div>
+                <div class="doc-meta">${esc(t.date || '')}</div>
+                ${t.details ? `<div class="doc-note">${multiline(t.details)}</div>` : ''}
+              </div>
+              ${fileLink(sharedFile(t.file), 'عرض المعاملة')}
+            </div>`
+          )
+          .join('')}</div>`
+      : emptyBox('لا توجد معاملات أفراد');
+  return `${pageHead('المعاملات', toArDigits(letters.length + ptx.length) + ' معاملة')}
+    ${tabs('t', [['letters', 'الخطابات', letters.length], ['ptx', 'معاملات الأفراد', ptx.length]], tab)}
+    ${body}`;
+}
+
+// ---------- الرغاوي والمحروقات ----------
+const CNK = { foam: 'الرغاوي', fuel: 'المحروقات', powder: 'طفايات البودرة' };
+async function consumPage() {
+  const [list, vmap] = await Promise.all([api('/api/records/consum'), vehMap()]);
+  const kinds = Object.keys(CNK).filter((k) => list.some((x) => x.kind === k));
+  const tab = qp('k', kinds[0] || 'foam');
+  afterRender = () => {};
+  const rows = list.filter((x) => x.kind === tab);
+  return `${pageHead('الرغاوي والمحروقات', toArDigits(list.length) + ' حركة')}
+    ${tabs('k', kinds.map((k) => [k, CNK[k], list.filter((x) => x.kind === k).length]), tab)}
+    ${
+      rows.length
+        ? table(
+            ['التاريخ', 'النوع', 'الصنف', 'الكمية', 'الجهة', 'الآلية', 'ملاحظة', 'المستند'],
+            rows.map(
+              (x) => `<tr><td>${esc(x.date || '')}</td><td>${pill(x.dir === 'in' ? 'وارد' : 'صرف', x.dir === 'in' ? 'p-ok' : 'p-mid')}</td><td class="name">${esc(x.item || '')}</td><td>${esc(x.qty || '')} ${esc(x.unit || '')}</td><td>${esc(x.party || '') || DASH}</td><td>${vehLink(x.vehicle, vmap) || DASH}</td><td class="muted-cell">${multiline(x.note) || DASH}</td><td>${fileLink(sharedFile(x.file), 'عرض') || DASH}</td></tr>`
+            )
+          )
+        : emptyBox('لا توجد حركات')
+    }`;
+}
+
+const SECTIONS = {
+  vehicles: vehiclesList,
+  warehouses: warehousesList,
+  profiles: profilesPage,
+  returns: returnsPage,
+  faults: faultsPage,
+  staff: staffPage,
+  tx: txPage,
+  consum: consumPage,
+};
 
 // ---------- عارض الصور ----------
 const lb = {

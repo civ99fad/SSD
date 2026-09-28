@@ -1,0 +1,124 @@
+{
+  "name": "ونش تدانو 50 طن",
+  "plate": "أ أ س 7545",
+  "make": "تادانو",
+  "model": "2002",
+  "code": "0/65",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "جهاز ارسال",
+      "1"
+    ],
+    [
+      "واير رفع قماش صغير",
+      "6"
+    ],
+    [
+      "سفتي متنقل",
+      "2"
+    ],
+    [
+      "حبال",
+      "1"
+    ],
+    [
+      "خوذة انقاذ",
+      "1"
+    ],
+    [
+      "عفريته كاملة",
+      "1"
+    ],
+    [
+      "شنطة عدة صغيرة",
+      "1"
+    ],
+    [
+      "واير سحب قماش كبير",
+      "1"
+    ],
+    [
+      "سلاسل رفع كبيره",
+      "2"
+    ],
+    [
+      "استبنة",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": "cdead351c37be3a97bc45b0d9886e30a.pdf",
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "استلام",
+      "date": "٢٥/١/١٤٤٦هـ",
+      "title": "سند استلام – استبدال واير سحب بطول ٢٢٧ متر",
+      "description": "",
+      "file": "e87f53ee8921d4cd02204dfd9947c2f3.pdf",
+      "fileName": "v65-istilam-1446-01-25.pdf"
+    },
+    {
+      "type": "استلام",
+      "date": "٩/٦/١٤٤٦هـ",
+      "title": "سند استلام – تركيب ١٢ كفر",
+      "description": "",
+      "file": "44f00e5cc18c0db716f47751f1d3de12.pdf",
+      "fileName": "v65-istilam-1446-06-09.pdf"
+    },
+    {
+      "type": "تسليم",
+      "date": "1444",
+      "title": "سند تسليم آلية",
+      "description": "",
+      "file": "41dd281e484bb46a610e65f3f53238d3.pdf",
+      "fileName": "v65-sanad-1447-03-17.pdf"
+    },
+    {
+      "type": "مستند",
+      "date": "٩/٩/١٤٤٣هـ",
+      "title": "نموذج طلب إصلاح – البكرة الكبيرة",
+      "description": "",
+      "file": "a27c0d651e5a7cd10b3d4687a5bfe3b0.pdf",
+      "fileName": "v65-doc-1443-09-09.pdf"
+    },
+    {
+      "type": "مستند",
+      "date": "٩/٩/١٤٤٣هـ",
+      "title": "خطاب – عطل البكرة الكبيرة في التدانو ٥٠ طن",
+      "description": "",
+      "file": "4d5f6b55ac30b259b4657ae0d19e11b3.pdf",
+      "fileName": "v65-doc-1443-09-09-2.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "٢٦/٥/١٤٤٣هـ",
+      "title": "محضر – عطل في البكرة وانقطاع الواير",
+      "description": "",
+      "file": "8031a71aff19e305920568ec00da86a8.pdf",
+      "fileName": "v65-mahdar-1443-05-26.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "٢١/١١/١٤٤٢هـ",
+      "title": "ضبط محضر – الونش لا يؤدي العمل",
+      "description": "",
+      "file": "63c8a1414641657618cb0dab42a11852.pdf",
+      "fileName": "v65-mahdar-1442-11-21.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "٥/٢/١٤٢٩هـ",
+      "title": "ضبط محضر – البكرة الكبيرة",
+      "description": "",
+      "file": "35777d72bf72e1af7104a4a694418538.pdf",
+      "fileName": "v65-mahdar-1429-02-05.pdf"
+    }
+  ]
+}

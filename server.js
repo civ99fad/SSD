@@ -12,7 +12,9 @@ const PUBLIC_DIR = path.join(ROOT, 'public');
 const DATA_DIR = path.join(ROOT, 'data');
 const VEHICLES_DIR = path.join(DATA_DIR, 'vehicles');
 const WAREHOUSES_DIR = path.join(DATA_DIR, 'warehouses');
+const RECORDS_DIR = path.join(DATA_DIR, 'records');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+const RECORDS = ['profiles', 'returns', 'faults', 'consum', 'staff', 'absences', 'missions', 'ptx', 'letters', 'misdocs'];
 
 const IMAGE_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
 const MIME = {
@@ -104,12 +106,10 @@ function loadVehicle(id) {
     name: f,
     url: fileUrl('vehicles', id, 'form', f),
   }));
-  const history = (info.history || []).map((h) => ({
-    ...h,
-    url: h.file ? fileUrl('vehicles', id, 'documents', h.file) : null,
-  }));
-  history.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
-  return { id, ...info, photos, contents, forms, history };
+  const docUrl = (f) => (f ? fileUrl('vehicles', id, 'documents', f) : null);
+  const history = (info.history || []).map((h) => ({ ...h, url: docUrl(h.file) }));
+  const specs = info.specs ? { ...info.specs, imageUrl: docUrl(info.specs.image) } : null;
+  return { id, ...info, specs, inventoryUrl: docUrl(info.inventoryFile), photos, contents, forms, history };
 }
 
 function vehicleSummary(v) {
@@ -119,6 +119,8 @@ function vehicleSummary(v) {
     plate: v.plate,
     make: v.make,
     model: v.model,
+    status: v.status || 'none',
+    statusNote: v.statusNote || '',
     warehouse: v.warehouse || '',
     thumb: v.photos[0] || null,
   };
@@ -248,6 +250,12 @@ async function handle(req, res) {
       if (!vehicleIds().includes(m[1])) return sendJson(res, 404, { error: 'not found' });
       return sendJson(res, 200, loadVehicle(m[1]));
     }
+    m = pathname.match(/^\/api\/records\/([a-z]+)$/);
+    if (m) {
+      const file = path.join(RECORDS_DIR, m[1] + '.json');
+      if (!RECORDS.includes(m[1]) || !fs.existsSync(file)) return sendJson(res, 200, m[1] === 'misdocs' ? {} : []);
+      return sendJson(res, 200, readJson(file));
+    }
     if (pathname === '/api/warehouses') {
       return sendJson(res, 200, warehouseIds().map(loadWarehouse));
     }
@@ -265,7 +273,7 @@ async function handle(req, res) {
     // يُسمح فقط بملفات مجلدات الصور والمستندات للآليات (وليس الإعدادات أو ملفات البيانات)
     const rel = pathname.slice('/files/'.length);
     const file = resolveInside(DATA_DIR, rel);
-    const allowed = /^vehicles\/[^/]+\/(photos|contents|documents|form)\/[^/]+$/.test(rel);
+    const allowed = /^(vehicles\/[^/]+\/(photos|contents|documents|form)|files)\/[^/]+$/.test(rel);
     if (!file || !allowed || path.basename(file).startsWith('.')) return send(res, 404, 'Not found');
     const headers = {};
     if (url.searchParams.has('download')) {

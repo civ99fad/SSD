@@ -1,0 +1,92 @@
+{
+  "name": "جمس أجهزة تنفس",
+  "plate": "أ هـ ع 9732",
+  "make": "جمس",
+  "model": "2013",
+  "code": "0/11",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "جهاز ارسال",
+      "1"
+    ],
+    [
+      "سفتي",
+      "1"
+    ],
+    [
+      "ونان",
+      "1"
+    ],
+    [
+      "اسطوانة هواء نقي (تنفس)",
+      "39"
+    ],
+    [
+      "استبنة",
+      "1"
+    ],
+    [
+      "عفريته كاملة",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": "a5df8a815495a08dff22165c6a6c5cfa.pdf",
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "مستند",
+      "date": "١/٩/١٤٣٥هـ",
+      "title": "استمارة تسليم سيارة – تغيير بطارية وإصلاح سلك الونش",
+      "description": "",
+      "file": "6cca2c0c9b269e762801032120f6228b.pdf",
+      "fileName": "v11-doc-1435-09-01.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "١٦/١١/١٤٣٦هـ",
+      "title": "محضر بخصوص أسطوانات الكمامات",
+      "description": "",
+      "file": "9b254f645fd6306ccc20e53ebb15c582.pdf",
+      "fileName": "v11-mahdar-1436-11-16.pdf"
+    },
+    {
+      "type": "مستند",
+      "date": "١٧/١١/١٤٣٦هـ",
+      "title": "خطاب لمدير العمليات – عطل ٣ أسطوانات",
+      "description": "",
+      "file": "0580a00ea68990bc477119b44fa03d4d.pdf",
+      "fileName": "v11-doc-1436-11-17.pdf"
+    },
+    {
+      "type": "محضر",
+      "date": "١/١٠/1443هـ",
+      "title": "محضر – باب الأسطوانات عطلان",
+      "description": "",
+      "file": "48d51511f6d6f3aa6dfca90891d90090.pdf",
+      "fileName": "v11-mahdar-1440-10-01.pdf"
+    },
+    {
+      "type": "تسليم",
+      "date": "1445",
+      "title": "سند تسليم/استلام معدة فنية – أسطوانة درايجر جديدة",
+      "description": "",
+      "file": "7dcd6ef076106ae99b5e1f1ea285e21f.pdf",
+      "fileName": "v11-sanad-1444-00-00.pdf"
+    },
+    {
+      "type": "استلام",
+      "date": "١٥/١/١٤٤٦هـ",
+      "title": "سند استلام – تغيير ٤ كفرات",
+      "description": "",
+      "file": "0964a37b4541086df28e8bb8fc42e84f.pdf",
+      "fileName": "v11-istilam-1446-01-15.pdf"
+    }
+  ]
+}

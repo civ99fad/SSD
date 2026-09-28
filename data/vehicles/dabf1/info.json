@@ -1,0 +1,41 @@
+{
+  "name": "دباب إطفاء ٤ عجلات (١)",
+  "plate": "",
+  "make": "بولاريس",
+  "model": "",
+  "code": "",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "شنطة عده",
+      "1"
+    ],
+    [
+      "بكرة",
+      "1"
+    ],
+    [
+      "ماطور مياه",
+      "1"
+    ],
+    [
+      "سفتي",
+      "1"
+    ],
+    [
+      "مكثف رغوة",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [
+    "رقم الشاصي: 4XATY76A6C2252690"
+  ],
+  "inventoryFile": null,
+  "review": [],
+  "specs": null,
+  "history": []
+}

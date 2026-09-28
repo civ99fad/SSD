@@ -4,14 +4,18 @@
   "make": "الشركة المصنعة (مثال: مرسيدس)",
   "model": "سنة الموديل (مثال: 2004)",
   "code": "0/1",
-  "entity": "الإسناد والاحتياط",
   "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
 
-  "inventoryDate": "1448-01-01",
+  "inventoryDate": "١ محرم ١٤٤٨هـ",
   "inventory": [
-    ["اسم الصنف", 1]
+    ["اسم الصنف", "1"]
   ],
   "inventoryNotes": [],
+  "inventoryFile": null,
 
+  "specs": null,
   "history": []
 }

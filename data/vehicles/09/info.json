@@ -1,0 +1,64 @@
+{
+  "name": "جمس غمارة ونص تدخل سريع",
+  "plate": "أ د ح 5486",
+  "make": "جمس",
+  "model": "2008",
+  "code": "0/9",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "",
+  "inventory": [
+    [
+      "سفتي / ونان",
+      "1"
+    ],
+    [
+      "جهاز ارسال",
+      "1"
+    ],
+    [
+      "استبنة",
+      "1"
+    ],
+    [
+      "عفريته  /  مفتاح عجل",
+      "1"
+    ],
+    [
+      "طفاية بودرة خاصة بالسيارة",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": null,
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "تسليم",
+      "date": "٢٢/٣/١٤٤٦هـ",
+      "title": "سند تسليم آلية",
+      "description": "",
+      "file": "147644ca87b4503a3e8c241a638476a8.pdf",
+      "fileName": "v09-sanad-1446-03-22.pdf"
+    },
+    {
+      "type": "تسليم",
+      "date": "٢٥/٩/١٤٤٥هـ",
+      "title": "سند تسليم آلية",
+      "description": "",
+      "file": "6db8d0ad4379705b7c0609bf08de605f.pdf",
+      "fileName": "v09-sanad-1445-09-25.pdf"
+    },
+    {
+      "type": "تسليم",
+      "date": "١٢/١/١٤٤٥هـ",
+      "title": "سند تسليم آلية",
+      "description": "",
+      "file": "251b7566735f1c84e020742a0952199d.pdf",
+      "fileName": "v09-sanad-1445-01-12.pdf"
+    }
+  ]
+}

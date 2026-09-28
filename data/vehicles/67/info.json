@@ -1,0 +1,76 @@
+{
+  "name": "دينا المحروقات",
+  "plate": "ا ح ط 8101",
+  "make": "تويوتا",
+  "model": "2002",
+  "code": "0/67",
+  "warehouse": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "inventoryDate": "٢٠ صفر ١٤٤٨هـ",
+  "inventory": [
+    [
+      "سفتي (لا يعمل)",
+      "1"
+    ],
+    [
+      "ونان (لا يعمل)",
+      "1"
+    ],
+    [
+      "استبنة",
+      "1"
+    ],
+    [
+      "دينمو تعبئة كامل",
+      "1"
+    ]
+  ],
+  "inventoryNotes": [],
+  "inventoryFile": null,
+  "review": [],
+  "specs": null,
+  "history": [
+    {
+      "type": "تسليم",
+      "date": "٢٥/١/١٤٤٦هـ",
+      "title": "سند تسليم آلية – التدريب",
+      "description": "عند التعبئة لا تتجاوز المضخة ١٠ دقائق للمرة الواحدة",
+      "file": "3979bcb7ac103947e7ae8f9fd69718e8.pdf",
+      "fileName": "v67-sanad-1446-01-25.pdf"
+    },
+    {
+      "type": "تسليم",
+      "date": "١٤٤٨/٢هـ ؟",
+      "title": "سند تسليم آلية – الخطة",
+      "description": "",
+      "file": "3be9586779dc89de1806b0756ce4f527.pdf",
+      "fileName": "v67-sanad-1448-02-00.pdf"
+    },
+    {
+      "type": "تسليم",
+      "date": "١٣/٢/١٤٤٨هـ",
+      "title": "سند تسليم آلية – الروضة",
+      "description": "",
+      "file": "2b7c89e2d548979e7d02e00de46b42b0.pdf",
+      "fileName": "v67-sanad-1448-02-13.pdf"
+    },
+    {
+      "type": "تسليم",
+      "date": "١١/١٠/١٤٤٤هـ",
+      "title": "سند تسليم آلية",
+      "description": "عطل بالبطارية – كسر بالأسطب الخلفي الأيسر",
+      "file": "d055f3bd9127220deb2830c1bc1d553c.pdf",
+      "fileName": "v67-sanad-1444-10-11.pdf"
+    },
+    {
+      "type": "مستند",
+      "date": "1424",
+      "title": "خطاب – أعطال في الآلية",
+      "description": "",
+      "file": "269863337edde81c36834bf33a8e5879.pdf",
+      "fileName": "v67-doc-1446-05-09.pdf"
+    }
+  ]
+}

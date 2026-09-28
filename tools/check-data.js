@@ -24,7 +24,6 @@ for (const id of ids) {
   for (const k of ['name', 'plate', 'model']) if (!v[k]) warn(`الآلية ${id}: الحقل "${k}" فارغ`);
   if (v.warehouse && !whIds.includes(String(v.warehouse))) warn(`الآلية ${id}: المستودع "${v.warehouse}" غير موجود`);
   for (const h of v.history || []) {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(h.date || '')) warn(`الآلية ${id}: تاريخ السجل "${h.date}" يجب أن يكون بصيغة 1448-03-26`);
     if (h.file && !fs.existsSync(path.join(vDir, id, 'documents', h.file))) warn(`الآلية ${id}: المستند "${h.file}" غير موجود في documents`);
   }
 }
