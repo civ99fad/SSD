@@ -54,6 +54,24 @@
       return;
     }
     btn.disabled = true;
+    // نسخة GitHub Pages: لا يوجد خادم، فتُقارن بصمة كلمة المرور داخل المتصفح (حماية شكلية فقط)
+    if (window.STATIC_SITE) {
+      const { hash, key } = window.STATIC_SITE;
+      const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('isnad:' + input.value));
+      const hex = [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');
+      if (hex === hash) {
+        try {
+          localStorage.setItem(key, hash);
+        } catch {}
+        location.href = './';
+        return;
+      }
+      err.textContent = 'كلمة المرور غير صحيحة';
+      err.classList.add('show');
+      input.select();
+      btn.disabled = false;
+      return;
+    }
     try {
       const r = await fetch('/api/login', {
         method: 'POST',

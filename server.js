@@ -289,17 +289,22 @@ async function handle(req, res) {
   return sendFile(res, path.join(PUBLIC_DIR, 'app.html'));
 }
 
-http
-  .createServer((req, res) => {
-    handle(req, res).catch((e) => {
-      console.error(e);
-      send(res, 500, 'Server error');
+// يُستورد هذا الملف أيضًا من tools/build-static.js لبناء نسخة GitHub Pages
+module.exports = { RECORDS, readJson, vehicleIds, loadVehicle, vehicleSummary, warehouseIds, loadWarehouse, readSettings };
+
+if (require.main === module) {
+  http
+    .createServer((req, res) => {
+      handle(req, res).catch((e) => {
+        console.error(e);
+        send(res, 500, 'Server error');
+      });
+    })
+    .listen(PORT, () => {
+      console.log('');
+      console.log('  موقع أرشيف قسم الإسناد يعمل الآن');
+      console.log(`  افتح المتصفح على:  http://localhost:${PORT}`);
+      console.log('  لإيقاف الموقع اضغط Ctrl + C');
+      console.log('');
     });
-  })
-  .listen(PORT, () => {
-    console.log('');
-    console.log('  موقع أرشيف قسم الإسناد يعمل الآن');
-    console.log(`  افتح المتصفح على:  http://localhost:${PORT}`);
-    console.log('  لإيقاف الموقع اضغط Ctrl + C');
-    console.log('');
-  });
+}
