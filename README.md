@@ -89,6 +89,14 @@ npm run new-vehicle -- 999
 
 الملف `render.yaml` جاهز. من https://render.com: سجّل الدخول بحساب GitHub، ثم **New → Blueprint**، واختر المستودع `civ99fad/SSD` والفرع `claude/civil-defense-archive-site-y3ue1n`. أدخل كلمة المرور في `SITE_PASSWORD` ثم اضغط **Apply**. كلمة المرور على الاستضافة تُغيَّر من **Environment** في لوحة Render.
 
+## النشر على GitHub Pages
+
+عند كل تحديث للفرع الرئيسي يبني GitHub نسخة ثابتة من الموقع (`npm run build:static`) وينشرها تلقائيًا على `https://civ99fad.github.io/SSD/`.
+
+- التفعيل مرة واحدة: من إعدادات المستودع **Settings ← Pages** اختر **Source: GitHub Actions**.
+- كلمة المرور تُؤخذ من السر `SITE_PASSWORD` في **Settings ← Secrets and variables ← Actions** إن وُجد، وإلا من `data/settings.json`.
+- **تنبيه:** لا يوجد خادم في هذه النسخة، فكلمة المرور حماية شكلية فقط. كل الصور والمستندات يمكن فتحها مباشرة لمن يعرف الرابط، والمستودع العام يكشف كل الملفات.
+
 ## أقسام الموقع
 
 الآليات، المستودعات، الملفات التعريفية، تقارير الرجيع، أعطال المبنى، الكادر البشري، المعاملات، الرغاوي والمحروقات.

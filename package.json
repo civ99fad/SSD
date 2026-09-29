@@ -7,7 +7,8 @@
     "start": "node server.js",
     "new-vehicle": "node tools/new-vehicle.js",
     "set-password": "node tools/set-password.js",
-    "check": "node tools/check-data.js"
+    "check": "node tools/check-data.js",
+    "build:static": "node tools/build-static.js"
   },
   "engines": { "node": ">=18" }
 }

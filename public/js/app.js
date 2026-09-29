@@ -3,6 +3,28 @@
 const PAGE_SIZE = 9;
 const view = document.getElementById('view');
 
+// نسخة GitHub Pages (ملفات ثابتة بدون خادم): التوجيه عبر # والبيانات من ملفات JSON جاهزة
+const STATIC = !!window.STATIC_SITE;
+
+// المسار الحالي داخل التطبيق، مثل { pathname: '/staff', search: '?tab=x' }
+function loc() {
+  if (!STATIC) return { pathname: location.pathname, search: location.search };
+  const h = location.hash.slice(1) || '/vehicles';
+  const i = h.indexOf('?');
+  return i < 0 ? { pathname: h, search: '' } : { pathname: h.slice(0, i), search: h.slice(i) };
+}
+
+// رابط داخلي ← الرابط الفعلي في المتصفح ("/vehicles" ← "#/vehicles" في النسخة الثابتة)
+function toHref(url) {
+  if (!STATIC) return url;
+  if (url.startsWith('?')) url = loc().pathname + url;
+  return url.startsWith('/') ? '#' + url : url;
+}
+
+function fixLinks(root) {
+  if (STATIC) root.querySelectorAll('a[data-link]').forEach((a) => a.setAttribute('href', toHref(a.getAttribute('href'))));
+}
+
 // ---------- أدوات ----------
 const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -59,10 +81,10 @@ const statusPill = (st) => `<span class="stpill st-${esc(st in STATUS ? st : 'no
 const DASH = '<span class="muted-dash">—</span>';
 const fileLink = (url, label = 'عرض المستند') =>
   url ? `<a class="link-more" href="${esc(url)}" target="_blank" rel="noopener">${esc(label)} ${ICON.arrow}</a>` : '';
-const sharedFile = (name) => (name ? '/files/files/' + encodeURIComponent(name) : null);
+const sharedFile = (name) => (name ? (STATIC ? '' : '/') + 'files/files/' + encodeURIComponent(name) : null);
 
 async function api(path) {
-  const r = await fetch(path, { headers: { Accept: 'application/json' } });
+  const r = await fetch(STATIC ? path.slice(1) + '.json' : path, { headers: { Accept: 'application/json' } });
   if (r.status === 401) {
     location.href = '/login';
     throw new Error('unauthorized');
@@ -74,7 +96,7 @@ async function api(path) {
 
 // ---------- التوجيه ----------
 function navigate(url, replace = false) {
-  history[replace ? 'replaceState' : 'pushState']({}, '', url);
+  history[replace ? 'replaceState' : 'pushState']({}, '', toHref(url));
   render();
 }
 
@@ -98,7 +120,7 @@ function setActiveNav(section) {
 let renderSeq = 0;
 async function render() {
   const seq = ++renderSeq;
-  const path = location.pathname.replace(/\/+$/, '') || '/vehicles';
+  const path = loc().pathname.replace(/\/+$/, '') || '/vehicles';
   const parts = path.split('/').filter(Boolean).map(decodeURIComponent);
   const section = SECTIONS[parts[0]] ? parts[0] : 'vehicles';
   setActiveNav(section);
@@ -111,6 +133,7 @@ async function render() {
     else html = await SECTIONS[section]();
     if (seq !== renderSeq) return;
     view.innerHTML = html;
+    fixLinks(view);
     afterRender();
     window.scrollTo(0, 0);
   } catch (e) {
@@ -130,7 +153,7 @@ function notFound(what, backHref, backLabel) {
 // ---------- الآليات: القائمة ----------
 async function vehiclesList() {
   const [vehicles, warehouses] = await Promise.all([api('/api/vehicles'), api('/api/warehouses')]);
-  const params = new URLSearchParams(location.search);
+  const params = new URLSearchParams(loc().search);
   const state = {
     q: params.get('q') || '',
     model: params.get('model') || '',
@@ -186,7 +209,7 @@ async function vehiclesList() {
       if (state.st) qs.set('st', state.st);
       if (state.page > 1) qs.set('page', state.page);
       const s = qs.toString();
-      history.replaceState({}, '', '/vehicles' + (s ? '?' + s : ''));
+      history.replaceState({}, '', toHref('/vehicles' + (s ? '?' + s : '')));
     };
 
     qInput.addEventListener('input', () => update(true));
@@ -639,7 +662,7 @@ function tabs(key, list, current) {
     )
     .join('')}</div>`;
 }
-const qp = (k, d) => new URLSearchParams(location.search).get(k) || d;
+const qp = (k, d) => new URLSearchParams(loc().search).get(k) || d;
 const vehMap = async () => Object.fromEntries((await api('/api/vehicles')).map((v) => [v.id, v]));
 
 // ---------- الملفات التعريفية ----------
@@ -939,5 +962,16 @@ lb.el.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') step(1);
   if (e.key === 'ArrowRight') step(-1);
 });
+
+fixLinks(document);
+if (STATIC) {
+  const out = document.querySelector('.side-logout');
+  out.setAttribute('href', 'login.html');
+  out.addEventListener('click', () => {
+    try {
+      localStorage.removeItem(window.STATIC_SITE.key);
+    } catch {}
+  });
+}
 
 render();
