@@ -406,52 +406,99 @@
   );
 
   if (!cfg.repo) return;
-  const admin = document.createElement('div');
-  admin.style.cssText = 'width:100%;margin-top:14px;font-size:13px;text-align:start';
   const link = 'all:unset;cursor:pointer;color:var(--accent);font-weight:700';
-  if (token) {
-    admin.innerHTML =
-      `<span id="isnadEditOn" style="color:var(--ok);font-weight:700">وضع التعديل مفعّل على هذا الجهاز</span> · ` +
-      `<button type="button" id="isnadEditOff" style="${link}">إيقاف التعديل</button>`;
-    userReady.then((m) => {
-      if (!m) admin.querySelector('#isnadEditOn').textContent = 'تعذّر التحقق من مفتاح GitHub. أدخل مفتاحًا جديدًا.';
-    });
-  } else {
-    admin.innerHTML =
-      `<button type="button" id="isnadEditShow" style="${link}">تفعيل التعديل (للمسؤول)</button>` +
-      '<div id="isnadEditBox" hidden style="margin-top:10px">' +
-      '<label for="isnadTok" style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">مفتاح GitHub</label>' +
-      `<input id="isnadTok" type="password" autocomplete="off" placeholder="github_pat_…" dir="ltr" style="${field}">` +
-      '<div style="margin-top:6px;color:var(--faint);font-size:12px;line-height:1.6">يُحفظ على هذا الجهاز فقط. أنشئه من GitHub: Settings ← Developer settings ← Fine-grained tokens، لمستودع ' +
-      cfg.repo +
-      ' بصلاحية Contents: Read and write.</div>' +
-      '<div id="isnadTokErr" role="alert" style="display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600"></div>' +
-      '<button type="button" id="isnadTokSave" class="btn" style="width:100%;margin-top:10px">حفظ المفتاح</button></div>';
-  }
-  enter.after(admin);
 
-  admin.addEventListener('click', async (e) => {
-    const id = e.target.id;
-    if (id === 'isnadEditOff') {
-      store.del(TOKEN_KEY);
-      location.reload();
-    } else if (id === 'isnadEditShow') {
-      admin.querySelector('#isnadEditBox').hidden = false;
-      admin.querySelector('#isnadTok').focus();
-    } else if (id === 'isnadTokSave') {
-      const t = admin.querySelector('#isnadTok').value.trim();
-      const msg = admin.querySelector('#isnadTokErr');
-      msg.style.display = 'none';
-      e.target.disabled = true;
-      try {
-        await checkToken(t);
-        store.set(TOKEN_KEY, t);
-        location.reload();
-      } catch (x) {
-        msg.textContent = x && x.code === 'not_granted' ? 'المفتاح غير صحيح أو ليس له صلاحية الكتابة على المستودع.' : 'تعذّر الاتصال بـ GitHub. حاول مجددًا.';
-        msg.style.display = 'block';
-        e.target.disabled = false;
-      }
+  // لوحة تفعيل التعديل: تظهر في شاشة الدخول، وفي نافذة من زر القائمة الجانبية
+  function adminPanel(open) {
+    const el = document.createElement('div');
+    el.style.cssText = 'width:100%;font-size:13px;text-align:start';
+    if (token) {
+      el.innerHTML =
+        `<span data-r="on" style="color:var(--ok);font-weight:700">وضع التعديل مفعّل على هذا الجهاز</span> · ` +
+        `<button type="button" data-r="off" style="${link}">إيقاف التعديل</button>`;
+      userReady.then((m) => {
+        if (!m) el.querySelector('[data-r="on"]').textContent = 'تعذّر التحقق من مفتاح GitHub. أوقف التعديل ثم أدخل مفتاحًا جديدًا.';
+      });
+    } else {
+      el.innerHTML =
+        (open ? '' : `<button type="button" data-r="show" style="${link}">تفعيل التعديل (للمسؤول)</button>`) +
+        `<div data-r="box"${open ? '' : ' hidden'} style="margin-top:${open ? 0 : 10}px">` +
+        '<label style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">مفتاح GitHub' +
+        `<input data-r="tok" type="password" autocomplete="off" placeholder="github_pat_…" dir="ltr" style="${field};margin-top:6px;font-weight:400"></label>` +
+        '<div style="margin-top:6px;color:var(--faint);font-size:12px;line-height:1.6">يُحفظ على هذا الجهاز فقط. أنشئه من GitHub: Settings ← Developer settings ← Fine-grained tokens، لمستودع ' +
+        cfg.repo +
+        ' بصلاحية Contents: Read and write.</div>' +
+        '<div data-r="err" role="alert" style="display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600"></div>' +
+        '<button type="button" data-r="save" class="btn primary" style="width:100%;margin-top:10px">حفظ المفتاح</button></div>';
     }
+    el.addEventListener('click', async (e) => {
+      const r = e.target.dataset && e.target.dataset.r;
+      if (r === 'off') {
+        store.del(TOKEN_KEY);
+        location.reload();
+      } else if (r === 'show') {
+        el.querySelector('[data-r="box"]').hidden = false;
+        el.querySelector('[data-r="tok"]').focus();
+      } else if (r === 'save') {
+        const t = el.querySelector('[data-r="tok"]').value.trim();
+        const msg = el.querySelector('[data-r="err"]');
+        msg.style.display = 'none';
+        e.target.disabled = true;
+        try {
+          await checkToken(t);
+          store.set(TOKEN_KEY, t);
+          location.reload();
+        } catch (x) {
+          msg.textContent = x && x.code === 'not_granted' ? 'المفتاح غير صحيح أو ليس له صلاحية الكتابة على المستودع.' : 'تعذّر الاتصال بـ GitHub. حاول مجددًا.';
+          msg.style.display = 'block';
+          e.target.disabled = false;
+        }
+      }
+    });
+    return el;
+  }
+
+  const onWelcome = adminPanel(false);
+  onWelcome.style.marginTop = '14px';
+  enter.after(onWelcome);
+
+  // زر في القائمة الجانبية (فوق «تسجيل الخروج») يفتح نفس اللوحة في نافذة
+  const logout = document.querySelector('.side-foot [data-act="logout"]');
+  if (!logout) return;
+  const sideBtn = document.createElement('button');
+  sideBtn.type = 'button';
+  sideBtn.className = 'logout';
+  sideBtn.innerHTML =
+    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>' +
+    `<span>${token ? 'وضع التعديل' : 'تفعيل التعديل'}</span>`;
+  logout.before(sideBtn);
+
+  const dlg = document.createElement('div');
+  dlg.className = 'modal';
+  dlg.hidden = true;
+  dlg.innerHTML = '<div class="mbox" role="dialog" aria-modal="true" aria-labelledby="isnadAdminT"><h2 id="isnadAdminT">تفعيل التعديل</h2></div>';
+  const mbox = dlg.firstChild;
+  mbox.appendChild(adminPanel(true));
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'btn';
+  close.style.cssText = 'width:100%;margin-top:10px';
+  close.textContent = 'إغلاق';
+  mbox.appendChild(close);
+  document.body.appendChild(dlg);
+  const hide = () => {
+    dlg.hidden = true;
+    sideBtn.focus();
+  };
+  sideBtn.addEventListener('click', () => {
+    dlg.hidden = false;
+    (mbox.querySelector('input') || close).focus();
+  });
+  close.addEventListener('click', hide);
+  dlg.addEventListener('mousedown', (e) => {
+    if (e.target === dlg) hide();
+  });
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') hide();
   });
 })();
