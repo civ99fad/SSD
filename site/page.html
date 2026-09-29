@@ -1407,12 +1407,13 @@ function staffAlerts(){
       if (n>=0) out.push({lvl:'soon', id:p.id, text:`${n===0?'تبدأ اليوم':n===1?'تبدأ غداً':'تبدأ بعد '+arD(n)+' أيام'} ${HST[s]} ${pl(p)} (${p.from}${p.to?' إلى '+p.to:''}).`}); }
     else if (t && t>=d0 && t===dayKey(1)) out.push({lvl:'info', id:p.id, text:`تنتهي ${HST[s]} ${pl(p)} غداً (${p.to}).`});
   });
-  // النقص يُحسب على أيام مناوبة كل وردية فقط (التناوب ١ ← ٢ ← ٣، من ٩ ص إلى ٩ ص)، مع احتساب الدعم القادم من الورديات الأخرى
+  // النقص يُحسب على أيام مناوبة كل وردية فقط (التناوب ١ ← ٢ ← ٣، من ٩ ص إلى ٩ ص)، مع احتساب الدعم القادم من الورديات الأخرى.
+  // يظهر التنبيه قبل مناوبة الوردية بيوم، ويبقى طوال مناوبتها.
   const dd=dutyDay(), off=(Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0;
   ['1','2','3'].forEach(k=>{ const size=cfg.shifts[k]; if (!size) return;
-    const duties=[]; for (let j=0;j<=15;j++) if (dutyShift(dd+j)===k) duties.push(j);
+    const duties=[]; for (let j=0;j<=1;j++) if (dutyShift(dd+j)===k) duties.push(j);
     const at = j => { const dk=dayKey(off+j); return {j, pres:shiftPres(k,dk), sup:(S.staff||[]).filter(p=>effSt(p,dk)==='support' && String(p.toShift||'')===k)}; };
-    const when = j => j===0 ? 'في مناوبتها الحالية' : `في مناوبتها يوم ${dutyDateStr(dd+j)} (${dayStr(off+j)})`;
+    const when = j => j===0 ? 'في مناوبتها الحالية' : off<0 ? `في مناوبتها اليوم (تستلم ٩:٠٠ ص ${dutyDateStr(dd+j)})` : `غداً في مناوبتها يوم ${dutyDateStr(dd+j)} (${dayStr(off+j)})`;
     const short = duties.map(at).find(x=>size-x.pres>3);
     if (short) out.push({lvl:'shift', text:`${SHN[k]}: ${when(short.j)} ${short.j===0?'قوتها':'ستكون قوتها'} ${arD(short.pres)} من ${arD(size)}${short.sup.length?` بعد احتساب ${arD(short.sup.length)} دعم`:''} (نقص ${arD(size-short.pres)} أفراد — أكثر من ٣).`});
     const next = duties.length ? at(duties[0]) : null;
