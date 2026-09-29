@@ -1407,9 +1407,16 @@ function staffAlerts(){
       if (n>=0) out.push({lvl:'soon', id:p.id, text:`${n===0?'تبدأ اليوم':n===1?'تبدأ غداً':'تبدأ بعد '+arD(n)+' أيام'} ${HST[s]} ${pl(p)} (${p.from}${p.to?' إلى '+p.to:''}).`}); }
     else if (t && t>=d0 && t===dayKey(1)) out.push({lvl:'info', id:p.id, text:`تنتهي ${HST[s]} ${pl(p)} غداً (${p.to}).`});
   });
-  ['1','2','3'].forEach(k=>{ const ps=staffOf(k), size=cfg.shifts[k]; if (!size) return;
-    for (let i=0;i<=14;i++){ const dk=dayKey(i), pres=shiftPres(k,dk), miss=size-pres;
-      if (miss>3){ out.push({lvl:'shift', text:`${SHN[k]}: ${i===0?'قوتها اليوم':'ستنخفض قوتها بتاريخ '+dayStr(i)} ${arD(pres)} من ${arD(size)} (نقص ${arD(miss)} أفراد — أكثر من ٣).`}); break; } } });
+  // النقص يُحسب على أيام مناوبة كل وردية فقط (التناوب ١ ← ٢ ← ٣، من ٩ ص إلى ٩ ص)، مع احتساب الدعم القادم من الورديات الأخرى
+  const dd=dutyDay(), off=(Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0;
+  ['1','2','3'].forEach(k=>{ const size=cfg.shifts[k]; if (!size) return;
+    const duties=[]; for (let j=0;j<=15;j++) if (dutyShift(dd+j)===k) duties.push(j);
+    const at = j => { const dk=dayKey(off+j); return {j, pres:shiftPres(k,dk), sup:(S.staff||[]).filter(p=>effSt(p,dk)==='support' && String(p.toShift||'')===k)}; };
+    const when = j => j===0 ? 'في مناوبتها الحالية' : `في مناوبتها يوم ${dutyDateStr(dd+j)} (${dayStr(off+j)})`;
+    const short = duties.map(at).find(x=>size-x.pres>3);
+    if (short) out.push({lvl:'shift', text:`${SHN[k]}: ${when(short.j)} ${short.j===0?'قوتها':'ستكون قوتها'} ${arD(short.pres)} من ${arD(size)}${short.sup.length?` بعد احتساب ${arD(short.sup.length)} دعم`:''} (نقص ${arD(size-short.pres)} أفراد — أكثر من ٣).`});
+    const next = duties.length ? at(duties[0]) : null;
+    if (next && next.sup.length) out.push({lvl:'info', text:`يصل دعم إلى ${SHN[k]} ${when(next.j)}: ${next.sup.map(p=>pl(p)+' (من '+SHN[String(p.shift||'1')]+')').join('، ')} — قوتها ${arD(next.pres)} من ${arD(size)}.`}); });
   return out;
 }
 function alertsPanel(){
