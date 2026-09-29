@@ -17,6 +17,12 @@ function password() {
   return String(process.env.SITE_PASSWORD || settings.password || '1234');
 }
 
+// المستودع والفرع اللذان يحفظ فيهما المسؤول تعديلاته (GitHub Actions و Render يمرّرانهما تلقائيًا)
+const repo = () => ({
+  repo: process.env.GITHUB_REPOSITORY || process.env.RENDER_GIT_REPO_SLUG || 'civ99fad/SSD',
+  branch: process.env.GITHUB_REF_NAME || process.env.RENDER_GIT_BRANCH || 'claude/civil-defense-archive-site-y3ue1n',
+});
+
 const passwordHash = (pw) => crypto.createHash('sha256').update('isnad:' + pw).digest('hex');
 
 // صفحة Claude كما هي، مع تعديلين: روابط الملفات تأتي من الشيم، والشيم يُحمّل قبل سكربت الصفحة
@@ -27,7 +33,9 @@ function pageHtml(config) {
     html = html.replace(from, to);
   };
   patch("const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';", "const blob = id => id ? window.ISNAD.blob(id) : '';");
-  patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(config)};</script>\n<script src="shim.js"></script>\n<script>\n(function(){`);
+  patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(Object.assign(repo(), config))};</script>\n<script src="shim.js"></script>\n<script>\n(function(){`);
+  const logo = logoFile();
+  if (logo) patch('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
   return html;
 }
 
@@ -42,6 +50,15 @@ function dbJson() {
   return { collections, blobs };
 }
 
+function logoFile() {
+  try {
+    const id = JSON.parse(fs.readFileSync(path.join(DB_DIR, 'settings.json'), 'utf8')).site.logo;
+    return blobFiles().find((f) => f.startsWith(id + '.'));
+  } catch {
+    return null;
+  }
+}
+
 const blobFiles = () => fs.readdirSync(BLOBS_DIR).filter((f) => /^[0-9a-f]{32}\.[a-z0-9]+$/.test(f));
 
-module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, password, passwordHash, pageHtml, dbJson, blobFiles };
+module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, password, passwordHash, pageHtml, dbJson, blobFiles, logoFile };

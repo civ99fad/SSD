@@ -98,6 +98,8 @@ async function handle(req, res) {
     return send(res, 200, site.pageHtml({ mode: 'server' }), { 'Content-Type': MIME['.html'] });
   }
   if (pathname === '/shim.js') return sendFile(res, path.join(site.SITE_DIR, 'shim.js'));
+  const logo = site.logoFile();
+  if (logo && pathname === '/blobs/' + logo) return sendFile(res, path.join(site.BLOBS_DIR, logo)); // أيقونة التبويب قبل الدخول
 
   if (pathname === '/api/login' && req.method === 'POST') {
     let password = '';
