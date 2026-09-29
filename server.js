@@ -1,51 +1,30 @@
-// خادم محلي لموقع أرشيف قسم الإسناد — بدون أي مكتبات خارجية (Node.js فقط)
+// خادم محلي لموقع أرشيف قسم الدعم والإسناد — بدون أي مكتبات خارجية (Node.js فقط)
 // التشغيل: node server.js  ثم افتح http://localhost:3000
+// يعرض نفس صفحة موقع Claude، والبيانات والملفات محمية بكلمة المرور (بخلاف نسخة GitHub Pages)
 
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const site = require('./tools/site');
 
 const PORT = Number(process.env.PORT) || 3000;
-const ROOT = __dirname;
-const PUBLIC_DIR = path.join(ROOT, 'public');
-const DATA_DIR = path.join(ROOT, 'data');
-const VEHICLES_DIR = path.join(DATA_DIR, 'vehicles');
-const WAREHOUSES_DIR = path.join(DATA_DIR, 'warehouses');
-const RECORDS_DIR = path.join(DATA_DIR, 'records');
-const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
-const RECORDS = ['profiles', 'returns', 'faults', 'consum', 'staff', 'absences', 'missions', 'ptx', 'letters', 'misdocs'];
-
-const IMAGE_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
 const MIME = {
   '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
   '.gif': 'image/gif',
   '.pdf': 'application/pdf',
-  '.doc': 'application/msword',
-  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  '.ico': 'image/x-icon',
 };
 
 // ---------- الجلسات (في الذاكرة) ----------
 const SESSION_COOKIE = 'isnad_session';
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12 ساعة
 const sessions = new Map();
-
-function readSettings() {
-  try {
-    return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
-  } catch {
-    return { password: '1234' };
-  }
-}
 
 function parseCookies(req) {
   const out = {};
@@ -72,73 +51,6 @@ function safeEqual(a, b) {
   return crypto.timingSafeEqual(ha, hb);
 }
 
-// ---------- قراءة البيانات من المجلدات ----------
-function readJson(file) {
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
-}
-
-function listFiles(dir, exts) {
-  if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir)
-    .filter((f) => !f.startsWith('.') && (!exts || exts.includes(path.extname(f).toLowerCase())))
-    .sort((a, b) => a.localeCompare(b, 'ar', { numeric: true }));
-}
-
-function fileUrl(...parts) {
-  return '/files/' + parts.map(encodeURIComponent).join('/');
-}
-
-function vehicleIds() {
-  if (!fs.existsSync(VEHICLES_DIR)) return [];
-  return fs
-    .readdirSync(VEHICLES_DIR)
-    .filter((d) => fs.existsSync(path.join(VEHICLES_DIR, d, 'info.json')))
-    .sort((a, b) => a.localeCompare(b, 'ar', { numeric: true }));
-}
-
-function loadVehicle(id) {
-  const dir = path.join(VEHICLES_DIR, id);
-  const info = readJson(path.join(dir, 'info.json'));
-  const photos = listFiles(path.join(dir, 'photos'), IMAGE_EXT).map((f) => fileUrl('vehicles', id, 'photos', f));
-  const contents = listFiles(path.join(dir, 'contents'), IMAGE_EXT).map((f) => fileUrl('vehicles', id, 'contents', f));
-  const forms = listFiles(path.join(dir, 'form'), ['.docx', '.doc', '.pdf']).map((f) => ({
-    name: f,
-    url: fileUrl('vehicles', id, 'form', f),
-  }));
-  const docUrl = (f) => (f ? fileUrl('vehicles', id, 'documents', f) : null);
-  const history = (info.history || []).map((h) => ({ ...h, url: docUrl(h.file) }));
-  const specs = info.specs ? { ...info.specs, imageUrl: docUrl(info.specs.image) } : null;
-  return { id, ...info, specs, inventoryUrl: docUrl(info.inventoryFile), photos, contents, forms, history };
-}
-
-function vehicleSummary(v) {
-  return {
-    id: v.id,
-    name: v.name,
-    plate: v.plate,
-    make: v.make,
-    model: v.model,
-    status: v.status || 'none',
-    statusNote: v.statusNote || '',
-    warehouse: v.warehouse || '',
-    thumb: v.photos[0] || null,
-  };
-}
-
-function warehouseIds() {
-  if (!fs.existsSync(WAREHOUSES_DIR)) return [];
-  return fs
-    .readdirSync(WAREHOUSES_DIR)
-    .filter((f) => f.endsWith('.json'))
-    .map((f) => f.slice(0, -5))
-    .sort((a, b) => a.localeCompare(b, 'ar', { numeric: true }));
-}
-
-function loadWarehouse(id) {
-  return { id, ...readJson(path.join(WAREHOUSES_DIR, id + '.json')) };
-}
-
 // ---------- أدوات الرد ----------
 function send(res, status, body, headers = {}) {
   res.writeHead(status, { 'Cache-Control': 'no-store', ...headers });
@@ -149,27 +61,16 @@ function sendJson(res, status, obj, headers = {}) {
   send(res, status, JSON.stringify(obj), { 'Content-Type': MIME['.json'], ...headers });
 }
 
-function redirect(res, to) {
-  send(res, 302, '', { Location: to });
-}
-
-function sendFile(res, file, extraHeaders = {}) {
+function sendFile(res, file) {
   fs.stat(file, (err, st) => {
     if (err || !st.isFile()) return send(res, 404, 'Not found');
     res.writeHead(200, {
       'Content-Type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream',
       'Content-Length': st.size,
       'Cache-Control': 'no-store',
-      ...extraHeaders,
     });
     fs.createReadStream(file).pipe(res);
   });
-}
-
-// يمنع الخروج من المجلد المسموح (path traversal)
-function resolveInside(base, rel) {
-  const full = path.resolve(base, rel);
-  return full.startsWith(base + path.sep) ? full : null;
 }
 
 function readBody(req) {
@@ -185,25 +86,18 @@ function readBody(req) {
 
 // ---------- الموجّه ----------
 async function handle(req, res) {
-  const url = new URL(req.url, 'http://localhost');
   let pathname;
   try {
-    pathname = decodeURIComponent(url.pathname);
+    pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
   } catch {
     return send(res, 400, 'Bad request');
   }
-  const authed = isAuthed(req);
 
-  // ملفات عامة (خطوط، تنسيقات، سكربت صفحة الدخول)
-  if (pathname.startsWith('/assets/')) {
-    const file = resolveInside(PUBLIC_DIR, pathname.slice('/assets/'.length));
-    return file ? sendFile(res, file) : send(res, 404, 'Not found');
+  // الصفحة والشيم عامّان (لا بيانات فيهما)
+  if (pathname === '/' || pathname === '/index.html') {
+    return send(res, 200, site.pageHtml({ mode: 'server' }), { 'Content-Type': MIME['.html'] });
   }
-
-  if (pathname === '/login') {
-    if (authed) return redirect(res, '/');
-    return sendFile(res, path.join(PUBLIC_DIR, 'login.html'));
-  }
+  if (pathname === '/shim.js') return sendFile(res, path.join(site.SITE_DIR, 'shim.js'));
 
   if (pathname === '/api/login' && req.method === 'POST') {
     let password = '';
@@ -211,8 +105,7 @@ async function handle(req, res) {
       password = JSON.parse(await readBody(req)).password || '';
     } catch {}
     // على الاستضافة تُضبط كلمة المرور من متغير البيئة SITE_PASSWORD
-    const expected = String(process.env.SITE_PASSWORD || readSettings().password || '1234');
-    if (!safeEqual(password, expected)) {
+    if (!safeEqual(password, site.password())) {
       return sendJson(res, 401, { ok: false, error: 'كلمة المرور غير صحيحة' });
     }
     const token = crypto.randomBytes(24).toString('hex');
@@ -227,84 +120,40 @@ async function handle(req, res) {
   if (pathname === '/logout') {
     const token = parseCookies(req)[SESSION_COOKIE];
     if (token) sessions.delete(token);
-    return send(res, 302, '', {
-      Location: '/login',
-      'Set-Cookie': `${SESSION_COOKIE}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0`,
-    });
+    return send(res, 204, '', { 'Set-Cookie': `${SESSION_COOKIE}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0` });
   }
 
-  // كل ما بعد هذا يتطلب تسجيل الدخول
-  if (!authed) {
-    if (pathname.startsWith('/api/') || pathname.startsWith('/files/')) {
-      return sendJson(res, 401, { ok: false, error: 'unauthorized' });
-    }
-    return redirect(res, '/login');
-  }
-
+  // كل ما بعد هذا (البيانات والملفات) يتطلب تسجيل الدخول
+  if (!isAuthed(req)) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
   if (req.method !== 'GET') return send(res, 405, 'Method not allowed');
 
-  try {
-    if (pathname === '/api/vehicles') {
-      const list = vehicleIds().map((id) => vehicleSummary(loadVehicle(id)));
-      return sendJson(res, 200, list);
+  if (pathname === '/db.json') {
+    try {
+      return sendJson(res, 200, site.dbJson());
+    } catch (e) {
+      console.error('خطأ في قراءة البيانات:', e.message);
+      return sendJson(res, 500, { error: 'خطأ في ملف البيانات: ' + e.message });
     }
-    let m = pathname.match(/^\/api\/vehicles\/([^/]+)$/);
-    if (m) {
-      if (!vehicleIds().includes(m[1])) return sendJson(res, 404, { error: 'not found' });
-      return sendJson(res, 200, loadVehicle(m[1]));
-    }
-    m = pathname.match(/^\/api\/records\/([a-z]+)$/);
-    if (m) {
-      const file = path.join(RECORDS_DIR, m[1] + '.json');
-      if (!RECORDS.includes(m[1]) || !fs.existsSync(file)) return sendJson(res, 200, m[1] === 'misdocs' ? {} : []);
-      return sendJson(res, 200, readJson(file));
-    }
-    if (pathname === '/api/warehouses') {
-      return sendJson(res, 200, warehouseIds().map(loadWarehouse));
-    }
-    m = pathname.match(/^\/api\/warehouses\/([^/]+)$/);
-    if (m) {
-      if (!warehouseIds().includes(m[1])) return sendJson(res, 404, { error: 'not found' });
-      return sendJson(res, 200, loadWarehouse(m[1]));
-    }
-  } catch (e) {
-    console.error('خطأ في قراءة البيانات:', e.message);
-    return sendJson(res, 500, { error: 'خطأ في ملف البيانات: ' + e.message });
   }
+  let m = pathname.match(/^\/db\/files\/([A-Za-z0-9_-]+\.json)$/);
+  if (m) return sendFile(res, path.join(site.DB_DIR, 'files', m[1]));
+  m = pathname.match(/^\/blobs\/([0-9a-f]{32}\.[a-z0-9]+)$/);
+  if (m) return sendFile(res, path.join(site.BLOBS_DIR, m[1]));
 
-  if (pathname.startsWith('/files/')) {
-    // يُسمح فقط بملفات مجلدات الصور والمستندات للآليات (وليس الإعدادات أو ملفات البيانات)
-    const rel = pathname.slice('/files/'.length);
-    const file = resolveInside(DATA_DIR, rel);
-    const allowed = /^(vehicles\/[^/]+\/(photos|contents|documents|form)|files)\/[^/]+$/.test(rel);
-    if (!file || !allowed || path.basename(file).startsWith('.')) return send(res, 404, 'Not found');
-    const headers = {};
-    if (url.searchParams.has('download')) {
-      headers['Content-Disposition'] = `attachment; filename*=UTF-8''${encodeURIComponent(path.basename(file))}`;
-    }
-    return sendFile(res, file, headers);
-  }
-
-  // باقي المسارات: تطبيق الصفحة الواحدة
-  return sendFile(res, path.join(PUBLIC_DIR, 'app.html'));
+  return send(res, 404, 'Not found');
 }
 
-// يُستورد هذا الملف أيضًا من tools/build-static.js لبناء نسخة GitHub Pages
-module.exports = { RECORDS, readJson, vehicleIds, loadVehicle, vehicleSummary, warehouseIds, loadWarehouse, readSettings };
-
-if (require.main === module) {
-  http
-    .createServer((req, res) => {
-      handle(req, res).catch((e) => {
-        console.error(e);
-        send(res, 500, 'Server error');
-      });
-    })
-    .listen(PORT, () => {
-      console.log('');
-      console.log('  موقع أرشيف قسم الإسناد يعمل الآن');
-      console.log(`  افتح المتصفح على:  http://localhost:${PORT}`);
-      console.log('  لإيقاف الموقع اضغط Ctrl + C');
-      console.log('');
+http
+  .createServer((req, res) => {
+    handle(req, res).catch((e) => {
+      console.error(e);
+      send(res, 500, 'Server error');
     });
-}
+  })
+  .listen(PORT, () => {
+    console.log('');
+    console.log('  موقع أرشيف قسم الدعم والإسناد يعمل الآن');
+    console.log(`  افتح المتصفح على:  http://localhost:${PORT}`);
+    console.log('  لإيقاف الموقع اضغط Ctrl + C');
+    console.log('');
+  });

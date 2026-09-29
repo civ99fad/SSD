@@ -5,7 +5,7 @@ services:
     plan: free
     buildCommand: echo "no build needed"
     startCommand: node server.js
-    healthCheckPath: /login
+    healthCheckPath: /
     envVars:
       - key: SITE_PASSWORD
         sync: false
