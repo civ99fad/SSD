@@ -13,6 +13,8 @@ fs.mkdirSync(path.join(OUT, 'blobs'), { recursive: true });
 
 fs.writeFileSync(path.join(OUT, 'index.html'), site.portalHtml({ mode: 'static' }));
 fs.copyFileSync(path.join(site.SITE_DIR, 'shim.js'), path.join(OUT, 'shim.js'));
+fs.mkdirSync(path.join(OUT, site.MANAGER.web), { recursive: true });
+fs.writeFileSync(path.join(OUT, site.MANAGER.web, 'db.json'), JSON.stringify(site.managerJson()));
 fs.writeFileSync(path.join(OUT, 'manager.html'), site.managerHtml({ mode: 'static', hash: site.passwordHash(site.password(site.MANAGER.id)) }));
 
 const report = [];
