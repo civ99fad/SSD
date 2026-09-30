@@ -1,0 +1,183 @@
+{
+ "b1-1": {
+  "code": "1/1",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "ب أ ق 1499",
+  "model": "2015",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771223977,
+  "updated": 1790771223977
+ },
+ "b1-2": {
+  "code": "1/2",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "ب ب ق 2218",
+  "model": "2015",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771223978,
+  "updated": 1790771223978
+ },
+ "b3-3": {
+  "code": "3/3",
+  "name": "جمس إسعاف",
+  "make": "جمس",
+  "plate": "أ ك ب 3412",
+  "model": "2008",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771223979,
+  "updated": 1790771223979
+ },
+ "b8-3": {
+  "code": "8/3",
+  "name": "جمس إسعاف",
+  "make": "جمس",
+  "plate": "أ هـ ب 4261",
+  "model": "2010",
+  "status": "down",
+  "statusNote": "بطارية",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790771223980,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-b8-3",
+    "note": "",
+    "title": "متعطلة بالمقر — بطارية",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771223980,
+  "updated": 1790771223980
+ },
+ "b1-4": {
+  "code": "1/4",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ ن ب 3374",
+  "model": "2012",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771223981,
+  "updated": 1790771223981
+ },
+ "b1-5": {
+  "code": "1/5",
+  "name": "وايت أكتروس",
+  "make": "مرسيدس",
+  "plate": "أ ح ط 8126",
+  "model": "2002",
+  "status": "down",
+  "statusNote": "بطارية + كلتش",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790771223982,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-b1-5",
+    "note": "",
+    "title": "متعطلة بالمقر — بطارية + كلتش",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771223982,
+  "updated": 1790771223982
+ },
+ "b1-7": {
+  "code": "1/7",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "ح ك ط 0248",
+  "model": "1998",
+  "status": "down",
+  "statusNote": "بطارية + غطاء فلتر المكينة",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790771223983,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-b1-7",
+    "note": "",
+    "title": "متعطلة بالمقر — بطارية + غطاء فلتر المكينة",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771223983,
+  "updated": 1790771223983
+ },
+ "b1-8": {
+  "code": "1/8",
+  "name": "جيب تايوتا ربع",
+  "make": "تويوتا",
+  "plate": "أ أ د 9923",
+  "model": "2003",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "at": 1790771223977,
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "n-b1-8",
+    "text": "ملاحظة من تشكيل الآليات: كفرات."
+   }
+  ],
+  "created": 1790771223984,
+  "updated": 1790771223984
+ }
+}
