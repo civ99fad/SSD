@@ -38,6 +38,9 @@ for (const [id, name] of CENTERS) {
 // قسم الدعم والإسناد آخر البوابة
 UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: { 'حدود المركز': 'حدود القسم' } };
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
+// بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
+const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
+const SHARED_COLS = ['forms'];
 // لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
 // والدخول لها يفتح كل الجهات لأن المدير يطّلع على الجميع
 // ولا تطّلع على مهام الجهات (داخلية لكل جهة)
@@ -109,6 +112,10 @@ function dbJson(unit) {
       if (f.endsWith('.json')) collections[f.slice(0, -5)] = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
     }
   }
+  for (const c of SHARED_COLS) {
+    const f = path.join(SHARED_DB, c + '.json');
+    collections[c] = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+  }
   const blobs = {};
   for (const f of blobFiles()) blobs[f.split('.')[0]] = 'blobs/' + f;
   return { collections, blobs };
@@ -125,4 +132,4 @@ function logoFile() {
 
 const blobFiles = () => fs.readdirSync(BLOBS_DIR).filter((f) => /^[0-9a-f]{32}\.[a-z0-9]+$/.test(f));
 
-module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, MANAGER, unitDb, password, passwordHash, pageHtml, portalHtml, managerHtml, dbJson, blobFiles, logoFile };
+module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, MANAGER, SHARED_DB, unitDb, password, passwordHash, pageHtml, portalHtml, managerHtml, dbJson, blobFiles, logoFile };

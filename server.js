@@ -164,6 +164,9 @@ async function handle(req, res) {
     if (!isAuthed(req, unitOf(m[1] || ''))) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
     return sendFile(res, path.join(site.unitDb(unitOf(m[1] || '')), 'files', m[2]));
   }
+  // ملفات Word المشتركة (نماذج ومحاضر) لأي جهة مسجّل دخولها
+  m = pathname.match(/^\/shared\/db\/files\/(shared-[A-Za-z0-9_-]+\.json)$/);
+  if (m) return sendFile(res, path.join(site.SHARED_DB, 'files', m[1]));
   m = pathname.match(/^\/blobs\/([0-9a-f]{32}\.[a-z0-9]+)$/);
   if (m) return sendFile(res, path.join(site.BLOBS_DIR, m[1]));
 
