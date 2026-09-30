@@ -83,6 +83,9 @@
   if (cfg.mode !== 'server' || signedIn) authed();
   const WEB = cfg.web || ''; // مسار بيانات الجهة في الموقع المنشور
   const DBDIR = cfg.dbDir || 'data/db'; // ومجلدها في المستودع
+  // بيانات مشتركة بين كل الجهات (نماذج ومحاضر): مجموعاتها وملفات Word التي تبدأ معرّفاتها بـ shared-
+  const SHARED_DIR = 'data/shared/db', SHARED_WEB = 'shared/db/', SHARED_COLS = ['forms'];
+  const dirOf = (c, id) => ((c === 'files' ? /^shared-/.test(id || '') : SHARED_COLS.includes(c)) ? SHARED_DIR : DBDIR);
 
   // ---------- GitHub ----------
   const b64encode = (bytes) => {
@@ -159,7 +162,7 @@
   // يطبّق mutate على مستند واحد ويرفع النتيجة (undefined = حذف المستند)
   function commitDoc(c, id, mutate) {
     const single = c === 'files';
-    const path = single ? `${DBDIR}/files/${id}.json` : `${DBDIR}/${c}.json`;
+    const path = single ? `${dirOf(c, id)}/files/${id}.json` : `${dirOf(c, id)}/${c}.json`;
     const msg = `تعديل من الموقع: ${c}/${id}`;
     return serial(path, () =>
       withRetry(async () => {
@@ -212,6 +215,12 @@
           const file = await readFile(DBDIR + '/' + f.name);
           collections[f.name.slice(0, -5)] = JSON.parse(utf8.dec(file.b64));
         })
+    );
+    await Promise.all(
+      SHARED_COLS.map(async (c) => {
+        const file = await readFile(`${SHARED_DIR}/${c}.json`);
+        collections[c] = file ? JSON.parse(utf8.dec(file.b64)) : {};
+      })
     );
     const map = Object.assign({}, pub.blobs || {});
     for (const t of tree) {
@@ -269,10 +278,10 @@
     const read = async () => {
       if (c === 'files') {
         if (token) {
-          const f = await readFile(`${DBDIR}/files/${id}.json`);
+          const f = await readFile(`${dirOf(c, id)}/files/${id}.json`);
           return snap(id, f ? JSON.parse(utf8.dec(f.b64)) : undefined);
         }
-        const r = await fetch(WEB + 'db/files/' + encodeURIComponent(id) + '.json');
+        const r = await fetch((/^shared-/.test(id) ? SHARED_WEB : WEB + 'db/') + 'files/' + encodeURIComponent(id) + '.json');
         return snap(id, r.ok ? await r.json() : undefined);
       }
       return snap(id, ((await loadDb())[c] || {})[id]);

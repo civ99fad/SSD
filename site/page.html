@@ -620,6 +620,10 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <span>المعاملات</span>
       </button>
       <div class="navh" aria-hidden="true">السجلات والمبنى</div>
+      <button type="button" data-act="nav" data-id="forms" id="nav-forms">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+        <span>نماذج ومحاضر</span>
+      </button>
       <button type="button" data-act="nav" data-id="profiles" id="nav-profiles">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         <span>الملفات التعريفية</span>
@@ -912,8 +916,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الكادر البشري: '+a.length+' — افتح «الكادر البشري»'),600); } }
@@ -924,6 +928,7 @@ function render(){
   else if (v.name==='tasks') paint(gSearchBar()+viewTasks());
   else if (v.name==='bounds') paint(gSearchBar()+viewBounds());
   else if (v.name==='sites') paint(gSearchBar()+viewSites());
+  else if (v.name==='forms') paint(gSearchBar()+viewForms());
   else if (v.name==='vehicles') paint(gSearchBar()+viewVehicles());
   else if (v.name==='vehicle') paint(gSearchBar()+viewVehicle(v.id));
   else if (v.name==='warehouses') paint(gSearchBar()+viewWarehouses());
@@ -1362,6 +1367,30 @@ function viewTasks(){
 /* ---------- حدود المركز: خريطة Google (My Maps) مضمّنة، تُحفظ في settings/map ---------- */
 const mapMid = u => { const m=String(u||'').match(/[?&]mid=([A-Za-z0-9_-]+)/); return m?m[1]:''; };
 const mapParam = (u,k) => { const m=String(u||'').match(new RegExp('[?&]'+k+'=([^&#]+)')); return m?decodeURIComponent(m[1]):''; };
+/* ---------- نماذج ومحاضر: مشتركة بين كل الجهات (تُحفظ في data/shared/db) ---------- */
+const FMK = {minutes:{t:'المحاضر', one:'محضر', add:'إضافة محضر', ph:'مثال: محضر معاينة حريق'}, incident:{t:'نماذج الحوادث', one:'نموذج', add:'إضافة نموذج', ph:'مثال: نموذج بلاغ حادث مروري'}};
+const getForm = id => (S.forms||[]).find(x=>x.id===id);
+const formFields = (k, p) => [
+  {id:'title', label:'اسم '+FMK[k].one, value:p&&p.title, required:true, placeholder:FMK[k].ph},
+  {id:'note', label:'وصف مختصر (اختياري)', type:'textarea', value:p&&p.note},
+  p ? {id:'file', label:'استبدال الملف (اختياري)', type:'file', accept:LIB_ACCEPT}
+    : {id:'file', label:'الملف', type:'file', required:true, accept:LIB_ACCEPT, hint:'PDF أو صورة حتى 20 ميجابايت، أو Word ‏(.docx) حتى 180 كيلوبايت'}];
+function viewForms(){
+  const edit=S.canEdit, k=FMK[S.fmk]?S.fmk:'minutes', C=FMK[k], all=(S.forms||[]);
+  const cnt=x=>all.filter(p=>(p.kind||'minutes')===x).length;
+  const head=`<header class="ph"><div class="ph-t"><h1>نماذج ومحاضر</h1><span class="count">موحّدة لجميع المراكز</span></div>${edit?`<button type="button" class="btn primary" data-act="formAdd">${ICON.plus}${esc(C.add)}</button>`:''}</header>`;
+  const tabs=`<div class="fchips" role="tablist" aria-label="القسم">${Object.entries(FMK).map(([id,c])=>`<button type="button" class="fchip${id===k?' on':''}" role="tab" aria-selected="${id===k}" data-act="formTab" data-id="${id}">${esc(c.t)} <b>${arD(cnt(id))}</b></button>`).join('')}</div>`;
+  if (!S.loadedFm) return head+tabs+loading();
+  const q=norm(S.fmq), mine=all.filter(p=>(p.kind||'minutes')===k).sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'ar',{numeric:true}));
+  const list=mine.filter(p=>!q||norm([p.title,p.note,p.fileName].join(' ')).includes(q));
+  const tools=mine.length?`<div class="toolbar"><label class="search"><span class="vh">بحث في ${esc(C.t)}</span>${ICON.search}<input id="fmq" type="search" placeholder="ابحث باسم ${esc(C.one)}" value="${esc(S.fmq||'')}"></label></div>`:'';
+  let body;
+  if (!mine.length) body=`<div class="panel empty"><b>لا توجد ${esc(C.t)} بعد.</b>${edit?'أضفها بزر «'+esc(C.add)+'» وستظهر في جميع المراكز.':'ستظهر هنا عند إضافتها.'}</div>`;
+  else if (!list.length) body=`<div class="panel empty"><b>لا توجد نتائج.</b>جرّب كلمة بحث أخرى.</div>`;
+  else body=`<div class="panel docs">${list.map(p=>`<div class="drow"><div class="file-ic sm">${ICON.doc}</div><div class="file-t"><b>${esc(p.title||p.fileName||C.one)}</b><small><span class="pill p-doc">${esc(KIND(p))}</span>${p.note?`<span>${esc(p.note)}</span>`:''}</small></div>
+    <div class="file-a"><button type="button" class="btn primary" data-act="formOpen" data-id="${esc(p.id)}">فتح</button>${edit?`<button type="button" class="icon-btn" data-act="formEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="formDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
+  return head+tabs+tools+body;
+}
 /* ---------- المنشآت الهامة في نطاق الجهة: الاسم ورابط موقعها في الخرائط ---------- */
 const getSite = id => (S.sites||[]).find(x=>x.id===id);
 const siteSort = (a,b)=>((+a.n||9e9)-(+b.n||9e9))||((a.at||0)-(b.at||0));
@@ -1864,6 +1893,16 @@ const vehicleFields = v => [
   [{id:'make', label:'الطراز', value:v.make, placeholder:'مثال: مرسيدس أكتروس'}, {id:'model', label:'الموديل', value:v.model, placeholder:'مثال: 2004'}]
 ];
 const ACT = {
+  formTab: k => { S.fmk=k; S.fmq=''; render(); },
+  formOpen: id => { const p=getForm(id); if(!p) return; const t=p.title||p.fileName||'ملف'; if (p.db) openDocxViewer(p.db, t); else openViewer(p.file, p.fileName||t); },
+  formAdd: () => { const k=FMK[S.fmk]?S.fmk:'minutes'; openForm({title:FMK[k].add, submit:'إضافة', fields:formFields(k), onSubmit: async x => {
+    const ref=S.db.collection('forms').doc(); const f=await storeLibFile(x.file, 'shared-forms-'+ref.id);
+    await ref.set(Object.assign({kind:k, title:x.title, note:x.note, at:Date.now()}, f)); toast('أُضيف '+FMK[k].one+' لجميع المراكز'); }}); },
+  formEdit: id => { const p=getForm(id); if(!p) return; const k=p.kind||'minutes'; openForm({title:'تعديل '+FMK[k].one, fields:formFields(k,p), onSubmit: async x => {
+    const patch={title:x.title, note:x.note}; if (x.file) Object.assign(patch, await storeLibFile(x.file, 'shared-forms-'+id+'-'+uid()));
+    await S.db.doc('forms/'+id).update(patch); if (x.file) dropLibFile(p); toast('حُفظ التعديل'); }}); },
+  formDel: id => { const p=getForm(id); if(!p) return; const k=p.kind||'minutes'; openConfirm(`حذف «${p.title||FMK[k].one}» من جميع المراكز؟`, 'حذف '+FMK[k].one, async () => {
+    await S.db.doc('forms/'+id).delete(); dropLibFile(p); toast('حُذف '+FMK[k].one); }); },
   siteAdd: () => openForm({title:'إضافة منشأة هامة', submit:'إضافة', fields:siteFields({}), onSubmit: async x => {
     const n=Math.max(0,...(S.sites||[]).map(y=>+y.n||0))+1;
     await S.db.collection('sites').doc().set(Object.assign(x, {n, at:Date.now()})); toast('أُضيفت المنشأة'); }}),
@@ -2168,6 +2207,7 @@ document.addEventListener('input', e => {
   else if (e.target.id==='fq'){ S.fq=e.target.value; render(); }
   else if (e.target.id==='tkq'){ S.tkq=e.target.value; render(); }
   else if (e.target.id==='stq'){ S.stq=e.target.value; render(); }
+  else if (e.target.id==='fmq'){ S.fmq=e.target.value; render(); }
   else if (e.target.id==='ft'){ S.ft=e.target.value; render(); }
   else if (e.target.dataset && e.target.dataset.lib){ S.lib[e.target.dataset.lib][e.target.dataset.f]=e.target.value; render(); }
   else if (e.target.id==='wq'){ S.wq=e.target.value; render(); }
@@ -2224,6 +2264,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   db.collection('consum').onSnapshot(s => { S.consum=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedC=true; render(); }, fail);
   for (const c of ['letters','ptx']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.tl[c]=1; S.loadedT=Object.keys(S.tl).length>=2; render(); }, fail);
   db.doc('settings/hr').onSnapshot(s => { S.hrs = s.exists ? s.data() : {}; S.hrsLoaded=true; render(); }, () => { S.hrsLoaded=true; render(); });
+  db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
   db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);
   db.doc('settings/map').onSnapshot(s => { S.map = s.exists ? s.data() : {}; S.mapLoaded=true; render(); }, () => { S.mapLoaded=true; render(); });
   db.doc('settings/misdocs').onSnapshot(s => { S.misd = s.exists ? s.data() : {}; render(); }, () => {});

@@ -27,6 +27,9 @@ for (const [unit, u] of Object.entries(site.UNITS)) {
   report.push(`${u.name}: ${Object.keys(db.collections.vehicles || {}).length} آلية`);
 }
 
+const shared = path.join(site.SHARED_DB, 'files');
+if (fs.existsSync(shared)) fs.cpSync(shared, path.join(OUT, 'shared', 'db', 'files'), { recursive: true });
+
 const files = site.blobFiles();
 for (const f of files) fs.copyFileSync(path.join(site.BLOBS_DIR, f), path.join(OUT, 'blobs', f));
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
