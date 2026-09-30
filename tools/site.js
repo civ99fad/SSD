@@ -36,7 +36,7 @@ for (const [id, name] of CENTERS) {
   UNITS[id] = { name, desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name) };
 }
 // قسم الدعم والإسناد آخر البوابة
-UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {}, hide: ['bounds'] }; // قسم الإسناد ليس له حدود
+UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {}, hide: ['bounds', 'sites'] }; // قسم الإسناد ليس له حدود ولا منشآت هامة
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
