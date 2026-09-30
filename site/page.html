@@ -632,6 +632,10 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M12 9v4"/><path d="M12 16.5v.5"/></svg>
         <span>أعطال المبنى</span>
       </button>
+      <button type="button" data-act="nav" data-id="sites" id="nav-sites">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+        <span>المنشآت الهامة</span>
+      </button>
       <button type="button" data-act="nav" data-id="bounds" id="nav-bounds">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>
         <span>حدود المركز</span>
@@ -908,8 +912,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : 'warehouses';
-  for (const k of ['dash','tasks','bounds','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الكادر البشري: '+a.length+' — افتح «الكادر البشري»'),600); } }
@@ -919,6 +923,7 @@ function render(){
   else if (v.name==='dash') paint(gSearchBar()+viewDash());
   else if (v.name==='tasks') paint(gSearchBar()+viewTasks());
   else if (v.name==='bounds') paint(gSearchBar()+viewBounds());
+  else if (v.name==='sites') paint(gSearchBar()+viewSites());
   else if (v.name==='vehicles') paint(gSearchBar()+viewVehicles());
   else if (v.name==='vehicle') paint(gSearchBar()+viewVehicle(v.id));
   else if (v.name==='warehouses') paint(gSearchBar()+viewWarehouses());
@@ -1357,6 +1362,23 @@ function viewTasks(){
 /* ---------- حدود المركز: خريطة Google (My Maps) مضمّنة، تُحفظ في settings/map ---------- */
 const mapMid = u => { const m=String(u||'').match(/[?&]mid=([A-Za-z0-9_-]+)/); return m?m[1]:''; };
 const mapParam = (u,k) => { const m=String(u||'').match(new RegExp('[?&]'+k+'=([^&#]+)')); return m?decodeURIComponent(m[1]):''; };
+/* ---------- المنشآت الهامة في نطاق الجهة: الاسم ورابط موقعها في الخرائط ---------- */
+const getSite = id => (S.sites||[]).find(x=>x.id===id);
+const siteSort = (a,b)=>((+a.n||9e9)-(+b.n||9e9))||((a.at||0)-(b.at||0));
+const siteFields = x => [{id:'name', label:'اسم المنشأة', value:x.name, required:true},
+  {id:'url', label:'رابط الموقع في الخرائط (اختياري)', value:x.url, placeholder:'https://maps.app.goo.gl/…'},
+  {id:'note', label:'ملاحظات (اختياري)', type:'textarea', value:x.note}];
+function viewSites(){
+  const edit=S.canEdit, all=(S.sites||[]).slice().sort(siteSort);
+  const head=`<header class="ph"><div class="ph-t"><h1>المنشآت الهامة</h1><span class="count">${esc(arD(all.length))} منشأة</span></div>${edit?`<button type="button" class="btn primary" data-act="siteAdd">${ICON.plus}إضافة منشأة</button>`:''}</header>`;
+  if (!S.loadedSt) return head+loading();
+  if (!all.length) return head+`<div class="panel empty"><b>لا توجد منشآت هامة مسجّلة بعد.</b>${edit?'أضف المنشآت الواقعة في نطاق المركز مع رابط موقع كل منها.':''}</div>`;
+  const q=norm(S.stq), list=all.filter(x=>!q||norm([x.name,x.note].join(' ')).includes(q));
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في المنشآت</span>${ICON.search}<input id="stq" type="search" placeholder="ابحث باسم المنشأة" value="${esc(S.stq||'')}"></label></div>`;
+  if (!list.length) return head+tools+`<div class="panel empty"><b>لا توجد منشأة مطابقة.</b>جرّب جزءاً من الاسم.</div>`;
+  const rows=list.map(x=>`<tr><td class="n">${esc(arD(all.indexOf(x)+1))}</td><td class="nm">${esc(x.name||'—')}${x.note?`<div class="hper">${esc(x.note)}</div>`:''}</td><td>${/^https?:\/\//.test(x.url||'')?`<a class="btn sm" href="${esc(x.url)}" target="_blank" rel="noopener" style="text-decoration:none;color:var(--text)">فتح الموقع ${ICON.arrow}</a>`:'<span class="hmut">—</span>'}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="siteEdit" data-id="${esc(x.id)}" aria-label="تعديل ${esc(x.name||'المنشأة')}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="siteDel" data-id="${esc(x.id)}" aria-label="حذف ${esc(x.name||'المنشأة')}">${ICON.del}</button></td>`:''}</tr>`).join('');
+  return head+tools+`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>م</th><th>اسم المنشأة</th><th>الموقع</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
 function viewBounds(){
   const edit=S.canEdit, m=S.map||{}, mid=mapMid(m.url);
   const head=`<header class="ph"><div class="ph-t"><h1>حدود المركز</h1></div>${edit?`<button type="button" class="btn${mid?'':' primary'}" data-act="boundsEdit">${mid?ICON.edit+'تعديل الخريطة':ICON.plus+'إضافة خريطة الحدود'}</button>`:''}</header>`;
@@ -1842,6 +1864,13 @@ const vehicleFields = v => [
   [{id:'make', label:'الطراز', value:v.make, placeholder:'مثال: مرسيدس أكتروس'}, {id:'model', label:'الموديل', value:v.model, placeholder:'مثال: 2004'}]
 ];
 const ACT = {
+  siteAdd: () => openForm({title:'إضافة منشأة هامة', submit:'إضافة', fields:siteFields({}), onSubmit: async x => {
+    const n=Math.max(0,...(S.sites||[]).map(y=>+y.n||0))+1;
+    await S.db.collection('sites').doc().set(Object.assign(x, {n, at:Date.now()})); toast('أُضيفت المنشأة'); }}),
+  siteEdit: id => { const x=getSite(id); if(!x) return; openForm({title:'تعديل المنشأة', fields:siteFields(x), onSubmit: async v => {
+    await S.db.doc('sites/'+id).update(Object.assign(v, {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
+  siteDel: id => { const x=getSite(id); if(!x) return; openConfirm(`حذف المنشأة «${x.name||''}»؟`, 'حذف المنشأة', async () => {
+    await S.db.doc('sites/'+id).delete(); toast('حُذفت المنشأة'); }); },
   boundsEdit: () => { const m=S.map||{}; openForm({title:'خريطة حدود المركز', submit:'حفظ', fields:[
       {id:'url', label:'رابط خريطة Google (My Maps)', value:m.url, required:true, placeholder:'https://www.google.com/maps/d/viewer?mid=…', hint:'افتح الخريطة في Google My Maps وانسخ الرابط من شريط العنوان أو من «مشاركة».'},
       {id:'desc', label:'وصف الحدود (اختياري)', type:'textarea', value:m.desc, placeholder:'مثال: شمالًا طريق الملك عبدالعزيز، جنوبًا …'}],
@@ -2138,6 +2167,7 @@ document.addEventListener('input', e => {
   else if (e.target.id==='eqs'){ S.eqs=e.target.value; render(); }
   else if (e.target.id==='fq'){ S.fq=e.target.value; render(); }
   else if (e.target.id==='tkq'){ S.tkq=e.target.value; render(); }
+  else if (e.target.id==='stq'){ S.stq=e.target.value; render(); }
   else if (e.target.id==='ft'){ S.ft=e.target.value; render(); }
   else if (e.target.dataset && e.target.dataset.lib){ S.lib[e.target.dataset.lib][e.target.dataset.f]=e.target.value; render(); }
   else if (e.target.id==='wq'){ S.wq=e.target.value; render(); }
@@ -2194,6 +2224,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   db.collection('consum').onSnapshot(s => { S.consum=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedC=true; render(); }, fail);
   for (const c of ['letters','ptx']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.tl[c]=1; S.loadedT=Object.keys(S.tl).length>=2; render(); }, fail);
   db.doc('settings/hr').onSnapshot(s => { S.hrs = s.exists ? s.data() : {}; S.hrsLoaded=true; render(); }, () => { S.hrsLoaded=true; render(); });
+  db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);
   db.doc('settings/map').onSnapshot(s => { S.map = s.exists ? s.data() : {}; S.mapLoaded=true; render(); }, () => { S.mapLoaded=true; render(); });
   db.doc('settings/misdocs').onSnapshot(s => { S.misd = s.exists ? s.data() : {}; render(); }, () => {});
   db.doc('settings/site').onSnapshot(s => { S.settings = s.exists ? s.data() : {}; renderBrand(); }, () => {});
