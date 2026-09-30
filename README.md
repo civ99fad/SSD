@@ -43,6 +43,7 @@
 2. في **Settings ← Variables and Secrets** أضف سرّين: `GITHUB_TOKEN` (مفتاح GitHub بصلاحية Contents: Read and write) و`CODES` بصيغة `{"balad":"رمز","sharaf":"رمز",...}`.
 3. ضع رابط الحارس في `data/settings.json` باسم `editProxy` (مثل `"editProxy": "https://isnad-edit.xxx.workers.dev"`).
 4. يفتح المدير صفحة مركزه ← «تفعيل التعديل» ← يكتب رمز مركزه.
+5. رمز `manager` في `CODES` هو كلمة دخول «لوحة مدير الإدارة» (للاطلاع فقط، بلا أي تعديل)، ويحل محل كلمة مرورها في الموقع.
 
 المسؤول يبقى يعدّل كل شيء بمفتاح GitHub من رابط «للمسؤول: الدخول بمفتاح GitHub».
 
