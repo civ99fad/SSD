@@ -1,13 +1,19 @@
 {
  "hr": {
-  "strength": 0,
+  "strength": 33,
   "shifts": {
-   "1": 0,
-   "2": 0,
-   "3": 0
+   "1": 11,
+   "2": 11,
+   "3": 11
   }
  },
  "site": {
   "logo": "b3e11d124e66c44ff784b06e7be72b76"
+ },
+ "map": {
+  "url": "https://www.google.com/maps/d/viewer?mid=1-KcvreWLaG7CcNsRgb99h0rsm77LMgE&ll=27.525275568568027%2C41.567572199999994&z=12",
+  "desc": "",
+  "date": "١٩/٤/١٤٤٨هـ",
+  "updated": 1790773388912
  }
 }
