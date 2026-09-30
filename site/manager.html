@@ -146,7 +146,6 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:2px 9px;border-radius:999px;white-space:nowrap}
 .pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
 .p-down{background:var(--bad-bg);color:var(--bad)}.p-maint{background:var(--mid-bg);color:var(--mid)}.p-away{background:var(--away-bg);color:var(--away)}.p-none{background:var(--none-bg);color:var(--none)}
-.p-late{background:var(--bad-bg);color:var(--bad)}.p-soon{background:var(--mid-bg);color:var(--mid)}.p-ok{background:var(--ok-bg);color:var(--ok)}
 .alerts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .alerts li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);font-size:14px}
 .alerts li.a-bad{background:var(--bad-bg);border-color:transparent}
@@ -156,24 +155,6 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 .loading{padding:40px;text-align:center;color:var(--muted)}
 .foot{font-size:12.5px;color:var(--faint);text-align:center}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#14201B;color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;z-index:9}
-/* مهام المدير */
-.ibtn{all:unset;cursor:pointer;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--muted)}
-.ibtn:hover{background:var(--surface-2);color:var(--accent)}
-.ibtn.del:hover{color:var(--bad)}
-.ibtn:focus-visible{outline:2px solid var(--accent)}
-td.ra{white-space:nowrap;text-align:end}
-tr.done td{color:var(--muted)}
-tr.done .tt{text-decoration:line-through}
-.p-run{background:var(--away-bg);color:var(--away)}.p-todo{background:var(--none-bg);color:var(--none)}
-.hint{font-size:13px;color:var(--muted);margin-top:10px}
-.modal{position:fixed;inset:0;background:rgba(10,20,16,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:8}
-.mbox{width:100%;max-width:480px;max-height:calc(100vh - 32px);overflow-y:auto;background:var(--surface);border-radius:16px;padding:22px;box-shadow:0 30px 60px rgba(0,0,0,.35)}
-.mbox h2{margin:0 0 6px;font-size:18px;font-weight:800}
-.mbox .fld{margin-top:12px}
-.mbox textarea{width:100%;min-height:74px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);font:inherit;color:inherit;outline:none;resize:vertical}
-.mbox textarea:focus{border-color:var(--accent)}
-.mrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.mact{display:flex;gap:8px;justify-content:flex-start;margin-top:18px}
 @media (max-width:900px){.two{grid-template-columns:1fr}}
 @media (max-width:560px){
   .top h1{font-size:20px}
@@ -230,7 +211,6 @@ tr.done .tt{text-decoration:line-through}
   </header>
   <main id="main"><div class="panel loading">جارٍ جمع بيانات الجهات…</div></main>
 </div>
-<div class="modal" id="modal" hidden></div>
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>/*CONFIG*/</script>
@@ -284,7 +264,6 @@ tr.done .tt{text-decoration:line-through}
   const dutyDay = (t = Date.now()) => Math.floor((t + DUTY_TZ_MS - DUTY_H * 36e5) / 864e5);
   const dutyShift = (d = dutyDay()) => String((((DUTY_ANCHOR_SHIFT - 1 + d - DUTY_ANCHOR) % 3) + 3) % 3 + 1);
   const dutyOff = () => ((Date.now() + DUTY_TZ_MS) / 864e5 - Math.floor((Date.now() + DUTY_TZ_MS) / 864e5) < DUTY_H / 24 ? -1 : 0);
-  const tkSt = (t) => { if (t.done) return 'done'; const d0 = dayKey(0), st = hkey(t.start), en = hkey(t.end); if (en && d0 && d0 > en) return 'late'; if (st && d0 && d0 < st) return 'todo'; return 'run'; };
   const fOpen = (f) => f.status !== 'done';
   const eqOut = (r) => r.dir === 'out' && !r.returned;
   const isWater = (v) => /وايت/.test(v.name || '');
@@ -303,16 +282,15 @@ tr.done .tt{text-decoration:line-through}
     const W = V.filter(isWater), P = W.filter(isProp), A = W.filter((v) => !isProp(v));
     const rd = (L) => L.filter((v) => stOf(v) === 'ready');
     const hc = hCfg(((C.settings || {}).hr) || {}), off = dutyOff(), dd = dutyDay();
-    const k = dutyShift(dd), nk = dutyShift(dd + 1);
+    const k = dutyShift(dd);
     const size = hc.shifts[k] || 0, pres = shiftPres(staff, k, dayKey(off));
-    const nsize = hc.shifts[nk] || 0, npres = shiftPres(staff, nk, dayKey(off + 1));
     const empty = !V.length && !staff.length;
-    const miss = Math.max(0, size - pres), nmiss = Math.max(0, nsize - npres);
-    const lv = empty ? 'none' : (pct != null && pct < 0.5) || miss > 3 ? 'bad' : (pct != null && pct < 0.8) || miss > 0 ? 'mid' : 'ok';
+    // الحالة تُحسب على جاهزية الآليات فقط (بلا تنبيهات عن الكادر)
+    const lv = empty ? 'none' : pct != null && pct < 0.5 ? 'bad' : pct != null && pct < 0.8 ? 'mid' : 'ok';
     return {
       u, ok: !!d, empty, lv, V, c, rated, pct,
       water: { all: [rd(W), W], prop: [rd(P), P], aydi: [rd(A), A] },
-      staffN: staff.length, k, size, pres, miss, nk, nsize, npres, nmiss,
+      staffN: staff.length, size, pres,
       faults: faults.filter(fOpen), eqOut: equip.filter(eqOut),
       notReady: V.filter((v) => ['down', 'maint'].includes(stOf(v))).sort((a, b) => (stOf(a) === 'down' ? 0 : 1) - (stOf(b) === 'down' ? 0 : 1)),
       away: V.filter((v) => stOf(v) === 'away'),
@@ -361,7 +339,7 @@ tr.done .tt{text-decoration:line-through}
         <div><dt>في الصيانة</dt><dd class="${x.c.maint ? 'c-mid' : ''}">${arD(x.c.maint)}</dd></div>
         <div><dt>مدعومة لجهات</dt><dd class="${x.c.away ? 'c-away' : ''}">${arD(x.c.away)}</dd></div>
         <div><dt>الوايتات الجاهزة</dt><dd>${w[1].length ? `${arD(w[0].length)} من ${arD(w[1].length)}` : '—'}</dd></div>
-        <div><dt>قوة الوردية</dt><dd class="${x.miss ? (x.miss > 3 ? 'c-bad' : 'c-mid') : ''}">${shiftTxt(x)}</dd></div>
+        <div><dt>قوة الوردية</dt><dd>${shiftTxt(x)}</dd></div>
         <div><dt>الأفراد</dt><dd>${arD(x.staffN)}</dd></div>
         <div><dt>أعطال المبنى</dt><dd class="${x.faults.length ? 'c-mid' : ''}">${arD(x.faults.length)}</dd></div>
         <div><dt>معدات لم ترجع</dt><dd>${arD(x.eqOut.length)}</dd></div>
@@ -382,9 +360,6 @@ tr.done .tt{text-decoration:line-through}
     R.forEach((x) => {
       if (x.empty) return;
       const n = x.u.name;
-      if (x.miss > 3) out.push(['bad', '⚠', `${n}: ${SHN[x.k]} المناوبة الآن قوتها ${arD(x.pres)} من ${arD(x.size)} (نقص ${arD(x.miss)} أفراد).`]);
-      else if (x.miss) out.push(['mid', '!', `${n}: نقص ${arD(x.miss)} في ${SHN[x.k]} المناوبة الآن (${arD(x.pres)} من ${arD(x.size)}).`]);
-      if (x.nmiss > 3) out.push(['mid', '⏳', `${n}: ${SHN[x.nk]} تستلم غدًا ٩ ص وقوتها المتوقعة ${arD(x.npres)} من ${arD(x.nsize)} (نقص ${arD(x.nmiss)}).`]);
       if (x.pct != null && x.pct < 0.5) out.push(['bad', '⚠', `${n}: جاهزية الآليات ${pctFmt(x.pct)} فقط.`]);
       const W = x.water.all; if (W[1].length && !W[0].length) out.push(['bad', '⚠', `${n}: لا يوجد وايت جاهز (${arD(W[1].length)} وايت غير جاهز).`]);
     });
@@ -407,7 +382,7 @@ tr.done .tt{text-decoration:line-through}
       <div class="kpi"><span class="kt">حالة الجهات</span><span class="kv"><span class="c-ok">${arD(lvCount('ok'))}</span> <small>جاهز</small></span><span class="kd"><span class="c-mid">${arD(lvCount('mid'))} يحتاج متابعة</span> · <span class="c-bad">${arD(lvCount('bad'))} حرج</span></span></div>
       <div class="kpi"><span class="kt">آليات غير جاهزة</span><span class="kv c-bad">${arD(t.c.down + t.c.maint)}</span><span class="kd">متعطلة ${arD(t.c.down)} · صيانة ${arD(t.c.maint)} · مدعومة ${arD(t.c.away)}</span></div>
       <div class="kpi"><span class="kt">الوايتات الجاهزة</span><span class="kv">${arD(t.wr)} <small>من ${arD(t.wt)}</small></span><span class="kd">في كل الجهات</span></div>
-      <div class="kpi"><span class="kt">القوة المناوبة الآن</span><span class="kv">${arD(t.pres)} <small>من ${arD(t.size)}</small></span><span class="kd ${t.size - t.pres > 0 ? 'c-bad' : ''}">${t.size - t.pres > 0 ? 'نقص ' + arD(t.size - t.pres) : 'مكتملة'}</span></div>
+      <div class="kpi"><span class="kt">القوة المناوبة الآن</span><span class="kv">${arD(t.pres)} <small>من ${arD(t.size)}</small></span><span class="kd">في الورديات المناوبة</span></div>
       <div class="kpi"><span class="kt">أعطال المباني</span><span class="kv ${t.faults ? 'c-mid' : ''}">${arD(t.faults)} <small>غير منجزة</small></span><span class="kd">معدات عند جهات ولم ترجع: ${arD(t.eq)}</span></div>
     </section>`;
 
@@ -422,7 +397,7 @@ tr.done .tt{text-decoration:line-through}
       <tbody>${list.map(row).join('')}<tr class="tot"><td>الإجمالي</td><td></td><td>${t.pct == null ? '—' : esc(pctFmt(t.pct))}</td><td>${arD(t.V)}</td><td>${arD(t.c.ready)}</td><td>${arD(t.c.down)}</td><td>${arD(t.c.maint)}</td><td>${arD(t.c.away)}</td><td>${arD(t.wr)} / ${arD(t.wt)}</td><td>${arD(R.reduce((s, x) => s + x.staffN, 0))}</td><td>${arD(t.pres)} من ${arD(t.size)}</td><td>${arD(t.faults)}</td></tr></tbody></table></div></section>`;
 
     const al = alerts();
-    const alertsHtml = `<section class="panel" aria-label="تنبيهات"><div class="sh"><h2>تنبيهات تحتاج قرارًا</h2><span class="cnt">${arD(al.length)}</span></div>${al.length ? `<ul class="alerts">${al.map(([l, i, s]) => `<li class="a-${l}"><span class="ic">${i}</span><span>${esc(s)}</span></li>`).join('')}</ul>` : '<div class="none">لا توجد تنبيهات — كل الجهات في وضع جيد.</div>'}</section>`;
+    const alertsHtml = `<section class="panel" aria-label="تنبيهات"><div class="sh"><h2>تنبيهات الجاهزية</h2><span class="cnt">${arD(al.length)}</span></div>${al.length ? `<ul class="alerts">${al.map(([l, i, s]) => `<li class="a-${l}"><span class="ic">${i}</span><span>${esc(s)}</span></li>`).join('')}</ul>` : '<div class="none">لا توجد تنبيهات — كل الجهات في وضع جيد.</div>'}</section>`;
 
     const nr = R.filter((x) => x.notReady.length);
     const nrHtml = `<section class="panel" aria-label="الآليات غير الجاهزة"><div class="sh"><h2>الآليات غير الجاهزة</h2><span class="cnt">${arD(t.c.down + t.c.maint)}</span><span class="grow"></span>${nr.length ? '<button type="button" class="btn noprint" data-act="copyDown">نسخ رسالة للصيانة</button>' : ''}</div>
@@ -432,123 +407,7 @@ tr.done .tt{text-decoration:line-through}
     const awHtml = `<section class="panel" aria-label="تحركات الدعم"><div class="sh"><h2>تحركات الدعم بين الجهات</h2><span class="cnt">${arD(t.c.away)}</span></div>
       ${aw.length ? aw.map((x) => `<div class="grp"><h3>من ${esc(x.u.name)}</h3>${x.away.map((v) => `<div class="row"><span class="code"><bdi dir="ltr">${esc(v.code || '—')}</bdi></span><span class="grow">${esc(v.name || 'آلية')}<small>${esc(v.statusNote ? 'إلى: ' + enj(v.statusNote) : 'الجهة غير محددة')}${v.statusAction ? ' — ' + esc(v.statusAction) : ''}</small></span><span class="pill p-away"><i></i>مدعومة</span></div>`).join('')}</div>`).join('') : '<div class="none">لا توجد آليات مدعومة لجهات أخرى الآن.</div>'}</section>`;
 
-    const tkHtml = mgrTasks();
-
-    $('main').innerHTML = kpis + alertsHtml + cards + tkHtml + `<div class="two">${nrHtml}${awHtml}</div>` + table + `<p class="foot">البيانات من آخر نسخة منشورة لكل جهة، وتتحدث تلقائيًا كل ٥ دقائق. الحالة: «حرج» = جاهزية أقل من ٥٠٪ أو نقص أكثر من ٣ أفراد، «يحتاج متابعة» = جاهزية أقل من ٨٠٪ أو أي نقص في الوردية.</p>`;
-  }
-
-  /* ---------- مهام لوحة المدير (خاصة بالمدير، ولا علاقة لها بمهام الجهات الداخلية) ---------- */
-  const TK = { todo: ['لم تبدأ', 'p-todo'], run: ['جارية', 'p-run'], late: ['متأخرة', 'p-late'], done: ['منجزة', 'p-ok'] };
-  const MT = { items: [], loaded: false, f: 'open', edit: false };
-  const TKFILE = (cfg.dbDir || 'data/manager/db') + '/tasks.json';
-  const hnum = () => (HFN ? HFN.format(new Date()).replace(/[‏\s]/g, '').replace(/هـ?$/, '') + 'هـ' : '');
-  const token = () => ls.get('isnad-gh-token') || '';
-  const b64e = (str) => { const b = new TextEncoder().encode(str); let x = ''; for (let i = 0; i < b.length; i += 0x8000) x += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(x); };
-  const b64d = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, '')), (c) => c.charCodeAt(0)));
-  async function gh(path, opts = {}) {
-    const r = await fetch('https://api.github.com/repos/' + cfg.repo + path, { ...opts, cache: 'no-store', headers: { Authorization: 'Bearer ' + (opts.token || token()), Accept: 'application/vnd.github+json' } });
-    if (r.status === 404) return null;
-    if (r.status === 409 || r.status === 422) throw { code: 'conflict' };
-    if (!r.ok) throw { code: r.status === 401 || r.status === 403 ? 'denied' : 'network' };
-    return r.json();
-  }
-  const enc = (p) => p.split('/').map(encodeURIComponent).join('/');
-  async function readTasks() {
-    const m = await gh('/contents/' + enc(TKFILE) + '?ref=' + encodeURIComponent(cfg.branch || ''));
-    return { sha: m && m.sha, all: m ? JSON.parse(b64d(m.content)) : {} };
-  }
-  async function loadTasks() {
-    try {
-      if (token()) MT.items = toList((await readTasks()).all);
-      else { const r = await fetch((cfg.web || '') + 'db.json', { cache: 'no-store' }); MT.items = r.ok ? toList(((await r.json()).collections || {}).tasks) : []; }
-    } catch (e) { MT.items = MT.items || []; }
-    MT.loaded = true; paintTasks();
-  }
-  const toList = (o) => Object.entries(o || {}).map(([id, t]) => Object.assign({ id }, t));
-  let q = Promise.resolve();
-  // كل تعديل: قراءة أحدث نسخة من المستودع ثم الحفظ (مع إعادة المحاولة إن سبق تعديل آخر)
-  function saveTask(id, mutate, msg) {
-    const run = q.catch(() => {}).then(async () => {
-      for (let i = 0; ; i++) {
-        try {
-          const cur = await readTasks(), next = mutate(cur.all[id]);
-          if (next === undefined) delete cur.all[id]; else cur.all[id] = next;
-          await gh('/contents/' + enc(TKFILE), { method: 'PUT', body: JSON.stringify({ message: 'مهام لوحة المدير: ' + msg, content: b64e(JSON.stringify(cur.all, null, 1) + '\n'), sha: cur.sha || undefined, branch: cfg.branch || undefined }) });
-          MT.items = toList(cur.all); paintTasks(); return;
-        } catch (e) { if (e && e.code === 'conflict' && i < 3) continue; throw e; }
-      }
-    });
-    q = run;
-    return run.catch((e) => { toast(e && e.code === 'denied' ? 'مفتاح GitHub لا يملك صلاحية الحفظ' : 'تعذّر الحفظ — تحقق من الاتصال'); throw e; });
-  }
-  async function checkEdit() {
-    MT.edit = false;
-    if (token()) { try { const r = await gh(''); MT.edit = !!(r && r.permissions && r.permissions.push); } catch (e) {} }
-    paintTasks();
-  }
-  const tkSort = (a, b) => ((tkSt(a) === 'done') - (tkSt(b) === 'done')) || ((hkey(a.end) || 9e9) - (hkey(b.end) || 9e9)) || ((a.at || 0) - (b.at || 0));
-  const ICO = {
-    ok: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
-    edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
-    del: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>',
-  };
-  function mgrTasks() {
-    const all = MT.items, c = { todo: 0, run: 0, late: 0, done: 0 };
-    all.forEach((t) => c[tkSt(t)]++);
-    const f = MT.f, list = all.filter((t) => f === 'all' || (f === 'open' ? tkSt(t) !== 'done' : tkSt(t) === f)).sort(tkSort);
-    const chip = (k, l, n) => `<button type="button" class="chip" data-act="tkF" data-v="${k}" aria-pressed="${f === k}">${l} ${arD(n)}</button>`;
-    const head = `<div class="sh"><h2>مهام مدير الإدارة</h2><span class="cnt">${arD(all.length)}</span><span class="muted small">خاصة بلوحة المدير — مهام المراكز داخلية لكل مركز ولا تظهر هنا</span><span class="grow"></span>${MT.edit ? '<button type="button" class="btn primary noprint" data-act="tkAdd">+ إضافة مهمة</button>' : '<button type="button" class="btn noprint" data-act="tkToken">تفعيل التعديل</button>'}</div>`;
-    if (!MT.loaded) return `<section class="panel" id="mtasks">${head}<div class="none">جارٍ التحميل…</div></section>`;
-    const chips = all.length ? `<div class="chips" style="margin-bottom:10px">${chip('open', 'المفتوحة', all.length - c.done)}${chip('late', 'المتأخرة', c.late)}${chip('run', 'الجارية', c.run)}${chip('todo', 'لم تبدأ', c.todo)}${chip('done', 'المنجزة', c.done)}${chip('all', 'الكل', all.length)}</div>` : '';
-    const body = !all.length ? `<div class="none">لا توجد مهام بعد.${MT.edit ? ' أضف مهمة بزر «إضافة مهمة».' : ''}</div>`
-      : !list.length ? '<div class="none">لا توجد مهام في هذا التصنيف.</div>'
-      : `<div class="tw"><table><thead><tr><th>نوع المهمة</th><th>المكلف بالمهمة</th><th>تاريخ البدء</th><th>تاريخ الانتهاء</th><th>الحالة</th>${MT.edit ? '<th class="noprint"><span style="position:absolute;clip:rect(0 0 0 0)">إجراءات</span></th>' : ''}</tr></thead><tbody>${list.map((t) => { const st = tkSt(t); return `<tr class="${st === 'done' ? 'done' : ''}"><td class="n"><span class="tt">${esc(t.type || 'مهمة')}</span>${t.note ? `<br><span class="muted small" style="font-weight:500">${esc(t.note)}</span>` : ''}</td><td>${esc(t.assignee || '—')}</td><td>${esc(t.start || '—')}</td><td>${esc(t.end || '—')}</td><td><span class="pill ${TK[st][1]}"><i></i>${TK[st][0]}</span></td>${MT.edit ? `<td class="ra noprint"><button type="button" class="ibtn" data-act="tkDone" data-id="${esc(t.id)}" title="${t.done ? 'إرجاعها مفتوحة' : 'تم الإنجاز'}" aria-label="${t.done ? 'إرجاعها مفتوحة' : 'تم الإنجاز'}">${ICO.ok}</button><button type="button" class="ibtn" data-act="tkEdit" data-id="${esc(t.id)}" aria-label="تعديل">${ICO.edit}</button><button type="button" class="ibtn del" data-act="tkDel" data-id="${esc(t.id)}" aria-label="حذف">${ICO.del}</button></td>` : ''}</tr>`; }).join('')}</tbody></table></div>`;
-    const hint = !MT.edit && token() ? '<div class="hint">مفتاح GitHub المحفوظ لا يملك صلاحية الحفظ.</div>' : '';
-    return `<section class="panel" id="mtasks">${head}${chips}${body}${hint}</section>`;
-  }
-  function paintTasks() { const el = $('mtasks'); if (el) el.outerHTML = mgrTasks(); }
-  const closeModal = () => { $('modal').hidden = true; $('modal').innerHTML = ''; };
-  function taskForm(t) {
-    const edit = !!t.id;
-    t = t || {};
-    $('modal').innerHTML = `<form class="mbox" id="tkform"><h2>${edit ? 'تعديل مهمة' : 'إضافة مهمة'}</h2>
-      <div class="fld"><label for="t_type">نوع المهمة</label><input id="t_type" required value="${esc(t.type || '')}" placeholder="مثال: جرد عهدة المركز"></div>
-      <div class="mrow"><div class="fld"><label for="t_start">تاريخ البدء</label><input id="t_start" required value="${esc(t.start || hnum())}" placeholder="١/٥/١٤٤٨هـ"></div>
-      <div class="fld"><label for="t_end">تاريخ الانتهاء</label><input id="t_end" value="${esc(t.end || '')}" placeholder="١٠/٥/١٤٤٨هـ"></div></div>
-      <div class="fld"><label for="t_as">المكلف بالمهمة</label><input id="t_as" required list="t_units" value="${esc(t.assignee || '')}" placeholder="اسم الشخص أو الجهة"><datalist id="t_units">${(cfg.units || []).map((u) => `<option value="${esc(u.name)}">`).join('')}</datalist></div>
-      <div class="fld"><label for="t_note">ملاحظات (اختياري)</label><textarea id="t_note">${esc(t.note || '')}</textarea></div>
-      <div class="err" id="t_err" role="alert" hidden></div>
-      <div class="mact"><button type="submit" class="btn primary" id="t_sub">${edit ? 'حفظ' : 'إضافة'}</button><button type="button" class="btn" data-act="close">إلغاء</button></div></form>`;
-    $('modal').hidden = false; $('t_type').focus();
-    $('tkform').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const x = { type: $('t_type').value.trim(), start: $('t_start').value.trim(), end: $('t_end').value.trim(), assignee: $('t_as').value.trim(), note: $('t_note').value.trim() };
-      if (!x.type || !x.start || !x.assignee) { $('t_err').textContent = 'أكمل نوع المهمة وتاريخ البدء والمكلف بها'; $('t_err').hidden = false; return; }
-      if (x.end && hkey(x.end) && hkey(x.start) && hkey(x.end) < hkey(x.start)) { $('t_err').textContent = 'تاريخ الانتهاء قبل تاريخ البدء'; $('t_err').hidden = false; return; }
-      $('t_sub').disabled = true;
-      const id = t.id || Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
-      try {
-        await saveTask(id, (cur) => Object.assign({}, cur || { done: false, at: Date.now() }, x), (edit ? 'تعديل ' : 'إضافة ') + x.type);
-        closeModal(); toast(edit ? 'تم حفظ التعديل' : 'أُضيفت المهمة');
-      } catch (er) { $('t_sub').disabled = false; }
-    });
-  }
-  function tokenForm() {
-    $('modal').innerHTML = `<form class="mbox" id="tokform"><h2>تفعيل التعديل</h2><div class="muted small">أدخل مفتاح GitHub (نفس المفتاح المستخدم لتفعيل التعديل داخل الجهات). يُحفظ في هذا المتصفح فقط.</div>
-      <div class="fld"><label for="tok">مفتاح GitHub</label><input id="tok" type="password" autocomplete="off" required dir="ltr"></div>
-      <div class="err" id="tok_err" role="alert" hidden></div>
-      <div class="mact"><button type="submit" class="btn primary" id="tok_sub">تفعيل</button><button type="button" class="btn" data-act="close">إلغاء</button></div></form>`;
-    $('modal').hidden = false; $('tok').focus();
-    $('tokform').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const v = $('tok').value.trim(); if (!v) return;
-      $('tok_sub').disabled = true;
-      let ok = false;
-      try { const r = await gh('', { token: v }); ok = !!(r && r.permissions && r.permissions.push); } catch (x) {}
-      $('tok_sub').disabled = false;
-      if (!ok) { $('tok_err').textContent = 'المفتاح غير صحيح أو لا يملك صلاحية الكتابة على المستودع'; $('tok_err').hidden = false; return; }
-      ls.set('isnad-gh-token', v); closeModal(); toast('تم تفعيل التعديل'); await checkEdit(); loadTasks();
-    });
+    $('main').innerHTML = kpis + alertsHtml + cards + `<div class="two">${nrHtml}${awHtml}</div>` + table + `<p class="foot">البيانات من آخر نسخة منشورة لكل جهة، وتتحدث تلقائيًا كل ٥ دقائق. الحالة حسب جاهزية الآليات: «حرج» = أقل من ٥٠٪، «يحتاج متابعة» = أقل من ٨٠٪.</p>`;
   }
 
   /* ---------- نصوص للنسخ ---------- */
@@ -574,25 +433,16 @@ tr.done .tt{text-decoration:line-through}
     const b = e.target.closest('[data-act]'); if (!b) return;
     const a = b.dataset.act;
     if (a === 'sort' || a === 'show') { S[a] = b.dataset.v; ls.set('isnad-mgr-' + a, S[a]); render(); }
-    else if (a === 'refresh') Promise.all([load(), loadTasks()]).then(() => toast('تم التحديث'));
+    else if (a === 'refresh') load().then(() => toast('تم التحديث'));
     else if (a === 'print') window.print();
     else if (a === 'copySum') copy(sumText());
     else if (a === 'copyDown') copy(downText());
-    else if (a === 'tkF') { MT.f = b.dataset.v; paintTasks(); }
-    else if (a === 'tkAdd') taskForm({});
-    else if (a === 'tkEdit') taskForm(MT.items.find((t) => t.id === b.dataset.id));
-    else if (a === 'tkDone') { const t = MT.items.find((x) => x.id === b.dataset.id); if (t) saveTask(t.id, (cur) => cur && Object.assign({}, cur, { done: !cur.done, doneAt: cur.done ? null : Date.now() }), (t.done ? 'إعادة فتح ' : 'إنجاز ') + (t.type || '')).then(() => toast(t.done ? 'أُعيدت مفتوحة' : 'تم تعليمها منجزة'), () => {}); }
-    else if (a === 'tkDel') { const t = MT.items.find((x) => x.id === b.dataset.id); if (t && confirm('حذف المهمة «' + (t.type || '') + '»؟')) saveTask(t.id, () => undefined, 'حذف ' + (t.type || '')).then(() => toast('حُذفت المهمة'), () => {}); }
-    else if (a === 'tkToken') tokenForm();
-    else if (a === 'close') closeModal();
     else if (a === 'logout') { ss.del(AUTH); if (cfg.mode === 'server') fetch('logout', { method: 'POST' }); location.replace('index.html'); }
   });
 
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('modal').hidden) closeModal(); });
-
   /* ---------- الدخول ---------- */
   function showGate() { $('app').hidden = true; $('gate').hidden = false; setTimeout(() => $('pw').focus(), 50); }
-  function showApp() { $('gate').hidden = true; $('app').hidden = false; load(); loadTasks(); checkEdit(); }
+  function showApp() { $('gate').hidden = true; $('app').hidden = false; load(); }
   async function check(pw) {
     if (cfg.mode === 'server') {
       const r = await fetch('api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw, unit: 'manager' }) });
@@ -615,7 +465,7 @@ tr.done .tt{text-decoration:line-through}
   });
 
   if (ss.get(AUTH) === '1') showApp(); else showGate();
-  setInterval(() => { if (!document.hidden && !$('app').hidden && $('modal').hidden) load(); }, 5 * 60 * 1000);
+  setInterval(() => { if (!document.hidden && !$('app').hidden) load(); }, 5 * 60 * 1000);
 })();
 </script>
 </body>

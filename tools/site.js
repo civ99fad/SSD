@@ -40,8 +40,8 @@ UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف ا
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
 // والدخول لها يفتح كل الجهات لأن المدير يطّلع على الجميع
-// ولها قائمة مهام خاصة بها في data/manager/db (لا تطّلع لوحة المدير على مهام الجهات)
-const MANAGER = { id: 'manager', name: 'لوحة مدير الإدارة', dbDir: 'data/manager/db', web: 'manager/' };
+// ولا تطّلع على مهام الجهات (داخلية لكل جهة)
+const MANAGER = { id: 'manager', name: 'لوحة مدير الإدارة' };
 
 // كلمة مرور كل جهة (البوابة نفسها بلا كلمة مرور). الأولوية:
 // SITE_PASSWORD_<الجهة> ثم units.<الجهة> في data/settings.json ثم SITE_PASSWORD ثم password ثم 1234
@@ -97,14 +97,7 @@ function managerHtml(config) {
   const logo = logoFile();
   let html = fs.readFileSync(path.join(SITE_DIR, 'manager.html'), 'utf8');
   if (logo) html = html.replace('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
-  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign(repo(), { units, unit: MANAGER.id, dbDir: MANAGER.dbDir, web: MANAGER.web, logo: logo ? 'blobs/' + logo : '' }, config))};`);
-}
-
-// بيانات لوحة المدير (مهامه الخاصة)
-function managerJson() {
-  const dir = path.join(ROOT, MANAGER.dbDir), collections = {};
-  if (fs.existsSync(dir)) for (const f of fs.readdirSync(dir)) if (f.endsWith('.json')) collections[f.slice(0, -5)] = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
-  return { collections };
+  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, unit: MANAGER.id, logo: logo ? 'blobs/' + logo : '' }, config))};`);
 }
 
 // كل مجموعات الجهة (عدا ملفات Word الكبيرة في db/files) + خريطة معرّف الملف ← مساره
@@ -132,4 +125,4 @@ function logoFile() {
 
 const blobFiles = () => fs.readdirSync(BLOBS_DIR).filter((f) => /^[0-9a-f]{32}\.[a-z0-9]+$/.test(f));
 
-module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, MANAGER, unitDb, password, passwordHash, pageHtml, portalHtml, managerHtml, managerJson, dbJson, blobFiles, logoFile };
+module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, MANAGER, unitDb, password, passwordHash, pageHtml, portalHtml, managerHtml, dbJson, blobFiles, logoFile };
