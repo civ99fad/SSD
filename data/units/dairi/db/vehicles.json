@@ -1,0 +1,168 @@
+{
+ "d01": {
+  "code": "6/1",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ ص م 3961",
+  "model": "2010",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388912,
+  "updated": 1790773388912
+ },
+ "d02": {
+  "code": "6/2",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "ب ب ق 2214",
+  "model": "2015",
+  "status": "down",
+  "statusNote": "بطارية",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388913,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-d02",
+    "note": "",
+    "title": "متعطلة بالمقر — بطارية",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388913,
+  "updated": 1790773388913
+ },
+ "d03": {
+  "code": "6/4",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ م ك 4429",
+  "model": "2012",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388914,
+  "updated": 1790773388914
+ },
+ "d04": {
+  "code": "6/5",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "أ أ د 9904",
+  "model": "2004",
+  "status": "maint",
+  "statusNote": "رجيع",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388915,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-d04",
+    "note": "",
+    "title": "في الصيانة — رجيع",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388915,
+  "updated": 1790773388915
+ },
+ "d05": {
+  "code": "منقذ 2",
+  "name": "جيب تايوتا ٤ أبواب",
+  "make": "تويوتا",
+  "plate": "ب ع ح 3651",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388916,
+  "updated": 1790773388916
+ },
+ "d06": {
+  "code": "",
+  "name": "جيب تايوتا ٤ أبواب",
+  "make": "تويوتا",
+  "plate": "ب ق ل 5984",
+  "model": "2011",
+  "status": "maint",
+  "statusNote": "رجيع",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388917,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-d06",
+    "note": "",
+    "title": "في الصيانة — رجيع",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388917,
+  "updated": 1790773388917
+ },
+ "d07": {
+  "code": "",
+  "name": "جيب باترول ٤ أبواب",
+  "make": "نيسان",
+  "plate": "أ ن ل 6436",
+  "model": "2009",
+  "status": "maint",
+  "statusNote": "انقطاع سير المكينة",
+  "statusAction": "تم التحويل",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388918,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-d07",
+    "note": "الإجراء المتخذ: تم التحويل",
+    "title": "في الصيانة — انقطاع سير المكينة",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388918,
+  "updated": 1790773388918
+ }
+}
