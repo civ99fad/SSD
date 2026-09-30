@@ -102,7 +102,6 @@ main{max-width:1240px;margin:-44px auto 0;padding:0 16px 48px;display:flex;flex-
 
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .ucard{display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
-.ucard:hover{border-color:var(--accent);box-shadow:0 10px 26px rgba(14,61,44,.12);transform:translateY(-2px)}
 .ucard.lv-bad{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
 .ucard.lv-none{opacity:.72}
 .uhead{display:flex;align-items:center;gap:8px}
@@ -328,9 +327,9 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 
   function card(x) {
     const u = x.u;
-    if (x.empty) return `<a class="ucard lv-none" href="${esc(u.id)}.html"><div class="uhead"><b>${esc(u.name)}</b><span class="badge"><i></i>${LV.none}</span></div><div class="uempty">${x.ok ? 'لم تُدخل آليات أو أفراد في هذه الجهة حتى الآن.' : 'تعذّر تحميل بيانات الجهة.'}</div><span class="ugo">دخول ←</span></a>`;
+    if (x.empty) return `<div class="ucard lv-none"><div class="uhead"><b>${esc(u.name)}</b><span class="badge"><i></i>${LV.none}</span></div><div class="uempty">${x.ok ? 'لم تُدخل آليات أو أفراد في هذه الجهة حتى الآن.' : 'تعذّر تحميل بيانات الجهة.'}</div></div>`;
     const w = x.water.all;
-    return `<a class="ucard lv-${x.lv}" href="${esc(u.id)}.html">
+    return `<div class="ucard lv-${x.lv}">
       <div class="uhead"><b>${esc(u.name)}</b><span class="badge"><i></i>${LV[x.lv]}</span></div>
       <div class="upct"><strong class="${lvColor(x)}">${esc(pct0(x))}</strong><span class="muted small">جاهزية الآليات · ${arD(x.c.ready)} من ${arD(x.rated)}</span></div>
       ${bar(x.c)}
@@ -344,8 +343,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
         <div><dt>أعطال المبنى</dt><dd class="${x.faults.length ? 'c-mid' : ''}">${arD(x.faults.length)}</dd></div>
         <div><dt>معدات لم ترجع</dt><dd>${arD(x.eqOut.length)}</dd></div>
       </dl>
-      <span class="ugo">دخول ${esc(u.name)} ←</span>
-    </a>`;
+    </div>`;
   }
 
   function totals() {

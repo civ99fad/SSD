@@ -1381,7 +1381,7 @@ function viewForms(){
   const head=`<header class="ph"><div class="ph-t"><h1>نماذج ومحاضر</h1><span class="count">موحّدة لجميع المراكز</span></div>${edit?`<button type="button" class="btn primary" data-act="formAdd">${ICON.plus}${esc(C.add)}</button>`:''}</header>`;
   const tabs=`<div class="fchips" role="tablist" aria-label="القسم">${Object.entries(FMK).map(([id,c])=>`<button type="button" class="fchip${id===k?' on':''}" role="tab" aria-selected="${id===k}" data-act="formTab" data-id="${id}">${esc(c.t)} <b>${arD(cnt(id))}</b></button>`).join('')}</div>`;
   if (!S.loadedFm) return head+tabs+loading();
-  const q=norm(S.fmq), mine=all.filter(p=>(p.kind||'minutes')===k).sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'ar',{numeric:true}));
+  const q=norm(S.fmq), mine=all.filter(p=>(p.kind||'minutes')===k).sort((a,b)=>((a.order||9e9)-(b.order||9e9))||String(a.title||'').localeCompare(String(b.title||''),'ar',{numeric:true}));
   const list=mine.filter(p=>!q||norm([p.title,p.note,p.fileName].join(' ')).includes(q));
   const tools=mine.length?`<div class="toolbar"><label class="search"><span class="vh">بحث في ${esc(C.t)}</span>${ICON.search}<input id="fmq" type="search" placeholder="ابحث باسم ${esc(C.one)}" value="${esc(S.fmq||'')}"></label></div>`:'';
   let body;
@@ -1897,7 +1897,8 @@ const ACT = {
   formOpen: id => { const p=getForm(id); if(!p) return; const t=p.title||p.fileName||'ملف'; if (p.db) openDocxViewer(p.db, t); else openViewer(p.file, p.fileName||t); },
   formAdd: () => { const k=FMK[S.fmk]?S.fmk:'minutes'; openForm({title:FMK[k].add, submit:'إضافة', fields:formFields(k), onSubmit: async x => {
     const ref=S.db.collection('forms').doc(); const f=await storeLibFile(x.file, 'shared-forms-'+ref.id);
-    await ref.set(Object.assign({kind:k, title:x.title, note:x.note, at:Date.now()}, f)); toast('أُضيف '+FMK[k].one+' لجميع المراكز'); }}); },
+    const order=Math.max(0,...(S.forms||[]).filter(p=>(p.kind||'minutes')===k).map(p=>+p.order||0))+1;
+    await ref.set(Object.assign({kind:k, title:x.title, note:x.note, order, at:Date.now()}, f)); toast('أُضيف '+FMK[k].one+' لجميع المراكز'); }}); },
   formEdit: id => { const p=getForm(id); if(!p) return; const k=p.kind||'minutes'; openForm({title:'تعديل '+FMK[k].one, fields:formFields(k,p), onSubmit: async x => {
     const patch={title:x.title, note:x.note}; if (x.file) Object.assign(patch, await storeLibFile(x.file, 'shared-forms-'+id+'-'+uid()));
     await S.db.doc('forms/'+id).update(patch); if (x.file) dropLibFile(p); toast('حُفظ التعديل'); }}); },
