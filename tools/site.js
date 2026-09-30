@@ -14,15 +14,15 @@ const SETTINGS_FILE = path.join(ROOT, 'data', 'settings.json');
 // names: نصوص الصفحة الخاصة بالقسم تُستبدل لكل جهة
 // المراكز: نفس صفحة القسم وميزاته، وكل مركز يبدأ فارغًا ببيانات مستقلة (بالترتيب الذي تظهر به في البوابة)
 const CENTERS = [
-  ['sharaf', 'مركز شراف'],
   ['balad', 'مركز البلد'],
+  ['sharaf', 'مركز شراف'],
   ['muntazah', 'مركز المنتزه'],
   ['sinaiya', 'مركز الصناعية'],
   ['aziziya', 'مركز العزيزية'],
   ['dairi', 'مركز الدائري'],
   ['aja', 'مركز أجا'],
   ['jabal', 'مركز الجبل'],
-  ['hazmat', 'مركز التدخل بالمواد الخطرة'],
+  ['hazmat', 'مركز التدخل بحوادث المواد الخطرة'],
 ];
 const centerNames = (name) => ({
   'أرشيف قسم الدعم والإسناد': 'أرشيف ' + name,
@@ -31,20 +31,24 @@ const centerNames = (name) => ({
   "'مستودع الإسناد (الرقم غير محدد)'": "'مستودع المركز (الرقم غير محدد)'",
   'مقصور استخدامه على مدير القسم': 'مقصور استخدامه على مدير المركز',
 });
-const UNITS = {
-  isnad: { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {} },
-};
+const UNITS = {};
 for (const [id, name] of CENTERS) {
   UNITS[id] = { name, desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name) };
 }
+// قسم الدعم والإسناد آخر البوابة
+UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {} };
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 
-function password() {
+// كلمة مرور كل جهة (البوابة نفسها بلا كلمة مرور). الأولوية:
+// SITE_PASSWORD_<الجهة> ثم units.<الجهة> في data/settings.json ثم SITE_PASSWORD ثم password ثم 1234
+function password(unit) {
   let settings = {};
   try {
     settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
   } catch {}
-  return String(process.env.SITE_PASSWORD || settings.password || '1234');
+  const env = process.env['SITE_PASSWORD_' + String(unit || '').toUpperCase()];
+  const own = (settings.units || {})[unit];
+  return String(env || own || process.env.SITE_PASSWORD || settings.password || '1234');
 }
 
 // المستودع والفرع اللذان يحفظ فيهما المسؤول تعديلاته (GitHub Actions و Render يمرّرانهما تلقائيًا)

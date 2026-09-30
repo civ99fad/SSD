@@ -584,6 +584,10 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         <span>لوحة اليوم</span>
       </button>
+      <button type="button" data-act="nav" data-id="tasks" id="nav-tasks">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="m3 18 1.5 1.5L7 17"/></svg>
+        <span>قائمة المهام</span>
+      </button>
       <div class="navh" aria-hidden="true">الأسطول والتجهيزات</div>
       <button type="button" data-act="nav" data-id="vehicles" id="nav-vehicles">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>
@@ -894,14 +898,16 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : 'warehouses';
-  for (const k of ['dash','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : 'warehouses';
+  for (const k of ['dash','tasks','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الكادر البشري: '+a.length+' — افتح «الكادر البشري»'),600); } }
   if (S.lastSect!==sect){ S.lastSect=sect; const nb=$('#nav-'+sect), nv=nb&&nb.parentElement; if (nv && nv.scrollWidth>nv.clientWidth){ const r=nb.getBoundingClientRect(), R=nv.getBoundingClientRect(); if (r.left<R.left||r.right>R.right) nv.scrollLeft += (r.left+r.width/2)-(R.left+R.width/2); } }
   if (S.dbFailed) return paint(`<div class="panel state"><b>تعذّر الوصول إلى البيانات.</b><br>أعد تحميل الصفحة، وإن استمرت المشكلة فتأكد أن الموقع مشارك معك.</div>`);
   if ((S.gq||'').trim()) paint(gSearchBar()+viewSearch(S.gq));
   else if (v.name==='dash') paint(gSearchBar()+viewDash());
+  else if (v.name==='tasks') paint(gSearchBar()+viewTasks());
   else if (v.name==='vehicles') paint(gSearchBar()+viewVehicles());
   else if (v.name==='vehicle') paint(gSearchBar()+viewVehicle(v.id));
   else if (v.name==='warehouses') paint(gSearchBar()+viewWarehouses());
@@ -1308,6 +1314,35 @@ const fStOf = f => FSTAT[f.status] ? f.status : 'open';
 const fPill = (f, cls='') => `<span class="stpill fs-${fStOf(f)} ${cls}"><i aria-hidden="true"></i>${FSTAT[fStOf(f)]}</span>`;
 const fCount = n => n===0 ? 'لا توجد أعطال' : plural(n,'عطل واحد','عطلان','أعطال','عطلاً');
 const WRENCH = (s=40)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>`;
+/* ---------- قائمة المهام ---------- */
+const TKST = {todo:['لم تبدأ','hs-in'], run:['جارية','hs-mid'], late:['متأخرة','hs-bad'], done:['منجزة','hs-ok']};
+const tkSt = t => { if (t.done) return 'done'; const d0=dayKey(0), st=hkey(t.start), en=hkey(t.end); if (en && d0 && d0>en) return 'late'; if (st && d0 && d0<st) return 'todo'; return 'run'; };
+const tkCount = n => n===0 ? 'لا توجد مهام' : plural(n,'مهمة واحدة','مهمتان','مهام','مهمة');
+const getTk = id => (S.tasks||[]).find(t=>t.id===id);
+const tkFields = t => [
+  {id:'type',label:'نوع المهمة',value:t.type,required:true,placeholder:'مثال: جرد المستودع رقم ١'},
+  [{id:'start',label:'تاريخ البدء',value:t.start||hnum(),required:true,placeholder:'مثال: 1448/4/20'},{id:'end',label:'تاريخ الانتهاء',value:t.end,placeholder:'مثال: 1448/4/25'}],
+  {id:'assignee',label:'المكلف بالمهمة',value:t.assignee,required:true,list:(S.staff||[]).map(pLabel),placeholder:'اسم الفرد أو الجهة'},
+  {id:'note',label:'ملاحظات (اختياري)',type:'textarea',value:t.note}
+];
+function viewTasks(){
+  const edit=S.canEdit, all=S.tasks||[];
+  const head=`<header class="ph"><div class="ph-t"><h1>قائمة المهام</h1><span class="count">${esc(tkCount(all.length))}</span></div>${edit?`<button type="button" class="btn primary" data-act="taskAdd">${ICON.plus}إضافة مهمة</button>`:''}</header>`;
+  if (!S.loadedTk) return head+loading();
+  if (!all.length) return head+`<div class="panel empty"><b>لا توجد مهام بعد.</b>${edit?'أضف مهمة بزر «إضافة مهمة» مع تاريخ البدء والانتهاء والمكلف بها.':''}</div>`;
+  const c={todo:0,run:0,late:0,done:0}; all.forEach(t=>c[tkSt(t)]++);
+  const f=S.tkf||'open', q=norm(S.tkq);
+  const list=all.filter(t=>(f==='all'||(f==='open'?tkSt(t)!=='done':tkSt(t)===f)) && (!q||norm([t.type,t.assignee,t.note,t.start,t.end].join(' ')).includes(q)))
+    .sort((a,b)=>((tkSt(a)==='done')-(tkSt(b)==='done')) || ((hkey(a.end)||9e9)-(hkey(b.end)||9e9)) || ((a.at||0)-(b.at||0)));
+  const chip=(k,l,n)=>`<button type="button" class="fchip${f===k?' on':''}" data-act="taskF" data-id="${k}" aria-pressed="${f===k}">${esc(l)} <b>${n}</b></button>`;
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في المهام</span>${ICON.search}<input id="tkq" type="search" placeholder="ابحث بنوع المهمة أو المكلف" value="${esc(S.tkq||'')}"></label></div>
+    <div class="fchips" role="group" aria-label="تصفية حسب الحالة">${chip('open','غير المنجزة',all.length-c.done)}${chip('late','متأخرة',c.late)}${chip('run','جارية',c.run)}${chip('todo','لم تبدأ',c.todo)}${chip('done','منجزة',c.done)}${chip('all','الكل',all.length)}</div>`;
+  if (!list.length) return head+tools+`<div class="panel empty"><b>لا توجد مهام مطابقة.</b>غيّر التصفية أو كلمة البحث.</div>`;
+  const rows=list.map((t,i)=>{ const st=tkSt(t);
+    return `<tr${st==='done'?' class="vac"':''}><td class="n">${i+1}</td><td class="nm">${esc(t.type||'—')}${t.note?`<div class="hper">${esc(t.note)}</div>`:''}</td><td class="hdate">${esc(t.start||'—')}</td><td class="hdate">${esc(t.end||'—')}</td><td>${esc(t.assignee||'—')}</td><td><span class="stpill ${TKST[st][1]}"><i aria-hidden="true"></i>${TKST[st][0]}</span></td>${edit?`<td class="ra wide"><button type="button" class="chk${t.done?' on':''}" data-act="taskDone" data-id="${esc(t.id)}" aria-pressed="${!!t.done}" aria-label="${t.done?'إلغاء الإنجاز':'تم الإنجاز'}" title="${t.done?'إلغاء الإنجاز':'تم الإنجاز'}">✓</button><button type="button" class="icon-btn" data-act="taskEdit" data-id="${esc(t.id)}" aria-label="تعديل المهمة">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="taskDel" data-id="${esc(t.id)}" aria-label="حذف المهمة">${ICON.del}</button></td>`:''}</tr>`; }).join('');
+  return head+tools+`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>#</th><th>نوع المهمة</th><th>تاريخ البدء</th><th>تاريخ الانتهاء</th><th>المكلف بالمهمة</th><th>الحالة</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
 function viewFaults(){
   const edit=S.canEdit, all=S.faults||[];
   const head=`<header class="ph"><div class="ph-t"><h1>أعطال المبنى</h1><span class="count">${esc(fCount(all.length))}</span></div>${edit?`<button type="button" class="btn primary" data-act="addFault">${ICON.plus}تسجيل عطل</button>`:''}</header>`;
@@ -1786,6 +1821,16 @@ const ACT = {
   nav: id => go(id),
   logout: () => { S.entered=false; store.del('isnad-entered'); closeModal(); render(); },
   openVehicle: id => go('vehicle', id),
+  taskF: k => { S.tkf=k; render(); },
+  taskAdd: () => openForm({title:'إضافة مهمة', submit:'إضافة', fields:tkFields({}), onSubmit: async x => {
+    await S.db.collection('tasks').doc().set(Object.assign(x, {done:false, at:Date.now()})); toast('أُضيفت المهمة'); }}),
+  taskEdit: id => { const t=getTk(id); if(!t) return; openForm({title:'تعديل المهمة', fields:tkFields(t), onSubmit: async x => {
+    await S.db.doc('tasks/'+id).update(Object.assign(x, {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
+  taskDel: id => { const t=getTk(id); if(!t) return; openConfirm(`حذف المهمة «${t.type||'المهمة'}»؟`, 'حذف المهمة', async () => {
+    await S.db.doc('tasks/'+id).delete(); toast('حُذفت المهمة'); }); },
+  taskDone: async id => { const t=getTk(id); if(!t) return;
+    try { await S.db.doc('tasks/'+id).update({done:!t.done, doneAt:t.done?null:Date.now(), updated:Date.now()}); toast(t.done?'أُعيدت المهمة غير منجزة':'تم إنجاز المهمة'); }
+    catch(x){ toast(errMsg(x)); } },
   openFault: id => go('fault', id),
   filterFault: k => { S.ffs=k; render(); },
   addFault: () => openForm({title:'تسجيل عطل', submit:'تسجيل', fields:[...faultFields({}),
@@ -2062,6 +2107,7 @@ document.addEventListener('input', e => {
   else if (e.target.id==='eqb'){ S.eqb=e.target.value; render(); }
   else if (e.target.id==='eqs'){ S.eqs=e.target.value; render(); }
   else if (e.target.id==='fq'){ S.fq=e.target.value; render(); }
+  else if (e.target.id==='tkq'){ S.tkq=e.target.value; render(); }
   else if (e.target.id==='ft'){ S.ft=e.target.value; render(); }
   else if (e.target.dataset && e.target.dataset.lib){ S.lib[e.target.dataset.lib][e.target.dataset.f]=e.target.value; render(); }
   else if (e.target.id==='wq'){ S.wq=e.target.value; render(); }
@@ -2110,6 +2156,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   const fail = () => { S.dbFailed=true; render(); };
   db.collection('vehicles').onSnapshot(s => { S.vehicles=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedV=true; render(); }, fail);
   db.collection('faults').onSnapshot(s => { S.faults=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedF=true; render(); }, fail);
+  db.collection('tasks').onSnapshot(s => { S.tasks=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedTk=true; render(); }, fail);
   for (const key of Object.keys(LIBS)) db.collection(key).onSnapshot(s => { S.lib[key].items=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.lib[key].loaded=true; render(); }, fail);
   db.collection('warehouses').onSnapshot(s => { S.warehouses=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedW=true; render(); }, fail);
   for (const c of ['staff','absences','rewards','missions']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.hl[c]=1; S.loadedH=Object.keys(S.hl).length>=4; render(); }, fail);

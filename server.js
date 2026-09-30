@@ -35,15 +35,21 @@ function parseCookies(req) {
   return out;
 }
 
-function isAuthed(req) {
+// الجلسة تحفظ الجهات التي أُدخلت كلمة مرورها: { exp, units: Set }
+function session(req) {
   const token = parseCookies(req)[SESSION_COOKIE];
-  if (!token || !sessions.has(token)) return false;
-  if (Date.now() > sessions.get(token)) {
+  const s = token && sessions.get(token);
+  if (!s) return null;
+  if (Date.now() > s.exp) {
     sessions.delete(token);
-    return false;
+    return null;
   }
-  return true;
+  return s;
 }
+const isAuthed = (req, unit) => {
+  const s = session(req);
+  return !!s && (unit ? s.units.has(unit) : s.units.size > 0);
+};
 
 function safeEqual(a, b) {
   const ha = crypto.createHash('sha256').update(String(a)).digest();
@@ -104,16 +110,21 @@ async function handle(req, res) {
   if (logo && pathname === '/blobs/' + logo) return sendFile(res, path.join(site.BLOBS_DIR, logo)); // أيقونة التبويب قبل الدخول
 
   if (pathname === '/api/login' && req.method === 'POST') {
-    let password = '';
+    let password = '', unit = '';
     try {
-      password = JSON.parse(await readBody(req)).password || '';
+      ({ password = '', unit = '' } = JSON.parse(await readBody(req)));
     } catch {}
-    // على الاستضافة تُضبط كلمة المرور من متغير البيئة SITE_PASSWORD
-    if (!safeEqual(password, site.password())) {
+    // كلمة مرور كل جهة: SITE_PASSWORD_<الجهة> أو units في data/settings.json (انظر tools/site.js)
+    if (!site.UNITS[unit] || !safeEqual(password, site.password(unit))) {
       return sendJson(res, 401, { ok: false, error: 'كلمة المرور غير صحيحة' });
     }
+    const current = session(req);
+    if (current) {
+      current.units.add(unit);
+      return sendJson(res, 200, { ok: true });
+    }
     const token = crypto.randomBytes(24).toString('hex');
-    sessions.set(token, Date.now() + SESSION_TTL_MS);
+    sessions.set(token, { exp: Date.now() + SESSION_TTL_MS, units: new Set([unit]) });
     return sendJson(res, 200, { ok: true }, {
       'Set-Cookie': `${SESSION_COOKIE}=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${SESSION_TTL_MS / 1000}${
         req.headers['x-forwarded-proto'] === 'https' ? '; Secure' : ''
@@ -127,7 +138,7 @@ async function handle(req, res) {
     return send(res, 204, '', { 'Set-Cookie': `${SESSION_COOKIE}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0` });
   }
 
-  // كل ما بعد هذا (البيانات والملفات) يتطلب تسجيل الدخول
+  // كل ما بعد هذا (البيانات والملفات) يتطلب الدخول لجهة واحدة على الأقل، وبيانات كل جهة تتطلب الدخول لها
   if (!isAuthed(req)) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
   if (req.method !== 'GET') return send(res, 405, 'Method not allowed');
 
@@ -135,6 +146,7 @@ async function handle(req, res) {
   const unitOf = (web) => Object.keys(site.UNITS).find((u) => site.UNITS[u].web === web);
   um = pathname.match(/^\/(units\/[a-z]+\/)?db\.json$/);
   if (um && unitOf(um[1] || '')) {
+    if (!isAuthed(req, unitOf(um[1] || ''))) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
     try {
       return sendJson(res, 200, site.dbJson(unitOf(um[1] || '')));
     } catch (e) {
@@ -143,7 +155,10 @@ async function handle(req, res) {
     }
   }
   let m = pathname.match(/^\/(units\/[a-z]+\/)?db\/files\/([A-Za-z0-9_-]+\.json)$/);
-  if (m && unitOf(m[1] || '')) return sendFile(res, path.join(site.unitDb(unitOf(m[1] || '')), 'files', m[2]));
+  if (m && unitOf(m[1] || '')) {
+    if (!isAuthed(req, unitOf(m[1] || ''))) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
+    return sendFile(res, path.join(site.unitDb(unitOf(m[1] || '')), 'files', m[2]));
+  }
   m = pathname.match(/^\/blobs\/([0-9a-f]{32}\.[a-z0-9]+)$/);
   if (m) return sendFile(res, path.join(site.BLOBS_DIR, m[1]));
 
