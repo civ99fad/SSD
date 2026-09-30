@@ -36,7 +36,7 @@ for (const [id, name] of CENTERS) {
   UNITS[id] = { name, desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name) };
 }
 // قسم الدعم والإسناد آخر البوابة
-UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: { 'حدود المركز': 'حدود القسم' } };
+UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {}, hide: ['bounds'] }; // قسم الإسناد ليس له حدود
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
@@ -80,6 +80,8 @@ function pageHtml(unit, config) {
   const ver = crypto.createHash('sha1').update(fs.readFileSync(path.join(SITE_DIR, 'shim.js'))).digest('hex').slice(0, 10);
   patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(cfg)};</script>\n<script src="shim.js?v=${ver}"></script>\n<script>\n(function(){`);
   for (const [from, to] of Object.entries(u.names)) patch(from, to);
+  // أقسام لا تنطبق على الجهة تُخفى من قائمتها الجانبية
+  if ((u.hide || []).length) patch('</head>', `<style>${u.hide.map((k) => '#nav-' + k).join(',')}{display:none!important}</style>\n</head>`);
   const logo = logoFile();
   if (logo) patch('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
   return html;
