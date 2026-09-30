@@ -56,7 +56,9 @@ function pageHtml(unit, config) {
   };
   patch("const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';", "const blob = id => id ? window.ISNAD.blob(id) : '';");
   const cfg = Object.assign(repo(), config, { unit, unitName: u.name, dbDir: u.dbDir, web: u.web });
-  patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(cfg)};</script>\n<script src="shim.js"></script>\n<script>\n(function(){`);
+  // ?v= بصمة الشيم: يجبر المتصفح على تحميل النسخة الجديدة بعد كل تحديث بدل نسخته المخزّنة
+  const ver = crypto.createHash('sha1').update(fs.readFileSync(path.join(SITE_DIR, 'shim.js'))).digest('hex').slice(0, 10);
+  patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(cfg)};</script>\n<script src="shim.js?v=${ver}"></script>\n<script>\n(function(){`);
   for (const [from, to] of Object.entries(u.names)) patch(from, to);
   const logo = logoFile();
   if (logo) patch('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
