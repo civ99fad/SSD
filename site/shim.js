@@ -1,6 +1,6 @@
 // يشغّل صفحة موقع Claude (page.html) خارج Claude: يوفّر window.claude.use('db' | 'user' | 'assets' | 'downloads')
-// بنفس الواجهة التي تستخدمها الصفحة، ويضيف خانة كلمة المرور لشاشة الدخول.
-// - للفريق: البيانات تُقرأ من ملفات ثابتة (db.json و blobs/) والموقع للعرض فقط.
+// بنفس الواجهة التي تستخدمها الصفحة. الدخول بكلمة المرور يتم من البوابة (portal.html)، ولكل جهة بياناتها.
+// - للفريق: البيانات تُقرأ من ملفات ثابتة (db.json للجهة و blobs/) والموقع للعرض فقط.
 // - للمسؤول: بعد إدخال مفتاح GitHub تُقرأ البيانات من المستودع مباشرة، وكل حفظ يُرفع إليه كتعديل (commit)
 //   فيُعاد نشر الموقع تلقائيًا.
 (function () {
@@ -35,14 +35,26 @@
   let blobs = {}; // معرّف الملف ← رابطه
   window.ISNAD = { blob: (id) => blobs[id] || '' };
 
-  // على الخادم لا تُطلب البيانات إلا بعد الدخول (في النسخة الثابتة تُحمّل مباشرة)
-  let entered = false;
+  // الدخول بكلمة المرور يتم من البوابة (index.html)، ومنها يختار الجهة؛ بدونه نرجع للبوابة
+  const toPortal = () => {
+    try {
+      sessionStorage.removeItem('isnad-auth');
+      sessionStorage.removeItem('isnad-entered');
+    } catch (e) {}
+    location.replace('index.html');
+  };
+  let signedIn = false;
   try {
-    entered = sessionStorage.getItem('isnad-entered') === '1';
+    signedIn = sessionStorage.getItem('isnad-auth') === '1';
+    if (signedIn) sessionStorage.setItem('isnad-entered', '1'); // تخطّي شاشة الترحيب داخل الصفحة
   } catch (e) {}
-  let authed;
-  const authReady = new Promise((res) => (authed = res));
-  if (cfg.mode !== 'server' || entered) authed();
+  if (!signedIn) {
+    document.documentElement.style.visibility = 'hidden';
+    location.replace('index.html');
+    return;
+  }
+  const WEB = cfg.web || ''; // مسار بيانات الجهة في الموقع المنشور
+  const DBDIR = cfg.dbDir || 'data/db'; // ومجلدها في المستودع
 
   // ---------- GitHub ----------
   const b64encode = (bytes) => {
@@ -119,7 +131,7 @@
   // يطبّق mutate على مستند واحد ويرفع النتيجة (undefined = حذف المستند)
   function commitDoc(c, id, mutate) {
     const single = c === 'files';
-    const path = single ? `data/db/files/${id}.json` : `data/db/${c}.json`;
+    const path = single ? `${DBDIR}/files/${id}.json` : `${DBDIR}/${c}.json`;
     const msg = `تعديل من الموقع: ${c}/${id}`;
     return serial(path, () =>
       withRetry(async () => {
@@ -146,13 +158,10 @@
   let cols = {};
 
   async function loadStatic() {
-    const r = await fetch('db.json', { cache: 'no-store' });
+    const r = await fetch(WEB + 'db.json', { cache: 'no-store' });
     if (r.status === 401) {
-      // انتهت جلسة الدخول على الخادم: نعود لشاشة الدخول
-      try {
-        sessionStorage.removeItem('isnad-entered');
-      } catch (e) {}
-      location.reload();
+      // انتهت جلسة الدخول على الخادم: نعود للبوابة
+      toPortal();
       throw new Error('unauthorized');
     }
     if (!r.ok) throw new Error(r.status);
@@ -163,7 +172,7 @@
   async function loadFromGitHub() {
     const [pub, list, tree] = await Promise.all([
       loadStatic().catch(() => ({})),
-      gh('/contents/data/db' + q),
+      gh('/contents/' + DBDIR + q),
       blobTree(),
     ]);
     const collections = {};
@@ -171,7 +180,7 @@
       (list || [])
         .filter((f) => f.type === 'file' && f.name.endsWith('.json'))
         .map(async (f) => {
-          const file = await readFile('data/db/' + f.name);
+          const file = await readFile(DBDIR + '/' + f.name);
           collections[f.name.slice(0, -5)] = JSON.parse(utf8.dec(file.b64));
         })
     );
@@ -185,8 +194,7 @@
 
   function loadDb() {
     if (!dbPromise) {
-      dbPromise = authReady
-        .then(() => (token ? loadFromGitHub() : loadStatic()))
+      dbPromise = (token ? loadFromGitHub() : loadStatic())
         .then((d) => {
           blobs = d.blobs || {};
           cols = d.collections || {};
@@ -230,10 +238,10 @@
     const read = async () => {
       if (c === 'files') {
         if (token) {
-          const f = await readFile(`data/db/files/${id}.json`);
+          const f = await readFile(`${DBDIR}/files/${id}.json`);
           return snap(id, f ? JSON.parse(utf8.dec(f.b64)) : undefined);
         }
-        const r = await fetch('db/files/' + encodeURIComponent(id) + '.json');
+        const r = await fetch(WEB + 'db/files/' + encodeURIComponent(id) + '.json');
         return snap(id, r.ok ? await r.json() : undefined);
       }
       return snap(id, ((await loadDb())[c] || {})[id]);
@@ -340,80 +348,34 @@
     },
   };
 
-  // ---------- شاشة الدخول: كلمة المرور + تفعيل التعديل ----------
-  const enter = document.getElementById('enter');
-  if (!enter) return;
+  // ---------- القائمة الجانبية: الرجوع للبوابة، وتسجيل الخروج يرجع للبوابة ----------
   const field = 'width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);font-size:15px;outline:none';
-  const box = document.createElement('div');
-  box.style.cssText = 'width:100%;margin-top:18px;text-align:start';
-  box.innerHTML =
-    '<label for="isnadPw" style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">كلمة المرور</label>' +
-    `<input id="isnadPw" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور" style="${field}">` +
-    '<div id="isnadPwErr" role="alert" style="display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600"></div>';
-  enter.before(box);
-  const input = box.querySelector('input');
-  const err = box.querySelector('#isnadPwErr');
-  let passed = false;
-
-  async function check(pw) {
-    if (cfg.mode === 'server') {
-      const r = await fetch('api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pw }),
-      });
-      return r.ok;
-    }
-    const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('isnad:' + pw));
-    return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('') === cfg.hash;
-  }
-
-  // يعمل قبل مستمع الصفحة على زر «دخول»، ولا يسمح بالمرور إلا بعد التحقق
-  enter.addEventListener('click', async (e) => {
-    if (passed) return;
-    e.stopImmediatePropagation();
-    err.style.display = 'none';
-    if (!input.value) {
-      err.textContent = 'الرجاء إدخال كلمة المرور';
-      err.style.display = 'block';
-      input.focus();
-      return;
-    }
-    enter.disabled = true;
-    let ok = false;
-    try {
-      ok = await check(input.value);
-    } catch (x) {}
-    enter.disabled = false;
-    if (!ok) {
-      err.textContent = 'كلمة المرور غير صحيحة';
-      err.style.display = 'block';
-      input.select();
-      return;
-    }
-    authed();
-    passed = true;
-    input.value = '';
-    enter.click();
-    passed = false;
-  });
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') enter.click();
-  });
-
-  // تسجيل الخروج ينهي جلسة الخادم أيضًا
   document.addEventListener(
     'click',
     (e) => {
-      if (cfg.mode === 'server' && e.target.closest('[data-act="logout"]')) fetch('logout', { method: 'POST' });
+      if (!e.target.closest('[data-act="logout"]')) return;
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      if (cfg.mode === 'server') fetch('logout', { method: 'POST' });
+      toPortal();
     },
     true
   );
+  const logout = document.querySelector('.side-foot [data-act="logout"]');
+  if (logout) {
+    const home = document.createElement('a');
+    home.className = 'logout';
+    home.href = 'index.html';
+    home.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11h14V9"/></svg>' +
+      '<span>البوابة (اختيار الجهة)</span>';
+    logout.before(home);
+  }
 
   if (!cfg.repo) return;
   const link = 'all:unset;cursor:pointer;color:var(--accent);font-weight:700';
 
-  // لوحة تفعيل التعديل: تظهر في شاشة الدخول، وفي نافذة من زر القائمة الجانبية
+  // لوحة تفعيل التعديل (تفتح في نافذة من زر القائمة الجانبية)
   function adminPanel(open) {
     const el = document.createElement('div');
     el.style.cssText = 'width:100%;font-size:13px;text-align:start';
@@ -463,12 +425,7 @@
     return el;
   }
 
-  const onWelcome = adminPanel(false);
-  onWelcome.style.marginTop = '14px';
-  enter.after(onWelcome);
-
-  // زر في القائمة الجانبية (فوق «تسجيل الخروج») يفتح نفس اللوحة في نافذة
-  const logout = document.querySelector('.side-foot [data-act="logout"]');
+  // زر في القائمة الجانبية (فوق «تسجيل الخروج») يفتح لوحة تفعيل التعديل في نافذة
   if (!logout) return;
   const sideBtn = document.createElement('button');
   sideBtn.type = 'button';
