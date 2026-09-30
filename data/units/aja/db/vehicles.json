@@ -1,0 +1,129 @@
+{
+ "j7-1": {
+  "code": "7/1",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ م ن 8197",
+  "model": "2012",
+  "status": "down",
+  "statusNote": "بالبطارية وكفرات",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790772821158,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-j7-1",
+    "note": "",
+    "title": "متعطلة بالمقر — بالبطارية وكفرات",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821158,
+  "updated": 1790772821158
+ },
+ "j7-2": {
+  "code": "7/2",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "أ هـ س 2278",
+  "model": "2013",
+  "status": "maint",
+  "statusNote": "الكارونة",
+  "statusAction": "تم التحويل",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790772821159,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-j7-2",
+    "note": "الإجراء المتخذ: تم التحويل",
+    "title": "في الصيانة — الكارونة",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821159,
+  "updated": 1790772821159
+ },
+ "j7-4": {
+  "code": "7/4",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ م ك 4463",
+  "model": "2012",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821160,
+  "updated": 1790772821160
+ },
+ "j7-5": {
+  "code": "7/5",
+  "name": "وايت مرسيدس مع قاذف",
+  "make": "مرسيدس",
+  "plate": "د ح هـ 0225",
+  "model": "1992",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "at": 1790772821158,
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "n-j7-5",
+    "text": "ملاحظة من تشكيل الآليات: جاهز نسبيًا — البريك."
+   }
+  ],
+  "created": 1790772821161,
+  "updated": 1790772821161
+ },
+ "j7-6": {
+  "code": "7/6",
+  "name": "جيب نيسان ٤ أبواب",
+  "make": "نيسان",
+  "plate": "ي أ ل 0746",
+  "model": "2008",
+  "status": "maint",
+  "statusNote": "الرديتر",
+  "statusAction": "تم التحويل",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790772821162,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-j7-6",
+    "note": "الإجراء المتخذ: تم التحويل",
+    "title": "في الصيانة — الرديتر",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821162,
+  "updated": 1790772821162
+ }
+}
