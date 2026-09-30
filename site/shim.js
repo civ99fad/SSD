@@ -27,6 +27,11 @@
   };
   const token = cfg.repo ? store.get(TOKEN_KEY) : null;
 
+  // ارتفاع الجزء الظاهر فعلًا من النافذة (بعض المتصفحات تعطي 100vh أطول منه فتختفي أسفل القائمة الجانبية)
+  const setAppH = () => document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px');
+  setAppH();
+  window.addEventListener('resize', setAppH);
+
   let blobs = {}; // معرّف الملف ← رابطه
   window.ISNAD = { blob: (id) => blobs[id] || '' };
 
