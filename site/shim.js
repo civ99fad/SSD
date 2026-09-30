@@ -57,15 +57,8 @@
       } catch (e) {}
     },
   };
-  // الدخول للوحة المدير يفتح كل الجهات، لكن «قائمة المهام» داخلية لكل جهة: لا تظهر إلا بكلمة مرور الجهة نفسها
-  const ownAuth = ss.get(AUTH_KEY) === '1';
-  const viaManager = !ownAuth && ss.get('isnad-auth-manager') === '1';
-  const signedIn = ownAuth || viaManager;
-  if (viaManager) {
-    const css = document.createElement('style');
-    css.textContent = '#nav-tasks{display:none!important}';
-    document.head.appendChild(css);
-  }
+  // كل جهة تُفتح بكلمة مرورها فقط (لوحة المدير لا تفتح الجهات)
+  const signedIn = ss.get(AUTH_KEY) === '1';
   // الصفحة تقرأ isnad-entered لتتخطى شاشة الترحيب: نضبطه حسب هذه الجهة فقط
   if (signedIn) ss.set('isnad-entered', '1');
   else ss.del('isnad-entered');
@@ -237,7 +230,6 @@
         .then((d) => {
           blobs = d.blobs || {};
           cols = d.collections || {};
-          if (viaManager) delete cols.tasks;
           return cols;
         });
     }

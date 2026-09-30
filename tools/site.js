@@ -42,7 +42,7 @@ const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
 const SHARED_COLS = ['forms'];
 // لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
-// والدخول لها يفتح كل الجهات لأن المدير يطّلع على الجميع
+// وهي للاطلاع فقط: لا تفتح صفحات الجهات (كل جهة بكلمة مرورها)
 // ولا تطّلع على مهام الجهات (داخلية لكل جهة)
 const MANAGER = { id: 'manager', name: 'لوحة مدير الإدارة' };
 

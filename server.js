@@ -48,7 +48,7 @@ function session(req) {
 }
 const isAuthed = (req, unit) => {
   const s = session(req);
-  // الدخول للوحة المدير يفتح كل الجهات
+  // لوحة المدير تقرأ بيانات الجهات لعرض الجاهزية فقط، وصفحات الجهات لا تُفتح إلا بكلمة مرور الجهة (في الشيم)
   return !!s && (unit ? s.units.has(unit) || s.units.has(site.MANAGER.id) : s.units.size > 0);
 };
 
