@@ -420,6 +420,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .wtile.main{background:var(--accent);border-color:var(--accent);color:#fff}
 .wtile .wt-t{font-size:13.5px;font-weight:700;opacity:.9}
 .wtile .wt-n{font-size:15px} .wtile .wt-n b{font-size:34px;line-height:1.1;margin-inline-end:4px}
+.wtile .wt-c{font-size:12.5px;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
 .wtile .wt-d{font-size:12.5px;color:var(--danger);font-weight:700} .wtile .wt-d.ok{color:var(--ok)}
 .wtile.main .wt-d,.wtile.main .wt-d.ok{color:#fff;opacity:.9}
 @media (max-width:640px){.wstrip{grid-template-columns:1fr 1fr}.wtile.main{grid-column:1/-1}}
@@ -1050,7 +1051,7 @@ const WT = {all:{t:'الوايتات', f:v=>/وايت/.test(v.name||'')}, prop:{
 function waterStrip(){
   if (!S.vehicles.length) return '';
   const tile = k => { const L=S.vehicles.filter(WT[k].f), r=L.filter(v=>stOf(v)==='ready').length, dn=L.length-r, on=S.vt===k;
-    return `<button type="button" class="wtile${on?' on':''}${k==='all'?' main':''}" data-act="vtFilter" data-id="${k}" aria-pressed="${on}"><span class="wt-t">${WT[k].t} الجاهزة</span><span class="wt-n"><b>${arD(r)}</b> من ${arD(L.length)}</span>${dn?`<span class="wt-d">${[['down','متعطلة بالمقر'],['maint','في الصيانة'],['away','مدعومة'],['none','بدون حالة']].map(([st,l])=>{ const n=L.filter(v=>stOf(v)===st).length; return n?l+': '+arD(n):''; }).filter(Boolean).join(' · ')}</span>`:`<span class="wt-d ok">كلها جاهزة</span>`}</button>`; };
+    return `<button type="button" class="wtile${on?' on':''}${k==='all'?' main':''}" data-act="vtFilter" data-id="${k}" aria-pressed="${on}"><span class="wt-t">${WT[k].t} الجاهزة</span><span class="wt-n"><b>${arD(r)}</b> من ${arD(L.length)}</span>${k!=='all'&&r?`<span class="wt-c">الجاهزة: ${L.filter(v=>stOf(v)==='ready').map(v=>`<bdi>${esc(v.code||v.name||'')}</bdi>`).join('، ')}</span>`:''}${dn?`<span class="wt-d">${[['down','متعطلة بالمقر'],['maint','في الصيانة'],['away','مدعومة'],['none','بدون حالة']].map(([st,l])=>{ const n=L.filter(v=>stOf(v)===st).length; return n?l+': '+arD(n):''; }).filter(Boolean).join(' · ')}</span>`:`<span class="wt-d ok">كلها جاهزة</span>`}</button>`; };
   return `<section class="wstrip" aria-label="جاهزية الوايتات">${tile('all')}${tile('prop')}${tile('aydi')}</section>`;
 }
 function readiness(){
