@@ -120,6 +120,7 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .icon-btn:hover{background:var(--chip);color:var(--text)}
 .icon-btn.del:hover{background:var(--danger-bg);color:var(--danger)}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.ssteps{margin:8px 0 0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px;line-height:1.7}
 .bmap{padding:0;overflow:hidden}
 .bmap iframe{display:block;width:100%;height:min(70vh,640px);min-height:360px;border:0;background:var(--surface-2)}
 .bmeta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px}
@@ -916,7 +917,7 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : 'warehouses';
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
   for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
@@ -934,6 +935,7 @@ function render(){
   else if (v.name==='warehouses') paint(gSearchBar()+viewWarehouses());
   else if (v.name==='warehouse') paint(gSearchBar()+viewWarehouse(v.id));
   else if (LIBS[v.name]) paint(gSearchBar()+viewLibrary(v.name));
+  else if (v.name==='ltype') paint(gSearchBar()+viewLType(v.id));
   else if (v.name==='faults') paint(gSearchBar()+viewFaults());
   else if (v.name==='fault') paint(gSearchBar()+viewFault(v.id));
   else if (v.name==='staff') paint(gSearchBar()+viewStaff());
@@ -1078,13 +1080,34 @@ function downTable(){
   return `<section class="sec" aria-label="الآليات غير الجاهزة"><div class="sh"><button type="button" class="dtog" data-act="toggleDown" aria-expanded="${open}" aria-controls="downtbl"><h2>الآليات غير الجاهزة والإجراء المتخذ</h2><span class="muted">${esc(vCount(L.length))}</span><span class="grow"></span><span class="link">${open?'إخفاء':'عرض القائمة'} <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></span></button></div>
     <div class="panel" id="downtbl" style="overflow-x:auto"${open?'':' hidden'}><table><thead><tr><th>الآلية</th><th>الحالة</th><th>السبب / الجهة</th><th>الإجراء المتخذ</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${L.map(v=>`<tr><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${v.code?`<bdi dir="ltr">${esc(v.code)}</bdi> — `:''}${esc(v.name||'آلية')}</button></td><td>${stPill(v)}</td><td>${v.statusNote?esc(enj(v.statusNote)):'—'}</td><td>${v.statusAction?esc(v.statusAction):'<span class="hmut">لم يُسجّل</span>'}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="editStatus" data-id="${esc(v.id)}" aria-label="تعديل حالة ${esc(v.name||'الآلية')}">${ICON.edit}</button></td>`:''}</tr>`).join('')}</tbody></table></div></section>`;
 }
+/* ---------- أنواع الآليات: من الملفات التعريفية المشتركة في المكتبة التعليمية (type لكل ملف) ---------- */
+const vTypes = () => (S.lib.profiles.items||[]).filter(p=>p.type).sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'ar',{numeric:true}));
+function typeOf(v){ const n=norm(v&&v.name); if (!n) return null;
+  return vTypes().find(p=>{ const t=p.type; if ((t.exclude||[]).some(w=>n.includes(norm(w)))) return false; return (t.match||[]).some(g=>g.every(w=>n.includes(norm(w)))); }) || null; }
+const typeVehicles = p => sortedVehicles().filter(v=>{ const t=typeOf(v); return t && t.id===p.id; });
+const typeSpec = p => p && p.type ? {title:p.type.vtype, summary:p.type.summary, rows:p.type.rows, comps:p.type.comps, steps:p.type.steps, src:p.id} : null;
 function specSection(v){
-  const sp=v.specs; if (!sp || !(sp.rows||[]).length) return '';
+  const sp=v.specs||typeSpec(typeOf(v)); if (!sp || !(sp.rows||[]).length) return '';
   const comps=(sp.comps||[]).filter(c=>(c.items||[]).length);
-  return `<section class="sec" aria-label="البيانات الفنية"><div class="sh"><h2>البيانات الفنية</h2><span class="muted">${esc(sp.title||'')}</span><span class="grow"></span>${sp.src?`<button type="button" class="btn" data-act="libOpen" data-id="profiles" data-i="${esc(sp.src)}">${ICON.doc}الملف التعريفي</button>`:''}</div>
+  return `<section class="sec" aria-label="البيانات الفنية"><div class="sh"><h2>البيانات الفنية</h2><span class="muted">${esc(sp.title||'')}</span><span class="grow"></span>${sp.src?`<button type="button" class="btn" data-act="libOpen" data-id="profiles" data-i="${esc(sp.src)}">${ICON.doc}الكتيب</button>`:''}</div>
     <div class="panel spec"><div class="shead">${(v.photos||[]).length?`<img src="${blob(v.photos[0])}" alt="صورة ${esc(v.name||'الآلية')}" data-act="viewPhoto" data-id="${esc(v.id)}" data-i="photos:0">`:''}${sp.summary?`<p class="ssum">${esc(sp.summary)}</p>`:''}</div><dl class="sdl">${sp.rows.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
     ${comps.length?`<details><summary>محتويات الأدراج حسب الكتيب (${comps.length})</summary><div class="comps">${comps.map(c=>`<div><b style="display:block;margin-bottom:6px">${esc(c.name)}</b><table><thead><tr><th>الصنف</th><th>العدد</th></tr></thead><tbody>${c.items.map(i=>`<tr><td>${esc(i[0])}</td><td class="q">${esc(i[1]||'—')}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></details>`:''}
+    ${(sp.steps||[]).length?`<details><summary>خطوات التشغيل والتنبيهات (${sp.steps.length})</summary><ol class="ssteps">${sp.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></details>`:''}
     ${(sp.uncertain||[]).length?`<div class="unc">⚑ ${sp.uncertain.map(esc).join('؛ ')}</div>`:''}</div></section>`;
+}
+// صفحة نوع الآلية من المكتبة: الملخص والبيانات والكتيب وآليات هذا النوع في الجهة
+function viewLType(id){
+  const p=libItem('profiles',id);
+  const back=`<button type="button" class="link" data-act="nav" data-id="profiles">${ICON.arrow} المكتبة التعليمية</button>`;
+  if (!S.lib.profiles.loaded) return back+loading();
+  if (!p || !p.type) return back+`<div class="panel empty"><b>لم يُعثر على هذه الآلية.</b></div>`;
+  const t=p.type, sp=typeSpec(p), comps=(sp.comps||[]).filter(c=>(c.items||[]).length), vs=typeVehicles(p);
+  const head=`<div style="margin-bottom:10px">${back}</div><header class="ph"><div class="ph-t"><h1>${esc(t.vtype)}</h1></div><button type="button" class="btn primary" data-act="libOpen" data-id="profiles" data-i="${esc(p.id)}">${ICON.doc}فتح الكتيب</button></header>`;
+  const mine=`<section class="sec"><div class="sh"><h2>آليات هذا النوع لدينا</h2><span class="muted">${esc(arD(vs.length))}</span></div>${vs.length?`<div class="panel fu">${vs.map(v=>`<button type="button" class="furow" data-act="openVehicle" data-id="${esc(v.id)}"><span class="fuc"><bdi dir="ltr">${esc(v.code||'—')}</bdi></span><span class="fun">${esc(v.name||'آلية')}${v.plate?`<small>${esc(v.plate)}</small>`:''}</span>${stPill(v)}</button>`).join('')}</div>`:'<div class="panel empty"><b>لا توجد آليات من هذا النوع مسجّلة في الجهة.</b></div>'}</section>`;
+  return head+`<section class="sec"><div class="panel spec"><div class="shead"><p class="ssum">${esc(t.summary||'')}</p></div><dl class="sdl">${sp.rows.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
+    ${(sp.steps||[]).length?`<details open><summary>خطوات التشغيل والتنبيهات (${sp.steps.length})</summary><ol class="ssteps">${sp.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></details>`:''}
+    ${comps.length?`<details><summary>محتويات الأدراج حسب الكتيب (${comps.length})</summary><div class="comps">${comps.map(c=>`<div><b style="display:block;margin-bottom:6px">${esc(c.name)}</b><table><thead><tr><th>الصنف</th><th>العدد</th></tr></thead><tbody>${c.items.map(i=>`<tr><td>${esc(i[0])}</td><td class="q">${esc(i[1]||'—')}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></details>`:''}
+    <p class="muted" style="font-size:12.5px;margin:10px 0 0">ملخص من الكتيب المعتمد: ${esc(p.fileName||p.title||'')}</p></div></section>`+mine;
 }
 const WT = {all:{t:'الوايتات', f:v=>/وايت/.test(v.name||'')}, prop:{t:'وايت بروبلين', f:v=>/وايت/.test(v.name||'')&&/بروبلين/.test(v.name||'')}, aydi:{t:'وايت عادي', f:v=>/وايت/.test(v.name||'')&&!/بروبلين/.test(v.name||'')}};
 function waterStrip(){
@@ -1292,7 +1315,7 @@ function viewLibrary(key){
   else if (!list.length) body=`<div class="panel empty"><b>لا توجد نتائج.</b>جرّب كلمة بحث أخرى أو غيّر التصفية.</div>`;
   else body=`<div class="panel docs">${list.map(p=>`<div class="drow">${pThumb(p)?`<img class="pthumb" src="${blob(pThumb(p))}" alt="" loading="lazy">`:`<div class="file-ic sm">${ICON.doc}</div>`}
       <div class="file-t"><b>${esc(p.title||p.fileName||'ملف')}</b><small><span class="pill p-doc">${esc(KIND(p))}</span>${/^shared-/.test(p.id)?'<span class="pill p-doc">لجميع المراكز</span>':''}${C.dated&&p.date?`<span>${esc(p.date)}</span><span>·</span>`:''}${vIds(p).filter(id=>getV(id)).length?vIds(p).filter(id=>getV(id)).map(id=>{ const v=getV(id); return `<button type="button" class="vlink" data-act="openVehicle" data-id="${esc(id)}">${ICON.truck(14)}${esc(v.code?v.code+' '+(v.name||''):(v.name||'آلية'))}</button>`; }).join('<span>·</span>'):`<span>${esc(C.general)}</span>`}${!C.dated&&p.at?`<span>· أُضيف ${esc(hijri(p.at))}</span>`:''}</small>${p.num?`<div class="rmeta">رقم المعاملة: <span class="rk">${esc(p.num)}</span></div>`:''}${p.items?`<ul class="ritems">${String(p.items).split('\n').map(t=>t.trim()).filter(Boolean).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}${p.rec?`<div class="rrec"><span class="rk">توصية اللجنة:</span> ${esc(p.rec)}</div>`:''}${p.note?`<div class="tlt">${esc(p.note)}</div>`:''}</div>
-      <div class="file-a"><button type="button" class="btn primary" data-act="libOpen" data-id="${key}" data-i="${esc(p.id)}">فتح</button>${edit?`<button type="button" class="icon-btn" data-act="libEdit" data-id="${key}" data-i="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="libDel" data-id="${key}" data-i="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
+      <div class="file-a">${p.type?`<button type="button" class="btn" data-act="openType" data-id="${esc(p.id)}">بيانات الآلية</button>`:''}<button type="button" class="btn primary" data-act="libOpen" data-id="${key}" data-i="${esc(p.id)}">${p.type?'الكتيب':'فتح'}</button>${edit?`<button type="button" class="icon-btn" data-act="libEdit" data-id="${key}" data-i="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="libDel" data-id="${key}" data-i="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
   return head+tools+body;
 }
 const libVehicleOpts = key => [['',LIBS[key].generalOpt],...sortedVehicles().map(v=>[v.id,v.name||'آلية'])];
@@ -1918,6 +1941,7 @@ const ACT = {
       await S.db.doc('settings/map').set({url:x.url, desc:x.desc, date:hnum(), updated:Date.now()}); toast('حُفظت خريطة الحدود'); }}); },
   closeModal: closeModal,
   nav: id => go(id),
+  openType: id => go('ltype', id),
   logout: () => { S.entered=false; store.del('isnad-entered'); closeModal(); render(); },
   openVehicle: id => go('vehicle', id),
   taskF: k => { S.tkf=k; render(); },
