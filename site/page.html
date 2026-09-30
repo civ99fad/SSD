@@ -832,7 +832,7 @@ async function openViewer(fid, name){
   }
   try {
     await loadPdfjs(); if (!alive()) return;
-    const pdf=await window.pdfjsLib.getDocument({data:new Uint8Array(await b.arrayBuffer()), isEvalSupported:false}).promise;
+    const pdf=await window.pdfjsLib.getDocument({data:new Uint8Array(await b.arrayBuffer()), isEvalSupported:false, disableFontFace:true, useSystemFonts:false}) /* رسم الخطوط المضمّنة كمسارات: يمنع تلخبط الحروف العربية */.promise;
     vb.innerHTML='';
     const dpr=Math.min(window.devicePixelRatio||1, 2);
     for (let i=1;i<=pdf.numPages;i++){
@@ -1085,12 +1085,12 @@ const vTypes = () => (S.lib.profiles.items||[]).filter(p=>p.type).sort((a,b)=>St
 function typeOf(v){ const n=norm(v&&v.name); if (!n) return null;
   return vTypes().find(p=>{ const t=p.type; if ((t.exclude||[]).some(w=>n.includes(norm(w)))) return false; return (t.match||[]).some(g=>g.every(w=>n.includes(norm(w)))); }) || null; }
 const typeVehicles = p => sortedVehicles().filter(v=>{ const t=typeOf(v); return t && t.id===p.id; });
-const typeSpec = p => p && p.type ? {title:p.type.vtype, summary:p.type.summary, rows:p.type.rows, comps:p.type.comps, steps:p.type.steps, src:p.id} : null;
+const typeSpec = p => p && p.type ? {title:p.type.vtype, summary:p.type.summary, rows:p.type.rows, comps:p.type.comps, steps:p.type.steps, src:p.id, photo:p.photo} : null;
 function specSection(v){
   const sp=v.specs||typeSpec(typeOf(v)); if (!sp || !(sp.rows||[]).length) return '';
   const comps=(sp.comps||[]).filter(c=>(c.items||[]).length);
   return `<section class="sec" aria-label="البيانات الفنية"><div class="sh"><h2>البيانات الفنية</h2><span class="muted">${esc(sp.title||'')}</span><span class="grow"></span>${sp.src?`<button type="button" class="btn" data-act="libOpen" data-id="profiles" data-i="${esc(sp.src)}">${ICON.doc}الكتيب</button>`:''}</div>
-    <div class="panel spec"><div class="shead">${(v.photos||[]).length?`<img src="${blob(v.photos[0])}" alt="صورة ${esc(v.name||'الآلية')}" data-act="viewPhoto" data-id="${esc(v.id)}" data-i="photos:0">`:''}${sp.summary?`<p class="ssum">${esc(sp.summary)}</p>`:''}</div><dl class="sdl">${sp.rows.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
+    <div class="panel spec"><div class="shead">${(v.photos||[]).length?`<img src="${blob(v.photos[0])}" alt="صورة ${esc(v.name||'الآلية')}" data-act="viewPhoto" data-id="${esc(v.id)}" data-i="photos:0">`:sp.photo?`<img src="${blob(sp.photo)}" alt="صورة ${esc(sp.title||'الآلية')} من الكتيب">`:''}${sp.summary?`<p class="ssum">${esc(sp.summary)}</p>`:''}</div><dl class="sdl">${sp.rows.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
     ${comps.length?`<details><summary>محتويات الأدراج حسب الكتيب (${comps.length})</summary><div class="comps">${comps.map(c=>`<div><b style="display:block;margin-bottom:6px">${esc(c.name)}</b><table><thead><tr><th>الصنف</th><th>العدد</th></tr></thead><tbody>${c.items.map(i=>`<tr><td>${esc(i[0])}</td><td class="q">${esc(i[1]||'—')}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></details>`:''}
     ${(sp.steps||[]).length?`<details><summary>خطوات التشغيل والتنبيهات (${sp.steps.length})</summary><ol class="ssteps">${sp.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></details>`:''}
     ${(sp.uncertain||[]).length?`<div class="unc">⚑ ${sp.uncertain.map(esc).join('؛ ')}</div>`:''}</div></section>`;
@@ -1104,7 +1104,7 @@ function viewLType(id){
   const t=p.type, sp=typeSpec(p), comps=(sp.comps||[]).filter(c=>(c.items||[]).length), vs=typeVehicles(p);
   const head=`<div style="margin-bottom:10px">${back}</div><header class="ph"><div class="ph-t"><h1>${esc(t.vtype)}</h1></div><button type="button" class="btn primary" data-act="libOpen" data-id="profiles" data-i="${esc(p.id)}">${ICON.doc}فتح الكتيب</button></header>`;
   const mine=`<section class="sec"><div class="sh"><h2>آليات هذا النوع لدينا</h2><span class="muted">${esc(arD(vs.length))}</span></div>${vs.length?`<div class="panel fu">${vs.map(v=>`<button type="button" class="furow" data-act="openVehicle" data-id="${esc(v.id)}"><span class="fuc"><bdi dir="ltr">${esc(v.code||'—')}</bdi></span><span class="fun">${esc(v.name||'آلية')}${v.plate?`<small>${esc(v.plate)}</small>`:''}</span>${stPill(v)}</button>`).join('')}</div>`:'<div class="panel empty"><b>لا توجد آليات من هذا النوع مسجّلة في الجهة.</b></div>'}</section>`;
-  return head+`<section class="sec"><div class="panel spec"><div class="shead"><p class="ssum">${esc(t.summary||'')}</p></div><dl class="sdl">${sp.rows.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
+  return head+`<section class="sec"><div class="panel spec"><div class="shead">${p.photo?`<img src="${blob(p.photo)}" alt="صورة ${esc(t.vtype)}">`:''}<p class="ssum">${esc(t.summary||'')}</p></div><dl class="sdl">${sp.rows.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
     ${(sp.steps||[]).length?`<details open><summary>خطوات التشغيل والتنبيهات (${sp.steps.length})</summary><ol class="ssteps">${sp.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></details>`:''}
     ${comps.length?`<details><summary>محتويات الأدراج حسب الكتيب (${comps.length})</summary><div class="comps">${comps.map(c=>`<div><b style="display:block;margin-bottom:6px">${esc(c.name)}</b><table><thead><tr><th>الصنف</th><th>العدد</th></tr></thead><tbody>${c.items.map(i=>`<tr><td>${esc(i[0])}</td><td class="q">${esc(i[1]||'—')}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></details>`:''}
     <p class="muted" style="font-size:12.5px;margin:10px 0 0">ملخص من الكتيب المعتمد: ${esc(p.fileName||p.title||'')}</p></div></section>`+mine;
