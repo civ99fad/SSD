@@ -25,7 +25,12 @@
       } catch (e) {}
     },
   };
-  const token = cfg.repo ? store.get(TOKEN_KEY) : null;
+  // مدير المركز يعدّل برمز مركزه عبر «الحارس» (cfg.editProxy) الذي لا يسمح إلا بملفات مركزه؛ المسؤول يعدّل بمفتاح GitHub
+  const PROXY = (cfg.editProxy || '').replace(/\/+$/, '');
+  const CODE_KEY = 'isnad-edit-' + (cfg.unit || 'isnad');
+  const unitCode = PROXY ? store.get(CODE_KEY) : null;
+  const token = cfg.repo ? store.get(TOKEN_KEY) || (unitCode ? 'unit:' + unitCode : null) : null;
+  const isUnit = (t) => /^unit:/.test(t || '');
 
   // ارتفاع الجزء الظاهر فعلًا من النافذة (بعض المتصفحات تعطي 100vh أطول منه فتختفي أسفل القائمة الجانبية)
   const setAppH = () => document.documentElement.style.setProperty('--app-h', window.innerHeight + 'px');
@@ -92,10 +97,13 @@
   const utf8 = { enc: (s) => b64encode(new TextEncoder().encode(s)), dec: (b64) => new TextDecoder().decode(b64decode(b64)) };
 
   async function gh(path, opts = {}) {
-    const r = await fetch('https://api.github.com/repos/' + cfg.repo + path, {
+    const t = opts.token || token;
+    const r = await fetch(isUnit(t) ? PROXY + '/gh' + path : 'https://api.github.com/repos/' + cfg.repo + path, {
       ...opts,
       cache: 'no-store',
-      headers: { Authorization: 'Bearer ' + (opts.token || token), Accept: 'application/vnd.github+json', ...(opts.headers || {}) },
+      headers: isUnit(t)
+        ? { 'X-Unit': cfg.unit || 'isnad', 'X-Code': t.slice(5), ...(opts.headers || {}) }
+        : { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', ...(opts.headers || {}) },
     });
     if (r.status === 401 || r.status === 403) throw { code: 'not_granted', status: r.status };
     if (r.status === 404) return null;
@@ -354,6 +362,12 @@
 
   // يتحقق من المفتاح ويعيد بيانات صاحبه إن كان له صلاحية الكتابة على المستودع
   async function checkToken(t) {
+    if (isUnit(t)) {
+      const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': t.slice(5) } });
+      if (r.status === 401) throw { code: 'not_granted' };
+      if (!r.ok) throw { code: 'network' };
+      return { name: 'مدير ' + (cfg.unitName || 'المركز'), avatarUrl: '', canEdit: true, unitEditor: true };
+    }
     const [repo, u] = await Promise.all([
       gh('', { token: t }),
       fetch('https://api.github.com/user', { cache: 'no-store', headers: { Authorization: 'Bearer ' + t } }).then((r) => (r.ok ? r.json() : null)),
@@ -367,7 +381,7 @@
     userReady = checkToken(token).then(
       (m) => (me = m),
       (e) => {
-        if (e && e.code === 'not_granted') store.del(TOKEN_KEY); // مفتاح منتهٍ أو بلا صلاحية
+        if (e && e.code === 'not_granted') store.del(isUnit(token) ? CODE_KEY : TOKEN_KEY); // مفتاح أو رمز منتهٍ أو بلا صلاحية
         return null;
       }
     );
@@ -485,15 +499,24 @@
     el.style.cssText = 'width:100%;font-size:13px;text-align:start';
     if (token) {
       el.innerHTML =
-        `<span data-r="on" style="color:var(--ok);font-weight:700">وضع التعديل مفعّل على هذا الجهاز</span> · ` +
+        `<span data-r="on" style="color:var(--ok);font-weight:700">${isUnit(token) ? 'التعديل على ' + (cfg.unitName || 'المركز') + ' مفعّل على هذا الجهاز' : 'وضع التعديل مفعّل على هذا الجهاز'}</span> · ` +
         `<button type="button" data-r="off" style="${link}">إيقاف التعديل</button>`;
       userReady.then((m) => {
-        if (!m) el.querySelector('[data-r="on"]').textContent = 'تعذّر التحقق من مفتاح GitHub. أوقف التعديل ثم أدخل مفتاحًا جديدًا.';
+        if (!m) el.querySelector('[data-r="on"]').textContent = isUnit(token) ? 'تعذّر التحقق من رمز المركز. أوقف التعديل ثم أدخل الرمز مجددًا.' : 'تعذّر التحقق من مفتاح GitHub. أوقف التعديل ثم أدخل مفتاحًا جديدًا.';
       });
     } else {
       el.innerHTML =
         (open ? '' : `<button type="button" data-r="show" style="${link}">تفعيل التعديل (للمسؤول)</button>`) +
-        `<div data-r="box"${open ? '' : ' hidden'} style="margin-top:${open ? 0 : 10}px">` +
+        (PROXY
+          ? `<div data-r="ubox"${open ? '' : ' hidden'} style="margin-top:${open ? 0 : 10}px">` +
+            `<label style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">رمز تعديل ${String(cfg.unitName || 'المركز').replace(/[<>&"]/g, '')}` +
+            `<input data-r="code" type="password" autocomplete="off" dir="ltr" style="${field};margin-top:6px;font-weight:400"></label>` +
+            '<div style="margin-top:6px;color:var(--faint);font-size:12px;line-height:1.6">لمدير المركز: يسمح بالتعديل على هذا المركز فقط، ويُحفظ على هذا الجهاز.</div>' +
+            '<div data-r="uerr" role="alert" style="display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600"></div>' +
+            '<button type="button" data-r="usave" class="btn primary" style="width:100%;margin-top:10px">تفعيل التعديل</button>' +
+            `<button type="button" data-r="gh" style="${link};display:block;margin-top:14px;font-size:12.5px">للمسؤول: الدخول بمفتاح GitHub</button></div>`
+          : '') +
+        `<div data-r="box"${open && !PROXY ? '' : ' hidden'} style="margin-top:${open && !PROXY ? 0 : 10}px">` +
         '<label style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">مفتاح GitHub' +
         `<input data-r="tok" type="password" autocomplete="off" placeholder="github_pat_…" dir="ltr" style="${field};margin-top:6px;font-weight:400"></label>` +
         '<div style="margin-top:6px;color:var(--faint);font-size:12px;line-height:1.6">يُحفظ على هذا الجهاز فقط. أنشئه من GitHub: Settings ← Developer settings ← Fine-grained tokens، لمستودع ' +
@@ -506,10 +529,30 @@
       const r = e.target.dataset && e.target.dataset.r;
       if (r === 'off') {
         store.del(TOKEN_KEY);
+        store.del(CODE_KEY);
         location.reload();
-      } else if (r === 'show') {
+      } else if (r === 'gh') {
         el.querySelector('[data-r="box"]').hidden = false;
         el.querySelector('[data-r="tok"]').focus();
+      } else if (r === 'usave') {
+        const c = el.querySelector('[data-r="code"]').value.trim();
+        const msg = el.querySelector('[data-r="uerr"]');
+        msg.style.display = 'none';
+        if (!c) return;
+        e.target.disabled = true;
+        try {
+          await checkToken('unit:' + c);
+          store.set(CODE_KEY, c);
+          location.reload();
+        } catch (x) {
+          msg.textContent = x && x.code === 'not_granted' ? 'رمز المركز غير صحيح.' : 'تعذّر الاتصال. حاول مجددًا.';
+          msg.style.display = 'block';
+          e.target.disabled = false;
+        }
+      } else if (r === 'show') {
+        const b = el.querySelector(PROXY ? '[data-r="ubox"]' : '[data-r="box"]');
+        b.hidden = false;
+        b.querySelector('input').focus();
       } else if (r === 'save') {
         const t = el.querySelector('[data-r="tok"]').value.trim();
         const msg = el.querySelector('[data-r="err"]');
