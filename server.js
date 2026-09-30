@@ -150,11 +150,19 @@ async function handle(req, res) {
   if (um && unitOf(um[1] || '')) {
     if (!isAuthed(req, unitOf(um[1] || ''))) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
     try {
-      return sendJson(res, 200, site.dbJson(unitOf(um[1] || '')));
+      const unit = unitOf(um[1] || ''), db = site.dbJson(unit);
+      // «قائمة المهام» داخلية: لا تُرسل لمن دخل بكلمة مرور لوحة المدير دون كلمة مرور الجهة
+      if (!session(req).units.has(unit)) delete db.collections.tasks;
+      return sendJson(res, 200, db);
     } catch (e) {
       console.error('خطأ في قراءة البيانات:', e.message);
       return sendJson(res, 500, { error: 'خطأ في ملف البيانات: ' + e.message });
     }
+  }
+  // مهام لوحة المدير الخاصة
+  if (pathname === '/' + site.MANAGER.web + 'db.json') {
+    if (!session(req).units.has(site.MANAGER.id)) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
+    return sendJson(res, 200, site.managerJson());
   }
   let m = pathname.match(/^\/(units\/[a-z]+\/)?db\/files\/([A-Za-z0-9_-]+\.json)$/);
   if (m && unitOf(m[1] || '')) {
