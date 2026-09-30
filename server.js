@@ -93,10 +93,12 @@ async function handle(req, res) {
     return send(res, 400, 'Bad request');
   }
 
-  // الصفحة والشيم عامّان (لا بيانات فيهما)
+  // البوابة وصفحات الجهات عامة (لا بيانات فيها)؛ البيانات والملفات بعدها تتطلب الدخول
   if (pathname === '/' || pathname === '/index.html') {
-    return send(res, 200, site.pageHtml({ mode: 'server' }), { 'Content-Type': MIME['.html'] });
+    return send(res, 200, site.portalHtml({ mode: 'server' }), { 'Content-Type': MIME['.html'] });
   }
+  let um = pathname.match(/^\/([a-z]+)\.html$/);
+  if (um && site.UNITS[um[1]]) return send(res, 200, site.pageHtml(um[1], { mode: 'server' }), { 'Content-Type': MIME['.html'] });
   if (pathname === '/shim.js') return sendFile(res, path.join(site.SITE_DIR, 'shim.js'));
   const logo = site.logoFile();
   if (logo && pathname === '/blobs/' + logo) return sendFile(res, path.join(site.BLOBS_DIR, logo)); // أيقونة التبويب قبل الدخول
@@ -129,16 +131,19 @@ async function handle(req, res) {
   if (!isAuthed(req)) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
   if (req.method !== 'GET') return send(res, 405, 'Method not allowed');
 
-  if (pathname === '/db.json') {
+  // بيانات كل جهة في مسارها: /db.json لقسم الدعم والإسناد، و/units/<الجهة>/db.json لغيره
+  const unitOf = (web) => Object.keys(site.UNITS).find((u) => site.UNITS[u].web === web);
+  um = pathname.match(/^\/(units\/[a-z]+\/)?db\.json$/);
+  if (um && unitOf(um[1] || '')) {
     try {
-      return sendJson(res, 200, site.dbJson());
+      return sendJson(res, 200, site.dbJson(unitOf(um[1] || '')));
     } catch (e) {
       console.error('خطأ في قراءة البيانات:', e.message);
       return sendJson(res, 500, { error: 'خطأ في ملف البيانات: ' + e.message });
     }
   }
-  let m = pathname.match(/^\/db\/files\/([A-Za-z0-9_-]+\.json)$/);
-  if (m) return sendFile(res, path.join(site.DB_DIR, 'files', m[1]));
+  let m = pathname.match(/^\/(units\/[a-z]+\/)?db\/files\/([A-Za-z0-9_-]+\.json)$/);
+  if (m && unitOf(m[1] || '')) return sendFile(res, path.join(site.unitDb(unitOf(m[1] || '')), 'files', m[2]));
   m = pathname.match(/^\/blobs\/([0-9a-f]{32}\.[a-z0-9]+)$/);
   if (m) return sendFile(res, path.join(site.BLOBS_DIR, m[1]));
 
