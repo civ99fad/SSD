@@ -362,14 +362,22 @@
     true
   );
   const logout = document.querySelector('.side-foot [data-act="logout"]');
-  if (logout) {
+  // زر «القائمة الرئيسية» تحت الشعار أعلى القائمة الجانبية: ظاهر دائمًا داخل أي قسم أو مركز
+  const brand = document.querySelector('.side .brand');
+  if (brand) {
     const home = document.createElement('a');
-    home.className = 'logout';
+    home.className = 'isnad-home';
     home.href = 'index.html';
     home.innerHTML =
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11h14V9"/></svg>' +
-      '<span>البوابة (اختيار الجهة)</span>';
-    logout.before(home);
+      '<span>القائمة الرئيسية</span>';
+    brand.after(home);
+    const css = document.createElement('style');
+    css.textContent =
+      '.isnad-home{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:700;font-size:13.5px;text-decoration:none;flex-shrink:0}' +
+      '.isnad-home:hover{background:rgba(255,255,255,.18)}.isnad-home:focus-visible{outline:2px solid #4FBE8E;outline-offset:2px}' +
+      '@media (max-width:860px){.isnad-home{padding:7px 10px;font-size:12.5px}}';
+    document.head.appendChild(css);
   }
 
   if (!cfg.repo) return;
