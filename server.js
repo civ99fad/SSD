@@ -48,7 +48,8 @@ function session(req) {
 }
 const isAuthed = (req, unit) => {
   const s = session(req);
-  return !!s && (unit ? s.units.has(unit) : s.units.size > 0);
+  // الدخول للوحة المدير يفتح كل الجهات
+  return !!s && (unit ? s.units.has(unit) || s.units.has(site.MANAGER.id) : s.units.size > 0);
 };
 
 function safeEqual(a, b) {
@@ -105,6 +106,7 @@ async function handle(req, res) {
   }
   let um = pathname.match(/^\/([a-z]+)\.html$/);
   if (um && site.UNITS[um[1]]) return send(res, 200, site.pageHtml(um[1], { mode: 'server' }), { 'Content-Type': MIME['.html'] });
+  if (pathname === '/manager.html') return send(res, 200, site.managerHtml({ mode: 'server' }), { 'Content-Type': MIME['.html'] });
   if (pathname === '/shim.js') return sendFile(res, path.join(site.SITE_DIR, 'shim.js'));
   const logo = site.logoFile();
   if (logo && pathname === '/blobs/' + logo) return sendFile(res, path.join(site.BLOBS_DIR, logo)); // أيقونة التبويب قبل الدخول
@@ -115,7 +117,7 @@ async function handle(req, res) {
       ({ password = '', unit = '' } = JSON.parse(await readBody(req)));
     } catch {}
     // كلمة مرور كل جهة: SITE_PASSWORD_<الجهة> أو units في data/settings.json (انظر tools/site.js)
-    if (!site.UNITS[unit] || !safeEqual(password, site.password(unit))) {
+    if (!(site.UNITS[unit] || unit === site.MANAGER.id) || !safeEqual(password, site.password(unit))) {
       return sendJson(res, 401, { ok: false, error: 'كلمة المرور غير صحيحة' });
     }
     const current = session(req);
