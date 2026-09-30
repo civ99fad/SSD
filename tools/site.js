@@ -36,7 +36,7 @@ for (const [id, name] of CENTERS) {
   UNITS[id] = { name, desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name) };
 }
 // قسم الدعم والإسناد آخر البوابة
-UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {} };
+UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: { 'حدود المركز': 'حدود القسم' } };
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
 // والدخول لها يفتح كل الجهات لأن المدير يطّلع على الجميع
