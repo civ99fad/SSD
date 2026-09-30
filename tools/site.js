@@ -38,6 +38,9 @@ for (const [id, name] of CENTERS) {
 // قسم الدعم والإسناد آخر البوابة
 UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {} };
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
+// لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
+// والدخول لها يفتح كل الجهات لأن المدير يطّلع على الجميع
+const MANAGER = { id: 'manager', name: 'لوحة مدير الإدارة' };
 
 // كلمة مرور كل جهة (البوابة نفسها بلا كلمة مرور). الأولوية:
 // SITE_PASSWORD_<الجهة> ثم units.<الجهة> في data/settings.json ثم SITE_PASSWORD ثم password ثم 1234
@@ -78,13 +81,22 @@ function pageHtml(unit, config) {
   return html;
 }
 
-// البوابة: كلمة المرور ثم اختيار الجهة
+// البوابة: اختيار الجهة (بلا كلمة مرور) وخانة لوحة المدير
 function portalHtml(config) {
   const units = Object.entries(UNITS).map(([id, u]) => ({ id, name: u.name, desc: u.desc }));
   const logo = logoFile();
   return fs
     .readFileSync(path.join(SITE_DIR, 'portal.html'), 'utf8')
-    .replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, logo: logo ? 'blobs/' + logo : '' }, config))};`);
+    .replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, manager: MANAGER, logo: logo ? 'blobs/' + logo : '' }, config))};`);
+}
+
+// لوحة المدير: تقرأ db.json لكل جهة وتعرض جاهزيتها
+function managerHtml(config) {
+  const units = Object.entries(UNITS).map(([id, u]) => ({ id, name: u.name, web: u.web }));
+  const logo = logoFile();
+  let html = fs.readFileSync(path.join(SITE_DIR, 'manager.html'), 'utf8');
+  if (logo) html = html.replace('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
+  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, unit: MANAGER.id, logo: logo ? 'blobs/' + logo : '' }, config))};`);
 }
 
 // كل مجموعات الجهة (عدا ملفات Word الكبيرة في db/files) + خريطة معرّف الملف ← مساره
@@ -112,4 +124,4 @@ function logoFile() {
 
 const blobFiles = () => fs.readdirSync(BLOBS_DIR).filter((f) => /^[0-9a-f]{32}\.[a-z0-9]+$/.test(f));
 
-module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, unitDb, password, passwordHash, pageHtml, portalHtml, dbJson, blobFiles, logoFile };
+module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, MANAGER, unitDb, password, passwordHash, pageHtml, portalHtml, managerHtml, dbJson, blobFiles, logoFile };

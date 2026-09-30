@@ -57,7 +57,8 @@
       } catch (e) {}
     },
   };
-  const signedIn = ss.get(AUTH_KEY) === '1';
+  // الدخول للوحة المدير يفتح كل الجهات
+  const signedIn = ss.get(AUTH_KEY) === '1' || ss.get('isnad-auth-manager') === '1';
   // الصفحة تقرأ isnad-entered لتتخطى شاشة الترحيب: نضبطه حسب هذه الجهة فقط
   if (signedIn) ss.set('isnad-entered', '1');
   else ss.del('isnad-entered');

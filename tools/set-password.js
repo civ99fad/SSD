@@ -1,9 +1,11 @@
 // تغيير كلمة مرور جهة (أو كلمة المرور الافتراضية لكل الجهات)
 // الاستخدام: npm run set-password -- 5678 sharaf   ← كلمة مرور مركز شراف فقط
+//            npm run set-password -- 5678 manager  ← كلمة مرور لوحة مدير الإدارة
 //            npm run set-password -- 5678          ← الكلمة الافتراضية للجهات التي ليس لها كلمة خاصة
 const fs = require('fs');
 const path = require('path');
-const { UNITS } = require('./site');
+const { UNITS: U, MANAGER } = require('./site');
+const UNITS = Object.assign({}, U, { [MANAGER.id]: MANAGER }); // manager = لوحة مدير الإدارة
 
 const [pw, unit] = process.argv.slice(2);
 if (!pw || (unit && !UNITS[unit])) {
