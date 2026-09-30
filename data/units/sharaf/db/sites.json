@@ -1,0 +1,261 @@
+{
+ "ss01": {
+  "n": 1,
+  "name": "مستشفى الملك خالد",
+  "url": "https://maps.app.goo.gl/YT5DmTeREN6sQWNG9",
+  "note": "",
+  "at": 1790773043237
+ },
+ "ss02": {
+  "n": 2,
+  "name": "مستشفى شراف",
+  "url": "https://maps.app.goo.gl/wvJKa32G1tqwAiYY9",
+  "note": "",
+  "at": 1790773043238
+ },
+ "ss03": {
+  "n": 3,
+  "name": "أمانة حائل",
+  "url": "https://maps.app.goo.gl/SYESfyTn32ZzK5AX8",
+  "note": "",
+  "at": 1790773043239
+ },
+ "ss04": {
+  "n": 4,
+  "name": "وزارة الزراعة والمياه",
+  "url": "https://maps.app.goo.gl/M9vvFjDcq6kGSDD8A",
+  "note": "",
+  "at": 1790773043240
+ },
+ "ss05": {
+  "n": 5,
+  "name": "فرع النيابة العامة",
+  "url": "https://maps.app.goo.gl/bu1X1vsdwG2ffPa9A",
+  "note": "",
+  "at": 1790773043241
+ },
+ "ss06": {
+  "n": 6,
+  "name": "غرفة حائل",
+  "url": "https://maps.app.goo.gl/FXXjdkmffWpyVySYA",
+  "note": "",
+  "at": 1790773043242
+ },
+ "ss07": {
+  "n": 7,
+  "name": "البريد السعودي",
+  "url": "https://maps.app.goo.gl/61DYatkSpxfFuCZn9",
+  "note": "",
+  "at": 1790773043243
+ },
+ "ss08": {
+  "n": 8,
+  "name": "الاتصالات السعودية",
+  "url": "https://maps.app.goo.gl/9jGi5HKVcY13J6TM6",
+  "note": "",
+  "at": 1790773043244
+ },
+ "ss09": {
+  "n": 9,
+  "name": "فندق قولدن توليب",
+  "url": "https://maps.app.goo.gl/KUUdJMkUFYqnaBVE9",
+  "note": "",
+  "at": 1790773043245
+ },
+ "ss10": {
+  "n": 10,
+  "name": "فندق هوليداي فيلا",
+  "url": "https://maps.app.goo.gl/yAm6BHu7xoCCGfox8",
+  "note": "",
+  "at": 1790773043246
+ },
+ "ss11": {
+  "n": 11,
+  "name": "وزارة الشؤون الإسلامية",
+  "url": "https://maps.app.goo.gl/gatq7pCegfAV2pvQA",
+  "note": "",
+  "at": 1790773043247
+ },
+ "ss12": {
+  "n": 12,
+  "name": "العثيم مول",
+  "url": "https://maps.app.goo.gl/KS17k7LvzxHp617Q9",
+  "note": "",
+  "at": 1790773043248
+ },
+ "ss13": {
+  "n": 13,
+  "name": "الجامعة العربية المفتوحة",
+  "url": "https://maps.app.goo.gl/e8s96M8z4ahkMjtN6",
+  "note": "",
+  "at": 1790773043249
+ },
+ "ss14": {
+  "n": 14,
+  "name": "مجمع الأهلي الطبي",
+  "url": "https://maps.app.goo.gl/m9DbqoXnYJims77i9",
+  "note": "",
+  "at": 1790773043250
+ },
+ "ss15": {
+  "n": 15,
+  "name": "مركز طب الأسنان",
+  "url": "https://maps.app.goo.gl/QUJjjavtM5aLrjvn6",
+  "note": "",
+  "at": 1790773043251
+ },
+ "ss16": {
+  "n": 16,
+  "name": "بنك البلاد",
+  "url": "https://maps.app.goo.gl/baX83jyRw3T87zgL8",
+  "note": "",
+  "at": 1790773043252
+ },
+ "ss17": {
+  "n": 17,
+  "name": "بنك الرياض",
+  "url": "https://maps.app.goo.gl/vn7GwpCUxzVg6WXW8",
+  "note": "",
+  "at": 1790773043253
+ },
+ "ss18": {
+  "n": 18,
+  "name": "مدينة الأمير عبدالعزيز بن مساعد الرياضية",
+  "url": "https://maps.app.goo.gl/HgxLYfZvYQs8BV3t8",
+  "note": "",
+  "at": 1790773043254
+ },
+ "ss19": {
+  "n": 19,
+  "name": "ابتدائية شراف",
+  "url": "https://maps.app.goo.gl/kjW3Ab5mDh8ip3gG9",
+  "note": "",
+  "at": 1790773043255
+ },
+ "ss20": {
+  "n": 20,
+  "name": "اورجين جيم",
+  "url": "https://maps.app.goo.gl/hbPM7jkU7RjQC1Le6",
+  "note": "",
+  "at": 1790773043256
+ },
+ "ss21": {
+  "n": 21,
+  "name": "منتزه الأمير سلطان",
+  "url": "https://maps.app.goo.gl/QBEQiLVNWLaoUTiZ6",
+  "note": "",
+  "at": 1790773043257
+ },
+ "ss22": {
+  "n": 22,
+  "name": "مركز قياس (رجال)",
+  "url": "https://maps.app.goo.gl/6Sv3XY2RgHCM1TaC6",
+  "note": "",
+  "at": 1790773043258
+ },
+ "ss23": {
+  "n": 23,
+  "name": "لولو ماركت",
+  "url": "https://maps.app.goo.gl/gC9sfbxKioCo6whq6",
+  "note": "",
+  "at": 1790773043259
+ },
+ "ss24": {
+  "n": 24,
+  "name": "محطة الدريس",
+  "url": "https://maps.app.goo.gl/M2frXNBvSK3ynmNa9",
+  "note": "",
+  "at": 1790773043260
+ },
+ "ss25": {
+  "n": 25,
+  "name": "مركز عنايتي الطبي",
+  "url": "https://maps.app.goo.gl/nEPPLGumCPFRFyT28",
+  "note": "",
+  "at": 1790773043261
+ },
+ "ss26": {
+  "n": 26,
+  "name": "سوبرماركت بنده",
+  "url": "https://maps.app.goo.gl/4onTXfgTSYT5DkFN8",
+  "note": "",
+  "at": 1790773043262
+ },
+ "ss27": {
+  "n": 27,
+  "name": "ساكو",
+  "url": "https://maps.app.goo.gl/JgreRic9NCozybTZ7",
+  "note": "",
+  "at": 1790773043263
+ },
+ "ss28": {
+  "n": 28,
+  "name": "مدرسة ربوع الحكمة",
+  "url": "https://maps.app.goo.gl/zq8gEz9PRnfK4XK18",
+  "note": "",
+  "at": 1790773043264
+ },
+ "ss29": {
+  "n": 29,
+  "name": "ابتدائية الشيخ عبدالعزيز بن باز",
+  "url": "https://maps.app.goo.gl/EfnsQMa9Jjuss7q69",
+  "note": "",
+  "at": 1790773043265
+ },
+ "ss30": {
+  "n": 30,
+  "name": "متوسطة الملك عبدالعزيز",
+  "url": "https://maps.app.goo.gl/o6JtAza7TJN8gUHZ7",
+  "note": "",
+  "at": 1790773043266
+ },
+ "ss31": {
+  "n": 31,
+  "name": "مدارس الفضيلة الأهلية",
+  "url": "https://maps.app.goo.gl/p22egoKktxFQF9no8",
+  "note": "",
+  "at": 1790773043267
+ },
+ "ss32": {
+  "n": 32,
+  "name": "محطة نفط",
+  "url": "https://maps.app.goo.gl/v8WcyHyQAnPgQTAp9",
+  "note": "",
+  "at": 1790773043268
+ },
+ "ss33": {
+  "n": 33,
+  "name": "مصرف الراجحي",
+  "url": "https://maps.app.goo.gl/byR6PV6qkom8Ky9c7",
+  "note": "",
+  "at": 1790773043269
+ },
+ "ss34": {
+  "n": 34,
+  "name": "بنك الجزيرة",
+  "url": "https://maps.app.goo.gl/VGKkofdumcBKspet5",
+  "note": "",
+  "at": 1790773043270
+ },
+ "ss35": {
+  "n": 35,
+  "name": "البنك السعودي للاستثمار",
+  "url": "https://maps.app.goo.gl/yHscxVQc4drxaBjz5",
+  "note": "",
+  "at": 1790773043271
+ },
+ "ss36": {
+  "n": 36,
+  "name": "بنك الإنماء",
+  "url": "https://maps.app.goo.gl/aooYskeX7AH114GaA",
+  "note": "",
+  "at": 1790773043272
+ },
+ "ss37": {
+  "n": 37,
+  "name": "فندق اللحيدان",
+  "url": "https://maps.app.goo.gl/ZERBU6osyZTntZR98",
+  "note": "",
+  "at": 1790773043273
+ }
+}
