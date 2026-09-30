@@ -120,6 +120,9 @@ h1,h2,h3{margin:0;text-wrap:balance}
 .icon-btn:hover{background:var(--chip);color:var(--text)}
 .icon-btn.del:hover{background:var(--danger-bg);color:var(--danger)}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.libnote{margin:0 0 14px;padding:10px 14px;border-radius:12px;background:#FEF6E0;border:1px solid #F5D98B;color:#7A5200;font-size:13.5px;font-weight:600;line-height:1.6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .libnote{background:#3A2A0C;border-color:#6B4E14;color:#F5C76B}}
+:root[data-theme="dark"] .libnote{background:#3A2A0C;border-color:#6B4E14;color:#F5C76B}
 .ssteps{margin:8px 0 0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px;line-height:1.7}
 .bmap{padding:0;overflow:hidden}
 .bmap iframe{display:block;width:100%;height:min(70vh,640px);min-height:360px;border:0;background:var(--surface-2)}
@@ -1107,6 +1110,7 @@ function viewLType(id){
   return head+`<section class="sec"><div class="panel spec"><div class="shead">${p.photo?`<img src="${blob(p.photo)}" alt="صورة ${esc(t.vtype)}">`:''}<p class="ssum">${esc(t.summary||'')}</p></div><dl class="sdl">${sp.rows.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl>
     ${(sp.steps||[]).length?`<details open><summary>خطوات التشغيل والتنبيهات (${sp.steps.length})</summary><ol class="ssteps">${sp.steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></details>`:''}
     ${comps.length?`<details><summary>محتويات الأدراج حسب الكتيب (${comps.length})</summary><div class="comps">${comps.map(c=>`<div><b style="display:block;margin-bottom:6px">${esc(c.name)}</b><table><thead><tr><th>الصنف</th><th>العدد</th></tr></thead><tbody>${c.items.map(i=>`<tr><td>${esc(i[0])}</td><td class="q">${esc(i[1]||'—')}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></details>`:''}
+    <div class="libnote" style="margin:12px 0 0">⚠ هذا ملخص قد لا يكون دقيقًا بشكل كامل، والرجاء التقيد بالكتيب الأساسي للآلية.</div>
     <p class="muted" style="font-size:12.5px;margin:10px 0 0">ملخص من الكتيب المعتمد: ${esc(p.fileName||p.title||'')}</p></div></section>`+mine;
 }
 const WT = {all:{t:'الوايتات', f:v=>/وايت/.test(v.name||'')}, prop:{t:'وايت بروبلين', f:v=>/وايت/.test(v.name||'')&&/بروبلين/.test(v.name||'')}, aydi:{t:'وايت عادي', f:v=>/وايت/.test(v.name||'')&&!/بروبلين/.test(v.name||'')}};
@@ -1298,7 +1302,8 @@ const libItem = (key,id) => S.lib[key].items.find(x=>x.id===id);
 function viewLibrary(key){
   const C=LIBS[key], L=S.lib[key], edit=S.canEdit, all=L.items;
   const head=`<header class="ph"><div class="ph-t"><h1>${esc(C.title)}</h1><span class="count">${esc(C.count(all.length))}</span></div>${edit?`<button type="button" class="btn primary" data-act="libAdd" data-id="${key}">${ICON.plus}${esc(C.add)}</button>`:''}</header>`;
-  if (!L.loaded) return head+loading();
+  const note = key==='profiles' ? `<div class="libnote" role="note">⚠ المعلومات المعروضة في المكتبة التعليمية قد لا تكون دقيقة بشكل كامل، والرجاء التقيد بالكتيب الأساسي للآلية.</div>` : '';
+  if (!L.loaded) return head+note+loading();
   const q=norm(L.q), fv=L.v||'';
   const vName = id => { const v=getV(id); return v ? (v.name||'آلية') : ''; };
   const vIds = p => (p.vehicles&&p.vehicles.length) ? p.vehicles : (p.vehicle?[p.vehicle]:[]);
@@ -1316,7 +1321,7 @@ function viewLibrary(key){
   else body=`<div class="panel docs">${list.map(p=>`<div class="drow">${pThumb(p)?`<img class="pthumb" src="${blob(pThumb(p))}" alt="" loading="lazy">`:`<div class="file-ic sm">${ICON.doc}</div>`}
       <div class="file-t"><b>${esc(p.title||p.fileName||'ملف')}</b><small><span class="pill p-doc">${esc(KIND(p))}</span>${/^shared-/.test(p.id)?'<span class="pill p-doc">لجميع المراكز</span>':''}${C.dated&&p.date?`<span>${esc(p.date)}</span><span>·</span>`:''}${vIds(p).filter(id=>getV(id)).length?vIds(p).filter(id=>getV(id)).map(id=>{ const v=getV(id); return `<button type="button" class="vlink" data-act="openVehicle" data-id="${esc(id)}">${ICON.truck(14)}${esc(v.code?v.code+' '+(v.name||''):(v.name||'آلية'))}</button>`; }).join('<span>·</span>'):`<span>${esc(C.general)}</span>`}${!C.dated&&p.at?`<span>· أُضيف ${esc(hijri(p.at))}</span>`:''}</small>${p.num?`<div class="rmeta">رقم المعاملة: <span class="rk">${esc(p.num)}</span></div>`:''}${p.items?`<ul class="ritems">${String(p.items).split('\n').map(t=>t.trim()).filter(Boolean).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}${p.rec?`<div class="rrec"><span class="rk">توصية اللجنة:</span> ${esc(p.rec)}</div>`:''}${p.note?`<div class="tlt">${esc(p.note)}</div>`:''}</div>
       <div class="file-a">${p.type?`<button type="button" class="btn" data-act="openType" data-id="${esc(p.id)}">بيانات الآلية</button>`:''}<button type="button" class="btn primary" data-act="libOpen" data-id="${key}" data-i="${esc(p.id)}">${p.type?'الكتيب':'فتح'}</button>${edit?`<button type="button" class="icon-btn" data-act="libEdit" data-id="${key}" data-i="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="libDel" data-id="${key}" data-i="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
-  return head+tools+body;
+  return head+note+tools+body;
 }
 const libVehicleOpts = key => [['',LIBS[key].generalOpt],...sortedVehicles().map(v=>[v.id,v.name||'آلية'])];
 async function storeLibFile(file, ref){
