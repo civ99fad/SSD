@@ -35,6 +35,17 @@
 - كل حفظ يُرفع للمستودع كتعديل (commit) في `data/db/` أو `data/blobs/`، ويُعاد نشر الموقع تلقائيًا. التعديل يظهر لك فورًا، وللفريق بعد دقيقة إلى دقيقتين.
 - حد حجم الملف المرفوع 20 ميجابايت (مثل موقع Claude).
 
+## تعديل مدراء المراكز (كلٌّ على مركزه)
+
+«الحارس» وسيط مجاني على Cloudflare Workers (الكود في `tools/edit-worker.js`). يحتفظ بمفتاح GitHub مخفيًا، ويعطي كل مدير مركز **رمز تعديل** لا يسمح إلا بملفات مركزه (مع إضافة صور وملفات جديدة). الملفات المشتركة والمراكز الأخرى لا تُعدَّل من خلاله، وكل تعديل يُسجَّل باسم المركز.
+
+1. في Cloudflare: **Workers & Pages ← Create ← Worker**، ثم الصق محتوى `tools/edit-worker.js` واضغط **Deploy**.
+2. في **Settings ← Variables and Secrets** أضف سرّين: `GITHUB_TOKEN` (مفتاح GitHub بصلاحية Contents: Read and write) و`CODES` بصيغة `{"balad":"رمز","sharaf":"رمز",...}`.
+3. ضع رابط الحارس في `data/settings.json` باسم `editProxy` (مثل `"editProxy": "https://isnad-edit.xxx.workers.dev"`).
+4. يفتح المدير صفحة مركزه ← «تفعيل التعديل» ← يكتب رمز مركزه.
+
+المسؤول يبقى يعدّل كل شيء بمفتاح GitHub من رابط «للمسؤول: الدخول بمفتاح GitHub».
+
 ## النشر على GitHub Pages
 
 عند كل تحديث للفرع الرئيسي يبني GitHub نسخة ثابتة من الموقع (`npm run build:static`) وينشرها تلقائيًا على `https://civ99fad.github.io/SSD/`.

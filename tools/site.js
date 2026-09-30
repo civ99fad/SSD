@@ -63,7 +63,16 @@ function password(unit) {
 const repo = () => ({
   repo: process.env.GITHUB_REPOSITORY || process.env.RENDER_GIT_REPO_SLUG || 'civ99fad/SSD',
   branch: process.env.GITHUB_REF_NAME || process.env.RENDER_GIT_BRANCH || 'claude/civil-defense-archive-site-y3ue1n',
+  editProxy: editProxy(),
 });
+// رابط «الحارس» (Cloudflare Worker) لتعديل مدراء المراكز برموز مراكزهم: editProxy في data/settings.json أو EDIT_PROXY
+function editProxy() {
+  try {
+    return process.env.EDIT_PROXY || JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8')).editProxy || '';
+  } catch {
+    return process.env.EDIT_PROXY || '';
+  }
+}
 
 const passwordHash = (pw) => crypto.createHash('sha256').update('isnad:' + pw).digest('hex');
 
