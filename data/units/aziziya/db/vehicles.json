@@ -1,0 +1,123 @@
+{
+ "a5-1": {
+  "code": "5/1",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ ص م 3010",
+  "model": "2010",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "at": 1790772614954,
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "n-a5-1",
+    "text": "ملاحظة من تشكيل الآليات: المكيف | التماس كهربائي."
+   }
+  ],
+  "created": 1790772614954,
+  "updated": 1790772614954
+ },
+ "a5-2": {
+  "code": "5/2",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "أ ن ل 1487",
+  "model": "2012",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "at": 1790772614954,
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "n-a5-2",
+    "text": "ملاحظة من تشكيل الآليات: المروحة | زيت القير | زيت الركسون."
+   }
+  ],
+  "created": 1790772614955,
+  "updated": 1790772614955
+ },
+ "a5-4": {
+  "code": "5/4",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ ن ب 3371",
+  "model": "2012",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "at": 1790772614954,
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "n-a5-4",
+    "text": "ملاحظة من تشكيل الآليات: السفتي."
+   }
+  ],
+  "created": 1790772614956,
+  "updated": 1790772614956
+ },
+ "a5-5": {
+  "code": "5/5",
+  "name": "وايت أكتروس",
+  "make": "مرسيدس",
+  "plate": "أ ح ط 8115",
+  "model": "2004",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772614957,
+  "updated": 1790772614957
+ },
+ "a5-6": {
+  "code": "5/6",
+  "name": "جيب نيسان ٤ أبواب",
+  "make": "نيسان",
+  "plate": "أ أ د 9920",
+  "model": "2002",
+  "status": "down",
+  "statusNote": "عطل بالبطارية",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790772614958,
+    "by": "",
+    "date": "١٩/٤/١٤٤٨هـ",
+    "id": "st-a5-6",
+    "note": "",
+    "title": "متعطلة بالمقر — عطل بالبطارية",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772614958,
+  "updated": 1790772614958
+ }
+}
