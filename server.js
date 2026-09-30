@@ -159,11 +159,6 @@ async function handle(req, res) {
       return sendJson(res, 500, { error: 'خطأ في ملف البيانات: ' + e.message });
     }
   }
-  // مهام لوحة المدير الخاصة
-  if (pathname === '/' + site.MANAGER.web + 'db.json') {
-    if (!session(req).units.has(site.MANAGER.id)) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
-    return sendJson(res, 200, site.managerJson());
-  }
   let m = pathname.match(/^\/(units\/[a-z]+\/)?db\/files\/([A-Za-z0-9_-]+\.json)$/);
   if (m && unitOf(m[1] || '')) {
     if (!isAuthed(req, unitOf(m[1] || ''))) return sendJson(res, 401, { ok: false, error: 'unauthorized' });
