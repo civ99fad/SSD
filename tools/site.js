@@ -112,7 +112,7 @@ function managerHtml(config) {
   const logo = logoFile();
   let html = fs.readFileSync(path.join(SITE_DIR, 'manager.html'), 'utf8');
   if (logo) html = html.replace('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
-  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, unit: MANAGER.id, logo: logo ? 'blobs/' + logo : '' }, config))};`);
+  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, unit: MANAGER.id, editProxy: editProxy(), logo: logo ? 'blobs/' + logo : '' }, config))};`);
 }
 
 // كل مجموعات الجهة (عدا ملفات Word الكبيرة في db/files) + خريطة معرّف الملف ← مساره

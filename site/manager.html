@@ -442,6 +442,11 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   function showGate() { $('app').hidden = true; $('gate').hidden = false; setTimeout(() => $('pw').focus(), 50); }
   function showApp() { $('gate').hidden = true; $('app').hidden = false; load(); }
   async function check(pw) {
+    // عند وجود «الحارس»: كلمة دخول اللوحة هي رمز manager فيه (لا تُكتب في الموقع العام)
+    if (cfg.editProxy) {
+      const r = await fetch(cfg.editProxy.replace(/\/+$/, '') + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw } });
+      return r.ok;
+    }
     if (cfg.mode === 'server') {
       const r = await fetch('api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw, unit: 'manager' }) });
       return r.ok;

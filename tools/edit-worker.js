@@ -4,12 +4,14 @@
 //
 // الإعداد في Cloudflare (Settings ← Variables and Secrets):
 //   GITHUB_TOKEN  (Secret) مفتاح GitHub بصلاحية Contents: Read and write على المستودع
-//   CODES         (Secret) رموز المراكز بصيغة JSON، مثال: {"balad":"رمز-البلد","sharaf":"رمز-شراف"}
+//   CODES         (Secret) رموز المراكز بصيغة JSON، مثال: {"balad":"رمز-البلد","sharaf":"رمز-شراف","manager":"رمز-لوحة-المدير"}
+//                 (manager: كلمة دخول لوحة مدير الإدارة، ولا يسمح بأي تعديل)
 //   اختياري: REPO (الافتراضي civ99fad/SSD)، BRANCH، ORIGIN (الافتراضي https://civ99fad.github.io)
 
 const NAMES = {
   balad: 'مركز البلد', sharaf: 'مركز شراف', muntazah: 'مركز المنتزه', sinaiya: 'مركز الصناعية', aziziya: 'مركز العزيزية',
   dairi: 'مركز الدائري', aja: 'مركز أجا', jabal: 'مركز الجبل', hazmat: 'مركز التدخل بحوادث المواد الخطرة', isnad: 'قسم الدعم والإسناد',
+  manager: 'لوحة مدير الإدارة', // رمزه لدخول لوحة المدير فقط (بلا أي تعديل)
 };
 const unitDir = (u) => (u === 'isnad' ? 'data/db/' : `data/units/${u}/db/`);
 
@@ -42,7 +44,7 @@ export default {
     }
 
     if (url.pathname === '/check') return json(200, { ok: true, unit, name: NAMES[unit] });
-    if (!url.pathname.startsWith('/gh')) return json(404, { message: 'not found' });
+    if (!url.pathname.startsWith('/gh') || unit === 'manager') return json(404, { message: 'not found' });
 
     const path = url.pathname.slice(3); // مسار واجهة GitHub بعد /repos/<المستودع>
     const m = req.method;
