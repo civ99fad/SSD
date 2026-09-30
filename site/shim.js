@@ -77,8 +77,10 @@
   const WEB = cfg.web || ''; // مسار بيانات الجهة في الموقع المنشور
   const DBDIR = cfg.dbDir || 'data/db'; // ومجلدها في المستودع
   // بيانات مشتركة بين كل الجهات (نماذج ومحاضر): مجموعاتها وملفات Word التي تبدأ معرّفاتها بـ shared-
-  const SHARED_DIR = 'data/shared/db', SHARED_WEB = 'shared/db/', SHARED_COLS = ['forms'];
-  const dirOf = (c, id) => ((c === 'files' ? /^shared-/.test(id || '') : SHARED_COLS.includes(c)) ? SHARED_DIR : DBDIR);
+  // SHARED_MIX: مجموعات لكل جهة عناصرها الخاصة، وتُضاف إليها عناصر مشتركة معرّفاتها تبدأ بـ shared- (مثل المكتبة التعليمية)
+  const SHARED_DIR = 'data/shared/db', SHARED_WEB = 'shared/db/', SHARED_COLS = ['forms'], SHARED_MIX = ['profiles'];
+  const isShared = (id) => /^shared-/.test(id || '');
+  const dirOf = (c, id) => ((c === 'files' || SHARED_MIX.includes(c) ? isShared(id) : SHARED_COLS.includes(c)) ? SHARED_DIR : DBDIR);
 
   // ---------- GitHub ----------
   const b64encode = (bytes) => {
@@ -210,9 +212,10 @@
         })
     );
     await Promise.all(
-      SHARED_COLS.map(async (c) => {
+      [...SHARED_COLS, ...SHARED_MIX].map(async (c) => {
         const file = await readFile(`${SHARED_DIR}/${c}.json`);
-        collections[c] = file ? JSON.parse(utf8.dec(file.b64)) : {};
+        const data = file ? JSON.parse(utf8.dec(file.b64)) : {};
+        collections[c] = SHARED_MIX.includes(c) ? Object.assign({}, collections[c], data) : data;
       })
     );
     const map = Object.assign({}, pub.blobs || {});

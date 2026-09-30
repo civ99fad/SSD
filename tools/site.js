@@ -41,6 +41,7 @@ const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
 const SHARED_COLS = ['forms'];
+const SHARED_MIX = ['profiles']; // عناصر مشتركة (معرّفاتها shared-) تُضاف إلى مجموعة كل جهة
 // لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
 // وهي للاطلاع فقط: لا تفتح صفحات الجهات (كل جهة بكلمة مرورها)
 // ولا تطّلع على مهام الجهات (داخلية لكل جهة)
@@ -117,6 +118,10 @@ function dbJson(unit) {
   for (const c of SHARED_COLS) {
     const f = path.join(SHARED_DB, c + '.json');
     collections[c] = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+  }
+  for (const c of SHARED_MIX) {
+    const f = path.join(SHARED_DB, c + '.json');
+    if (fs.existsSync(f)) collections[c] = Object.assign({}, collections[c], JSON.parse(fs.readFileSync(f, 'utf8')));
   }
   const blobs = {};
   for (const f of blobFiles()) blobs[f.split('.')[0]] = 'blobs/' + f;
