@@ -72,25 +72,12 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
 <main class="page">
   <div class="band">سرّي — محظور التداول — مقصور استخدامه على منسوبي الدفاع المدني</div>
 
-  <section class="card" id="login" hidden>
-    <div class="logo" id="logo1"></div>
-    <h1>بوابة الإدارة العامة للدفاع المدني</h1>
-    <div class="sub">أرشيف الجهات</div>
-    <form class="fld" id="form" novalidate>
-      <label for="pw">كلمة المرور</label>
-      <input id="pw" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور" autofocus>
-      <div class="err" id="err" role="alert"></div>
-      <button class="btn" id="enter" type="submit">دخول</button>
-    </form>
-    <div class="foot">الإدارة العامة للدفاع المدني — للاستخدام الداخلي فقط</div>
-  </section>
-
-  <section class="card wide" id="choose" hidden>
+  <section class="card wide" id="choose">
     <div class="logo" id="logo2"></div>
     <h1>بوابة الإدارة العامة للدفاع المدني</h1>
     <div class="sub">اختر الجهة</div>
     <nav class="units" id="units" aria-label="الجهات"></nav>
-    <button type="button" class="out" id="out">تسجيل الخروج</button>
+    <button type="button" class="out" id="out" hidden>تسجيل الخروج من جميع الجهات</button>
   </section>
 </main>
 
@@ -107,7 +94,6 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
   };
   const shield = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0E3D2C" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/></svg>';
   const logo = cfg.logo ? `<img src="${esc(cfg.logo)}" alt="شعار الدفاع المدني">` : shield;
-  $('logo1').innerHTML = logo;
   $('logo2').innerHTML = logo;
   const icons = {
     isnad: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>',
@@ -118,39 +104,20 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
     .map((u) => `<a class="unit" href="${esc(u.id)}.html"><span class="ic">${icons[u.id] || icons.other}</span><b>${esc(u.name)}</b><span class="go">دخول ←</span></a>`)
     .join('');
 
+  // البوابة بلا كلمة مرور؛ كل جهة تطلب كلمتها عند دخولها. زر الخروج يظهر إن كانت أي جهة مفتوحة
+  const authKeys = () => {
+    const out = [];
+    try {
+      for (let i = 0; i < sessionStorage.length; i++) if (/^isnad-auth-/.test(sessionStorage.key(i))) out.push(sessionStorage.key(i));
+    } catch (e) {}
+    return out;
+  };
   function show() {
-    const ok = ss.get('isnad-auth') === '1';
-    $('login').hidden = ok;
-    $('choose').hidden = !ok;
-    if (!ok) $('pw').focus();
+    $('out').hidden = !authKeys().length;
   }
-
-  async function check(pw) {
-    if (cfg.mode === 'server') {
-      const r = await fetch('api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) });
-      return r.ok;
-    }
-    const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('isnad:' + pw));
-    return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('') === cfg.hash;
-  }
-
-  $('form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const err = $('err'), pw = $('pw').value;
-    err.style.display = 'none';
-    if (!pw) { err.textContent = 'الرجاء إدخال كلمة المرور'; err.style.display = 'block'; return; }
-    $('enter').disabled = true;
-    let ok = false;
-    try { ok = await check(pw); } catch (x) {}
-    $('enter').disabled = false;
-    if (!ok) { err.textContent = 'كلمة المرور غير صحيحة'; err.style.display = 'block'; $('pw').select(); return; }
-    $('pw').value = '';
-    ss.set('isnad-auth', '1');
-    show();
-  });
 
   $('out').addEventListener('click', () => {
-    ss.del('isnad-auth');
+    authKeys().forEach(ss.del);
     ss.del('isnad-entered');
     if (cfg.mode === 'server') fetch('logout', { method: 'POST' });
     show();

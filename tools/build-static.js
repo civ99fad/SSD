@@ -1,7 +1,7 @@
 // بناء نسخة ثابتة من الموقع للنشر على GitHub Pages (بدون خادم)
 // الاستخدام: npm run build:static  ← ينتج المجلد _site/
 //   index.html = البوابة، و<الجهة>.html = صفحة كل جهة، وبيانات كل جهة في مسارها (db.json أو units/<الجهة>/db.json)
-// كلمة المرور: من متغير البيئة SITE_PASSWORD إن وُجد، وإلا من data/settings.json
+// كلمات المرور: لكل جهة كلمتها (انظر password() في tools/site.js)، والبوابة بلا كلمة مرور
 const fs = require('fs');
 const path = require('path');
 const site = require('./site');
@@ -11,13 +11,12 @@ const OUT = path.join(site.ROOT, '_site');
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, 'blobs'), { recursive: true });
 
-const auth = { mode: 'static', hash: site.passwordHash(site.password()) };
-fs.writeFileSync(path.join(OUT, 'index.html'), site.portalHtml(auth));
+fs.writeFileSync(path.join(OUT, 'index.html'), site.portalHtml({ mode: 'static' }));
 fs.copyFileSync(path.join(site.SITE_DIR, 'shim.js'), path.join(OUT, 'shim.js'));
 
 const report = [];
 for (const [unit, u] of Object.entries(site.UNITS)) {
-  fs.writeFileSync(path.join(OUT, unit + '.html'), site.pageHtml(unit, auth));
+  fs.writeFileSync(path.join(OUT, unit + '.html'), site.pageHtml(unit, { mode: 'static', hash: site.passwordHash(site.password(unit)) }));
   const web = path.join(OUT, u.web);
   fs.mkdirSync(web, { recursive: true });
   const db = site.dbJson(unit);
