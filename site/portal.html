@@ -41,7 +41,7 @@ button,input{font:inherit;color:inherit}
 .page::before{content:"";position:absolute;inset:0;background:radial-gradient(560px 560px at 85% 12%,rgba(255,255,255,.06),transparent 70%),radial-gradient(480px 480px at 8% 92%,rgba(255,255,255,.05),transparent 70%);pointer-events:none}
 .band{position:absolute;top:0;left:0;right:0;background:#B42318;color:#fff;text-align:center;font-size:13px;font-weight:800;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));z-index:1}
 .card{position:relative;width:100%;max-width:440px;background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:40px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
-.card.wide{max-width:760px}
+.card.wide{max-width:980px}
 .logo{width:92px;height:92px;border-radius:50%;background:#fff;border:1px solid #E6ECE9;display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden}
 .logo img{width:80px;height:80px;object-fit:contain}
 h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
@@ -55,12 +55,17 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
 .btn:hover{background:var(--accent-hover)}
 .btn[disabled]{opacity:.6;cursor:progress}
 .foot{margin-top:22px;font-size:12px;color:var(--faint)}
-.units{width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:24px}
-.unit{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:start;padding:22px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface-2);min-height:150px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.units{width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:22px}
+.unit{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:start;padding:16px 18px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);min-height:118px;transition:border-color .15s,box-shadow .15s,transform .15s}
+.unit.main{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px;min-height:0;padding:18px 20px}
+.unit.main .txt{display:flex;flex-direction:column;gap:2px;flex:1}
+.unit.main .go{margin-top:0}
+.grp{grid-column:1/-1;text-align:start;font-size:13px;font-weight:800;color:var(--faint);margin-top:8px}
 .unit:hover{border-color:var(--accent);box-shadow:0 10px 26px rgba(14,61,44,.14);transform:translateY(-2px)}
 .unit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.unit .ic{width:46px;height:46px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.unit b{font-size:19px;font-weight:800}
+.unit .ic{width:40px;height:40px;flex-shrink:0;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.unit b{font-size:17px;font-weight:800}
+.unit.main b{font-size:19px}
 .unit small{font-size:13px;color:var(--muted)}
 .unit .go{margin-top:auto;font-size:13px;font-weight:700;color:var(--accent)}
 .out{all:unset;cursor:pointer;margin-top:18px;font-size:13px;font-weight:700;color:var(--muted)}
@@ -113,9 +118,16 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
     isnad: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>',
     other: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>',
   };
-  $('units').innerHTML = (cfg.units || [])
-    .map((u) => `<a class="unit" href="${esc(u.id)}.html"><span class="ic">${icons[u.id] || icons.other}</span><b>${esc(u.name)}</b><small>${esc(u.desc)}</small><span class="go">دخول ←</span></a>`)
-    .join('');
+  // القسم أولًا في خانة عريضة، ثم المراكز
+  const card = (u) =>
+    u.id === 'isnad'
+      ? `<a class="unit main" href="${esc(u.id)}.html"><span class="ic">${icons.isnad}</span><span class="txt"><b>${esc(u.name)}</b><small>${esc(u.desc)}</small></span><span class="go">دخول ←</span></a>`
+      : `<a class="unit" href="${esc(u.id)}.html"><span class="ic">${icons.other}</span><b>${esc(u.name)}</b><span class="go">دخول ←</span></a>`;
+  const list = cfg.units || [];
+  $('units').innerHTML =
+    list.filter((u) => u.id === 'isnad').map(card).join('') +
+    (list.some((u) => u.id !== 'isnad') ? '<div class="grp">المراكز</div>' : '') +
+    list.filter((u) => u.id !== 'isnad').map(card).join('');
 
   function show() {
     const ok = ss.get('isnad-auth') === '1';
