@@ -10,7 +10,7 @@
 <style>
 :root{
   color-scheme:light;
-  --bg:#0E3D2C; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#E3E8E5;
+  --bg:#0E3D2C; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#8DB3A1;--edge:#2F6B53;
   --text:#14201B; --muted:#56635D; --faint:#7C8983;
   --accent:#1F7A56; --accent-hover:#17694A; --on-accent:#FFFFFF; --accent-soft:#E4F1EA;
   --danger:#B42318; --danger-bg:#FDECEA; --shadow:0 30px 60px rgba(0,0,0,.35);
@@ -18,7 +18,7 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#0A2A1F; --surface:#151D1A; --surface-2:#19231F; --line:#26322D;
+    --bg:#0A2A1F; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
     --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
     --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
     --danger:#F97066; --danger-bg:#3A1714;
@@ -26,7 +26,7 @@
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#0A2A1F; --surface:#151D1A; --surface-2:#19231F; --line:#26322D;
+  --bg:#0A2A1F; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
   --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
   --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
   --danger:#F97066; --danger-bg:#3A1714;
@@ -77,6 +77,10 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
 .out{all:unset;cursor:pointer;margin-top:18px;font-size:13px;font-weight:700;color:var(--muted)}
 .out:hover{color:var(--accent);text-decoration:underline}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
+.unit{border:2px solid var(--edge)!important;background:var(--surface)!important}
+.unit:hover{border-color:var(--accent)!important}
 </style>
 </head>
 <body>

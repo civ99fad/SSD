@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
 <style>
 :root{
-  --bg:#F3F5F4; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#E3E8E5; --line-2:#EEF2F0;
+  --bg:#F3F5F4; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#8DB3A1;--edge:#2F6B53; --line-2:#C6D9CF;
   --text:#14201B; --muted:#56635D; --faint:#7C8983;
   --brand:#0E3D2C; --brand-text:#EAF1EE; --brand-muted:#A9C2B7; --brand-line:rgba(255,255,255,.1);
   --accent:#1F7A56; --accent-hover:#17694A; --on-accent:#FFFFFF; --accent-soft:#E4F1EA;
@@ -18,7 +18,7 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#0D1311; --surface:#151D1A; --surface-2:#19231F; --line:#26322D; --line-2:#1F2A26;
+    --bg:#0D1311; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62; --line-2:#1F2A26;
     --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
     --brand:#0A2A1F; --brand-text:#E6EFEB; --brand-muted:#93AFA3; --brand-line:rgba(255,255,255,.08);
     --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
@@ -31,7 +31,7 @@
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#0D1311; --surface:#151D1A; --surface-2:#19231F; --line:#26322D; --line-2:#1F2A26;
+  --bg:#0D1311; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62; --line-2:#1F2A26;
   --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
   --brand:#0A2A1F; --brand-text:#E6EFEB; --brand-muted:#93AFA3; --brand-line:rgba(255,255,255,.08);
   --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
@@ -616,6 +616,12 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
   .mpage{width:210mm;height:297mm;box-shadow:none;break-after:page;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .mf{background:none!important;outline:none!important}.mf:empty::before{content:none}
 }
+
+/* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
+.panel,.kpi,.vcard{border:1.5px solid var(--edge)!important}
+.panel table th{border-bottom:1.5px solid var(--edge)}
+.panel table td,.panel table th{border-color:var(--line-2)}
+.drow{border-bottom-color:var(--line)}
 </style>
 
 <div id="welcome" class="welcome" hidden>
