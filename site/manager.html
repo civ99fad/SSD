@@ -174,6 +174,21 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 
 /* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
 .panel,.kpi,.ucard{border:2px solid var(--edge)!important}
+
+/* التعاميم */
+.cform{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.cform .full{grid-column:1/-1}
+.cform label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:var(--muted)}
+.cform input,.cform textarea{font:inherit;font-weight:400;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--text)}
+.cform textarea{min-height:80px;resize:vertical}
+.clist{display:flex;flex-direction:column}
+.crow{display:flex;gap:14px;align-items:flex-start;padding:14px 4px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.crow:last-child{border-bottom:0}
+.crow .ct{flex:1 1 280px;min-width:0}
+.crow b{font-size:15.5px}.crow small{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.crow p{margin:6px 0 0;font-size:14px;white-space:pre-wrap}
+.cerr{color:var(--bad);font-weight:700;font-size:13.5px}
+@media (max-width:640px){ .cform{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -203,6 +218,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
         <div class="meta" id="meta"></div>
       </div>
       <div class="acts">
+        <button type="button" class="btn" data-act="circ" id="circBtn">التعاميم</button>
         <button type="button" class="btn" data-act="refresh">تحديث</button>
         <button type="button" class="btn" data-act="copySum">نسخ الملخص</button>
         <button type="button" class="btn" data-act="print">طباعة التقرير</button>
@@ -370,6 +386,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   }
 
   function render() {
+    if (S.circ) return;
     const t = totals(), d = dutyDay(), k = dutyShift(d);
     $('meta').innerHTML = `<span>${esc(hijri())}</span><span>الوردية المناوبة: <b>${SHN[k].replace('الوردية ', '')}</b> (٩ ص ← ٩ ص)</span><span>آخر تحديث: ${esc(timeStr(loadedAt))}</span>`;
     const withData = R.filter((x) => !x.empty);
@@ -439,8 +456,84 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     else if (a === 'print') window.print();
     else if (a === 'copySum') copy(sumText());
     else if (a === 'copyDown') copy(downText());
-    else if (a === 'logout') { ss.del(AUTH); if (cfg.mode === 'server') fetch('logout', { method: 'POST' }); location.replace('index.html'); }
+    else if (a === 'circ') openCirc();
+    else if (a === 'circBack') { S.circ = false; render(); }
+    else if (a === 'cdel') { if (confirm('حذف هذا التعميم من جميع المراكز والأقسام؟')) saveCirc((cur) => { const n = Object.assign({}, cur); delete n[b.dataset.v]; return n; }, 'حذف تعميم').then(() => { toast('حُذف التعميم'); circView(); }, (x) => toast('تعذّر الحذف: ' + x.message)); }
+    else if (a === 'logout') { ss.del(CODE); ss.del(AUTH); if (cfg.mode === 'server') fetch('logout', { method: 'POST' }); location.replace('index.html'); }
   });
+
+
+  /* ---------- التعاميم: يضيفها مدير الإدارة فتصل لجميع المراكز والأقسام (data/shared/db/circulars.json) ---------- */
+  const CODE = 'isnad-mgr-code', CPATH = 'data/shared/db/circulars.json';
+  const PROXY = (cfg.editProxy || '').replace(/\/+$/, '');
+  let circ = null, circSha = null, circErr = '';
+  const b64u = (str) => { const by = new TextEncoder().encode(str); let s = ''; for (let i = 0; i < by.length; i += 0x8000) s += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000)); return btoa(s); };
+  const ub64 = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, '')), (c) => c.charCodeAt(0)));
+  function ghWho() { const t = ls.get('isnad-gh-token'), c = ss.get(CODE); if (c && PROXY) return { proxy: true, c }; if (t) return { t }; return null; }
+  async function gh(path, opts = {}) {
+    const w = ghWho(); if (!w) throw new Error('nokey');
+    const url = w.proxy ? PROXY + '/gh' + path : 'https://api.github.com/repos/' + cfg.repo + path;
+    const headers = w.proxy ? { 'X-Unit': 'manager', 'X-Code': w.c } : { Authorization: 'Bearer ' + w.t, Accept: 'application/vnd.github+json' };
+    const r = await fetch(url, Object.assign({ cache: 'no-store' }, opts, { headers: Object.assign(headers, opts.body ? { 'Content-Type': 'application/json' } : {}) }));
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error(String(r.status));
+    return r.json();
+  }
+  const ref = () => (cfg.branch ? '?ref=' + encodeURIComponent(cfg.branch) : '');
+  async function loadCirc() {
+    circErr = '';
+    try {
+      if (ghWho()) { const f = await gh('/contents/' + CPATH + ref()); circSha = f ? f.sha : null; circ = f ? JSON.parse(ub64(f.content)) : {}; return; }
+    } catch (e) { circErr = 'تعذّر قراءة أحدث التعاميم من المستودع (' + e.message + ')، والمعروض آخر نسخة منشورة.'; }
+    try { const r = await fetch('db.json', { cache: 'no-store' }); const d = r.ok ? await r.json() : {}; circ = (d.collections || {}).circulars || {}; } catch (e) { circ = {}; }
+  }
+  const rawUrl = (x) => (x.file ? `https://raw.githubusercontent.com/${cfg.repo}/${cfg.branch}/data/blobs/${x.file}.${x.ext}` : '');
+  const EXTS = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx' };
+  async function saveCirc(mut, msg) {
+    const f = await gh('/contents/' + CPATH + ref()); const cur = f ? JSON.parse(ub64(f.content)) : {};
+    const next = mut(cur);
+    await gh('/contents/' + CPATH, { method: 'PUT', body: JSON.stringify({ message: msg, content: b64u(JSON.stringify(next, null, 1) + '\n'), sha: f ? f.sha : undefined, branch: cfg.branch || undefined }) });
+    circ = next;
+  }
+  function circView() {
+    const can = !!ghWho();
+    const list = Object.entries(circ || {}).map(([id, x]) => Object.assign({ id }, x)).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const form = can ? `<section class="panel"><div class="sh"><h2>إضافة تعميم جديد</h2></div>
+      <form class="cform" id="cform">
+        <label class="full">عنوان التعميم<input name="title" required placeholder="مثال: تعميم بشأن الالتزام بأوقات الدوام"></label>
+        <label>رقم التعميم (اختياري)<input name="num" placeholder="مثال: ١٢٣٤/ص"></label>
+        <label>التاريخ<input name="date" value="${esc(hijri())}"></label>
+        <label class="full">نص مختصر أو ملاحظات (اختياري)<textarea name="note"></textarea></label>
+        <label class="full">المرفق (PDF أو صورة أو Word)<input name="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.docx,application/pdf,image/*"></label>
+        <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="btn primary" id="cgo">إرسال التعميم لجميع المراكز والأقسام</button><span class="cerr" id="cerr"></span></div>
+      </form></section>` : `<section class="panel"><div class="none">لإضافة التعاميم سجّل الدخول برمز لوحة المدير من جديد (الخروج ثم الدخول).</div></section>`;
+    const rows = list.length ? `<div class="clist">${list.map((x) => `<div class="crow"><div class="ct"><b>${esc(x.title || 'تعميم')}</b><small>${[x.num ? 'رقم ' + x.num : '', x.date || ''].filter(Boolean).map(esc).join(' · ')}</small>${x.note ? `<p>${esc(x.note)}</p>` : ''}</div>
+      ${x.file ? `<a class="btn" href="${esc(rawUrl(x))}" target="_blank" rel="noopener">عرض المرفق</a>` : ''}${can ? `<button type="button" class="btn" data-act="cdel" data-v="${esc(x.id)}">حذف</button>` : ''}</div>`).join('')}</div>` : '<div class="none">لا توجد تعاميم بعد.</div>';
+    $('main').innerHTML = `<div class="sh"><h2>التعاميم</h2><span class="grow"></span><button type="button" class="btn" data-act="circBack">→ الرجوع للوحة</button></div>${circErr ? `<p class="cerr">${esc(circErr)}</p>` : ''}${form}<section class="panel" style="margin-top:16px"><div class="sh"><h2>التعاميم المرسلة</h2><span class="cnt">${arD(list.length)}</span></div>${rows}</section>
+      <p class="foot">يصل التعميم إلى صفحة «التعاميم» في جميع المراكز والأقسام، ويظهر لمدرائها تنبيه بوصول تعميم جديد (بعد دقيقة أو دقيقتين من الإرسال).</p>`;
+    const fm = $('cform'); if (!fm) return;
+    fm.addEventListener('submit', async (e) => {
+      e.preventDefault(); const go = $('cgo'), er = $('cerr'); er.textContent = '';
+      const fd = new FormData(fm), file = fd.get('file');
+      go.disabled = true; go.textContent = 'جارٍ الإرسال…';
+      try {
+        let att = {};
+        if (file && file.size) {
+          const ext = EXTS[file.type] || (/\.docx$/i.test(file.name) ? 'docx' : ''); if (!ext) throw new Error('نوع الملف غير مدعوم');
+          if (file.size > 20 * 1024 * 1024) throw new Error('الملف أكبر من 20 ميجابايت');
+          const id = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+          const by = new Uint8Array(await file.arrayBuffer()); let bs = ''; for (let i = 0; i < by.length; i += 0x8000) bs += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000));
+          await gh('/contents/data/blobs/' + id + '.' + ext, { method: 'PUT', body: JSON.stringify({ message: 'تعميم: رفع مرفق ' + file.name, content: btoa(bs), branch: cfg.branch || undefined }) });
+          att = { file: id, ext, fileName: file.name };
+        }
+        const cid = 'c' + Date.now().toString(36);
+        const rec = Object.assign({ title: String(fd.get('title') || '').trim(), num: String(fd.get('num') || '').trim(), date: String(fd.get('date') || '').trim(), note: String(fd.get('note') || '').trim(), at: Date.now() }, att);
+        await saveCirc((cur) => Object.assign({}, cur, { [cid]: rec }), 'تعميم جديد: ' + rec.title.slice(0, 80));
+        toast('أُرسل التعميم لجميع المراكز والأقسام'); circView();
+      } catch (x) { er.textContent = 'تعذّر الإرسال: ' + (x.message === '403' ? 'رمز لوحة المدير لا يملك صلاحية الإرسال بعد (يلزم تحديث «الحارس»).' : x.message); go.disabled = false; go.textContent = 'إرسال التعميم لجميع المراكز والأقسام'; }
+    });
+  }
+  async function openCirc() { S.circ = true; $('main').innerHTML = '<div class="panel loading">جارٍ تحميل التعاميم…</div>'; await loadCirc(); circView(); }
 
   /* ---------- الدخول ---------- */
   function showGate() { $('app').hidden = true; $('gate').hidden = false; setTimeout(() => $('pw').focus(), 50); }
@@ -468,7 +561,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     try { ok = await check(pw); } catch (x) {}
     $('pgo').disabled = false;
     if (!ok) { err.textContent = 'كلمة المرور غير صحيحة'; err.hidden = false; $('pw').select(); return; }
-    ss.set(AUTH, '1'); $('pw').value = ''; showApp();
+    ss.set(AUTH, '1'); if (cfg.editProxy) ss.set(CODE, pw); $('pw').value = ''; showApp();
   });
 
   // المسؤول بمفتاح GitHub المحفوظ على جهازه (له صلاحية الكتابة على المستودع) يدخل اللوحة مباشرة

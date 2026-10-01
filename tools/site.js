@@ -40,7 +40,7 @@ UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف ا
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
-const SHARED_COLS = ['forms', 'guide'];
+const SHARED_COLS = ['forms', 'guide', 'circulars'];
 const SHARED_MIX = ['profiles']; // عناصر مشتركة (معرّفاتها shared-) تُضاف إلى مجموعة كل جهة
 // لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
 // وهي للاطلاع فقط: لا تفتح صفحات الجهات (كل جهة بكلمة مرورها)
@@ -112,7 +112,7 @@ function managerHtml(config) {
   const logo = logoFile();
   let html = fs.readFileSync(path.join(SITE_DIR, 'manager.html'), 'utf8');
   if (logo) html = html.replace('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
-  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, unit: MANAGER.id, editProxy: editProxy(), repo: repo().repo, logo: logo ? 'blobs/' + logo : '' }, config))};`);
+  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, unit: MANAGER.id, editProxy: editProxy(), repo: repo().repo, branch: repo().branch, logo: logo ? 'blobs/' + logo : '' }, config))};`);
 }
 
 // كل مجموعات الجهة (عدا ملفات Word الكبيرة في db/files) + خريطة معرّف الملف ← مساره
