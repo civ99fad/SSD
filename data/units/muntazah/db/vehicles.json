@@ -1,6 +1,6 @@
 {
  "m01": {
-  "code": "3/1",
+  "code": "1/3",
   "name": "إنقاذ فورد روزنباور",
   "make": "فورد",
   "plate": "أ هـ س 2505",
@@ -13,22 +13,39 @@
   "documents": [],
   "inventory": [],
   "history": [],
-  "notes": [],
+  "notes": [
+   {
+    "id": "n-rd-m01",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790839620118,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: ماطور الوسائد الهوائية بالمقر + ماطور القص والفصل بالمقر + القوارب بطاريات بالصيانة + حبل السارية"
+   }
+  ],
   "created": 1790771897726,
   "updated": 1790771897726
  },
  "m02": {
-  "code": "3/2",
+  "code": "2/3",
   "name": "مزدوجة كوماندر",
   "make": "كوماندر",
   "plate": "أ و س 7255",
   "model": "2013",
-  "status": "ready",
-  "statusNote": "",
+  "status": "maint",
+  "statusNote": "عطل في العامود",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],
-  "documents": [],
+  "documents": [
+   {
+    "id": "st-m02-2004",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "في الصيانة — عطل في العامود",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620118,
+    "by": ""
+   }
+  ],
   "inventory": [],
   "history": [],
   "notes": [],
@@ -36,17 +53,27 @@
   "updated": 1790771897727
  },
  "m03": {
-  "code": "3/4",
+  "code": "4/3",
   "name": "وايت بروبلين",
   "make": "",
   "plate": "أ م ك 4426",
   "model": "2013",
-  "status": "ready",
-  "statusNote": "",
+  "status": "down",
+  "statusNote": "عطل (لم يُذكر السبب)",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],
-  "documents": [],
+  "documents": [
+   {
+    "id": "st-m03-2004",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "متعطلة بالمقر — عطل (لم يُذكر السبب)",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620118,
+    "by": ""
+   }
+  ],
   "inventory": [],
   "history": [],
   "notes": [],
@@ -54,13 +81,13 @@
   "updated": 1790771897728
  },
  "m04": {
-  "code": "3/5",
+  "code": "5/3",
   "name": "وايت أكتروس",
   "make": "مرسيدس",
   "plate": "أ ح ط 8108",
   "model": "2004",
-  "status": "maint",
-  "statusNote": "تهريب ماء",
+  "status": "ready",
+  "statusNote": "",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],
@@ -73,16 +100,32 @@
     "note": "",
     "title": "في الصيانة — تهريب ماء",
     "type": "status"
+   },
+   {
+    "id": "st-m04-2004",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "عادت من الصيانة وهي جاهزة",
+    "note": "الحالة السابقة: في الصيانة",
+    "at": 1790839620118,
+    "by": ""
    }
   ],
   "inventory": [],
   "history": [],
-  "notes": [],
+  "notes": [
+   {
+    "id": "n-rd-m04",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790839620118,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: بديلة 0/33 من قسم الدعم والإسناد"
+   }
+  ],
   "created": 1790771897729,
   "updated": 1790771897729
  },
  "m05": {
-  "code": "3/6",
+  "code": "6/3",
   "name": "جيب نيسان بابين",
   "make": "نيسان",
   "plate": "أ أ د 5485",
@@ -100,7 +143,7 @@
   "updated": 1790771897730
  },
  "m06": {
-  "code": "3/7",
+  "code": "7/3",
   "name": "سيارة الغواصين ايفيكو",
   "make": "ايفيكو",
   "plate": "أ ع ل 3236",
@@ -113,12 +156,19 @@
   "documents": [],
   "inventory": [],
   "history": [],
-  "notes": [],
+  "notes": [
+   {
+    "id": "n-rd-m06",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790839620118,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد مفتاح مصاعد"
+   }
+  ],
   "created": 1790771897731,
   "updated": 1790771897731
  },
  "m07": {
-  "code": "3/8",
+  "code": "8/3",
   "name": "جيب نيسان ٤ أبواب",
   "make": "نيسان",
   "plate": "ب ل ط 3323",
@@ -160,7 +210,7 @@
   "plate": "ب ع س 4288",
   "model": "2010",
   "status": "maint",
-  "statusNote": "تهريب زيت",
+  "statusNote": "عطل (لم يُذكر السبب)",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],

@@ -13,12 +13,19 @@
   "documents": [],
   "inventory": [],
   "history": [],
-  "notes": [],
+  "notes": [
+   {
+    "id": "n-rd-b1-1",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790839620116,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد مفتاح مصاعد"
+   }
+  ],
   "created": 1790771223977,
   "updated": 1790771223977
  },
  "b1-2": {
-  "code": "1/2",
+  "code": "2/1",
   "name": "مزدوجة كوماندر",
   "make": "كوماندر",
   "plate": "ب ب ق 2218",
@@ -41,12 +48,22 @@
   "make": "جمس",
   "plate": "أ ك ب 3412",
   "model": "2008",
-  "status": "ready",
-  "statusNote": "",
+  "status": "down",
+  "statusNote": "عطل (لم يُذكر السبب)",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],
-  "documents": [],
+  "documents": [
+   {
+    "id": "st-b3-3-2004",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "متعطلة بالمقر — عطل (لم يُذكر السبب)",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620116,
+    "by": ""
+   }
+  ],
   "inventory": [],
   "history": [],
   "notes": [],
@@ -54,13 +71,13 @@
   "updated": 1790771223979
  },
  "b8-3": {
-  "code": "8/3",
+  "code": "3/8",
   "name": "جمس إسعاف",
   "make": "جمس",
   "plate": "أ هـ ب 4261",
   "model": "2010",
-  "status": "down",
-  "statusNote": "بطارية",
+  "status": "ready",
+  "statusNote": "",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],
@@ -73,6 +90,15 @@
     "note": "",
     "title": "متعطلة بالمقر — بطارية",
     "type": "status"
+   },
+   {
+    "id": "st-b8-3-2004",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "أصبحت جاهزة",
+    "note": "الحالة السابقة: متعطلة بالمقر",
+    "at": 1790839620116,
+    "by": ""
    }
   ],
   "inventory": [],
@@ -82,7 +108,7 @@
   "updated": 1790771223980
  },
  "b1-4": {
-  "code": "1/4",
+  "code": "4/1",
   "name": "وايت بروبلين",
   "make": "",
   "plate": "أ ن ب 3374",
@@ -100,13 +126,13 @@
   "updated": 1790771223981
  },
  "b1-5": {
-  "code": "1/5",
+  "code": "5/1",
   "name": "وايت أكتروس",
   "make": "مرسيدس",
   "plate": "أ ح ط 8126",
   "model": "2002",
   "status": "down",
-  "statusNote": "بطارية + كلتش",
+  "statusNote": "عطل في الكلتش",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],
@@ -128,7 +154,7 @@
   "updated": 1790771223982
  },
  "b1-7": {
-  "code": "1/7",
+  "code": "7/1",
   "name": "جيب نيسان بابين",
   "make": "نيسان",
   "plate": "ح ك ط 0248",
@@ -156,7 +182,7 @@
   "updated": 1790771223983
  },
  "b1-8": {
-  "code": "1/8",
+  "code": "8/1",
   "name": "جيب تايوتا ربع",
   "make": "تويوتا",
   "plate": "أ أ د 9923",
