@@ -40,7 +40,7 @@ UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف ا
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
-const SHARED_COLS = ['forms'];
+const SHARED_COLS = ['forms', 'guide'];
 const SHARED_MIX = ['profiles']; // عناصر مشتركة (معرّفاتها shared-) تُضاف إلى مجموعة كل جهة
 // لوحة مدير الإدارة: تجمع جاهزية كل الجهات في صفحة واحدة، ولها كلمة مرورها (password('manager'))،
 // وهي للاطلاع فقط: لا تفتح صفحات الجهات (كل جهة بكلمة مرورها)
