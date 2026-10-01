@@ -5,7 +5,7 @@
 // الإعداد في Cloudflare (Settings ← Variables and Secrets):
 //   GITHUB_TOKEN  (Secret) مفتاح GitHub بصلاحية Contents: Read and write على المستودع
 //   CODES         (Secret) رموز المراكز بصيغة JSON، مثال: {"balad":"رمز-البلد","sharaf":"رمز-شراف","manager":"رمز-لوحة-المدير"}
-//                 (manager: كلمة دخول لوحة مدير الإدارة، ولا يسمح بأي تعديل)
+//                 (manager: كلمة دخول لوحة مدير الإدارة، ويسمح بإرسال التعاميم فقط)
 //                 (admin اختياري: رمز المسؤول العام يفتح أي مركز أو قسم أو لوحة المدير، ويعدّل على الجهة المفتوحة)
 //   اختياري: REPO (الافتراضي civ99fad/SSD)، BRANCH، ORIGIN (الافتراضي https://civ99fad.github.io)
 
@@ -46,7 +46,7 @@ export default {
     }
 
     if (url.pathname === '/check') return json(200, { ok: true, unit, name: NAMES[unit] });
-    if (!url.pathname.startsWith('/gh') || unit === 'manager') return json(404, { message: 'not found' });
+    if (!url.pathname.startsWith('/gh')) return json(404, { message: 'not found' });
 
     const path = url.pathname.slice(3); // مسار واجهة GitHub بعد /repos/<المستودع>
     const m = req.method;
@@ -68,7 +68,8 @@ export default {
       } catch (e) {
         return json(400, { message: 'طلب غير صالح' });
       }
-      const own = file.startsWith(unitDir(unit)) && /\.json$/.test(file);
+      // رمز لوحة المدير يكتب في ملف التعاميم المشترك فقط (تصل لجميع المراكز والأقسام)
+      const own = unit === 'manager' ? file === 'data/shared/db/circulars.json' && m === 'PUT' : file.startsWith(unitDir(unit)) && /\.json$/.test(file);
       const newBlob = m === 'PUT' && !body.sha && /^data\/blobs\/[0-9a-f]{32}\.[a-z0-9]+$/.test(file);
       if (!own && !newBlob) return json(403, { message: 'هذا الرمز يسمح بالتعديل على ' + NAMES[unit] + ' فقط' });
       if (env.BRANCH) body.branch = env.BRANCH;

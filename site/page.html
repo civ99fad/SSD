@@ -535,6 +535,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .navt[aria-expanded=false] .chev{transform:rotate(90deg)}
 .navg{display:flex;flex-direction:column;gap:4px;padding-inline-start:8px;border-inline-start:1px solid rgba(255,255,255,.08);margin-inline-start:10px}
 .navg.closed{display:none}
+.newb{display:inline-block;margin-inline-start:6px;padding:1px 8px;border-radius:999px;background:var(--danger);color:#fff;font-size:11.5px;font-weight:800;vertical-align:middle}
 .advc{padding:0;margin-bottom:10px;overflow:hidden}
 .advh{display:flex;flex-direction:column;gap:2px;width:100%;text-align:start;background:none;border:0;padding:16px 20px;font:inherit;color:inherit;cursor:pointer}
 .advh b{font-size:15.5px}.advh small{color:var(--muted)}
@@ -678,6 +679,10 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
       </div>
       <button type="button" class="navh navt" data-act="navGrp" data-id="hr" id="navg-hr" aria-expanded="true" aria-controls="navb-hr"><span>الموارد البشرية</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="navg" id="navb-hr">
+      <button type="button" data-act="nav" data-id="circ" id="nav-circ">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+        <span>التعاميم</span>
+      </button>
       <button type="button" data-act="nav" data-id="staff" id="nav-staff">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"/></svg>
         <span>الورديات والتكميل</span>
@@ -991,11 +996,14 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','circ','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
+  circBadge();
+  if (S.loadedCirc && !S.circToasted){ S.circToasted=true; const n=circNew().length; if (n) setTimeout(()=>toast(n===1?'وصل تعميم جديد من مدير الإدارة — افتح «التعاميم»':'وصلت '+n+' تعاميم جديدة من مدير الإدارة — افتح «التعاميم»'),900); }
+  if (v.name==='circ' && S.loadedCirc && circNew().length){ if (S.circSeenAt==null) S.circSeenAt=circSeen(); circMarkSeen(); setTimeout(circBadge,0); }
   if (S.lastSect!==sect){ S.lastSect=sect; const nb=$('#nav-'+sect), nv=nb&&nb.closest('.nav'); navOpenFor(nb); if (nv && nv.scrollWidth>nv.clientWidth){ const r=nb.getBoundingClientRect(), R=nv.getBoundingClientRect(); if (r.left<R.left||r.right>R.right) nv.scrollLeft += (r.left+r.width/2)-(R.left+R.width/2); } }
   if (S.dbFailed) return paint(`<div class="panel state"><b>تعذّر الوصول إلى البيانات.</b><br>أعد تحميل الصفحة، وإن استمرت المشكلة فتأكد أن الموقع مشارك معك.</div>`);
   if ((S.gq||'').trim()) paint(gSearchBar()+viewSearch(S.gq));
@@ -1016,6 +1024,7 @@ function render(){
   else if (v.name==='tx') paint(gSearchBar()+viewTx());
   else if (v.name==='pfiles') paint(gSearchBar()+viewPFiles());
   else if (v.name==='advisor') paint(gSearchBar()+viewAdvisor());
+  else if (v.name==='circ') paint(gSearchBar()+viewCirc());
   else if (v.name==='pfile') paint(gSearchBar()+viewPFile(v.id));
   else if (v.name==='consum') paint(gSearchBar()+viewConsum());
   else if (v.name==='equip') paint(gSearchBar()+viewEquip());
@@ -1025,7 +1034,7 @@ function navSave(){ try{ const o={}; document.querySelectorAll('.navt').forEach(
 function navInit(){ let o={}; try{ o=JSON.parse(localStorage.getItem('isnad-navg')||'{}')||{}; }catch(e){}
   document.querySelectorAll('.navt').forEach(b=>{ const g=$('#navb-'+b.dataset.id); const vis=[...g.querySelectorAll('button')].some(x=>getComputedStyle(x).display!=='none'); if(!vis){ b.style.setProperty('display','none','important'); return; } const open=o[b.dataset.id]!==false; b.setAttribute('aria-expanded',open); g.classList.toggle('closed',!open); }); }
 function navOpenFor(nb){ const g=nb&&nb.closest('.navg'); if(g&&g.classList.contains('closed')){ const b=$('#navg-'+g.id.slice(5)); if(b){ b.setAttribute('aria-expanded','true'); g.classList.remove('closed'); } } }
-function go(name, id){ S.view={name,id}; S.gq=''; if(name==='vehicles') S.q=''; if(name==='warehouse') S.wq=''; render(); window.scrollTo(0,0); }
+function go(name, id){ if (name!=='circ') S.circSeenAt=null; S.view={name,id}; S.gq=''; if(name==='vehicles') S.q=''; if(name==='warehouse') S.wq=''; render(); window.scrollTo(0,0); }
 const loading = () => `<div class="panel state">جارٍ تحميل البيانات…</div>`;
 
 function sortedVehicles(){
@@ -1607,6 +1616,28 @@ function viewAdvisor(){
         ${x.note?`<div class="advn">${esc(x.note)}</div>`:''}
         ${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(x.id)}">${ICON.edit}تعديل</button><button type="button" class="btn sm danger" data-act="advDel" data-id="${esc(x.id)}">${ICON.del}حذف</button></div>`:''}</div>`:''}</section>`; }).join('');
 }
+
+/* ---------- التعاميم: يرسلها مدير الإدارة من لوحته فتصل لجميع المراكز والأقسام، مع تنبيه بالتعاميم الجديدة ---------- */
+const CIRC_SEEN = 'isnad-circ-seen-'+((window.ISNAD_CONFIG||{}).unit||'isnad');
+const circSeen = () => { try{ return +localStorage.getItem(CIRC_SEEN)||0; }catch(e){ return 0; } };
+const circAll = () => (S.circulars||[]).slice().sort((a,b)=>(b.at||0)-(a.at||0));
+const circNew = () => { const t=circSeen(); return circAll().filter(c=>(c.at||0)>t); };
+const circUrl = c => c.file ? (blob(c.file) || `https://raw.githubusercontent.com/${(window.ISNAD_CONFIG||{}).repo}/${(window.ISNAD_CONFIG||{}).branch}/data/blobs/${c.file}.${c.ext}`) : '';
+function viewCirc(){
+  const all=circAll(), seen=S.circSeenAt!=null?S.circSeenAt:circSeen();
+  const head=`<header class="ph"><div class="ph-t"><h1>التعاميم</h1><span class="count">${esc(arD(all.length))} تعميم</span></div></header>
+  <p class="muted" style="margin:-6px 0 16px">التعاميم الرسمية الواردة من مدير الإدارة لجميع المراكز والأقسام.</p>`;
+  if (!S.loadedCirc) return head+loading();
+  if (!all.length) return head+`<div class="panel empty"><b>لا توجد تعاميم بعد.</b>ستظهر هنا التعاميم التي يرسلها مدير الإدارة، مع تنبيه عند وصول تعميم جديد.</div>`;
+  const q=norm(S.circq), list=all.filter(c=>!q||norm([c.title,c.num,c.note,c.date].join(' ')).includes(q));
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في التعاميم</span>${ICON.search}<input id="circq" type="search" placeholder="ابحث بعنوان التعميم أو رقمه" value="${esc(S.circq||'')}"></label></div>`;
+  if (!list.length) return head+tools+`<div class="panel empty"><b>لا يوجد تعميم مطابق.</b></div>`;
+  return head+tools+`<div class="panel docs">${list.map(c=>`<div class="drow"><div class="file-ic sm">${ICON.doc}</div><div class="file-t"><b>${esc(c.title||'تعميم')} ${(c.at||0)>seen?'<span class="newb">جديد</span>':''}</b><small>${c.num?`<span>رقم ${esc(c.num)}</span>`:''}${c.date?`<span>${esc(c.date)}</span>`:''}</small>${c.note?`<div class="hper" style="margin-top:4px;white-space:pre-wrap">${esc(c.note)}</div>`:''}</div>
+    <div class="file-a">${c.file?`<a class="btn primary" href="${esc(circUrl(c))}" target="_blank" rel="noopener" style="text-decoration:none">عرض التعميم</a>`:''}</div></div>`).join('')}</div>`;
+}
+function circMarkSeen(){ const all=circAll(); if(!all.length) return; try{ localStorage.setItem(CIRC_SEEN, String(Math.max(...all.map(c=>c.at||0)))); }catch(e){} }
+function circBadge(){ const nb=$('#nav-circ'); if(!nb) return; let bd=nb.querySelector('.navbadge'); const n=S.loadedCirc?circNew().length:0;
+  if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تعاميم جديدة'); } else if (bd) bd.remove(); }
 /* ---------- المنشآت الهامة في نطاق الجهة: الاسم ورابط موقعها في الخرائط ---------- */
 const getSite = id => (S.sites||[]).find(x=>x.id===id);
 const siteSort = (a,b)=>((+a.n||9e9)-(+b.n||9e9))||((a.at||0)-(b.at||0));
@@ -2518,6 +2549,7 @@ document.addEventListener('input', e => {
   else if (e.target.id==='txq'){ S.txq=e.target.value; render(); }
   else if (e.target.id==='pfq'){ S.pfq=e.target.value; render(); }
   else if (e.target.id==='advq'){ S.advq=e.target.value; render(); }
+  else if (e.target.id==='circq'){ S.circq=e.target.value; render(); }
   else if (e.target.id==='cnq'){ S.cnq=e.target.value; render(); }
   else if (e.target.id==='cny'){ S.cny=e.target.value; render(); }
   else if (e.target.id==='eqq'){ S.eqq=e.target.value; render(); }
@@ -2585,6 +2617,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   for (const c of ['letters','ptx']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.tl[c]=1; S.loadedT=Object.keys(S.tl).length>=2; render(); }, fail);
   db.doc('settings/hr').onSnapshot(s => { S.hrs = s.exists ? s.data() : {}; S.hrsLoaded=true; render(); }, () => { S.hrsLoaded=true; render(); });
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
+  db.collection('circulars').onSnapshot(s => { S.circulars=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedCirc=true; render(); }, () => { S.loadedCirc=true; render(); });
   db.collection('guide').onSnapshot(s => { S.guide=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedAdv=true; render(); }, () => { S.loadedAdv=true; render(); });
   db.collection('pdocs').onSnapshot(s => { S.pdocs=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
