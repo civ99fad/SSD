@@ -8,7 +8,9 @@
   "status": "down",
   "statusNote": "بالبطارية وكفرات",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -25,7 +27,10 @@
   "history": [],
   "notes": [],
   "created": 1790772821158,
-  "updated": 1790772821158
+  "updated": 1790772821158,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "j7-2": {
   "code": "2/7",
@@ -36,7 +41,9 @@
   "status": "maint",
   "statusNote": "عطل — شعبة",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -53,7 +60,10 @@
   "history": [],
   "notes": [],
   "created": 1790772821159,
-  "updated": 1790772821159
+  "updated": 1790772821159,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
  },
  "j7-4": {
   "code": "4/7",
@@ -64,7 +74,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -78,7 +90,10 @@
    }
   ],
   "created": 1790772821160,
-  "updated": 1790772821160
+  "updated": 1790772821160,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "j7-5": {
   "code": "5/7",
@@ -89,14 +104,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790772821161,
-  "updated": 1790772821161
+  "updated": 1790772821161,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "j7-6": {
   "code": "6/7",
@@ -107,7 +127,9 @@
   "status": "maint",
   "statusNote": "الرديتر",
   "statusAction": "تم التحويل",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -124,6 +146,9 @@
   "history": [],
   "notes": [],
   "created": 1790772821162,
-  "updated": 1790772821162
+  "updated": 1790772821162,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  }
 }

@@ -8,14 +8,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773388912,
-  "updated": 1790773388912
+  "updated": 1790773388912,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "d02": {
   "code": "2/6",
@@ -26,7 +31,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -52,7 +59,10 @@
   "history": [],
   "notes": [],
   "created": 1790773388913,
-  "updated": 1790773388913
+  "updated": 1790773388913,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
  },
  "d03": {
   "code": "4/6",
@@ -63,14 +73,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773388914,
-  "updated": 1790773388914
+  "updated": 1790773388914,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "d04": {
   "code": "5/6",
@@ -81,7 +96,9 @@
   "status": "maint",
   "statusNote": "رجيع",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -98,7 +115,10 @@
   "history": [],
   "notes": [],
   "created": 1790773388915,
-  "updated": 1790773388915
+  "updated": 1790773388915,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  },
  "d05": {
   "code": "منقذ 2",
@@ -109,7 +129,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -123,7 +145,10 @@
    }
   ],
   "created": 1790773388916,
-  "updated": 1790773388916
+  "updated": 1790773388916,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "d06": {
   "code": "",
@@ -134,7 +159,9 @@
   "status": "maint",
   "statusNote": "رجيع",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -151,7 +178,10 @@
   "history": [],
   "notes": [],
   "created": 1790773388917,
-  "updated": 1790773388917
+  "updated": 1790773388917,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "d07": {
   "code": "",
@@ -162,7 +192,9 @@
   "status": "maint",
   "statusNote": "انقطاع سير المكينة",
   "statusAction": "تم التحويل",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -179,6 +211,9 @@
   "history": [],
   "notes": [],
   "created": 1790773388918,
-  "updated": 1790773388918
+  "updated": 1790773388918,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  }
 }

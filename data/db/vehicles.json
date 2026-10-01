@@ -2350,7 +2350,10 @@
   "review": [],
   "status": "ready",
   "statusNote": "",
-  "updated": 1790590695231
+  "updated": 1790590695231,
+  "keepBlobs": [
+   "ad8186c0a54a58cae07a1fe117cfb1c0"
+  ]
  },
  "v15": {
   "code": "0/15",
@@ -2741,7 +2744,10 @@
   "status": "away",
   "statusAction": "تم التحويل",
   "statusNote": "دعم إنجاز ٣",
-  "updated": 1790591049995
+  "updated": 1790591049995,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "v24": {
   "code": "0/24",
@@ -6531,7 +6537,10 @@
   "review": [],
   "status": "ready",
   "statusNote": "",
-  "updated": 1790592305212
+  "updated": 1790592305212,
+  "keepBlobs": [
+   "809dd40bfaddcb333ba0a0a6dad30f5b"
+  ]
  },
  "v51": {
   "code": "0/51",
@@ -8488,7 +8497,10 @@
   "review": [],
   "status": "ready",
   "statusNote": "",
-  "updated": 1790592923812
+  "updated": 1790592923812,
+  "keepBlobs": [
+   "e6c0a82f94665d86ab70e73e63799914"
+  ]
  },
  "vnis5376": {
   "code": "",
@@ -8516,6 +8528,9 @@
   "review": [],
   "status": "ready",
   "statusNote": "",
-  "updated": 1790592880501
+  "updated": 1790592880501,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  }
 }

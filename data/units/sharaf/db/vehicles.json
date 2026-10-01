@@ -8,14 +8,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773043237,
-  "updated": 1790773043237
+  "updated": 1790773043237,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "sh02": {
   "code": "2/2",
@@ -26,7 +31,9 @@
   "status": "down",
   "statusNote": "عطل (منظم الوسائد الهوائية) + تهريب زيت",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -43,7 +50,10 @@
   "history": [],
   "notes": [],
   "created": 1790773043238,
-  "updated": 1790773043238
+  "updated": 1790773043238,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
  },
  "sh03": {
   "code": "4/2",
@@ -54,14 +64,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773043239,
-  "updated": 1790773043239
+  "updated": 1790773043239,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "sh04": {
   "code": "5/2",
@@ -72,7 +87,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -86,7 +103,10 @@
    }
   ],
   "created": 1790773043240,
-  "updated": 1790773043240
+  "updated": 1790773043240,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "sh05": {
   "code": "7/2",
@@ -97,14 +117,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773043241,
-  "updated": 1790773043241
+  "updated": 1790773043241,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  },
  "sh06": {
   "code": "انهيار 1",

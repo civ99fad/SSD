@@ -8,7 +8,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -22,7 +24,10 @@
    }
   ],
   "created": 1790772614954,
-  "updated": 1790772614954
+  "updated": 1790772614954,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "a5-2": {
   "code": "2/5",
@@ -33,14 +38,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790772614955,
-  "updated": 1790772614955
+  "updated": 1790772614955,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
  },
  "a5-4": {
   "code": "4/5",
@@ -51,7 +61,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -65,7 +77,10 @@
    }
   ],
   "created": 1790772614956,
-  "updated": 1790772614956
+  "updated": 1790772614956,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "a5-5": {
   "code": "5/5",
@@ -76,7 +91,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -90,7 +107,10 @@
    }
   ],
   "created": 1790772614957,
-  "updated": 1790772614957
+  "updated": 1790772614957,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "a5-6": {
   "code": "6/5",
@@ -101,7 +121,9 @@
   "status": "down",
   "statusNote": "عطل بالبطارية",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -118,6 +140,9 @@
   "history": [],
   "notes": [],
   "created": 1790772614958,
-  "updated": 1790772614958
+  "updated": 1790772614958,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  }
 }

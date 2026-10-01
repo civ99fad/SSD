@@ -8,7 +8,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -22,7 +24,10 @@
    }
   ],
   "created": 1790771223977,
-  "updated": 1790771223977
+  "updated": 1790771223977,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "b1-2": {
   "code": "2/1",
@@ -33,14 +38,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790771223978,
-  "updated": 1790771223978
+  "updated": 1790771223978,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
  },
  "b3-3": {
   "code": "3/3",
@@ -116,14 +126,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790771223981,
-  "updated": 1790771223981
+  "updated": 1790771223981,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "b1-5": {
   "code": "5/1",
@@ -134,7 +149,9 @@
   "status": "down",
   "statusNote": "عطل في الكلتش",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -151,7 +168,10 @@
   "history": [],
   "notes": [],
   "created": 1790771223982,
-  "updated": 1790771223982
+  "updated": 1790771223982,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "b1-7": {
   "code": "7/1",
@@ -162,7 +182,9 @@
   "status": "down",
   "statusNote": "بطارية + غطاء فلتر المكينة",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -179,7 +201,10 @@
   "history": [],
   "notes": [],
   "created": 1790771223983,
-  "updated": 1790771223983
+  "updated": 1790771223983,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  },
  "b1-8": {
   "code": "8/1",
@@ -190,7 +215,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -204,6 +231,9 @@
    }
   ],
   "created": 1790771223984,
-  "updated": 1790771223984
+  "updated": 1790771223984,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  }
 }
