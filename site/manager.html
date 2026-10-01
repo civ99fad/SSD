@@ -293,6 +293,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       faults: faults.filter(fOpen), eqOut: equip.filter(eqOut),
       notReady: V.filter((v) => ['down', 'maint'].includes(stOf(v))).sort((a, b) => (stOf(a) === 'down' ? 0 : 1) - (stOf(b) === 'down' ? 0 : 1)),
       away: V.filter((v) => stOf(v) === 'away'),
+      center: u.id !== 'isnad', inc: arr('incoming'), // المراكز تستقبل «دعم وارد» ولا تدعم غيرها
     };
   }
 
@@ -336,7 +337,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       <dl class="ustats">
         <div><dt>متعطلة بالمقر</dt><dd class="${x.c.down ? 'c-bad' : ''}">${arD(x.c.down)}</dd></div>
         <div><dt>في الصيانة</dt><dd class="${x.c.maint ? 'c-mid' : ''}">${arD(x.c.maint)}</dd></div>
-        <div><dt>مدعومة لجهات</dt><dd class="${x.c.away ? 'c-away' : ''}">${arD(x.c.away)}</dd></div>
+        ${x.center ? `<div><dt>دعم وارد</dt><dd class="${x.inc.length ? 'c-away' : ''}">${arD(x.inc.length)}</dd></div>` : `<div><dt>مدعومة لجهات</dt><dd class="${x.c.away ? 'c-away' : ''}">${arD(x.c.away)}</dd></div>`}
         <div><dt>الوايتات الجاهزة</dt><dd>${w[1].length ? `${arD(w[0].length)} من ${arD(w[1].length)}` : '—'}</dd></div>
         <div><dt>قوة الوردية</dt><dd>${shiftTxt(x)}</dd></div>
         <div><dt>الأفراد</dt><dd>${arD(x.staffN)}</dd></div>
@@ -389,9 +390,9 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       <div class="chips" role="group" aria-label="العرض">${chip('show', 'all', 'كل الجهات')}${chip('show', 'data', 'التي فيها بيانات')}</div></div>
       <div class="cards">${list.map(card).join('') || '<div class="none">لا توجد جهات فيها بيانات بعد.</div>'}</div></section>`;
 
-    const row = (x) => `<tr><td class="n">${esc(x.u.name)}</td><td><span class="badge lv-${x.lv}"><i></i>${LV[x.lv]}</span></td><td class="n ${lvColor(x)}">${esc(pct0(x))}${x.pct != null ? `<span class="minibar"><i class="${x.pct >= 0.8 ? 'st-ready' : x.pct >= 0.5 ? 'st-maint' : 'st-down'}" style="width:${(x.pct * 100).toFixed(0)}%"></i></span>` : ''}</td><td>${arD(x.V.length)}</td><td>${arD(x.c.ready)}</td><td>${arD(x.c.down)}</td><td>${arD(x.c.maint)}</td><td>${arD(x.c.away)}</td><td>${x.water.all[1].length ? arD(x.water.all[0].length) + ' / ' + arD(x.water.all[1].length) : '—'}</td><td>${arD(x.staffN)}</td><td>${shiftTxt(x)}</td><td>${arD(x.faults.length)}</td></tr>`;
+    const row = (x) => `<tr><td class="n">${esc(x.u.name)}</td><td><span class="badge lv-${x.lv}"><i></i>${LV[x.lv]}</span></td><td class="n ${lvColor(x)}">${esc(pct0(x))}${x.pct != null ? `<span class="minibar"><i class="${x.pct >= 0.8 ? 'st-ready' : x.pct >= 0.5 ? 'st-maint' : 'st-down'}" style="width:${(x.pct * 100).toFixed(0)}%"></i></span>` : ''}</td><td>${arD(x.V.length)}</td><td>${arD(x.c.ready)}</td><td>${arD(x.c.down)}</td><td>${arD(x.c.maint)}</td><td>${x.center ? (x.inc.length ? 'وارد ' + arD(x.inc.length) : '—') : arD(x.c.away)}</td><td>${x.water.all[1].length ? arD(x.water.all[0].length) + ' / ' + arD(x.water.all[1].length) : '—'}</td><td>${arD(x.staffN)}</td><td>${shiftTxt(x)}</td><td>${arD(x.faults.length)}</td></tr>`;
     const table = `<section class="panel" aria-label="جدول المقارنة"><div class="sh"><h2>جدول المقارنة</h2></div><div class="tw"><table>
-      <thead><tr><th>الجهة</th><th>الحالة</th><th>الجاهزية</th><th>الآليات</th><th>جاهزة</th><th>متعطلة</th><th>صيانة</th><th>مدعومة</th><th>الوايتات الجاهزة</th><th>الأفراد</th><th>الوردية الآن</th><th>أعطال مبنى</th></tr></thead>
+      <thead><tr><th>الجهة</th><th>الحالة</th><th>الجاهزية</th><th>الآليات</th><th>جاهزة</th><th>متعطلة</th><th>صيانة</th><th>مدعومة / دعم وارد</th><th>الوايتات الجاهزة</th><th>الأفراد</th><th>الوردية الآن</th><th>أعطال مبنى</th></tr></thead>
       <tbody>${list.map(row).join('')}<tr class="tot"><td>الإجمالي</td><td></td><td>${t.pct == null ? '—' : esc(pctFmt(t.pct))}</td><td>${arD(t.V)}</td><td>${arD(t.c.ready)}</td><td>${arD(t.c.down)}</td><td>${arD(t.c.maint)}</td><td>${arD(t.c.away)}</td><td>${arD(t.wr)} / ${arD(t.wt)}</td><td>${arD(R.reduce((s, x) => s + x.staffN, 0))}</td><td>${arD(t.pres)} من ${arD(t.size)}</td><td>${arD(t.faults)}</td></tr></tbody></table></div></section>`;
 
     const al = alerts();

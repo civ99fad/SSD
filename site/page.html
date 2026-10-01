@@ -958,7 +958,7 @@ const gSearchBar = () => `<label class="gsearch"><span class="vh">بحث شام�
 function viewSearch(raw){
   const q=norm(raw), pq=plateKey(raw), out=[];
   const head=`<header class="ph"><div class="ph-t"><h1>نتائج البحث</h1><span class="count">«${esc(raw.trim())}»</span></div><button type="button" class="btn" data-act="gClear">إغلاق البحث</button></header>`;
-  const vs=S.loadedV ? sortedVehicles().filter(v=>(pq.length>=2 && (plateKey(v.plate).includes(pq)||plateKey(v.code).includes(pq))) || norm([v.name,v.plate,v.make,v.model,v.code,enj(v.statusNote),v.statusAction,v.incoming].join(' ')).includes(q)) : [];
+  const vs=S.loadedV ? sortedVehicles().filter(v=>(pq.length>=2 && (plateKey(v.plate).includes(pq)||plateKey(v.code).includes(pq))) || norm([v.name,v.plate,v.make,v.model,v.code,enj(v.statusNote),v.statusAction,...incFor(v.id).map(incLabel)].join(' ')).includes(q)) : [];
   if (vs.length) out.push(`<section class="sec srch"><div class="sh"><h2>الآليات</h2><span class="muted">${esc(vCount(vs.length))}</span></div><div class="panel fu">${vs.slice(0,40).map(v=>`<button type="button" class="furow" data-act="openVehicle" data-id="${esc(v.id)}"><span class="fuc"><bdi dir="ltr">${esc(v.code||'—')}</bdi></span><span class="fun">${esc(v.name||'آلية')}${v.plate?`<small>${esc(v.plate)}</small>`:''}</span>${stPill(v)}</button>`).join('')}</div></section>`);
   const ps=(S.staff||[]).filter(p=>norm([p.rank,p.name,p.num,p.spec].join(' ')).includes(q)||DIG(p.num||'').includes(DIG(raw.trim())));
   if (ps.length) out.push(`<section class="sec srch"><div class="sh"><h2>الأفراد</h2><span class="muted">${ps.length}</span></div><div class="panel fu">${ps.map(p=>`<button type="button" class="furow" data-act="nav" data-id="staff"><span class="fuc">${esc(p.num||'—')}</span><span class="fun">${esc(pLabel(p))}<small>${esc(SHN[String(p.shift||'1')])}</small></span>${hPill(p)}</button>`).join('')}</div></section>`);
@@ -985,7 +985,7 @@ function viewDash(){
     <button type="button" class="kpi main" data-act="nav" data-id="staff"><span class="kt">الوردية المناوبة</span><span class="kv">${SHN[k].replace('الوردية ','')}</span><span class="kd">٩ ص ${esc(dutyDateStr(d))} ← ٩ ص ${esc(dutyDateStr(d+1))}</span></button>
     <button type="button" class="kpi" data-act="nav" data-id="staff"><span class="kt">قوة الوردية</span><span class="kv">${arD(pres)} <small>من ${arD(size)}</small></span><span class="kbar"><i style="width:${size?Math.min(100,pres/size*100).toFixed(0):0}%"></i></span>${miss?`<span class="kd bad">نقص ${arD(miss)}</span>`:'<span class="kd">مكتملة</span>'}</button>
     <button type="button" class="kpi" data-act="dashVeh" data-id="ready"><span class="kt">جاهزية الآليات</span><span class="kv ok">${pct==null?'—':esc(pctFmt(pct))}</span><span class="kd">${arD(c.ready)} جاهزة من ${arD(rated)} لدينا</span></button>
-    <button type="button" class="kpi" data-act="dashVeh" data-id="away"><span class="kt">آليات مدعومة لجهات أخرى</span><span class="kv away">${arD(trainAway)}</span><span class="kd">متعطلة ${arD(c.down)} · صيانة ${arD(c.maint)}</span></button>
+    ${CENTER?`<button type="button" class="kpi" data-act="dashVeh" data-id="incoming"><span class="kt">دعم وارد</span><span class="kv away">${arD(incAll().length)}</span>`:`<button type="button" class="kpi" data-act="dashVeh" data-id="away"><span class="kt">آليات مدعومة لجهات أخرى</span><span class="kv away">${arD(trainAway)}</span>`}<span class="kd">متعطلة ${arD(c.down)} · صيانة ${arD(c.maint)}</span></button>
   </section>`;
   const ord={down:0,maint:1,away:2};
   const L=sortedVehicles().filter(v=>stOf(v) in ord).sort((a,b)=>ord[stOf(a)]-ord[stOf(b)]);
@@ -1014,21 +1014,22 @@ function viewVehicles(){
   const chip=(k,l,n)=>`<button type="button" class="fchip${fs===k?' on':''}" data-act="filterSt" data-id="${k}" aria-pressed="${fs===k}">${esc(l)} <b>${n}</b></button>`;
   const c=stCounts(), rvN=S.vehicles.filter(v=>(v.review||[]).length).length;
   const tools=`<div class="toolbar"><div class="vtog" role="group" aria-label="طريقة العرض"><button type="button" data-act="vView" data-id="table" aria-pressed="${vview==='table'}">جدول</button><button type="button" data-act="vView" data-id="cards" aria-pressed="${vview==='cards'}">بطاقات</button></div><label class="search"><span class="vh">بحث في الآليات والمعدات</span>${ICON.search}<input id="q" type="search" placeholder="ابحث باسم الآلية أو رقم اللوحة أو الرمز أو معدّة، مثال: 2296 أو خراطيم" value="${esc(S.q)}"></label>
-    ${S.vehicles.length?`<div class="fchips" role="group" aria-label="تصفية حسب الحالة">${chip('all','الكل',S.vehicles.length)}${chip('ready','جاهزة',c.ready)}${chip('notready','غير الجاهزة',c.down+c.maint+c.away)}${chip('down','متعطلة بالمقر',c.down)}${chip('maint','في الصيانة',c.maint)}${chip('away','مدعومة',c.away)}${c.none?chip('none','غير محددة',c.none):''}${rvN?chip('review','⚑ للمراجعة',rvN):''}</div>`:''}</div>`;
+    ${S.vehicles.length?`<div class="fchips" role="group" aria-label="تصفية حسب الحالة">${chip('all','الكل',S.vehicles.length)}${chip('ready','جاهزة',c.ready)}${chip('notready','غير الجاهزة',c.down+c.maint+c.away)}${chip('down','متعطلة بالمقر',c.down)}${chip('maint','في الصيانة',c.maint)}${CENTER?chip('incoming','دعم وارد',incAll().length):chip('away','مدعومة',c.away)}${c.none?chip('none','غير محددة',c.none):''}${rvN?chip('review','⚑ للمراجعة',rvN):''}</div>`:''}</div>`;
   const eq = q ? equipmentResults(S.q) : '';
   let body;
   if (!S.vehicles.length) body=`<div class="panel empty"><b>لم تُضف أي آلية بعد.</b>${edit?'ابدأ بزر «إضافة آلية».':''}</div>`;
   else if (!list.length) body = q ? '' : `<div class="panel empty"><b>لا توجد آليات بهذه الحالة.</b></div>`;
-  else if (vview==='table') body=(q?`<div class="sh"><h2>الآليات المطابقة</h2><span class="muted">${esc(vCount(list.length))}</span></div>`:'')+`<div class="panel vtable" style="overflow-x:auto"><table><thead><tr><th>الرمز</th><th>الآلية</th><th>اللوحة</th><th>الحالة</th><th>السبب / الجهة والإجراء</th></tr></thead><tbody>${list.map(v=>`<tr><td class="hnum"><bdi dir="ltr">${esc(v.code||'—')}</bdi></td><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${esc(v.name||'آلية بدون اسم')}</button>${(v.review||[]).length?` <span class="rvbadge">⚑ ${(v.review||[]).length}</span>`:''}</td><td>${v.plate?`<span class="plate">${esc(v.plate)}</span>`:DASH}</td><td>${stPill(v)}</td><td class="hper">${stOf(v)!=='ready'&&(v.statusNote||v.statusAction)?esc([v.statusNote?enj(v.statusNote):'',v.statusAction].filter(Boolean).join(' — ')):(v.incoming?'':DASH)}${v.incoming?`<div class="stnote">دعم وارد: <b>${esc(v.incoming)}</b></div>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+  else if (vview==='table') body=(q?`<div class="sh"><h2>الآليات المطابقة</h2><span class="muted">${esc(vCount(list.length))}</span></div>`:'')+`<div class="panel vtable" style="overflow-x:auto"><table><thead><tr><th>الرمز</th><th>الآلية</th><th>اللوحة</th><th>الحالة</th><th>السبب / الجهة والإجراء</th></tr></thead><tbody>${list.map(v=>`<tr><td class="hnum"><bdi dir="ltr">${esc(v.code||'—')}</bdi></td><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${esc(v.name||'آلية بدون اسم')}</button>${(v.review||[]).length?` <span class="rvbadge">⚑ ${(v.review||[]).length}</span>`:''}</td><td>${v.plate?`<span class="plate">${esc(v.plate)}</span>`:DASH}</td><td>${stPill(v)}</td><td class="hper">${stOf(v)!=='ready'&&(v.statusNote||v.statusAction)?esc([v.statusNote?enj(v.statusNote):'',v.statusAction].filter(Boolean).join(' — ')):(incFor(v.id).length?'':DASH)}${incFor(v.id).length?`<div class="stnote">دعم وارد: <b>${esc(incFor(v.id).map(incLabel).join('، '))}</b></div>`:''}</td></tr>`).join('')}</tbody></table></div>`;
   else body=(q?`<div class="sh"><h2>الآليات المطابقة</h2><span class="muted">${esc(vCount(list.length))}</span></div>`:'')+`<div class="grid">${list.map(v=>{
     const p=(v.photos||[])[0];
     return `<button type="button" class="vcard" data-act="openVehicle" data-id="${esc(v.id)}">
       <div class="vthumb">${p?`<img src="${blob(p)}" alt="" loading="lazy">`:ICON.truck(42)}${stPill(v,'onimg')}</div>
       <div class="vbody"><div class="vname">${esc(v.name||'آلية بدون اسم')}</div>
         ${v.plate||v.code?`<div class="vmeta">${v.plate?`<span class="plate">${esc(v.plate)}</span>`:''}${v.code?`<span>الرمز <bdi dir="ltr">${esc(v.code)}</bdi></span>`:''}</div>`:''}
-        ${v.statusNote&&stOf(v)!=='ready'?`<div class="stnote">${stOf(v)==='away'?'مدعومة إلى: ':''}${esc(enj(v.statusNote))}</div>`:''}${v.statusAction&&stOf(v)!=='ready'?`<div class="stnote">الإجراء: ${esc(v.statusAction)}</div>`:''}${v.incoming?`<div class="stnote">دعم وارد: <b>${esc(v.incoming)}</b></div>`:''}
+        ${v.statusNote&&stOf(v)!=='ready'?`<div class="stnote">${stOf(v)==='away'?'مدعومة إلى: ':''}${esc(enj(v.statusNote))}</div>`:''}${v.statusAction&&stOf(v)!=='ready'?`<div class="stnote">الإجراء: ${esc(v.statusAction)}</div>`:''}${incFor(v.id).length?`<div class="stnote">دعم وارد: <b>${esc(incFor(v.id).map(incLabel).join('، '))}</b></div>`:''}
         <div class="vfoot"><span class="link">عرض التفاصيل ${ICON.arrow}</span>${(v.review||[]).length?`<span class="rvbadge">⚑ للمراجعة ${(v.review||[]).length}</span>`:''}</div></div>
     </button>`;}).join('')}</div>`;
+  if (fs==='incoming' && !q) body=incomingPanel(edit);
   if (q && !list.length && !eq) body=`<div class="panel empty"><b>لا توجد نتائج لـ «${esc(S.q.trim())}».</b>لا آلية ولا معدّة بهذا الاسم. جرّب جزءاً من الاسم، مثل «ماطور» أو «خرطوم».</div>`;
   return head+(q?'':waterStrip()+readiness()+downTable())+tools+eq+body;
 }
@@ -1073,6 +1074,12 @@ const STATUS = {ready:'جاهزة', down:'متعطلة بالمقر', maint:'ف�
 const plateKey = t => norm(t).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[\s\-_/\\.]/g,'').replace(/ه/g,'ه');
 const stOf = v => STATUS[v.status] && v.status!=='none' ? v.status : 'none';
 function stCounts(){ const c={ready:0,down:0,maint:0,away:0,none:0}; S.vehicles.forEach(v=>c[stOf(v)]++); return c; }
+/* المراكز لا تدعم غيرها، بل تستقبل «دعم وارد» من قسم الدعم والإسناد أو غيره؛ القسم نفسه يبقى بخانة «مدعومة» */
+const CENTER = (()=>{ const u=(window.ISNAD_CONFIG||{}).unit; return !!u && u!=='isnad'; })();
+const ISNAD_NAME = 'قسم الدعم و'+'الإسناد'; // مقسوم عمداً كي لا يُستبدل باسم المركز عند بناء صفحته
+const incAll = () => (S.incoming||[]).slice().sort((a,b)=>String(a.code||'').localeCompare(String(b.code||''),'ar',{numeric:true}));
+const incFor = id => incAll().filter(r=>r.for===id);
+const incLabel = r => [r.code, r.name].filter(Boolean).join(' — ') + (r.from?' (من '+r.from+')':'');
 const stPill = (v, cls='') => `<span class="stpill st-${stOf(v)} ${cls}"><i aria-hidden="true"></i>${STATUS[stOf(v)]}</span>`;
 const pctFmt = n => new Intl.NumberFormat('ar-SA',{style:'percent',maximumFractionDigits:0}).format(n);
 function downTable(){
@@ -1081,7 +1088,7 @@ function downTable(){
   if (!L.length) return '';
   const open=!!S.downOpen;
   return `<section class="sec" aria-label="الآليات غير الجاهزة"><div class="sh"><button type="button" class="dtog" data-act="toggleDown" aria-expanded="${open}" aria-controls="downtbl"><h2>الآليات غير الجاهزة والإجراء المتخذ</h2><span class="muted">${esc(vCount(L.length))}</span><span class="grow"></span><span class="link">${open?'إخفاء':'عرض القائمة'} <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></span></button></div>
-    <div class="panel" id="downtbl" style="overflow-x:auto"${open?'':' hidden'}><table><thead><tr><th>الآلية</th><th>الحالة</th><th>السبب / الجهة</th><th>الإجراء المتخذ</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${L.map(v=>`<tr><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${v.code?`<bdi dir="ltr">${esc(v.code)}</bdi> — `:''}${esc(v.name||'آلية')}</button></td><td>${stPill(v)}</td><td>${v.statusNote?esc(enj(v.statusNote)):'—'}</td><td>${v.statusAction?esc(v.statusAction):'<span class="hmut">لم يُسجّل</span>'}${v.incoming?`<div class="stnote">دعم وارد: <b>${esc(v.incoming)}</b></div>`:''}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="editStatus" data-id="${esc(v.id)}" aria-label="تعديل حالة ${esc(v.name||'الآلية')}">${ICON.edit}</button></td>`:''}</tr>`).join('')}</tbody></table></div></section>`;
+    <div class="panel" id="downtbl" style="overflow-x:auto"${open?'':' hidden'}><table><thead><tr><th>الآلية</th><th>الحالة</th><th>السبب / الجهة</th><th>الإجراء المتخذ</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${L.map(v=>`<tr><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${v.code?`<bdi dir="ltr">${esc(v.code)}</bdi> — `:''}${esc(v.name||'آلية')}</button></td><td>${stPill(v)}</td><td>${v.statusNote?esc(enj(v.statusNote)):'—'}</td><td>${v.statusAction?esc(v.statusAction):'<span class="hmut">لم يُسجّل</span>'}${incFor(v.id).length?`<div class="stnote">دعم وارد: <b>${esc(incFor(v.id).map(incLabel).join('، '))}</b></div>`:''}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="editStatus" data-id="${esc(v.id)}" aria-label="تعديل حالة ${esc(v.name||'الآلية')}">${ICON.edit}</button></td>`:''}</tr>`).join('')}</tbody></table></div></section>`;
 }
 /* ---------- أنواع الآليات: من الملفات التعريفية المشتركة في المكتبة التعليمية (type لكل ملف) ---------- */
 const vTypes = () => (S.lib.profiles.items||[]).filter(p=>p.type).sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'ar',{numeric:true}));
@@ -1120,6 +1127,21 @@ function waterStrip(){
     return `<button type="button" class="wtile${on?' on':''}${k==='all'?' main':''}" data-act="vtFilter" data-id="${k}" aria-pressed="${on}"><span class="wt-t">${WT[k].t} الجاهزة</span><span class="wt-n"><b>${arD(r)}</b> من ${arD(L.length)}</span>${k!=='all'&&r?`<span class="wt-c">الجاهزة: ${L.filter(v=>stOf(v)==='ready').map(v=>`<bdi>${esc(v.code||v.name||'')}</bdi>`).join('، ')}</span>`:''}${dn?`<span class="wt-d">${[['down','متعطلة بالمقر'],['maint','في الصيانة'],['away','مدعومة'],['none','بدون حالة']].map(([st,l])=>{ const n=L.filter(v=>stOf(v)===st).length; return n?l+': '+arD(n):''; }).filter(Boolean).join(' · ')}</span>`:`<span class="wt-d ok">كلها جاهزة</span>`}</button>`; };
   return `<section class="wstrip" aria-label="جاهزية الوايتات">${tile('all')}${tile('prop')}${tile('aydi')}</section>`;
 }
+/* ---------- دعم وارد (للمراكز): الآليات المدعومة للمركز من قسم الدعم والإسناد أو غيره ---------- */
+const incFields = x => [
+  [{id:'code', label:'نداء الآلية الداعمة', value:x.code, required:true, placeholder:'مثال: 0/35'}, {id:'name', label:'نوع الآلية', value:x.name, placeholder:'مثال: وايت سكس بروبلين'}],
+  [{id:'from', label:'الجهة الداعمة', value:x.from==null?ISNAD_NAME:x.from, placeholder:'مثال: '+ISNAD_NAME}, {id:'plate', label:'رقم اللوحة (اختياري)', value:x.plate}],
+  [{id:'for', label:'بديلة عن (اختياري)', type:'select', value:x.for||'', options:[['','دعم عام للمركز'],...sortedVehicles().map(v=>[v.id,[v.code,v.name].filter(Boolean).join(' — ')])]}, {id:'date', label:'تاريخ الاستلام', value:x.date==null?hnum():x.date, placeholder:'مثال: ٢٠/٤/١٤٤٨هـ'}],
+  {id:'note', label:'ملاحظات (اختياري)', type:'textarea', value:x.note}];
+function incomingPanel(edit){
+  const L=incAll();
+  const addB=edit?`<button type="button" class="btn primary" data-act="incAdd">${ICON.plus}إضافة دعم وارد</button>`:'';
+  if (!L.length) return `<div class="panel empty"><b>لا يوجد دعم وارد حالياً.</b>${edit?'سجّل أي آلية تصل للمركز دعماً من زر «إضافة دعم وارد».':''}${addB?'<div style="margin-top:12px">'+addB+'</div>':''}</div>`;
+  const fv = id => { const v=getV(id); return v?`<button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${v.code?`<bdi dir="ltr">${esc(v.code)}</bdi> — `:''}${esc(v.name||'آلية')}</button>`:'<span class="hmut">دعم عام للمركز</span>'; };
+  return `<div class="sh"><h2>دعم وارد</h2><span class="muted">${esc(vCount(L.length))}</span>${addB?'<span style="margin-inline-start:auto">'+addB+'</span>':''}</div>
+  <div class="panel vtable" style="overflow-x:auto"><table><thead><tr><th>النداء</th><th>الآلية</th><th>اللوحة</th><th>الجهة الداعمة</th><th>بديلة عن</th><th>تاريخ الاستلام</th><th>ملاحظات</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${L.map(r=>`<tr><td class="hnum"><bdi dir="ltr">${esc(r.code||'—')}</bdi></td><td class="nm">${esc(r.name||'—')}</td><td>${r.plate?`<span class="plate">${esc(r.plate)}</span>`:DASH}</td><td>${esc(r.from||'—')}</td><td>${fv(r.for)}</td><td>${esc(r.date||'—')}</td><td class="hper">${r.note?esc(r.note):DASH}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="incEdit" data-id="${esc(r.id)}" aria-label="تعديل">${ICON.edit}</button><button type="button" class="icon-btn" data-act="incDel" data-id="${esc(r.id)}" aria-label="حذف">${ICON.del}</button></td>`:''}</tr>`).join('')}</tbody></table></div>
+  <p class="rnote">آليات الدعم الوارد لا تدخل في نسبة جاهزية المركز، لأنها مسجّلة على الجهة الداعمة. عند انتهاء الدعم وعودة الآلية احذفها من هنا.</p>`;
+}
 function readiness(){
   const total=S.vehicles.length; if (!total) return '';
   const c=stCounts(), rated=c.ready+c.down+c.maint;
@@ -1129,7 +1151,7 @@ function readiness(){
     : `النسبة = الجاهزة من الآليات الموجودة لدينا (${esc(vCount(rated))})${c.away?`، ولا تشمل ${esc(vCount(c.away))} مدعومة لجهات أخرى`:''}${c.none?`، و${esc(vCount(c.none))} بدون حالة`:''}.`;
   return `<section class="panel ready" aria-label="جاهزية الآليات">
     <div class="rhead"><div><div class="rtitle">جاهزية الآليات</div><div class="rbig${pct==null?' none':''}">${pct==null?'—':esc(pctFmt(pct))}</div></div>
-      <dl class="rstats"><div><dt><i class="dot st-ready"></i>جاهزة</dt><dd>${c.ready}</dd></div><div><dt><i class="dot st-down"></i>متعطلة بالمقر</dt><dd>${c.down}</dd></div><div><dt><i class="dot st-maint"></i>في الصيانة</dt><dd>${c.maint}</dd></div><div><dt><i class="dot st-away"></i>مدعومة لجهات أخرى</dt><dd>${c.away}</dd></div>${c.none?`<div><dt><i class="dot st-none"></i>غير محددة</dt><dd>${c.none}</dd></div>`:''}</dl></div>
+      <dl class="rstats"><div><dt><i class="dot st-ready"></i>جاهزة</dt><dd>${c.ready}</dd></div><div><dt><i class="dot st-down"></i>متعطلة بالمقر</dt><dd>${c.down}</dd></div><div><dt><i class="dot st-maint"></i>في الصيانة</dt><dd>${c.maint}</dd></div>${CENTER?`<div><dt><i class="dot st-away"></i>دعم وارد</dt><dd>${incAll().length}</dd></div>`:`<div><dt><i class="dot st-away"></i>مدعومة لجهات أخرى</dt><dd>${c.away}</dd></div>`}${c.none?`<div><dt><i class="dot st-none"></i>غير محددة</dt><dd>${c.none}</dd></div>`:''}</dl></div>
     <div class="rbar" role="img" aria-label="جاهزة ${c.ready}، متعطلة بالمقر ${c.down}، في الصيانة ${c.maint}، مدعومة ${c.away}${c.none?'، غير محددة '+c.none:''}"><span class="st-ready" style="width:${w('ready')}"></span><span class="st-down" style="width:${w('down')}"></span><span class="st-maint" style="width:${w('maint')}"></span><span class="st-away" style="width:${w('away')}"></span><span class="st-none" style="width:${w('none')}"></span></div>
     <p class="rnote">${note}</p>
   </section>`;
@@ -1221,7 +1243,7 @@ function viewVehicle(id){
   <dl class="panel info" style="margin:0">
     <div><dt>اسم الآلية</dt>${dd(v.name)}</div>
     <div><dt>الحالة</dt><dd>${stPill(v)}${v.statusNote&&stOf(v)!=='ready'?`<div class="stnote">${stOf(v)==='away'?'مدعومة إلى: ':'السبب: '}${esc(enj(v.statusNote))}</div>`:''}${v.statusAction&&stOf(v)!=='ready'?`<div class="stnote">الإجراء المتخذ: <b>${esc(v.statusAction)}</b></div>`:''}</dd></div>
-    <div><dt>دعم وارد</dt>${v.incoming?`<dd><b>${esc(v.incoming)}</b></dd>`:'<dd class="none">لا يوجد</dd>'}</div>
+    ${CENTER?`<div><dt>دعم وارد</dt>${incFor(v.id).length?`<dd><b>${esc(incFor(v.id).map(incLabel).join('، '))}</b></dd>`:'<dd class="none">لا يوجد</dd>'}</div>`:''}
     <div><dt>رقم اللوحة</dt>${dd(v.plate)}</div>
     <div><dt>الطراز</dt>${dd(v.make)}</div>
     <div><dt>الموديل</dt>${dd(v.model)}</div>
@@ -1915,10 +1937,9 @@ const ptxFields = r => [
 /* ---------- actions ---------- */
 const vehicleFields = v => [
   [{id:'name', label:'اسم الآلية', value:v.name, required:true, placeholder:'مثال: مرسيدس مزدوجة'},
-   {id:'status', label:'الحالة', type:'select', value:stOf(v)==='none'?'':stOf(v), options:[['','غير محددة'],['ready','جاهزة'],['down','متعطلة بالمقر'],['maint','في الصيانة'],['away','مدعومة لجهة أخرى']]}],
-  [{id:'statusNote', label:'سبب العطل أو الجهة المدعومة لها (اختياري)', value:v.statusNote, placeholder:'مثال: تهريب هواء — أو: دعم إنجاز ٣'},
+   {id:'status', label:'الحالة', type:'select', value:stOf(v)==='none'?'':stOf(v), options:[['','غير محددة'],['ready','جاهزة'],['down','متعطلة بالمقر'],['maint','في الصيانة'],...(CENTER&&stOf(v)!=='away'?[]:[['away','مدعومة لجهة أخرى']])]}],
+  [{id:'statusNote', label:CENTER?'سبب العطل (اختياري)':'سبب العطل أو الجهة المدعومة لها (اختياري)', value:v.statusNote, placeholder:'مثال: تهريب هواء — أو: دعم إنجاز ٣'},
    {id:'statusAction', label:'الإجراء المتخذ (اختياري)', value:v.statusAction, placeholder:'مثال: تم رفع طلب صيانة'}],
-  [{id:'incoming', label:'دعم وارد — الآلية الداعمة (اختياري)', value:v.incoming, placeholder:'مثال: 0/5 وايت من قسم الدعم والإسناد'}],
   [{id:'plate', label:'رقم اللوحة', value:v.plate, placeholder:'مثال: أ ح ط 8147'}, {id:'code', label:'الرمز', value:v.code, placeholder:'مثال: 0/1'}],
   [{id:'make', label:'الطراز', value:v.make, placeholder:'مثال: مرسيدس أكتروس'}, {id:'model', label:'الموديل', value:v.model, placeholder:'مثال: 2004'}]
 ];
@@ -2112,6 +2133,12 @@ const ACT = {
   filterSt: k => { S.fs=k; render(); },
   vView: k => { S.vview=k; try { localStorage.setItem('isnad-vview', k); } catch(e){} render(); },
   dashVeh: k => { S.fs=k; S.vt=''; go('vehicles'); },
+  incAdd: () => openForm({title:'إضافة دعم وارد', submit:'إضافة', fields:incFields({}), onSubmit: async x => {
+    await S.db.collection('incoming').doc().set(Object.assign(x, {at:Date.now()})); toast('سُجّل الدعم الوارد'); }}),
+  incEdit: id => { const r=(S.incoming||[]).find(y=>y.id===id); if(!r) return; openForm({title:'تعديل الدعم الوارد', fields:incFields(r), onSubmit: async x => {
+    await S.db.doc('incoming/'+id).update(Object.assign(x, {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
+  incDel: id => { const r=(S.incoming||[]).find(y=>y.id===id); if(!r) return; openConfirm(`حذف الدعم الوارد «${incLabel(r)}»؟ (عند عودة الآلية لجهتها)`, 'حذف', async () => {
+    await S.db.doc('incoming/'+id).delete(); toast('حُذف الدعم الوارد'); }); },
   dashEq: () => { S.eqg='veh'; S.eqf='out'; go('equip'); },
   gClear: () => { S.gq=''; render(); },
   gTx: k => { S.txtab=k; S.txf='all'; S.txq=''; go('tx'); },
@@ -2133,9 +2160,8 @@ const ACT = {
   vtFilter: k => { S.vt = S.vt===k ? '' : k; render(); },
   toggleDown: () => { S.downOpen=!S.downOpen; try{ localStorage.setItem('isnad-down', S.downOpen?'1':''); }catch(e){} render(); },
   editStatus: id => { const v=getV(id); if(!v) return; openForm({title:'حالة الآلية — '+(v.code?v.code+' ':'')+(v.name||''), fields:[
-      {id:'status', label:'الحالة', type:'select', value:stOf(v)==='none'?'':stOf(v), options:[['','غير محددة'],['ready','جاهزة'],['down','متعطلة بالمقر'],['maint','في الصيانة'],['away','مدعومة لجهة أخرى']]},
-      {id:'statusNote', label:'سبب العطل أو الجهة المدعومة لها', value:v.statusNote, placeholder:'مثال: تهريب هواء'},
-      {id:'incoming', label:'دعم وارد — الآلية الداعمة (اختياري)', value:v.incoming, placeholder:'مثال: 0/5 من قسم الدعم والإسناد'},
+      {id:'status', label:'الحالة', type:'select', value:stOf(v)==='none'?'':stOf(v), options:[['','غير محددة'],['ready','جاهزة'],['down','متعطلة بالمقر'],['maint','في الصيانة'],...(CENTER&&stOf(v)!=='away'?[]:[['away','مدعومة لجهة أخرى']])]},
+      {id:'statusNote', label:CENTER?'سبب العطل':'سبب العطل أو الجهة المدعومة لها', value:v.statusNote, placeholder:'مثال: تهريب هواء'},
       {id:'statusAction', label:'الإجراء المتخذ', type:'textarea', value:v.statusAction, placeholder:'مثال: تم رفع طلب صيانة', hint:'يُسجَّل أي تغيير في الحالة تلقائياً في «سجل الآلية».'}], onSubmit: async x => { if (!x.statusAction && DEF_ACT[x.status] && x.status!==stOf(v)) x.statusAction=DEF_ACT[x.status]; { const lg=statusLog(getV(id), x); if (x.status==='ready'){ x.statusNote=''; x.statusAction=''; } await saveV(id, Object.assign({}, x, lg)); } toast('حُفظت الحالة وسُجّلت في سجل الآلية'); }}); },
   delVehicle: id => { const v=getV(id); openConfirm(`سيتم حذف «${v.name||'الآلية'}» مع جردها وسجلها. لا يمكن التراجع عن ذلك.`, 'حذف الآلية', async () => { await vref(id).delete(); toast('حُذفت الآلية'); go('vehicles'); }); },
   viewPhoto: (id, i) => { const [key, idx] = i.split(':'); showPhoto(id, key, +idx); },
@@ -2298,6 +2324,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   for (const c of ['letters','ptx']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.tl[c]=1; S.loadedT=Object.keys(S.tl).length>=2; render(); }, fail);
   db.doc('settings/hr').onSnapshot(s => { S.hrs = s.exists ? s.data() : {}; S.hrsLoaded=true; render(); }, () => { S.hrsLoaded=true; render(); });
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
+  db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);
   db.doc('settings/map').onSnapshot(s => { S.map = s.exists ? s.data() : {}; S.mapLoaded=true; render(); }, () => { S.mapLoaded=true; render(); });
   db.doc('settings/misdocs').onSnapshot(s => { S.misd = s.exists ? s.data() : {}; render(); }, () => {});
