@@ -535,6 +535,17 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .navt[aria-expanded=false] .chev{transform:rotate(90deg)}
 .navg{display:flex;flex-direction:column;gap:4px;padding-inline-start:8px;border-inline-start:1px solid rgba(255,255,255,.08);margin-inline-start:10px}
 .navg.closed{display:none}
+.advc{padding:0;margin-bottom:10px;overflow:hidden}
+.advh{display:flex;flex-direction:column;gap:2px;width:100%;text-align:start;background:none;border:0;padding:16px 20px;font:inherit;color:inherit;cursor:pointer}
+.advh b{font-size:15.5px}.advh small{color:var(--muted)}
+.advh::after{content:'';}
+.advc.on .advh{border-bottom:1px solid var(--line-2)}
+.advb{padding:14px 20px 18px}
+.advs{margin:0 0 12px;padding-inline-start:22px;line-height:1.9}
+.advf{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.advn{margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--accent-soft);font-size:14px}
+.attc{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
+.attb{padding:3px 10px!important;font-size:12.5px!important;white-space:nowrap}
 .pfrow{background:none;border:0;border-bottom:1px solid var(--line-2);font:inherit;color:inherit;text-align:start;cursor:pointer;width:100%;box-sizing:border-box}
 .pfrow:hover{background:var(--accent-soft)}
 .pfrow .link{color:var(--accent);font-weight:700;font-size:13px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
@@ -680,11 +691,13 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <span>أعطال المبنى</span>
       </button>
       </div>
-      <button type="button" class="navh navt" data-act="navGrp" data-id="rec" id="navg-rec" aria-expanded="true" aria-controls="navb-rec"><span>السجلات والمركز</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-      <div class="navg" id="navb-rec">
       <button type="button" data-act="nav" data-id="profiles" id="nav-profiles">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         <span>المكتبة التعليمية</span>
+      </button>
+      <button type="button" data-act="nav" data-id="advisor" id="nav-advisor">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a7 7 0 0 0-4 12.7V18h8v-2.3A7 7 0 0 0 12 3Z"/><path d="M9.5 21h5"/><path d="M12 7v4"/><path d="M12 13.5v.5"/></svg>
+        <span>المستشار</span>
       </button>
       <button type="button" data-act="nav" data-id="sites" id="nav-sites">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
@@ -694,7 +707,6 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>
         <span>حدود المركز</span>
       </button>
-      </div>
     </nav>
     <div class="side-foot">
       <div class="who" id="who"></div>
@@ -967,8 +979,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الكادر البشري: '+a.length+' — افتح «الكادر البشري»'),600); } }
@@ -991,6 +1003,7 @@ function render(){
   else if (v.name==='staff') paint(gSearchBar()+viewStaff());
   else if (v.name==='tx') paint(gSearchBar()+viewTx());
   else if (v.name==='pfiles') paint(gSearchBar()+viewPFiles());
+  else if (v.name==='advisor') paint(gSearchBar()+viewAdvisor());
   else if (v.name==='pfile') paint(gSearchBar()+viewPFile(v.id));
   else if (v.name==='consum') paint(gSearchBar()+viewConsum());
   else if (v.name==='equip') paint(gSearchBar()+viewEquip());
@@ -1552,6 +1565,35 @@ function minClose(){
   const el=document.getElementById('medit'); if(!el) return;
   document.removeEventListener('keydown', el._key); el.remove(); document.body.classList.remove('medit-on');
 }
+
+/* ---------- المستشار: دليل الإجراءات للمستجد (مثلاً: غياب فرد، تأخير، غياب متصل ٥ أيام فأكثر) مع المحاضر المطلوبة لكل حالة؛ مشترك لجميع المراكز ---------- */
+const getAdv = id => (S.guide||[]).find(x=>x.id===id);
+const advEdit = () => S.canEdit && !(S.me && S.me.unitEditor); // يحرره المسؤول فقط لأنه مشترك
+const minOpts = () => [['','—'],...(S.forms||[]).filter(f=>(f.kind||'minutes')==='minutes').sort((a,b)=>(a.order||0)-(b.order||0)).map(f=>[f.id,f.title||'محضر'])];
+const advFields = x => [
+  {id:'title',label:'الحالة',value:x.title,required:true,placeholder:'مثال: غياب فرد عن العمل'},
+  {id:'when',label:'متى تنطبق (اختياري)',value:x.when,placeholder:'مثال: إذا لم يحضر الفرد لمناوبته دون إذن'},
+  {id:'steps',label:'الإجراءات بالترتيب (كل خطوة في سطر)',type:'textarea',value:x.steps,placeholder:'مثال:\nالاتصال على الفرد وضبط محضر اتصال\nضبط محضر غياب\nرفع المحضر لإدارة العمليات'},
+  [{id:'f1',label:'محضر مطلوب ١',type:'select',value:(x.forms||[])[0]||'',options:minOpts()},{id:'f2',label:'محضر مطلوب ٢',type:'select',value:(x.forms||[])[1]||'',options:minOpts()}],
+  [{id:'f3',label:'محضر مطلوب ٣',type:'select',value:(x.forms||[])[2]||'',options:minOpts()},{id:'f4',label:'محضر مطلوب ٤',type:'select',value:(x.forms||[])[3]||'',options:minOpts()}],
+  {id:'note',label:'ملاحظات وتنبيهات (اختياري)',type:'textarea',value:x.note}];
+const advVal = x => ({title:x.title, when:x.when||'', steps:x.steps||'', note:x.note||'', forms:[x.f1,x.f2,x.f3,x.f4].filter(Boolean)});
+function viewAdvisor(){
+  const edit=advEdit(), all=(S.guide||[]).slice().sort((a,b)=>((a.order||9e9)-(b.order||9e9))||((a.at||0)-(b.at||0)));
+  const head=`<header class="ph"><div class="ph-t"><h1>المستشار</h1><span class="count">دليل الإجراءات</span></div>${edit?`<button type="button" class="btn primary" data-act="advAdd">${ICON.plus}إضافة حالة</button>`:''}</header>
+  <p class="muted" style="margin:-6px 0 16px">اختر الحالة لتعرف الإجراءات المطلوبة خطوة بخطوة والمحاضر التي تُضبط فيها، وافتح المحضر مباشرة لتعبئته وطباعته.</p>`;
+  if (!S.loadedAdv) return head+loading();
+  if (!all.length) return head+`<div class="panel empty"><b>لم تُضف الحالات بعد.</b>ستُضاف هنا تعليمات كل حالة (الغياب، التأخير، الغياب المتصل ٥ أيام فأكثر…) والمحاضر المطلوبة لها.</div>`;
+  const q=norm(S.advq), list=all.filter(x=>!q||norm([x.title,x.when,x.steps,x.note].join(' ')).includes(q));
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الحالات</span>${ICON.search}<input id="advq" type="search" placeholder="ابحث عن حالة، مثال: غياب أو تأخير" value="${esc(S.advq||'')}"></label></div>`;
+  if (!list.length) return head+tools+`<div class="panel empty"><b>لا توجد حالة مطابقة.</b></div>`;
+  return head+tools+list.map(x=>{ const st=String(x.steps||'').split('\n').map(t=>t.trim()).filter(Boolean), fs=(x.forms||[]).map(getForm).filter(Boolean), open=S.advOpen===x.id;
+    return `<section class="panel advc${open?' on':''}"><button type="button" class="advh" data-act="advTog" data-id="${esc(x.id)}" aria-expanded="${open}"><b>${esc(x.title||'حالة')}</b>${x.when?`<small>${esc(x.when)}</small>`:''}</button>
+      ${open?`<div class="advb">${st.length?`<ol class="advs">${st.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:'<p class="muted">لم تُكتب الإجراءات بعد.</p>'}
+        ${fs.length?`<div class="advf"><span class="muted">المحاضر المطلوبة:</span>${fs.map(f=>`<button type="button" class="btn sm" data-act="${f.tpl?'minEdit':'formOpen'}" data-id="${esc(f.id)}">${ICON.doc}${esc(f.title||'محضر')}</button>`).join('')}</div>`:''}
+        ${x.note?`<div class="advn">${esc(x.note)}</div>`:''}
+        ${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(x.id)}">${ICON.edit}تعديل</button><button type="button" class="btn sm danger" data-act="advDel" data-id="${esc(x.id)}">${ICON.del}حذف</button></div>`:''}</div>`:''}</section>`; }).join('');
+}
 /* ---------- المنشآت الهامة في نطاق الجهة: الاسم ورابط موقعها في الخرائط ---------- */
 const getSite = id => (S.sites||[]).find(x=>x.id===id);
 const siteSort = (a,b)=>((+a.n||9e9)-(+b.n||9e9))||((a.at||0)-(b.at||0));
@@ -1789,7 +1831,13 @@ function hTeam(){
       <div class="panel hstaff" style="overflow-x:auto"><table><thead><tr><th>م</th><th>الرتبة</th><th>الاسم</th><th>الرقم العسكري</th><th>التخصص</th><th>الحالة</th><th>الفترة / ملاحظة</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${rows||`<tr class="vac"><td colspan="8">لا توجد خانات في هذه الوردية.</td></tr>`}</tbody></table></div></section>`;
   }).join('');
 }
-const fileBtn = (col, r, label) => (r.file||r.db) ? `<button type="button" class="link" data-act="hOpen" data-id="${col}" data-i="${esc(r.id)}">${esc(label)} ${ICON.arrow}</button>` : DASH;
+// خانة المرفق: عرضه إن وُجد، وفي وضع التعديل زر «إرفاق» (أو «استبدال») مباشرة بجانب السجل
+const fileBtn = (col, r, label) => { const has=!!(r.file||r.db), att=S.canEdit && HCOLS[col];
+  const v = has ? `<button type="button" class="link" data-act="hOpen" data-id="${col}" data-i="${esc(r.id)}">${esc(label)} ${ICON.arrow}</button>` : '';
+  const a = att ? `<button type="button" class="btn sm attb" data-act="hAttach" data-id="${col}" data-i="${esc(r.id)}" title="${has?'استبدال المرفق':'إرفاق مستند'}">${has?'استبدال':'📎 إرفاق'}</button>` : '';
+  return (v||a) ? `<span class="attc">${v}${a}</span>` : DASH; };
+// مرفق يشترك فيه أكثر من سجل (نسخ المعاملات في ملفات الأفراد) لا يُحذف عند استبداله
+const fileShared = r => r.src || ['ptx','pdocs'].some(c=>(S[c]||[]).some(x=>x!==r && ((r.file && x.file===r.file) || (r.db && x.db===r.db))));
 const rowActs = (col, r, extra='') => `<td class="ra wide">${extra}<button type="button" class="icon-btn" data-act="hRecEdit" data-id="${col}" data-i="${esc(r.id)}" aria-label="تعديل">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hRecDel" data-id="${col}" data-i="${esc(r.id)}" aria-label="حذف">${ICON.del}</button></td>`;
 const byDate = (a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0));
 const AK = {absence:'غياب', late:'تأخير'};
@@ -2198,6 +2246,11 @@ const ACT = {
       const d={title:x.title, date:x.date}; if (x.file) Object.assign(d, await storeLibFile(x.file, 'misdoc-'+k+'-'+uid()));
       const all=Object.assign({}, S.misd||{}); all[k]=Object.assign({}, md, d);
       await S.db.doc('settings/misdocs').set(all); if (x.file && (md.file||md.db)) dropLibFile(md); toast('حُفظ البيان'); }}); },
+  hAttach: (col, id) => { const r=hRec(col,id); if(!r) return; const has=!!(r.file||r.db);
+    openForm({title:has?'استبدال المرفق':'إرفاق مستند', submit:has?'استبدال':'إرفاق', fields:[{id:'file',label:'المستند',type:'file',required:true,accept:LIB_ACCEPT,hint:'PDF أو صورة، أو Word ‏(.docx) حتى 180 كيلوبايت'}], onSubmit: async x => {
+      const f=await storeLibFile(x.file, col.slice(0,3)+'-'+id+'-'+Date.now().toString(36));
+      if (has && !fileShared(r)) dropLibFile(r);
+      await S.db.doc(col+'/'+id).update(Object.assign({file:null, db:null, fileName:''}, f, r.src?{src:null}:{}, {updated:Date.now()})); toast(has?'استُبدل المرفق':'أُرفق المستند'); }}); },
   hOpen: (col, id) => { const r=hRec(col,id); if(!r) return; const t=r.fileName||'مرفق'; if (r.db) openDocxViewer(r.db, t); else if (r.file) openViewer(r.file, t); },
   absAdd: () => openForm({title:'تسجيل غياب أو تأخير', submit:'تسجيل', fields:absFields({}), onSubmit: async x => {
       const ref=S.db.collection('absences').doc();
@@ -2216,10 +2269,10 @@ const ACT = {
   hRecEdit: (col, id) => { const r=hRec(col,id), C=HCOLS[col]; if(!r||!C) return; openForm({title:'تعديل '+C.title, fields:C.fields(r), onSubmit: async x => {
       let patch=Object.assign(hStrip(x));
       if (col==='missions'){ Object.assign(patch, personVal(x,'a'), personVal(x,'b')); if ((x.kind==='int'?'int':'ext')!==mkOf(r)) patch.order=nextOrder((S.missions||[]).filter(m=>mkOf(m)===x.kind)); }
-      else Object.assign(patch, ('p' in x||'pN' in x)?personVal(x,'p'):{}, await hStoreFile(x, col.slice(0,3)+'-'+id+'-'+Date.now().toString(36), r));
+      else Object.assign(patch, ('p' in x||'pN' in x)?personVal(x,'p'):{}, await hStoreFile(x, col.slice(0,3)+'-'+id+'-'+Date.now().toString(36), fileShared(r)?null:r));
       await S.db.doc(col+'/'+id).update(Object.assign(patch,{updated:Date.now()})); toast('حُفظ التعديل'); }}); },
   hRecDel: (col, id) => { const r=hRec(col,id); if(!r) return; openConfirm('حذف هذا السجل نهائياً؟', 'حذف', async () => {
-      await S.db.doc(col+'/'+id).delete(); if (r.file||r.db) dropLibFile(r); toast('حُذف السجل'); }); },
+      await S.db.doc(col+'/'+id).delete(); if ((r.file||r.db) && !fileShared(r)) dropLibFile(r); toast('حُذف السجل'); }); },
   misDone: id => { const m=hRec('missions',id); if(!m) return;
     if (m.done) return openConfirm(`إلغاء علامة الإنجاز عن مهمة ${pDisp(m,'a')} و${pDisp(m,'b')}؟`, 'إلغاء الإنجاز', async () => {
       await S.db.doc('missions/'+id).update({done:false, updated:Date.now()}); toast('أُلغيت علامة الإنجاز'); }, 'تأكيد');
@@ -2260,6 +2313,12 @@ const ACT = {
   letAdd: () => openForm({title:'إضافة خطاب رسمي', submit:'إضافة', fields:letFields({}), onSubmit: async x => {
       const ref=S.db.collection('letters').doc(); const f=await hStoreFile(x, 'let-'+ref.id);
       await ref.set(Object.assign(hStrip(x), {file:null, db:null, fileName:''}, f, {at:Date.now()})); toast('أُضيف الخطاب'); }}),
+  advTog: id => { S.advOpen = S.advOpen===id ? '' : id; render(); },
+  advAdd: () => openForm({title:'إضافة حالة للمستشار', submit:'إضافة', fields:advFields({}), onSubmit: async x => {
+      const n=Math.max(0,...(S.guide||[]).map(y=>+y.order||0))+1; await S.db.collection('guide').doc().set(Object.assign(advVal(x), {order:n, at:Date.now()})); toast('أُضيفت الحالة'); }}),
+  advEdit: id => { const x=getAdv(id); if(!x) return; openForm({title:'تعديل الحالة', fields:advFields(x), onSubmit: async v => {
+      await S.db.doc('guide/'+id).update(Object.assign(advVal(v), {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
+  advDel: id => { const x=getAdv(id); if(!x) return; openConfirm(`حذف الحالة «${x.title||''}»؟`, 'حذف', async () => { await S.db.doc('guide/'+id).delete(); toast('حُذفت الحالة'); }); },
   pfOpen: id => go('pfile', id),
   pdAdd: pid => openForm({title:'إضافة مستند لملف الفرد', submit:'إضافة', fields:pdFields({}), onSubmit: async x => {
       const ref=S.db.collection('pdocs').doc(); const f=await hStoreFile(x, 'pd-'+ref.id);
@@ -2422,6 +2481,7 @@ document.addEventListener('input', e => {
   else if (e.target.id==='wsq'){ S.wsq=e.target.value; render(); }
   else if (e.target.id==='txq'){ S.txq=e.target.value; render(); }
   else if (e.target.id==='pfq'){ S.pfq=e.target.value; render(); }
+  else if (e.target.id==='advq'){ S.advq=e.target.value; render(); }
   else if (e.target.id==='cnq'){ S.cnq=e.target.value; render(); }
   else if (e.target.id==='cny'){ S.cny=e.target.value; render(); }
   else if (e.target.id==='eqq'){ S.eqq=e.target.value; render(); }
@@ -2489,6 +2549,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   for (const c of ['letters','ptx']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.tl[c]=1; S.loadedT=Object.keys(S.tl).length>=2; render(); }, fail);
   db.doc('settings/hr').onSnapshot(s => { S.hrs = s.exists ? s.data() : {}; S.hrsLoaded=true; render(); }, () => { S.hrsLoaded=true; render(); });
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
+  db.collection('guide').onSnapshot(s => { S.guide=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedAdv=true; render(); }, () => { S.loadedAdv=true; render(); });
   db.collection('pdocs').onSnapshot(s => { S.pdocs=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);
