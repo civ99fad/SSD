@@ -235,6 +235,8 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 <script>
 (function () {
   const cfg = window.ISNAD_CONFIG || {};
+  // نفس اللوحة تُنشر باسم «لوحة مدير إدارة العمليات» (ops.html) بنفس الرمز والمميزات
+  if (cfg.title) { document.title = cfg.title; document.querySelectorAll('h1').forEach((h) => { if (h.textContent.trim() === 'لوحة مدير الإدارة') h.textContent = cfg.title; }); }
   const $ = (s) => document.getElementById(s);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const ss = {

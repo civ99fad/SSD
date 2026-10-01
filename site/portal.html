@@ -93,6 +93,7 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
     <div class="org">الإدارة العامة للعمليات</div>
     <div class="sub">اختر الجهة</div>
     <a class="mgr" id="mgr" href="manager.html" hidden><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b></b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a>
+    <a class="mgr" id="ops" href="ops.html" hidden style="margin-top:12px"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b>لوحة مدير إدارة العمليات</b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a>
     <div class="lbl">المراكز والأقسام</div>
     <nav class="units" id="units" aria-label="الجهات"></nav>
     <button type="button" class="out" id="out" hidden>تسجيل الخروج من جميع الجهات</button>
@@ -125,6 +126,7 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
   if (cfg.manager) {
     $('mgr').querySelector('b').textContent = cfg.manager.name;
     $('mgr').hidden = false;
+    $('ops').hidden = false; // لوحة مدير إدارة العمليات: نفس لوحة مدير الإدارة ورمزها
   }
 
   // البوابة بلا كلمة مرور؛ كل جهة تطلب كلمتها عند دخولها. زر الخروج يظهر إن كانت أي جهة مفتوحة
