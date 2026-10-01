@@ -542,6 +542,40 @@
     });
   }
 
+
+  // زر «إظهار/إخفاء» داخل كل خانة كلمة مرور أو رمز، ليتأكد المستخدم مما يكتبه
+  (function () {
+    const EYE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const NOEYE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17.4 17.4 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+    const add = (inp) => {
+      if (inp.dataset.eye) return;
+      inp.dataset.eye = '1';
+      const w = document.createElement('span');
+      w.style.cssText = 'position:relative;display:block;width:100%';
+      inp.parentNode.insertBefore(w, inp);
+      w.appendChild(inp);
+      inp.style.paddingLeft = '44px';
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'إظهار ما كُتب');
+      b.title = 'إظهار / إخفاء';
+      b.innerHTML = EYE;
+      b.style.cssText = 'position:absolute;top:50%;transform:translateY(-50%);left:6px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:var(--muted,#555);cursor:pointer;padding:0';
+      b.addEventListener('mousedown', (e) => e.preventDefault());
+      b.addEventListener('click', () => {
+        const show = inp.type === 'password';
+        inp.type = show ? 'text' : 'password';
+        b.innerHTML = show ? NOEYE : EYE;
+        b.setAttribute('aria-label', show ? 'إخفاء ما كُتب' : 'إظهار ما كُتب');
+        inp.focus();
+      });
+      w.appendChild(b);
+    };
+    const scan = () => document.querySelectorAll('input[type="password"]').forEach(add);
+    scan();
+    new MutationObserver(scan).observe(document.documentElement, { childList: true, subtree: true });
+  })();
+
   // ---------- القائمة الجانبية: زر القائمة الرئيسية، وتسجيل الخروج يرجع للبوابة ----------
   document.addEventListener(
     'click',
