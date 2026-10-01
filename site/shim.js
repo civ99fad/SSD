@@ -71,7 +71,9 @@
   // كل جهة تُفتح برمزها فقط (لوحة المدير لا تفتح الجهات). عند وجود «الحارس» يكون الرمز هو رمز الجهة فيه،
   // فالجلسة القديمة التي فُتحت بكلمة المرور العامة (بلا رمز) لا تُعتمد
   const GATE = PROXY && cfg.mode !== 'server';
-  const signedIn = ss.get(AUTH_KEY) === '1' && (!GATE || !!unitCode);
+  // المسؤول بمفتاح GitHub المحفوظ على جهازه يدخل كل الجهات مباشرة (يُتحقق من المفتاح، وإن كان غير صالح يُطلب الرمز)
+  const adminTok = cfg.repo && store.get(TOKEN_KEY);
+  const signedIn = (ss.get(AUTH_KEY) === '1' && (!GATE || !!unitCode)) || (GATE && !!adminTok);
   // الصفحة تقرأ isnad-entered لتتخطى شاشة الترحيب: نضبطه حسب هذه الجهة فقط
   if (signedIn) ss.set('isnad-entered', '1');
   else ss.del('isnad-entered');
@@ -403,6 +405,10 @@
       (e) => {
         unitErr = e;
         if (e && e.code === 'not_granted') isUnit(token) ? sess.del(CODE_KEY) : store.del(TOKEN_KEY); // مفتاح أو رمز منتهٍ أو بلا صلاحية
+        if (e && e.code === 'not_granted' && GATE && !isUnit(token) && !unitCode) {
+          signOut();
+          location.reload();
+        }
         return null;
       }
     );
@@ -434,6 +440,38 @@
     back.textContent = '→ الرجوع للقائمة الرئيسية';
     back.style.cssText = 'margin-top:14px;font-size:13px;font-weight:700;color:var(--accent);text-decoration:none';
     enter.after(back);
+    if (GATE && cfg.repo) {
+      // للمسؤول: مفتاح GitHub يُحفظ على هذا الجهاز ويفتح كل المراكز والأقسام ولوحة المدير مع التعديل
+      const gbox = document.createElement('div');
+      gbox.style.cssText = 'width:100%;margin-top:12px;text-align:start';
+      gbox.innerHTML =
+        '<button type="button" data-g="show" style="background:none;border:0;padding:0;color:var(--muted);font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline">للمسؤول: الدخول بمفتاح GitHub</button>' +
+        `<div data-g="box" hidden style="margin-top:8px"><input data-g="tok" type="password" autocomplete="off" placeholder="github_pat_…" dir="ltr" style="${field}">` +
+        '<div data-g="err" role="alert" style="display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600"></div>' +
+        '<button type="button" data-g="save" class="btn" style="width:100%;margin-top:8px">دخول بالمفتاح</button></div>';
+      back.before(gbox);
+      gbox.addEventListener('click', async (e) => {
+        const g = e.target.dataset && e.target.dataset.g;
+        if (g === 'show') {
+          gbox.querySelector('[data-g="box"]').hidden = false;
+          gbox.querySelector('[data-g="tok"]').focus();
+        } else if (g === 'save') {
+          const t = gbox.querySelector('[data-g="tok"]').value.trim(), m = gbox.querySelector('[data-g="err"]');
+          m.style.display = 'none';
+          if (!t) return;
+          e.target.disabled = true;
+          try {
+            await checkToken(t);
+            store.set(TOKEN_KEY, t);
+            location.reload();
+          } catch (x) {
+            m.textContent = x && x.code === 'not_granted' ? 'المفتاح غير صحيح أو ليس له صلاحية الكتابة على المستودع.' : 'تعذّر الاتصال بـ GitHub. حاول مجددًا.';
+            m.style.display = 'block';
+            e.target.disabled = false;
+          }
+        }
+      });
+    }
     const input = box.querySelector('input');
     const err = box.querySelector('#isnadPwErr');
     let passed = false;
