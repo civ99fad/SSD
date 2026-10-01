@@ -6,6 +6,7 @@
 //   GITHUB_TOKEN  (Secret) مفتاح GitHub بصلاحية Contents: Read and write على المستودع
 //   CODES         (Secret) رموز المراكز بصيغة JSON، مثال: {"balad":"رمز-البلد","sharaf":"رمز-شراف","manager":"رمز-لوحة-المدير"}
 //                 (manager: كلمة دخول لوحة مدير الإدارة، ولا يسمح بأي تعديل)
+//                 (admin اختياري: رمز المسؤول العام يفتح أي مركز أو قسم أو لوحة المدير، ويعدّل على الجهة المفتوحة)
 //   اختياري: REPO (الافتراضي civ99fad/SSD)، BRANCH، ORIGIN (الافتراضي https://civ99fad.github.io)
 
 const NAMES = {
@@ -37,7 +38,8 @@ export default {
     } catch (e) {
       return json(500, { message: 'CODES غير صالح' });
     }
-    const valid = NAMES[unit] && typeof codes[unit] === 'string' && codes[unit].length > 0 && same(codes[unit], code);
+    const ok = (k) => typeof codes[k] === 'string' && codes[k].length > 0 && same(codes[k], code);
+    const valid = NAMES[unit] && (ok(unit) || ok('admin'));
     if (!valid) {
       await new Promise((r) => setTimeout(r, 700)); // إبطاء محاولات التخمين
       return json(401, { message: 'رمز المركز غير صحيح' });
