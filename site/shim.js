@@ -599,10 +599,21 @@
       '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 9v11h14V9"/></svg>' +
       '<span>القائمة الرئيسية</span>';
     brand.after(home);
+    // زر «تحديث» لجلب أحدث نسخة من الموقع والبيانات (يتجاوز النسخة المخزّنة في المتصفح)
+    const rf = document.createElement('button');
+    rf.type = 'button';
+    rf.className = 'isnad-home isnad-refresh';
+    rf.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg><span>تحديث</span>';
+    rf.addEventListener('click', () => {
+      rf.disabled = true;
+      rf.querySelector('span').textContent = 'جارٍ التحديث…';
+      Promise.all([fetch(location.href, { cache: 'reload' }), fetch('version.json', { cache: 'reload' }), fetch('db.json', { cache: 'reload' })].map((p) => p.catch(() => null))).then(() => location.reload());
+    });
+    home.after(rf);
     const css = document.createElement('style');
     css.textContent =
       '.isnad-home{display:flex;align-items:center;justify-content:center;gap:8px;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:700;font-size:13.5px;text-decoration:none;flex-shrink:0}' +
-      '.isnad-home:hover{background:rgba(255,255,255,.18)}.isnad-home:focus-visible{outline:2px solid #4FBE8E;outline-offset:2px}' +
+      '.isnad-refresh{cursor:pointer;font-family:inherit;margin-top:6px;width:100%}.isnad-home:hover{background:rgba(255,255,255,.18)}.isnad-home:focus-visible{outline:2px solid #4FBE8E;outline-offset:2px}' +
       '@media (max-width:860px){.isnad-home{padding:7px 10px;font-size:12.5px}}';
     document.head.appendChild(css);
   }

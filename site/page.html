@@ -1002,7 +1002,7 @@ function render(){
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
   circBadge();
-  if (S.loadedCirc && !S.circToasted){ S.circToasted=true; const n=circNew().length; if (n) setTimeout(()=>toast(n===1?'وصل تعميم جديد من مدير الإدارة العامة — افتح «التعاميم»':'وصلت '+n+' تعاميم جديدة من مدير الإدارة العامة — افتح «التعاميم»'),900); }
+  if (S.loadedCirc && !S.circToasted){ S.circToasted=true; const n=circNew().length; if (n) setTimeout(()=>toast(n===1?'وصل تعميم جديد من مدير الإدارة العامة / مدير إدارة العمليات — افتح «التعاميم»':'وصلت '+n+' تعاميم جديدة من الإدارة — افتح «التعاميم»'),900); }
   if (v.name==='circ' && S.loadedCirc && circNew().length){ if (S.circSeenAt==null) S.circSeenAt=circSeen(); circMarkSeen(); setTimeout(circBadge,0); }
   if (S.lastSect!==sect){ S.lastSect=sect; const nb=$('#nav-'+sect), nv=nb&&nb.closest('.nav'); navOpenFor(nb); if (nv && nv.scrollWidth>nv.clientWidth){ const r=nb.getBoundingClientRect(), R=nv.getBoundingClientRect(); if (r.left<R.left||r.right>R.right) nv.scrollLeft += (r.left+r.width/2)-(R.left+R.width/2); } }
   if (S.dbFailed) return paint(`<div class="panel state"><b>تعذّر الوصول إلى البيانات.</b><br>أعد تحميل الصفحة، وإن استمرت المشكلة فتأكد أن الموقع مشارك معك.</div>`);
@@ -1432,8 +1432,8 @@ function viewLibrary(key){
   if (!all.length) body=`<div class="panel empty"><b>${esc(C.empty)}</b>${edit?esc(C.hint):'ستظهر هنا عند إضافتها.'}</div>`;
   else if (!list.length) body=`<div class="panel empty"><b>لا توجد نتائج.</b>جرّب كلمة بحث أخرى أو غيّر التصفية.</div>`;
   else body=`<div class="panel docs">${list.map(p=>`<div class="drow">${pThumb(p)?`<img class="pthumb" src="${blob(pThumb(p))}" alt="" loading="lazy">`:`<div class="file-ic sm">${ICON.doc}</div>`}
-      <div class="file-t"><b>${esc(p.title||p.fileName||'ملف')}</b><small><span class="pill p-doc">${esc(KIND(p))}</span>${/^shared-/.test(p.id)?'<span class="pill p-doc">لجميع المراكز</span>':''}${C.dated&&p.date?`<span>${esc(p.date)}</span><span>·</span>`:''}${vIds(p).filter(id=>getV(id)).length?vIds(p).filter(id=>getV(id)).map(id=>{ const v=getV(id); return `<button type="button" class="vlink" data-act="openVehicle" data-id="${esc(id)}">${ICON.truck(14)}${esc(v.code?v.code+' '+(v.name||''):(v.name||'آلية'))}</button>`; }).join('<span>·</span>'):`<span>${esc(C.general)}</span>`}${!C.dated&&p.at?`<span>· أُضيف ${esc(hijri(p.at))}</span>`:''}</small>${p.num?`<div class="rmeta">رقم المعاملة: <span class="rk">${esc(p.num)}</span></div>`:''}${p.items?`<ul class="ritems">${String(p.items).split('\n').map(t=>t.trim()).filter(Boolean).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}${p.rec?`<div class="rrec"><span class="rk">توصية اللجنة:</span> ${esc(p.rec)}</div>`:''}${p.note?`<div class="tlt">${esc(p.note)}</div>`:''}</div>
-      <div class="file-a">${p.type?`<button type="button" class="btn" data-act="openType" data-id="${esc(p.id)}">بيانات الآلية</button>`:''}<button type="button" class="btn primary" data-act="libOpen" data-id="${key}" data-i="${esc(p.id)}">${p.type?'الكتيب':'فتح'}</button>${edit?`<button type="button" class="icon-btn" data-act="libEdit" data-id="${key}" data-i="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="libDel" data-id="${key}" data-i="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
+      <div class="file-t"><b>${esc(p.title||p.fileName||'ملف')}</b><small><span class="pill p-doc">${esc(KIND(p))}</span>${/^shared-/.test(p.id)?'<span class="pill p-doc">لجميع المراكز</span>':''}${C.dated&&p.date?`<span>${esc(p.date)}</span><span>·</span>`:''}${vIds(p).filter(id=>getV(id)).length?vIds(p).filter(id=>getV(id)).map(id=>{ const v=getV(id); return `<button type="button" class="vlink" data-act="openVehicle" data-id="${esc(id)}">${ICON.truck(14)}${esc(v.code?v.code+' '+(v.name||''):(v.name||'آلية'))}</button>`; }).join('<span>·</span>'):`<span>${esc(C.general)}</span>`}${!C.dated&&p.at?`<span>· أُضيف ${esc(hijri(p.at))}</span>`:''}</small>${key==='returns'?retPill(p):''}${p.num?`<div class="rmeta">رقم المعاملة: <span class="rk">${esc(p.num)}</span></div>`:''}${p.items?`<ul class="ritems">${String(p.items).split('\n').map(t=>t.trim()).filter(Boolean).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}${p.rec?`<div class="rrec"><span class="rk">توصية اللجنة:</span> ${esc(p.rec)}</div>`:''}${p.note?`<div class="tlt">${esc(p.note)}</div>`:''}</div>
+      <div class="file-a">${p.type?`<button type="button" class="btn" data-act="openType" data-id="${esc(p.id)}">بيانات الآلية</button>`:''}<button type="button" class="btn primary" data-act="libOpen" data-id="${key}" data-i="${esc(p.id)}">${p.type?'الكتيب':'فتح'}</button>${edit&&key==='returns'?`<button type="button" class="btn sm" data-act="retTog" data-id="${esc(p.id)}">${(p.rstat==='referred')?'إرجاعها للمقر':'تمت الإحالة'}</button>`:''}${edit?`<button type="button" class="icon-btn" data-act="libEdit" data-id="${key}" data-i="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="libDel" data-id="${key}" data-i="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
   return head+note+tools+body;
 }
 const libVehicleOpts = key => [['',LIBS[key].generalOpt],...sortedVehicles().map(v=>[v.id,v.name||'آلية'])];
@@ -1452,6 +1452,9 @@ function dropLibFile(p){
   if (p.db) S.db.doc('files/'+p.db).delete().catch(()=>{});
 }
 const LIB_ACCEPT='application/pdf,image/jpeg,image/png,image/webp,.docx';
+// حالة الرجيع: تمت الإحالة لساحة الرجيع، أو لا تزال في المقر بانتظار فتح الساحة
+const retPill = p => { const ok=p.rstat==='referred';
+  return `<div class="rmeta"><span class="stpill ${ok?'hs-ok':'hs-mid'}"><i aria-hidden="true"></i>${ok?'✓ تمت الإحالة إلى ساحة الرجيع':'⏳ لا تزال في المقر — بانتظار فتح ساحة الرجيع'}</span></div>`; };
 function libFields(key, p){
   const C=LIBS[key], L=S.lib[key];
   const veh={id:'vehicle',label:'الآلية',type:'select',value:p?(p.vehicle||''):((L.v&&L.v!=='_general')?L.v:''),options:libVehicleOpts(key)};
@@ -1461,6 +1464,7 @@ function libFields(key, p){
     ...(key==='returns'?[
       {id:'num',label:'رقم المعاملة (اختياري)',value:p&&p.num,placeholder:'مثال: ٧٥٦٩١'},
       {id:'items',label:'الأصناف المرتجعة',type:'textarea',value:p&&p.items,placeholder:'صنف في كل سطر، مثال: ماطور سحب ماء WB30 XT — العدد ١',hint:'اكتب كل صنف في سطر مستقل مع الموديل والعدد.'},
+      {id:'rstat',label:'حالة الإحالة',type:'select',value:(p&&p.rstat)||'waiting',options:[['waiting','لا تزال في المقر — بانتظار فتح ساحة الرجيع'],['referred','تمت الإحالة إلى ساحة الرجيع']]},
       {id:'rec',label:'توصية اللجنة الفنية (اختياري)',type:'textarea',value:p&&p.rec,placeholder:'مثال: لا يتوفر قطع غيار لها'}]:[]),
     {id:'note',label:'وصف مختصر (اختياري)',type:'textarea',value:p&&p.note,placeholder:C.notePh},
     p ? {id:'file',label:'استبدال الملف (اختياري)',type:'file',accept:LIB_ACCEPT}
@@ -1628,9 +1632,9 @@ const circUrl = c => c.file ? (blob(c.file) || `https://raw.githubusercontent.co
 function viewCirc(){
   const all=circAll(), seen=S.circSeenAt!=null?S.circSeenAt:circSeen();
   const head=`<header class="ph"><div class="ph-t"><h1>التعاميم</h1><span class="count">${esc(arD(all.length))} تعميم</span></div></header>
-  <p class="muted" style="margin:-6px 0 16px">التعاميم الرسمية الواردة من مدير الإدارة العامة لجميع المراكز والأقسام.</p>`;
+  <p class="muted" style="margin:-6px 0 16px">التعاميم الرسمية الواردة من مدير الإدارة العامة ومدير إدارة العمليات لجميع المراكز والأقسام.</p>`;
   if (!S.loadedCirc) return head+loading();
-  if (!all.length) return head+`<div class="panel empty"><b>لا توجد تعاميم بعد.</b>ستظهر هنا التعاميم التي يرسلها مدير الإدارة العامة، مع تنبيه عند وصول تعميم جديد.</div>`;
+  if (!all.length) return head+`<div class="panel empty"><b>لا توجد تعاميم بعد.</b>ستظهر هنا التعاميم التي يرسلها مدير الإدارة العامة ومدير إدارة العمليات، مع تنبيه عند وصول تعميم جديد.</div>`;
   const q=norm(S.circq), list=all.filter(c=>!q||norm([c.title,c.num,c.note,c.date].join(' ')).includes(q));
   const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في التعاميم</span>${ICON.search}<input id="circq" type="search" placeholder="ابحث بعنوان التعميم أو رقمه" value="${esc(S.circq||'')}"></label></div>`;
   if (!list.length) return head+tools+`<div class="panel empty"><b>لا يوجد تعميم مطابق.</b></div>`;
@@ -2410,11 +2414,12 @@ const ACT = {
   libAdd: key => openForm({title:'إضافة '+LIBS[key].formTitle, submit:'إضافة', fields:libFields(key), onSubmit: async x => {
       const ref=S.db.collection(key).doc();
       const f=await storeLibFile(x.file, key+'-'+ref.id);
-      const d=Object.assign({title:x.title, vehicle:x.vehicle, note:x.note, at:Date.now()}, f); if (LIBS[key].dated) d.date=x.date; if (key==='returns') Object.assign(d,{num:x.num, items:x.items, rec:x.rec});
+      const d=Object.assign({title:x.title, vehicle:x.vehicle, note:x.note, at:Date.now()}, f); if (LIBS[key].dated) d.date=x.date; if (key==='returns') Object.assign(d,{num:x.num, items:x.items, rec:x.rec, rstat:x.rstat||'waiting'});
       await ref.set(d); toast('أُضيف '+LIBS[key].one); }}),
+  retTog: id => { const p=libItem('returns',id); if(!p) return; S.db.doc('returns/'+id).update({rstat:p.rstat==='referred'?'waiting':'referred'}).then(()=>toast(p.rstat==='referred'?'أُعيدت الحالة: لا تزال في المقر':'سُجّلت الإحالة إلى ساحة الرجيع')); },
   libEdit: (key, id) => { const p=libItem(key,id); if(!p) return;
     openForm({title:'تعديل '+LIBS[key].formTitle, fields:libFields(key,p), onSubmit: async x => {
-      const patch={title:x.title, vehicle:x.vehicle, note:x.note}; if (LIBS[key].dated) patch.date=x.date; if (key==='returns') Object.assign(patch,{num:x.num, items:x.items, rec:x.rec});
+      const patch={title:x.title, vehicle:x.vehicle, note:x.note}; if (LIBS[key].dated) patch.date=x.date; if (key==='returns') Object.assign(patch,{num:x.num, items:x.items, rec:x.rec, rstat:x.rstat||'waiting'});
       if (x.file) Object.assign(patch, await storeLibFile(x.file, key+'-'+id+'-'+uid()));
       await S.db.doc(key+'/'+id).update(patch);
       if (x.file) dropLibFile(p);
