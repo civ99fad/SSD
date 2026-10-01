@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>لوحة مدير الإدارة</title>
+<title>لوحة مدير الإدارة العامة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
@@ -197,7 +197,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 <section class="gate" id="gate" hidden>
   <form class="gcard" id="gform">
     <div class="logo" data-logo></div>
-    <h1>لوحة مدير الإدارة</h1>
+    <h1>لوحة مدير الإدارة العامة</h1>
     <div class="sub">جاهزية المراكز والأقسام في صفحة واحدة</div>
     <div class="fld">
       <label for="pw">كلمة المرور</label>
@@ -214,7 +214,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     <div class="top-in">
       <div class="logo" data-logo></div>
       <div>
-        <h1>لوحة مدير الإدارة</h1>
+        <h1>لوحة مدير الإدارة العامة</h1>
         <div class="meta" id="meta"></div>
       </div>
       <div class="acts">
@@ -236,7 +236,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 (function () {
   const cfg = window.ISNAD_CONFIG || {};
   // نفس اللوحة تُنشر باسم «لوحة مدير إدارة العمليات» (ops.html) بنفس الرمز والمميزات
-  if (cfg.title) { document.title = cfg.title; document.querySelectorAll('h1').forEach((h) => { if (h.textContent.trim() === 'لوحة مدير الإدارة') h.textContent = cfg.title; }); }
+  if (cfg.title) { document.title = cfg.title; document.querySelectorAll('h1').forEach((h) => { if (h.textContent.trim() === 'لوحة مدير الإدارة العامة') h.textContent = cfg.title; }); }
   const $ = (s) => document.getElementById(s);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const ss = {

@@ -1002,7 +1002,7 @@ function render(){
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
   circBadge();
-  if (S.loadedCirc && !S.circToasted){ S.circToasted=true; const n=circNew().length; if (n) setTimeout(()=>toast(n===1?'وصل تعميم جديد من مدير الإدارة — افتح «التعاميم»':'وصلت '+n+' تعاميم جديدة من مدير الإدارة — افتح «التعاميم»'),900); }
+  if (S.loadedCirc && !S.circToasted){ S.circToasted=true; const n=circNew().length; if (n) setTimeout(()=>toast(n===1?'وصل تعميم جديد من مدير الإدارة العامة — افتح «التعاميم»':'وصلت '+n+' تعاميم جديدة من مدير الإدارة العامة — افتح «التعاميم»'),900); }
   if (v.name==='circ' && S.loadedCirc && circNew().length){ if (S.circSeenAt==null) S.circSeenAt=circSeen(); circMarkSeen(); setTimeout(circBadge,0); }
   if (S.lastSect!==sect){ S.lastSect=sect; const nb=$('#nav-'+sect), nv=nb&&nb.closest('.nav'); navOpenFor(nb); if (nv && nv.scrollWidth>nv.clientWidth){ const r=nb.getBoundingClientRect(), R=nv.getBoundingClientRect(); if (r.left<R.left||r.right>R.right) nv.scrollLeft += (r.left+r.width/2)-(R.left+R.width/2); } }
   if (S.dbFailed) return paint(`<div class="panel state"><b>تعذّر الوصول إلى البيانات.</b><br>أعد تحميل الصفحة، وإن استمرت المشكلة فتأكد أن الموقع مشارك معك.</div>`);
@@ -1617,7 +1617,7 @@ function viewAdvisor(){
         ${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(x.id)}">${ICON.edit}تعديل</button><button type="button" class="btn sm danger" data-act="advDel" data-id="${esc(x.id)}">${ICON.del}حذف</button></div>`:''}</div>`:''}</section>`; }).join('');
 }
 
-/* ---------- التعاميم: يرسلها مدير الإدارة من لوحته فتصل لجميع المراكز والأقسام، مع تنبيه بالتعاميم الجديدة ---------- */
+/* ---------- التعاميم: يرسلها مدير الإدارة العامة من لوحته فتصل لجميع المراكز والأقسام، مع تنبيه بالتعاميم الجديدة ---------- */
 const CIRC_SEEN = 'isnad-circ-seen-'+((window.ISNAD_CONFIG||{}).unit||'isnad');
 const circSeen = () => { try{ return +localStorage.getItem(CIRC_SEEN)||0; }catch(e){ return 0; } };
 const circAll = () => (S.circulars||[]).slice().sort((a,b)=>(b.at||0)-(a.at||0));
@@ -1626,9 +1626,9 @@ const circUrl = c => c.file ? (blob(c.file) || `https://raw.githubusercontent.co
 function viewCirc(){
   const all=circAll(), seen=S.circSeenAt!=null?S.circSeenAt:circSeen();
   const head=`<header class="ph"><div class="ph-t"><h1>التعاميم</h1><span class="count">${esc(arD(all.length))} تعميم</span></div></header>
-  <p class="muted" style="margin:-6px 0 16px">التعاميم الرسمية الواردة من مدير الإدارة لجميع المراكز والأقسام.</p>`;
+  <p class="muted" style="margin:-6px 0 16px">التعاميم الرسمية الواردة من مدير الإدارة العامة لجميع المراكز والأقسام.</p>`;
   if (!S.loadedCirc) return head+loading();
-  if (!all.length) return head+`<div class="panel empty"><b>لا توجد تعاميم بعد.</b>ستظهر هنا التعاميم التي يرسلها مدير الإدارة، مع تنبيه عند وصول تعميم جديد.</div>`;
+  if (!all.length) return head+`<div class="panel empty"><b>لا توجد تعاميم بعد.</b>ستظهر هنا التعاميم التي يرسلها مدير الإدارة العامة، مع تنبيه عند وصول تعميم جديد.</div>`;
   const q=norm(S.circq), list=all.filter(c=>!q||norm([c.title,c.num,c.note,c.date].join(' ')).includes(q));
   const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في التعاميم</span>${ICON.search}<input id="circq" type="search" placeholder="ابحث بعنوان التعميم أو رقمه" value="${esc(S.circq||'')}"></label></div>`;
   if (!list.length) return head+tools+`<div class="panel empty"><b>لا يوجد تعميم مطابق.</b></div>`;
