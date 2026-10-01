@@ -544,6 +544,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .advs{margin:0 0 12px;padding-inline-start:22px;line-height:1.9}
 .advf{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .advn{margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--accent-soft);font-size:14px}
+.stdoc{margin-top:4px}
 .attc{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
 .attb{padding:3px 10px!important;font-size:12.5px!important;white-space:nowrap}
 .pfrow{background:none;border:0;border-bottom:1px solid var(--line-2);font:inherit;color:inherit;text-align:start;cursor:pointer;width:100%;box-sizing:border-box}
@@ -1826,7 +1827,7 @@ function hTeam(){
       if (!p) return `<tr class="vac"><td class="n">${i+1}</td><td colspan="6">خانة شاغرة</td>${edit?`<td class="ra"><button type="button" class="btn sm" data-act="hAdd" data-id="${k}">${ICON.plus}إضافة</button></td>`:''}</tr>`;
       const per = hStOf(p)!=='present' && (p.from||p.to) ? `${p.from?'من '+esc(p.from):''}${p.from&&p.to?' ':''}${p.to?'إلى '+esc(p.to):''}` : '';
       const sb = hStOf(p)==='proxy' && subName(p) ? `<div>البديل: ${esc(subName(p))}</div>` : '';
-      return `<tr><td class="n">${i+1}</td><td class="hdate">${p.rank?esc(p.rank):DASH}</td><td class="nm">${esc(p.name||'فرد')}</td><td class="hnum">${p.num?esc(p.num):DASH}</td><td class="hdate">${p.spec?esc(p.spec):DASH}</td><td>${hPill(p)}</td><td class="hper">${per}${sb}${p.note?`<div>${esc(p.note)}</div>`:''}${!per&&!sb&&!p.note?DASH:''}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="hEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(pLabel(p))}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(pLabel(p))}">${ICON.del}</button></td>`:''}</tr>`; }).join('');
+      return `<tr><td class="n">${i+1}</td><td class="hdate">${p.rank?esc(p.rank):DASH}</td><td class="nm">${esc(p.name||'فرد')}</td><td class="hnum">${p.num?esc(p.num):DASH}</td><td class="hdate">${p.spec?esc(p.spec):DASH}</td><td>${hPill(p)}</td><td class="hper">${per}${sb}${p.note?`<div>${esc(p.note)}</div>`:''}${!per&&!sb&&!p.note&&!stAttach(p)?DASH:''}${stAttach(p)}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="hEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(pLabel(p))}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(pLabel(p))}">${ICON.del}</button></td>`:''}</tr>`; }).join('');
     return `<section class="sec"><div class="sh"><h2>${SHN[k]}</h2>${k===dutyShift()?'<span class="onduty"><i></i>مناوبة اليوم</span>':''}<span class="muted">${pres} على رأس العمل من ${cfg.shifts[k]}${supIn?` (منهم ${supIn} دعم من وردية أخرى)`:''}</span></div>
       <div class="panel hstaff" style="overflow-x:auto"><table><thead><tr><th>م</th><th>الرتبة</th><th>الاسم</th><th>الرقم العسكري</th><th>التخصص</th><th>الحالة</th><th>الفترة / ملاحظة</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${rows||`<tr class="vac"><td colspan="8">لا توجد خانات في هذه الوردية.</td></tr>`}</tbody></table></div></section>`;
   }).join('');
@@ -1837,7 +1838,7 @@ const fileBtn = (col, r, label) => { const has=!!(r.file||r.db), att=S.canEdit &
   const a = att ? `<button type="button" class="btn sm attb" data-act="hAttach" data-id="${col}" data-i="${esc(r.id)}" title="${has?'استبدال المرفق':'إرفاق مستند'}">${has?'استبدال':'📎 إرفاق'}</button>` : '';
   return (v||a) ? `<span class="attc">${v}${a}</span>` : DASH; };
 // مرفق يشترك فيه أكثر من سجل (نسخ المعاملات في ملفات الأفراد) لا يُحذف عند استبداله
-const fileShared = r => r.src || ['ptx','pdocs'].some(c=>(S[c]||[]).some(x=>x!==r && ((r.file && x.file===r.file) || (r.db && x.db===r.db))));
+const fileShared = r => /^ptx:/.test(r.src||'') || ['ptx','pdocs'].some(c=>(S[c]||[]).some(x=>x!==r && ((r.file && x.file===r.file) || (r.db && x.db===r.db))));
 const rowActs = (col, r, extra='') => `<td class="ra wide">${extra}<button type="button" class="icon-btn" data-act="hRecEdit" data-id="${col}" data-i="${esc(r.id)}" aria-label="تعديل">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hRecDel" data-id="${col}" data-i="${esc(r.id)}" aria-label="حذف">${ICON.del}</button></td>`;
 const byDate = (a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0));
 const AK = {absence:'غياب', late:'تأخير'};
@@ -1854,6 +1855,30 @@ function hAbs(){
 }
 const RTYPES = ['خطاب شكر','شهادة شكر وتقدير','مكافأة مالية','تكريم','رخصة','أخرى'];
 // when a member's status is set to «رخصة», copy it once into the rewards list (keyed by member + period)
+
+/* ربط حالة الفرد بسجلاته: كل غياب أو تأخير أو رخصة أو إجازة أو دورة أو تكليف أو إلحاق يُنسخ مرة واحدة إلى سجله
+   (الغيابات والتأخيرات / المكافآت والرخص / مستندات ملف الفرد) فيظهر في ملف الفرد ويمكن إرفاق مستنده من أي مكان */
+const ST_DOC = {leave:'إجازة', course:'شهادة / دورة', assign:'معاملة', attach:'معاملة'};
+const stPer = x => [x.from?'من '+x.from:'', x.to?'إلى '+x.to:''].filter(Boolean).join(' ');
+function stRecKey(pid, x){ const st=x.status;
+  if (st==='permit') return ['rewards', pid+'|'+(x.from||'')+'|'+(x.to||'')];
+  if (st==='absent'||st==='lateP'||st==='lateN') return ['absences', pid+'|'+st+'|'+(x.from||x.lateDay||'')];
+  if (ST_DOC[st]) return ['pdocs', pid+'|'+st+'|'+(x.from||'')];
+  return null; }
+const statusRec = p => { const k=stRecKey(p.id, p); if(!k) return null; const L=S[k[0]]||[];
+  return L.find(r=>r.src===k[1]) || ((p.status==='lateP'||p.status==='lateN') ? L.filter(r=>String(r.src||'').startsWith(p.id+'|'+p.status+'|')).sort((a,b)=>(b.at||0)-(a.at||0))[0] : null) || null; };
+// خانة مستند الحالة في جدول الورديات: عرض/إرفاق مستند الغياب أو الرخصة أو الإجازة… من السجل المرتبط بها
+const stAttach = p => { const r=hStOf(p)!=='present' && statusRec(p); if(!r) return ''; const k=stRecKey(p.id,p)[0];
+  return `<div class="stdoc">${fileBtn(k, r, 'مستند '+(HST[p.status]||'الحالة'))}</div>`; };
+async function statusToRecords(pid, person, x){
+  const st=x.status; if (st==='late'||!st) return '';
+  if (st==='lateP'||st==='lateN') x=Object.assign({}, x, {lateDay:x.from||hnum()});
+  const k=stRecKey(pid, x); if (!k || (S[k[0]]||[]).some(r=>r.src===k[1])) return '';
+  const base={p:pid, pN:pLabel(person), file:null, db:null, fileName:'', src:k[1], at:Date.now()}, per=stPer(x);
+  if (k[0]==='rewards'){ await S.db.collection('rewards').doc().set(Object.assign(base, {type:'رخصة', date:x.from||hnum(), reason:['رخصة'+(per?' '+per:''), x.note||''].filter(Boolean).join(' — ')})); return 'المكافآت والرخص'; }
+  if (k[0]==='absences'){ const late=st!=='absent';
+    await S.db.collection('absences').doc().set(Object.assign(base, {kind:late?'late':'absence', date:x.from||hnum(), action:late?HST[st]:'غياب'+(per?' '+per:''), note:x.note||''})); return 'الغيابات والتأخيرات'; }
+  await S.db.collection('pdocs').doc().set(Object.assign(base, {title:HST[st]+(per?' '+per:''), type:ST_DOC[st], date:x.from||hnum(), note:x.note||''})); return 'ملف الفرد'; }
 async function permitToRewards(pid, person, x){
   if (x.status!=='permit') return false;
   const key=pid+'|'+(x.from||'')+'|'+(x.to||'');
@@ -2230,13 +2255,11 @@ const ACT = {
   hAdd: shift => openForm({title:'إضافة فرد — '+SHN[shift||'1'], submit:'إضافة', fields:staffFields({}, shift), onSubmit: async x => {
       const ref=S.db.collection('staff').doc(); const now=Date.now();
       await ref.set(Object.assign(staffClean(x), {order:nextOrder(staffOf(x.shift)), at:now, updated:now}));
-        if (await permitToRewards(ref.id, x, x)) toast('أُضيف الفرد وأُضيفت الرخصة إلى «المكافآت»'); else toast('أُضيف الفرد'); }}),
+        { const w=await statusToRecords(ref.id, x, x); toast(w?'أُضيف الفرد وسُجّلت حالته في «'+w+'»':'أُضيف الفرد'); } }}),
   hEdit: id => { const p=getP(id); if(!p) return; openForm({title:'تعديل بيانات الفرد', fields:staffFields(p), onSubmit: async x => {
       const patch=staffClean(x); if (String(x.shift)!==String(p.shift||'1')) patch.order=nextOrder(staffOf(x.shift));
       await S.db.doc('staff/'+id).update(Object.assign(patch,{updated:Date.now()}));
-      if ((x.status==='lateP'||x.status==='lateN') && x.status!==hStOf(p)){ await S.db.collection('absences').doc().set({kind:'late', p:id, pN:pLabel(p), date:hnum(), action:x.status==='lateP'?'تأخير بإذن':'تأخير بدون إذن', note:x.note||'', file:null, db:null, fileName:'', at:Date.now()}); toast('حُفظت الحالة وسُجّل التأخير في «الغيابات والتأخيرات»'); }
-      else if (await permitToRewards(id, Object.assign({}, p, x), x)) toast('حُفظت الحالة وأُضيفت الرخصة إلى «المكافآت»');
-        else toast('حُفظت التعديلات'); }}); },
+      { const w=await statusToRecords(id, Object.assign({}, p, x), x); toast(w?'حُفظت الحالة وسُجّلت في «'+w+'» وفي ملف الفرد':'حُفظت التعديلات'); } }}); },
   hDel: id => { const p=getP(id); if(!p) return; openConfirm(`حذف «${pLabel(p)}» من الكادر؟ تبقى سجلاته (الغياب والمكافآت والمهمات) باسمه.`, 'حذف الفرد', async () => {
       await S.db.doc('staff/'+id).delete(); toast('حُذف الفرد'); }); },
   misDocOpen: k => { const md=(S.misd||{})[k]; if(!md) return; const t=md.title||'بيان الترتيب'; if (md.db) openDocxViewer(md.db, t); else if (md.file) openViewer(md.file, t); },
@@ -2250,7 +2273,7 @@ const ACT = {
     openForm({title:has?'استبدال المرفق':'إرفاق مستند', submit:has?'استبدال':'إرفاق', fields:[{id:'file',label:'المستند',type:'file',required:true,accept:LIB_ACCEPT,hint:'PDF أو صورة، أو Word ‏(.docx) حتى 180 كيلوبايت'}], onSubmit: async x => {
       const f=await storeLibFile(x.file, col.slice(0,3)+'-'+id+'-'+Date.now().toString(36));
       if (has && !fileShared(r)) dropLibFile(r);
-      await S.db.doc(col+'/'+id).update(Object.assign({file:null, db:null, fileName:''}, f, r.src?{src:null}:{}, {updated:Date.now()})); toast(has?'استُبدل المرفق':'أُرفق المستند'); }}); },
+      await S.db.doc(col+'/'+id).update(Object.assign({file:null, db:null, fileName:''}, f, /^ptx:/.test(r.src||'')?{src:null}:{}, {updated:Date.now()})); toast(has?'استُبدل المرفق':'أُرفق المستند'); }}); },
   hOpen: (col, id) => { const r=hRec(col,id); if(!r) return; const t=r.fileName||'مرفق'; if (r.db) openDocxViewer(r.db, t); else if (r.file) openViewer(r.file, t); },
   absAdd: () => openForm({title:'تسجيل غياب أو تأخير', submit:'تسجيل', fields:absFields({}), onSubmit: async x => {
       const ref=S.db.collection('absences').doc();
