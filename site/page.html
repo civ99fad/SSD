@@ -528,6 +528,17 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
   .ph h1,.dh h1{font-size:22px}
 }
 /* ---------- redesign: grouped nav, global search, dashboard, table view, gate band ---------- */
+.navt{all:unset;box-sizing:border-box;cursor:pointer;display:flex!important;align-items:center;justify-content:space-between;gap:8px;width:100%;margin-top:6px;border-radius:8px}
+.navt:hover{background:rgba(255,255,255,.05);color:#C9D8D1}
+.navt:focus-visible{outline:2px solid #4FBE8E;outline-offset:1px}
+.navt .chev{transition:transform .18s;flex-shrink:0}
+.navt[aria-expanded=false] .chev{transform:rotate(90deg)}
+.navg{display:flex;flex-direction:column;gap:4px;padding-inline-start:8px;border-inline-start:1px solid rgba(255,255,255,.08);margin-inline-start:10px}
+.navg.closed{display:none}
+.pfrow{background:none;border:0;border-bottom:1px solid var(--line-2);font:inherit;color:inherit;text-align:start;cursor:pointer;width:100%;box-sizing:border-box}
+.pfrow:hover{background:var(--accent-soft)}
+.pfrow .link{color:var(--accent);font-weight:700;font-size:13px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+@media (max-width:860px){ .navt{display:none!important} .navg,.navg.closed{display:contents} }
 .navh{font-size:11.5px;font-weight:800;color:#93AFA3;padding:14px 14px 4px;letter-spacing:.2px}
 .gsearch{position:relative;display:block}
 .gsearch input{width:100%;min-height:48px;padding:12px 44px 12px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:15px;outline:none}
@@ -623,7 +634,8 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="m3 18 1.5 1.5L7 17"/></svg>
         <span>قائمة المهام</span>
       </button>
-      <div class="navh" aria-hidden="true">الأسطول والتجهيزات</div>
+      <button type="button" class="navh navt" data-act="navGrp" data-id="fleet" id="navg-fleet" aria-expanded="true" aria-controls="navb-fleet"><span>الآليات والتجهيزات</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="navg" id="navb-fleet">
       <button type="button" data-act="nav" data-id="vehicles" id="nav-vehicles">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>
         <span>الآليات</span>
@@ -640,23 +652,16 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16"/><path d="M3 21h13"/><path d="M7 7h5v4H7z"/><path d="M15 9h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V9l-3-3"/></svg>
         <span>الرغاوي والمحروقات</span>
       </button>
-      <div class="navh" aria-hidden="true">الأفراد</div>
+      </div>
+      <button type="button" class="navh navt" data-act="navGrp" data-id="hr" id="navg-hr" aria-expanded="true" aria-controls="navb-hr"><span>الموارد البشرية</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="navg" id="navb-hr">
       <button type="button" data-act="nav" data-id="staff" id="nav-staff">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"/></svg>
-        <span>الكادر البشري</span>
+        <span>الورديات والتكميل</span>
       </button>
-      <button type="button" data-act="nav" data-id="tx" id="nav-tx">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>
-        <span>المعاملات</span>
-      </button>
-      <div class="navh" aria-hidden="true">السجلات والمبنى</div>
-      <button type="button" data-act="nav" data-id="forms" id="nav-forms">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
-        <span>نماذج ومحاضر</span>
-      </button>
-      <button type="button" data-act="nav" data-id="profiles" id="nav-profiles">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        <span>المكتبة التعليمية</span>
+      <button type="button" data-act="nav" data-id="pfiles" id="nav-pfiles">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="2.2"/><path d="M8.5 18c.5-1.8 1.8-2.8 3.5-2.8s3 1 3.5 2.8"/></svg>
+        <span>ملفات الأفراد</span>
       </button>
       <button type="button" data-act="nav" data-id="returns" id="nav-returns">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-4"/></svg>
@@ -666,6 +671,21 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M12 9v4"/><path d="M12 16.5v.5"/></svg>
         <span>أعطال المبنى</span>
       </button>
+      </div>
+      <button type="button" data-act="nav" data-id="tx" id="nav-tx">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>
+        <span>المعاملات</span>
+      </button>
+      <button type="button" class="navh navt" data-act="navGrp" data-id="rec" id="navg-rec" aria-expanded="true" aria-controls="navb-rec"><span>السجلات والمركز</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="navg" id="navb-rec">
+      <button type="button" data-act="nav" data-id="forms" id="nav-forms">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+        <span>نماذج ومحاضر</span>
+      </button>
+      <button type="button" data-act="nav" data-id="profiles" id="nav-profiles">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span>المكتبة التعليمية</span>
+      </button>
       <button type="button" data-act="nav" data-id="sites" id="nav-sites">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
         <span>المنشآت الهامة</span>
@@ -674,6 +694,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>
         <span>حدود المركز</span>
       </button>
+      </div>
     </nav>
     <div class="side-foot">
       <div class="who" id="who"></div>
@@ -946,12 +967,12 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الكادر البشري: '+a.length+' — افتح «الكادر البشري»'),600); } }
-  if (S.lastSect!==sect){ S.lastSect=sect; const nb=$('#nav-'+sect), nv=nb&&nb.parentElement; if (nv && nv.scrollWidth>nv.clientWidth){ const r=nb.getBoundingClientRect(), R=nv.getBoundingClientRect(); if (r.left<R.left||r.right>R.right) nv.scrollLeft += (r.left+r.width/2)-(R.left+R.width/2); } }
+  if (S.lastSect!==sect){ S.lastSect=sect; const nb=$('#nav-'+sect), nv=nb&&nb.closest('.nav'); navOpenFor(nb); if (nv && nv.scrollWidth>nv.clientWidth){ const r=nb.getBoundingClientRect(), R=nv.getBoundingClientRect(); if (r.left<R.left||r.right>R.right) nv.scrollLeft += (r.left+r.width/2)-(R.left+R.width/2); } }
   if (S.dbFailed) return paint(`<div class="panel state"><b>تعذّر الوصول إلى البيانات.</b><br>أعد تحميل الصفحة، وإن استمرت المشكلة فتأكد أن الموقع مشارك معك.</div>`);
   if ((S.gq||'').trim()) paint(gSearchBar()+viewSearch(S.gq));
   else if (v.name==='dash') paint(gSearchBar()+viewDash());
@@ -969,9 +990,16 @@ function render(){
   else if (v.name==='fault') paint(gSearchBar()+viewFault(v.id));
   else if (v.name==='staff') paint(gSearchBar()+viewStaff());
   else if (v.name==='tx') paint(gSearchBar()+viewTx());
+  else if (v.name==='pfiles') paint(gSearchBar()+viewPFiles());
+  else if (v.name==='pfile') paint(gSearchBar()+viewPFile(v.id));
   else if (v.name==='consum') paint(gSearchBar()+viewConsum());
   else if (v.name==='equip') paint(gSearchBar()+viewEquip());
 }
+/* أقسام القائمة الجانبية القابلة للطي: تُحفظ حالتها في المتصفح، ويُفتح القسم تلقائياً إن كانت الصفحة الحالية فيه */
+function navSave(){ try{ const o={}; document.querySelectorAll('.navt').forEach(b=>o[b.dataset.id]=b.getAttribute('aria-expanded')==='true'); localStorage.setItem('isnad-navg', JSON.stringify(o)); }catch(e){} }
+function navInit(){ let o={}; try{ o=JSON.parse(localStorage.getItem('isnad-navg')||'{}')||{}; }catch(e){}
+  document.querySelectorAll('.navt').forEach(b=>{ const g=$('#navb-'+b.dataset.id); const vis=[...g.querySelectorAll('button')].some(x=>getComputedStyle(x).display!=='none'); if(!vis){ b.style.setProperty('display','none','important'); return; } const open=o[b.dataset.id]!==false; b.setAttribute('aria-expanded',open); g.classList.toggle('closed',!open); }); }
+function navOpenFor(nb){ const g=nb&&nb.closest('.navg'); if(g&&g.classList.contains('closed')){ const b=$('#navg-'+g.id.slice(5)); if(b){ b.setAttribute('aria-expanded','true'); g.classList.remove('closed'); } } }
 function go(name, id){ S.view={name,id}; S.gq=''; if(name==='vehicles') S.q=''; if(name==='warehouse') S.wq=''; render(); window.scrollTo(0,0); }
 const loading = () => `<div class="panel state">جارٍ تحميل البيانات…</div>`;
 
@@ -1962,7 +1990,7 @@ const cnFields = (r, kind) => { const k=r.kind||kind||S.cnk||'foam', C=CNK[k]; r
   {id:'note',label:'ملاحظة (اختياري)',value:r.note,placeholder:'مثال: حسب توجيه العمليات لمهمة حريق'},
   {id:'file',label:(r.file||r.db)?'استبدال المرفق (اختياري)':'مرفق السند (اختياري)',type:'file',accept:LIB_ACCEPT}
 ]; };
-const HCOLS = {letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
+const HCOLS = {pdocs:{fields:r=>pdFields(r),title:'المستند'}, letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
 const hRec = (col, id) => (S[col]||[]).find(r=>r.id===id);
 async function hStoreFile(x, ref, old){
   if (!x.file) return {};
@@ -1972,6 +2000,45 @@ async function hStoreFile(x, ref, old){
 }
 const hStrip = x => { const o=Object.assign({},x); delete o.file; return o; };
 
+
+/* ---------- ملفات الأفراد: ملف لكل فرد فيه بياناته ومستنداته (نسخ من معاملاته ومحاضره)، وسجلات غيابه ومكافآته ومهماته ---------- */
+const PDTYPES = ['معاملة','قرار','محضر','جزاء','شهادة / دورة','إجازة','تقييم','هوية / مستند شخصي','أخرى'];
+const pdocsOf = id => (S.pdocs||[]).filter(r=>r.p===id).sort(byDate);
+const pdFields = r => [
+  [{id:'title',label:'عنوان المستند',value:r.title,required:true,placeholder:'مثال: قرار ترقية'},{id:'type',label:'النوع',type:'select',value:r.type||PDTYPES[0],options:PDTYPES.map(t=>[t,t])}],
+  {id:'date',label:'التاريخ',value:r.date||hijri()},
+  {id:'note',label:'ملاحظة (اختياري)',type:'textarea',value:r.note},
+  {id:'file',label:(r.file||r.db)?'استبدال المرفق (اختياري)':'المرفق (اختياري)',type:'file',accept:LIB_ACCEPT}];
+function viewPFiles(){
+  const all=(S.staff||[]).slice().sort((a,b)=>String(a.shift||'').localeCompare(String(b.shift||''))||((a.order||0)-(b.order||0)));
+  const head=`<header class="ph"><div class="ph-t"><h1>ملفات الأفراد</h1><span class="count">${esc(arD(all.length))} ملف</span></div></header>`;
+  if (!S.loadedH) return head+loading();
+  if (!all.length) return head+`<div class="panel empty"><b>لا يوجد أفراد بعد.</b>أضف الأفراد من «الورديات والتكميل» وسيُنشأ لكل فرد ملف هنا.</div>`;
+  const q=norm(S.pfq), list=all.filter(p=>!q||norm([p.name,p.rank,p.num,p.spec].join(' ')).includes(q));
+  const n = id => pdocsOf(id).length + (S.absences||[]).filter(r=>r.p===id).length + (S.rewards||[]).filter(r=>r.p===id).length;
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الأفراد</span>${ICON.search}<input id="pfq" type="search" placeholder="ابحث بالاسم أو الرقم العسكري أو الرتبة" value="${esc(S.pfq||'')}"></label></div>`;
+  if (!list.length) return head+tools+`<div class="panel empty"><b>لا يوجد فرد مطابق.</b></div>`;
+  return head+tools+['1','2','3',''].map(k=>{ const L=list.filter(p=>(['1','2','3'].includes(String(p.shift))?String(p.shift):'')===k); if(!L.length) return '';
+    return `<section class="sec"><div class="sh"><h2>${k?SHN[k]:'بدون وردية'}</h2><span class="muted">${esc(arD(L.length))}</span></div><div class="panel docs">${L.map(p=>{ const c=n(p.id);
+      return `<button type="button" class="drow pfrow" data-act="pfOpen" data-id="${esc(p.id)}"><div class="file-ic sm">${ICON.doc}</div><div class="file-t"><b>${esc(pLabel(p))}</b><small>${p.num?`<span>الرقم ${esc(p.num)}</span>`:''}${p.spec?`<span>${esc(p.spec)}</span>`:''}<span>${c?esc(arD(c))+' سجل':'لا توجد سجلات'}</span></small></div><span class="link">فتح الملف ${ICON.arrow}</span></button>`; }).join('')}</div></section>`; }).join('');
+}
+function viewPFile(id){
+  const p=getP(id), edit=S.canEdit;
+  const crumbs=`<nav class="crumbs" aria-label="المسار"><button type="button" data-act="nav" data-id="pfiles">ملفات الأفراد</button><span>/</span><span>${esc(p?p.name||'فرد':'غير موجود')}</span></nav>`;
+  if (!S.loadedH) return crumbs+loading();
+  if (!p) return crumbs+`<div class="panel empty"><b>هذا الفرد غير موجود.</b>ربما حُذف من الكادر.</div>`;
+  const dd = v => v?`<dd>${esc(v)}</dd>`:'<dd class="none">—</dd>';
+  const info=`<header class="ph"><div class="ph-t"><h1>${esc(pLabel(p))}</h1></div>${edit?`<div class="dh-actions"><button type="button" class="btn" data-act="hEdit" data-id="${esc(p.id)}">${ICON.edit}تعديل البيانات</button><button type="button" class="btn primary" data-act="pdAdd" data-id="${esc(p.id)}">${ICON.plus}إضافة مستند للملف</button></div>`:''}</header>
+  <dl class="panel info" style="margin:0 0 16px"><div><dt>الاسم</dt>${dd(p.name)}</div><div><dt>الرتبة</dt>${dd(p.rank)}</div><div><dt>الرقم العسكري</dt>${p.num?`<dd><bdi>${esc(p.num)}</bdi></dd>`:'<dd class="none">—</dd>'}</div><div><dt>التخصص</dt>${dd(p.spec)}</div><div><dt>الوردية</dt>${dd(SHN[String(p.shift)])}</div><div><dt>الحالة الآن</dt><dd>${hPill(p)}</dd></div></dl>`;
+  const D=pdocsOf(id);
+  const docs=`<section class="sec"><div class="sh"><h2>مستندات الملف</h2><span class="muted">${esc(arD(D.length))}</span></div>${D.length?`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>المستند</th><th>النوع</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${D.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td class="nm">${esc(r.title||'مستند')}${r.note?`<div class="hper">${esc(r.note)}</div>`:''}</td><td>${esc(r.type||'—')}</td><td>${fileBtn('pdocs',r,'عرض')}</td>${edit?`<td class="ra wide"><button type="button" class="icon-btn" data-act="pdEdit" data-id="${esc(r.id)}" aria-label="تعديل">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="pdDel" data-id="${esc(r.id)}" aria-label="حذف">${ICON.del}</button></td>`:''}</tr>`).join('')}</tbody></table></div>`:`<div class="panel empty"><b>لا توجد مستندات في الملف بعد.</b>${edit?'أضف قرارات الفرد ومعاملاته ومحاضره وشهاداته من زر «إضافة مستند للملف».':''}</div>`}</section>`;
+  const A=(S.absences||[]).filter(r=>r.p===id).sort(byDate), R=(S.rewards||[]).filter(r=>r.p===id).sort(byDate), M=(S.missions||[]).filter(m=>m.a===id||m.b===id);
+  const tbl=(title,rows,head,row,empty)=>`<section class="sec"><div class="sh"><h2>${title}</h2><span class="muted">${esc(arD(rows.length))}</span></div>${rows.length?`<div class="panel" style="overflow-x:auto"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(row).join('')}</tbody></table></div>`:`<div class="panel empty">${empty}</div>`}</section>`;
+  return crumbs+info+docs
+    +tbl('الغياب والتأخير',A,['التاريخ','النوع','الإجراء المتخذ','المحضر'],a=>`<tr><td class="hdate">${esc(a.date||'')}</td><td>${AK[akOf(a)]}</td><td>${a.action?esc(a.action):DASH}</td><td>${fileBtn('absences',a,'عرض المحضر')}</td></tr>`,'لا توجد غيابات أو تأخيرات.')
+    +tbl('المكافآت والرخص',R,['التاريخ','النوع','السبب','المرفق'],r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td>${esc(r.type||'—')}</td><td class="hper">${r.reason?esc(r.reason):DASH}</td><td>${fileBtn('rewards',r,'عرض')}</td></tr>`,'لا توجد مكافآت أو رخص.')
+    +tbl('المهمات',M,['التاريخ','النوع','الموقع / السبب','الحالة'],m=>`<tr><td class="hdate">${esc(m.date||'')||DASH}</td><td>${m.kind==='int'?'داخلية':'خارجية'}</td><td class="hper">${esc([m.location,m.reason].filter(Boolean).join(' — '))||DASH}</td><td>${m.done?'منتهية':'قائمة'}</td></tr>`,'لا توجد مهمات.');
+}
 /* ---------- transactions (المعاملات) ---------- */
 const TXTABS = [['letters','الخطابات الرسمية'],['ptx','معاملات الأفراد']];
 const TXST = {open:'قيد الإجراء', done:'منتهية'};
@@ -2053,6 +2120,7 @@ const ACT = {
       await S.db.doc('settings/map').set({url:x.url, desc:x.desc, date:hnum(), updated:Date.now()}); toast('حُفظت خريطة الحدود'); }}); },
   closeModal: closeModal,
   nav: id => go(id),
+  navGrp: k => { const b=$('#navg-'+k), g=$('#navb-'+k); if(!b||!g) return; const open=b.getAttribute('aria-expanded')!=='true'; b.setAttribute('aria-expanded',open); g.classList.toggle('closed',!open); navSave(); },
   openType: id => go('ltype', id),
   logout: () => { S.entered=false; store.del('isnad-entered'); closeModal(); render(); },
   openVehicle: id => go('vehicle', id),
@@ -2192,6 +2260,17 @@ const ACT = {
   letAdd: () => openForm({title:'إضافة خطاب رسمي', submit:'إضافة', fields:letFields({}), onSubmit: async x => {
       const ref=S.db.collection('letters').doc(); const f=await hStoreFile(x, 'let-'+ref.id);
       await ref.set(Object.assign(hStrip(x), {file:null, db:null, fileName:''}, f, {at:Date.now()})); toast('أُضيف الخطاب'); }}),
+  pfOpen: id => go('pfile', id),
+  pdAdd: pid => openForm({title:'إضافة مستند لملف الفرد', submit:'إضافة', fields:pdFields({}), onSubmit: async x => {
+      const ref=S.db.collection('pdocs').doc(); const f=await hStoreFile(x, 'pd-'+ref.id);
+      await ref.set(Object.assign(hStrip(x), {p:pid, file:null, db:null, fileName:''}, f, {at:Date.now()})); toast('أُضيف المستند إلى الملف'); }}),
+  // النسخ المأخوذة من المعاملات تشترك في ملف المرفق نفسه، فلا يُحذف المرفق عند تعديلها أو حذفها
+  pdEdit: id => { const r=hRec('pdocs',id); if(!r) return; openForm({title:'تعديل المستند', fields:pdFields(r), onSubmit: async x => {
+      const f = x.file ? await storeLibFile(x.file, 'pd-'+id+'-'+Date.now().toString(36)) : {};
+      if (x.file && !r.src && (r.file||r.db)) dropLibFile(r);
+      await S.db.doc('pdocs/'+id).update(Object.assign(hStrip(x), f, x.file?{src:null}:{}, {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
+  pdDel: id => { const r=hRec('pdocs',id); if(!r) return; openConfirm('حذف هذا المستند من ملف الفرد؟', 'حذف', async () => {
+      await S.db.doc('pdocs/'+id).delete(); if (!r.src && (r.file||r.db)) dropLibFile(r); toast('حُذف المستند'); }); },
   ptxAdd: () => openForm({title:'إضافة معاملة فرد', submit:'إضافة', fields:ptxFields({}), onSubmit: async x => {
       const ref=S.db.collection('ptx').doc(); const f=await hStoreFile(x, 'ptx-'+ref.id);
       await ref.set(Object.assign(hStrip(x), personVal(x,'p'), {file:null, db:null, fileName:''}, f, {at:Date.now()})); toast('أُضيفت المعاملة'); }}),
@@ -2342,6 +2421,7 @@ document.addEventListener('input', e => {
   else if (e.target.id==='q'){ S.q=e.target.value; render(); }
   else if (e.target.id==='wsq'){ S.wsq=e.target.value; render(); }
   else if (e.target.id==='txq'){ S.txq=e.target.value; render(); }
+  else if (e.target.id==='pfq'){ S.pfq=e.target.value; render(); }
   else if (e.target.id==='cnq'){ S.cnq=e.target.value; render(); }
   else if (e.target.id==='cny'){ S.cny=e.target.value; render(); }
   else if (e.target.id==='eqq'){ S.eqq=e.target.value; render(); }
@@ -2383,6 +2463,7 @@ document.addEventListener('change', async e => {
     }
   } catch(x){ toast(errMsg(x)); }
 });
+navInit();
 $('#enter').addEventListener('click', () => { S.entered=true; store.set('isnad-entered','1'); render(); });
 
 /* ---------- boot ---------- */
@@ -2408,6 +2489,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   for (const c of ['letters','ptx']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.tl[c]=1; S.loadedT=Object.keys(S.tl).length>=2; render(); }, fail);
   db.doc('settings/hr').onSnapshot(s => { S.hrs = s.exists ? s.data() : {}; S.hrsLoaded=true; render(); }, () => { S.hrsLoaded=true; render(); });
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
+  db.collection('pdocs').onSnapshot(s => { S.pdocs=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);
   db.doc('settings/map').onSnapshot(s => { S.map = s.exists ? s.data() : {}; S.mapLoaded=true; render(); }, () => { S.mapLoaded=true; render(); });
