@@ -10,7 +10,7 @@
 <style>
 :root{
   color-scheme:light;
-  --brand:#0E3D2C; --bg:#F1F4F2; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#E3E8E5;
+  --brand:#0E3D2C; --bg:#F1F4F2; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#8DB3A1;--edge:#2F6B53;
   --text:#14201B; --muted:#56635D; --faint:#7C8983;
   --accent:#1F7A56; --accent-hover:#17694A; --on-accent:#FFFFFF; --accent-soft:#E4F1EA;
   --ok:#1F7A56; --ok-bg:#E4F1EA; --mid:#B54708; --mid-bg:#FEF0C7; --bad:#B42318; --bad-bg:#FDECEA;
@@ -20,7 +20,7 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --brand:#0A2A1F; --bg:#0F1513; --surface:#151D1A; --surface-2:#19231F; --line:#26322D;
+    --brand:#0A2A1F; --bg:#0F1513; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
     --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
     --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
     --ok:#45A980; --ok-bg:#16352A; --mid:#F5B544; --mid-bg:#3A2A0C; --bad:#F97066; --bad-bg:#3A1714;
@@ -30,7 +30,7 @@
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --brand:#0A2A1F; --bg:#0F1513; --surface:#151D1A; --surface-2:#19231F; --line:#26322D;
+  --brand:#0A2A1F; --bg:#0F1513; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
   --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
   --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
   --ok:#45A980; --ok-bg:#16352A; --mid:#F5B544; --mid-bg:#3A2A0C; --bad:#F97066; --bad-bg:#3A1714;
@@ -171,6 +171,9 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   .kpi.main{background:#fff;color:#000;border-color:#999}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
+.panel,.kpi,.ucard{border:1.5px solid var(--edge)!important}
 </style>
 </head>
 <body>
