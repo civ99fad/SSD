@@ -154,7 +154,7 @@ a.gbar{text-decoration:none}
     group('south', 'شعبة الجنوب', 'شراف · الصناعية · الدائري · الجبل', pick(south)) +
     group('north', 'شعبة الشمال', 'البلد · المنتزه · العزيزية · أجا', pick(north)) +
     ['hazmat', 'isnad'].filter((i) => byId[i]).map((i) => `<a class="gbar" href="${esc(i)}.html"><span class="ic">${icons[i] || icons.other}</span><span class="tx"><b>${esc(byId[i].name)}</b><small>${i === 'isnad' ? 'قسم' : 'مركز'}</small></span><span class="go">دخول ←</span></a>`).join('') +
-    group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', ['مركز الروضة', 'مركز جبة', 'مركز الخطة'].map(soon).join(''));
+    group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', pick(['rawda', 'jubba', 'khatta']));
   $('units').addEventListener('click', (e) => {
     const b = e.target.closest('.gbar'); if (!b) return;
     const open = b.getAttribute('aria-expanded') !== 'true';
