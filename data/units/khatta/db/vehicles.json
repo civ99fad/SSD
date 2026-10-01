@@ -1,0 +1,187 @@
+{
+ "k1": {
+  "code": "1/10",
+  "name": "إنقاذ فورد",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "down",
+  "statusNote": "بطاريات",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k1",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "متعطلة بالمقر — بطاريات",
+    "note": "",
+    "at": 1790869174366,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ },
+ "k2": {
+  "code": "2/10",
+  "name": "مزدوجة كوماندر",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "down",
+  "statusNote": "عطل (لم يُذكر السبب)",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k2",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "متعطلة بالمقر — عطل (لم يُذكر السبب)",
+    "note": "",
+    "at": 1790869174366,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ },
+ "k3": {
+  "code": "3/10",
+  "name": "جمس إسعاف",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ },
+ "k4": {
+  "code": "4/10",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-k4",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790869174366,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: جهاز القص والفصل دعم من الإسناد"
+   }
+  ],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ },
+ "k5": {
+  "code": "5/10",
+  "name": "وايت بوز",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-k5",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790869174366,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد مفتاح المصاعد"
+   }
+  ],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ },
+ "k6": {
+  "code": "6/10",
+  "name": "وايت أكتروس",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ },
+ "k7": {
+  "code": "قارب ١",
+  "name": "قارب",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ },
+ "k8": {
+  "code": "منقذ 3",
+  "name": "جيب التدخل السريع",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-k8",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790869174366,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: التدخل في الحوادث على الطرق السريعة وفتح الأبواب واحتباس الخواتم"
+   }
+  ],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ }
+}
