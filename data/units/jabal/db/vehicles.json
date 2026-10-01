@@ -8,7 +8,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -22,7 +24,10 @@
    }
   ],
   "created": 1790773574575,
-  "updated": 1790773574575
+  "updated": 1790773574575,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "g8-2": {
   "code": "2/8",
@@ -33,7 +38,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -47,7 +54,10 @@
    }
   ],
   "created": 1790773574576,
-  "updated": 1790773574576
+  "updated": 1790773574576,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
  },
  "g8-4": {
   "code": "4/8",
@@ -58,7 +68,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -72,7 +84,10 @@
    }
   ],
   "created": 1790773574577,
-  "updated": 1790773574577
+  "updated": 1790773574577,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "g8-5": {
   "code": "5/8",
@@ -83,7 +98,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -109,7 +126,10 @@
   "history": [],
   "notes": [],
   "created": 1790773574578,
-  "updated": 1790773574578
+  "updated": 1790773574578,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "g8-6": {
   "code": "6/8",
@@ -120,7 +140,9 @@
   "status": "maint",
   "statusNote": "الفرامل",
   "statusAction": "تم التحويل",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -137,7 +159,10 @@
   "history": [],
   "notes": [],
   "created": 1790773574579,
-  "updated": 1790773574579
+  "updated": 1790773574579,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "g8-7": {
   "code": "7/8",
@@ -148,14 +173,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773574580,
-  "updated": 1790773574580
+  "updated": 1790773574580,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "g8-8": {
   "code": "8/8",
@@ -166,14 +196,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773574581,
-  "updated": 1790773574581
+  "updated": 1790773574581,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "g8-9": {
   "code": "9/8",
@@ -184,13 +219,18 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773574582,
-  "updated": 1790773574582
+  "updated": 1790773574582,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  }
 }

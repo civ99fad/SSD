@@ -8,7 +8,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -22,7 +24,10 @@
    }
   ],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "j02": {
   "code": "2/11",
@@ -33,14 +38,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "6e15bb03c831441f0af4ec09c3855ed9"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "6e15bb03c831441f0af4ec09c3855ed9"
+  ]
  },
  "j03": {
   "code": "3/11",
@@ -69,7 +79,9 @@
   "status": "down",
   "statusNote": "تأخير بالمضخة",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -86,7 +98,10 @@
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "j05": {
   "code": "5/11",
@@ -97,7 +112,9 @@
   "status": "down",
   "statusNote": "بطارية",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -114,7 +131,10 @@
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "j06": {
   "code": "6/11",
@@ -125,14 +145,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "j07": {
   "code": "7/11",
@@ -143,14 +168,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "j08": {
   "code": "8/11",
@@ -161,14 +191,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "809dd40bfaddcb333ba0a0a6dad30f5b"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "809dd40bfaddcb333ba0a0a6dad30f5b"
+  ]
  },
  "j09": {
   "code": "10/11",
@@ -179,7 +214,9 @@
   "status": "maint",
   "statusNote": "تهريب ماء الراديتر",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -196,7 +233,10 @@
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  },
  "j10": {
   "code": "11/11",
@@ -207,14 +247,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "j11": {
   "code": "بدون نداء",
@@ -225,14 +270,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "j12": {
   "code": "بدون نداء",
@@ -243,14 +293,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  },
  "j13": {
   "code": "بدون نداء",
@@ -261,7 +316,9 @@
   "status": "maint",
   "statusNote": "بطارية",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "e6c0a82f94665d86ab70e73e63799914"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -278,7 +335,10 @@
   "history": [],
   "notes": [],
   "created": 1790895662135,
-  "updated": 1790895662135
+  "updated": 1790895662135,
+  "keepBlobs": [
+   "e6c0a82f94665d86ab70e73e63799914"
+  ]
  },
  "j99": {
   "code": "قارب ١",
@@ -289,13 +349,18 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1788c4ec36905a226874554fa0fe039a"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790869174366,
-  "updated": 1790869174366
+  "updated": 1790869174366,
+  "keepBlobs": [
+   "1788c4ec36905a226874554fa0fe039a"
+  ]
  }
 }

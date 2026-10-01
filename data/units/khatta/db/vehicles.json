@@ -8,7 +8,9 @@
   "status": "down",
   "statusNote": "بطارية",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -25,7 +27,10 @@
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
  },
  "k02": {
   "code": "2/10",
@@ -36,14 +41,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "0ceb4ef6f3b5946ea367d575f3aa61f2"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "0ceb4ef6f3b5946ea367d575f3aa61f2"
+  ]
  },
  "k03": {
   "code": "3/10",
@@ -82,14 +92,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
  },
  "k05": {
   "code": "5/10",
@@ -100,14 +115,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "k06": {
   "code": "6/10",
@@ -118,14 +138,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
  },
  "k07": {
   "code": "7/10",
@@ -136,7 +161,9 @@
   "status": "down",
   "statusNote": "بطارية",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -153,7 +180,10 @@
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "k08": {
   "code": "9/10",
@@ -164,14 +194,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "k09": {
   "code": "10/10",
@@ -182,7 +217,9 @@
   "status": "maint",
   "statusNote": "رجيع — عطل بالكهرباء وتهريب بنزين",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
   "contentPhotos": [],
   "documents": [
    {
@@ -199,7 +236,10 @@
   "history": [],
   "notes": [],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
  },
  "k10": {
   "code": "11/10",
@@ -210,7 +250,9 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
@@ -224,7 +266,10 @@
    }
   ],
   "created": 1790895337639,
-  "updated": 1790895337639
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
  },
  "kx-k7": {
   "code": "قارب ١",
@@ -235,14 +280,19 @@
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
-  "photos": [],
+  "photos": [
+   "1788c4ec36905a226874554fa0fe039a"
+  ],
   "contentPhotos": [],
   "documents": [],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790869174366,
-  "updated": 1790869174366
+  "updated": 1790869174366,
+  "keepBlobs": [
+   "1788c4ec36905a226874554fa0fe039a"
+  ]
  },
  "kx-k8": {
   "code": "منقذ 3",

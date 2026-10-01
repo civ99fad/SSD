@@ -2467,8 +2467,9 @@ const ACT = {
     if (!S.lb) return; const {vid, key, idx}=S.lb; const pid=((ownGet(vid)||{})[key]||[])[idx]; if(!pid) return;
     btn.disabled=true;
     try {
-      const arr=(ownGet(vid)[key]||[]).filter(x=>x!==pid); await ownSave(vid, {[key]:arr});
-      if (S.assets) S.assets.delete(pid).catch(()=>{});
+      const own=ownGet(vid), arr=(own[key]||[]).filter(x=>x!==pid); await ownSave(vid, {[key]:arr});
+      // صورة منسوخة بالمرجع من المكتبة أو الإسناد ومستخدمة في جهات أخرى: نزيل الربط فقط ولا نحذف الملف
+      if (S.assets && !(own.keepBlobs||[]).includes(pid)) S.assets.delete(pid).catch(()=>{});
       toast('حُذفت الصورة');
       if (arr.length) showPhoto(vid, key, Math.min(idx, arr.length-1), arr); else closeModal();
     } catch(x){ btn.disabled=false; toast(errMsg(x)); }
