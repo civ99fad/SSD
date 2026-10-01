@@ -567,6 +567,32 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .wsum{margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-size:12.5px;color:var(--muted)}
 .wsum b{color:var(--text)} .wsum b.ok{color:var(--ok)}
 @media (max-width:860px){ .navh{display:none} .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} .dgrid{grid-template-columns:1fr} }
+
+/* محرّر المحاضر: صفحة المحضر صورةً وفوقها خانات للكتابة، وتُطبع بنفس الشكل على A4 */
+.medit{position:fixed;inset:0;z-index:9000;background:#4b5150;display:flex;flex-direction:column}
+.mbar{display:flex;gap:8px;align-items:center;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.mbar .mtitle{font-size:16px}.mbar .mhint{color:var(--muted);font-size:13px}.mbar .grow{flex:1}
+.mbar .btn[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mpages{flex:1;overflow:auto;padding:20px 12px 40px;display:flex;flex-direction:column;align-items:center;gap:20px}
+.mpage{position:relative;width:min(100%,860px);aspect-ratio:1240/1754;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.45);container-type:inline-size;flex:none}
+.mpage img{position:absolute;inset:0;width:100%;height:100%;user-select:none;pointer-events:none}
+.medit.free .mpage{cursor:crosshair}
+.mf{position:absolute;box-sizing:border-box;display:flex;align-items:center;font-family:'Tajawal',"Segoe UI",Tahoma,sans-serif;font-weight:700;font-size:calc(var(--fs) * var(--k,1));line-height:1.15;color:#000;white-space:nowrap;overflow:hidden;padding:0 .35cqw;background:rgba(255,224,102,.3);outline:1px dashed rgba(29,91,216,.5);border-radius:2px;cursor:text}
+.mf.mc{justify-content:center;text-align:center}
+.mf:empty::before{content:attr(data-ph);color:rgba(0,0,0,.3);font-weight:400}
+.mf:focus{background:rgba(255,224,102,.55);outline:2px solid #1d5bd8}
+.mck{position:absolute;box-sizing:border-box;padding:0;margin:0;border:.16cqw solid #111;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;color:#000;border-radius:1px}
+.mck[aria-pressed=true]::after{content:'✓';font-weight:800;font-size:2.1cqw;line-height:1}
+.mblank .mf{background:none;outline:none;cursor:default}.mblank .mf:empty::before{content:none}.mblank .mck{cursor:default}
+@media print{
+  body.medit-on>*:not(#medit){display:none!important}
+  body.medit-on{background:#fff!important}
+  #medit{position:static;background:none;display:block}
+  .mbar{display:none!important}
+  .mpages{display:block;padding:0;overflow:visible}
+  .mpage{width:210mm;height:297mm;box-shadow:none;break-after:page;margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mf{background:none!important;outline:none!important}.mf:empty::before{content:none}
+}
 </style>
 
 <div id="welcome" class="welcome" hidden>
@@ -1439,8 +1465,64 @@ function viewForms(){
   if (!mine.length) body=`<div class="panel empty"><b>لا توجد ${esc(C.t)} بعد.</b>${edit?'أضفها بزر «'+esc(C.add)+'» وستظهر في جميع المراكز.':'ستظهر هنا عند إضافتها.'}</div>`;
   else if (!list.length) body=`<div class="panel empty"><b>لا توجد نتائج.</b>جرّب كلمة بحث أخرى.</div>`;
   else body=`<div class="panel docs">${list.map(p=>`<div class="drow"><div class="file-ic sm">${ICON.doc}</div><div class="file-t"><b>${esc(p.title||p.fileName||C.one)}</b><small><span class="pill p-doc">${esc(KIND(p))}</span>${p.note?`<span>${esc(p.note)}</span>`:''}</small></div>
-    <div class="file-a"><button type="button" class="btn primary" data-act="formOpen" data-id="${esc(p.id)}">فتح</button>${edit?`<button type="button" class="icon-btn" data-act="formEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="formDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
+    <div class="file-a">${p.tpl?`<button type="button" class="btn primary" data-act="minEdit" data-id="${esc(p.id)}">${ICON.edit}تحرير وطباعة</button><button type="button" class="btn" data-act="minBlank" data-id="${esc(p.id)}">طباعة فارغ</button>${p.docx?`<a class="btn" href="${esc(blob(p.docx))}" download="${esc(p.docxName||((p.title||'محضر')+'.docx'))}" style="text-decoration:none;color:var(--text)">${ICON.dl}Word</a>`:''}`:`<button type="button" class="btn primary" data-act="formOpen" data-id="${esc(p.id)}">فتح</button>`}${edit?`<button type="button" class="icon-btn" data-act="formEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(p.title||C.one)}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="formDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(p.title||C.one)}">${ICON.del}</button>`:''}</div></div>`).join('')}</div>`;
   return head+tabs+tools+body;
+}
+
+/* ---------- محرّر المحاضر: يفتح المحضر بشكله الأصلي (صورة الصفحة) وفوقه خانات قابلة للكتابة، ثم يُطبع على A4 بنفس الشكل ---------- */
+function minOpen(id, blank){
+  const p=getForm(id); if(!p||!p.tpl) return;
+  minClose(true);
+  const T=p.tpl, W=T.w||1240, H=T.h||1754, pc=(v,b)=>(v/b*100).toFixed(3)+'%';
+  const fs=h=>(Math.min(0.68*Math.max(h,28), 0.95*h)/W*100).toFixed(3)+'cqw';
+  const order=(a,b)=>((a.p||0)-(b.p||0)) || (Math.round(a.y/18)-Math.round(b.y/18)) || (b.x+b.w-a.x-a.w); // ترتيب القراءة من اليمين للتنقل بزر Tab
+  const field=f=>{ const st=`left:${pc(f.x,W)};top:${pc(f.y,H)};width:${pc(f.w,W)};height:${pc(f.h,H)}`;
+    return f.t==='c' ? `<button type="button" class="mck" style="${st}" aria-pressed="false" aria-label="خانة اختيار"${blank?' disabled':''}></button>`
+      : `<div class="mf${f.c?' mc':''}" style="${st};--fs:${fs(f.h)}" data-v="${esc(f.v||'')}" data-ph="${esc(f.ph||'')}"${blank?'':' contenteditable="true"'} spellcheck="false" dir="auto">${esc(f.v||'')}</div>`; };
+  const el=document.createElement('div'); el.id='medit'; el.className='medit'+(blank?' mblank':''); el.dir='rtl';
+  el.innerHTML=`<div class="mbar"><b class="mtitle">${esc(p.title||'محضر')}</b><span class="mhint">${blank?'نسخة فارغة جاهزة للطباعة':'اضغط على أي خانة واكتب فيها، ثم اضغط «طباعة»'}</span><span class="grow"></span>
+    ${blank?'':`<button type="button" class="btn" data-m="free" aria-pressed="false" title="اضغط الزر ثم اضغط على أي مكان في المحضر لإضافة نص فيه">${ICON.plus}نص في أي مكان</button><button type="button" class="btn" data-m="clear">مسح الخانات</button>`}
+    <button type="button" class="btn primary" data-m="print">طباعة</button><button type="button" class="btn" data-m="close">إغلاق</button></div>
+    <div class="mpages">${(T.pages||[]).map((b,pi)=>`<div class="mpage" data-p="${pi}"><img src="${esc(blob(b))}" alt="" draggable="false">${(T.fields||[]).filter(f=>(f.p||0)===pi).sort(order).map(field).join('')}</div>`).join('')}</div>`;
+  document.body.appendChild(el); document.body.classList.add('medit-on');
+  const fit=d=>{ d.style.setProperty('--k',1); let k=1; while(d.scrollWidth>d.clientWidth+1 && k>0.45){ k-=0.05; d.style.setProperty('--k',k.toFixed(2)); } };
+  el.querySelectorAll('.mf').forEach(fit);
+  const dirty=()=>[...el.querySelectorAll('.mf')].some(d=>d.textContent!==(d.dataset.v||'')) || !!el.querySelector('.mck[aria-pressed=true]');
+  el.addEventListener('input', e=>{ const d=e.target.closest('.mf'); if(d) fit(d); });
+  el.addEventListener('keydown', e=>{ if(e.target.closest('.mf') && e.key==='Enter'){ e.preventDefault(); e.target.blur(); } });
+  el.addEventListener('paste', e=>{ const d=e.target.closest('.mf'); if(!d) return; e.preventDefault(); document.execCommand('insertText', false, (e.clipboardData.getData('text/plain')||'').replace(/\s+/g,' ')); });
+  el.addEventListener('focusout', e=>{ const d=e.target.closest('.mf.mfree'); if(d && !d.textContent.trim()) d.remove(); });
+  el.addEventListener('click', e=>{
+    const ck=e.target.closest('.mck'); if(ck){ if(!blank) ck.setAttribute('aria-pressed', ck.getAttribute('aria-pressed')==='true'?'false':'true'); return; }
+    const b=e.target.closest('[data-m]');
+    if(b){ const m=b.dataset.m;
+      if(m==='close'){ if(!dirty() || confirm('ستُفقد البيانات التي كتبتها في المحضر. إغلاق؟')) minClose(); }
+      else if(m==='print') minPrint();
+      else if(m==='clear'){ el.querySelectorAll('.mf').forEach(d=>{ if(d.classList.contains('mfree')) d.remove(); else { d.textContent=d.dataset.v||''; fit(d); } }); el.querySelectorAll('.mck').forEach(c=>c.setAttribute('aria-pressed','false')); }
+      else if(m==='free'){ const on=b.getAttribute('aria-pressed')!=='true'; b.setAttribute('aria-pressed', on); el.classList.toggle('free', on); }
+      return; }
+    const pg=e.target.closest('.mpage');
+    if(pg && el.classList.contains('free') && !e.target.closest('.mf')){
+      const r=pg.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height, h=36;
+      const d=document.createElement('div'); d.className='mf mfree'; d.contentEditable='true'; d.spellcheck=false; d.dir='auto';
+      d.style.cssText=`left:${Math.max(0,Math.min(x*100-30,70)).toFixed(3)}%;top:${Math.max(0,(y*100-h/H*50)).toFixed(3)}%;width:30%;height:${(h/H*100).toFixed(3)}%;--fs:${fs(h)}`;
+      d.style.justifyContent='flex-end'; pg.appendChild(d); d.focus();
+      const fb=el.querySelector('[data-m=free]'); fb.setAttribute('aria-pressed','false'); el.classList.remove('free');
+    }
+  });
+  el._key=e=>{ if(e.key==='Escape' && !el.querySelector('.mf:focus')) el.querySelector('[data-m=close]').click(); };
+  document.addEventListener('keydown', el._key);
+}
+function minPrint(){
+  const st=document.createElement('style'); st.id='mprint-page'; st.textContent='@page{size:A4;margin:0}'; document.head.appendChild(st);
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  const done=()=>{ st.remove(); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  setTimeout(()=>window.print(), 50);
+}
+function minClose(){
+  const el=document.getElementById('medit'); if(!el) return;
+  document.removeEventListener('keydown', el._key); el.remove(); document.body.classList.remove('medit-on');
 }
 /* ---------- المنشآت الهامة في نطاق الجهة: الاسم ورابط موقعها في الخرائط ---------- */
 const getSite = id => (S.sites||[]).find(x=>x.id===id);
@@ -1945,6 +2027,8 @@ const vehicleFields = v => [
 ];
 const ACT = {
   formTab: k => { S.fmk=k; S.fmq=''; render(); },
+  minEdit: id => minOpen(id, false),
+  minBlank: id => minOpen(id, true),
   formOpen: id => { const p=getForm(id); if(!p) return; const t=p.title||p.fileName||'ملف'; if (p.db) openDocxViewer(p.db, t); else openViewer(p.file, p.fileName||t); },
   formAdd: () => { const k=FMK[S.fmk]?S.fmk:'minutes'; openForm({title:FMK[k].add, submit:'إضافة', fields:formFields(k), onSubmit: async x => {
     const ref=S.db.collection('forms').doc(); const f=await storeLibFile(x.file, 'shared-forms-'+ref.id);
