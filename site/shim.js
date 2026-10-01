@@ -68,8 +68,10 @@
       } catch (e) {}
     },
   };
-  // كل جهة تُفتح بكلمة مرورها فقط (لوحة المدير لا تفتح الجهات)
-  const signedIn = ss.get(AUTH_KEY) === '1';
+  // كل جهة تُفتح برمزها فقط (لوحة المدير لا تفتح الجهات). عند وجود «الحارس» يكون الرمز هو رمز الجهة فيه،
+  // فالجلسة القديمة التي فُتحت بكلمة المرور العامة (بلا رمز) لا تُعتمد
+  const GATE = PROXY && cfg.mode !== 'server';
+  const signedIn = ss.get(AUTH_KEY) === '1' && (!GATE || !!unitCode);
   // الصفحة تقرأ isnad-entered لتتخطى شاشة الترحيب: نضبطه حسب هذه الجهة فقط
   if (signedIn) ss.set('isnad-entered', '1');
   else ss.del('isnad-entered');
@@ -423,8 +425,8 @@
     const box = document.createElement('div');
     box.style.cssText = 'width:100%;margin-top:18px;text-align:start';
     box.innerHTML =
-      '<label for="isnadPw" style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">كلمة المرور</label>' +
-      `<input id="isnadPw" type="password" autocomplete="current-password" placeholder="أدخل كلمة مرور ${String(cfg.unitName || '').replace(/[<>&"]/g, '')}" style="${field}">` +
+      `<label for="isnadPw" style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">${GATE ? 'رمز الدخول' : 'كلمة المرور'}</label>` +
+      `<input id="isnadPw" type="password" autocomplete="current-password" placeholder="أدخل ${GATE ? 'رمز' : 'كلمة مرور'} ${String(cfg.unitName || '').replace(/[<>&"]/g, '')}" style="${field}">` +
       '<div id="isnadPwErr" role="alert" style="display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600"></div>';
     enter.before(box);
     const back = document.createElement('a');
@@ -455,17 +457,27 @@
         return;
       }
       enter.disabled = true;
-      let ok = false, editCode = false;
-      try {
-        ok = await check(input.value);
-      } catch (x) {}
-      if (!ok && PROXY && cfg.mode !== 'server') {
+      let ok = false, editCode = false, netErr = false;
+      if (GATE) {
+        // الدخول برمز الجهة في «الحارس» فقط (أو الرمز العام للمسؤول)، ويفتح وضع التعديل مباشرة
         try {
           const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value } });
           ok = editCode = r.ok;
+          netErr = !r.ok && r.status !== 401;
+        } catch (x) {
+          netErr = true;
+        }
+      } else {
+        try {
+          ok = await check(input.value);
         } catch (x) {}
       }
       enter.disabled = false;
+      if (netErr) {
+        err.textContent = 'تعذّر التحقق من الرمز الآن. تأكد من اتصال الإنترنت وحاول مرة أخرى.';
+        err.style.display = 'block';
+        return;
+      }
       if (editCode) {
         // رمز تعديل هذا المركز: دخول مع وضع التعديل على هذا المركز فقط
         ss.set(AUTH_KEY, '1');
@@ -475,7 +487,7 @@
         return;
       }
       if (!ok) {
-        err.textContent = 'كلمة المرور غير صحيحة';
+        err.textContent = GATE ? 'الرمز غير صحيح' : 'كلمة المرور غير صحيحة';
         err.style.display = 'block';
         input.select();
         return;
