@@ -468,7 +468,12 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     ss.set(AUTH, '1'); $('pw').value = ''; showApp();
   });
 
-  if (ss.get(AUTH) === '1') showApp(); else showGate();
+  // المسؤول بمفتاح GitHub المحفوظ على جهازه (له صلاحية الكتابة على المستودع) يدخل اللوحة مباشرة
+  async function adminKey() {
+    const t = ls.get('isnad-gh-token'); if (!t || !cfg.repo) return false;
+    try { const r = await fetch('https://api.github.com/repos/' + cfg.repo, { cache: 'no-store', headers: { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json' } }); if (!r.ok) return false; const j = await r.json(); return !!(j.permissions && j.permissions.push); } catch (e) { return false; }
+  }
+  if (ss.get(AUTH) === '1') showApp(); else adminKey().then((ok) => { if (ok) { ss.set(AUTH, '1'); showApp(); } else showGate(); });
   setInterval(() => { if (!document.hidden && !$('app').hidden) load(); }, 5 * 60 * 1000);
 })();
 </script>
