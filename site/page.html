@@ -958,7 +958,7 @@ const gSearchBar = () => `<label class="gsearch"><span class="vh">بحث شام�
 function viewSearch(raw){
   const q=norm(raw), pq=plateKey(raw), out=[];
   const head=`<header class="ph"><div class="ph-t"><h1>نتائج البحث</h1><span class="count">«${esc(raw.trim())}»</span></div><button type="button" class="btn" data-act="gClear">إغلاق البحث</button></header>`;
-  const vs=S.loadedV ? sortedVehicles().filter(v=>(pq.length>=2 && (plateKey(v.plate).includes(pq)||plateKey(v.code).includes(pq))) || norm([v.name,v.plate,v.make,v.model,v.code,enj(v.statusNote),v.statusAction].join(' ')).includes(q)) : [];
+  const vs=S.loadedV ? sortedVehicles().filter(v=>(pq.length>=2 && (plateKey(v.plate).includes(pq)||plateKey(v.code).includes(pq))) || norm([v.name,v.plate,v.make,v.model,v.code,enj(v.statusNote),v.statusAction,v.incoming].join(' ')).includes(q)) : [];
   if (vs.length) out.push(`<section class="sec srch"><div class="sh"><h2>الآليات</h2><span class="muted">${esc(vCount(vs.length))}</span></div><div class="panel fu">${vs.slice(0,40).map(v=>`<button type="button" class="furow" data-act="openVehicle" data-id="${esc(v.id)}"><span class="fuc"><bdi dir="ltr">${esc(v.code||'—')}</bdi></span><span class="fun">${esc(v.name||'آلية')}${v.plate?`<small>${esc(v.plate)}</small>`:''}</span>${stPill(v)}</button>`).join('')}</div></section>`);
   const ps=(S.staff||[]).filter(p=>norm([p.rank,p.name,p.num,p.spec].join(' ')).includes(q)||DIG(p.num||'').includes(DIG(raw.trim())));
   if (ps.length) out.push(`<section class="sec srch"><div class="sh"><h2>الأفراد</h2><span class="muted">${ps.length}</span></div><div class="panel fu">${ps.map(p=>`<button type="button" class="furow" data-act="nav" data-id="staff"><span class="fuc">${esc(p.num||'—')}</span><span class="fun">${esc(pLabel(p))}<small>${esc(SHN[String(p.shift||'1')])}</small></span>${hPill(p)}</button>`).join('')}</div></section>`);
@@ -1019,14 +1019,14 @@ function viewVehicles(){
   let body;
   if (!S.vehicles.length) body=`<div class="panel empty"><b>لم تُضف أي آلية بعد.</b>${edit?'ابدأ بزر «إضافة آلية».':''}</div>`;
   else if (!list.length) body = q ? '' : `<div class="panel empty"><b>لا توجد آليات بهذه الحالة.</b></div>`;
-  else if (vview==='table') body=(q?`<div class="sh"><h2>الآليات المطابقة</h2><span class="muted">${esc(vCount(list.length))}</span></div>`:'')+`<div class="panel vtable" style="overflow-x:auto"><table><thead><tr><th>الرمز</th><th>الآلية</th><th>اللوحة</th><th>الحالة</th><th>السبب / الجهة والإجراء</th></tr></thead><tbody>${list.map(v=>`<tr><td class="hnum"><bdi dir="ltr">${esc(v.code||'—')}</bdi></td><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${esc(v.name||'آلية بدون اسم')}</button>${(v.review||[]).length?` <span class="rvbadge">⚑ ${(v.review||[]).length}</span>`:''}</td><td>${v.plate?`<span class="plate">${esc(v.plate)}</span>`:DASH}</td><td>${stPill(v)}</td><td class="hper">${stOf(v)!=='ready'&&(v.statusNote||v.statusAction)?esc([v.statusNote?enj(v.statusNote):'',v.statusAction].filter(Boolean).join(' — ')):DASH}</td></tr>`).join('')}</tbody></table></div>`;
+  else if (vview==='table') body=(q?`<div class="sh"><h2>الآليات المطابقة</h2><span class="muted">${esc(vCount(list.length))}</span></div>`:'')+`<div class="panel vtable" style="overflow-x:auto"><table><thead><tr><th>الرمز</th><th>الآلية</th><th>اللوحة</th><th>الحالة</th><th>السبب / الجهة والإجراء</th></tr></thead><tbody>${list.map(v=>`<tr><td class="hnum"><bdi dir="ltr">${esc(v.code||'—')}</bdi></td><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${esc(v.name||'آلية بدون اسم')}</button>${(v.review||[]).length?` <span class="rvbadge">⚑ ${(v.review||[]).length}</span>`:''}</td><td>${v.plate?`<span class="plate">${esc(v.plate)}</span>`:DASH}</td><td>${stPill(v)}</td><td class="hper">${stOf(v)!=='ready'&&(v.statusNote||v.statusAction)?esc([v.statusNote?enj(v.statusNote):'',v.statusAction].filter(Boolean).join(' — ')):(v.incoming?'':DASH)}${v.incoming?`<div class="stnote">دعم وارد: <b>${esc(v.incoming)}</b></div>`:''}</td></tr>`).join('')}</tbody></table></div>`;
   else body=(q?`<div class="sh"><h2>الآليات المطابقة</h2><span class="muted">${esc(vCount(list.length))}</span></div>`:'')+`<div class="grid">${list.map(v=>{
     const p=(v.photos||[])[0];
     return `<button type="button" class="vcard" data-act="openVehicle" data-id="${esc(v.id)}">
       <div class="vthumb">${p?`<img src="${blob(p)}" alt="" loading="lazy">`:ICON.truck(42)}${stPill(v,'onimg')}</div>
       <div class="vbody"><div class="vname">${esc(v.name||'آلية بدون اسم')}</div>
         ${v.plate||v.code?`<div class="vmeta">${v.plate?`<span class="plate">${esc(v.plate)}</span>`:''}${v.code?`<span>الرمز <bdi dir="ltr">${esc(v.code)}</bdi></span>`:''}</div>`:''}
-        ${v.statusNote&&stOf(v)!=='ready'?`<div class="stnote">${stOf(v)==='away'?'مدعومة إلى: ':''}${esc(enj(v.statusNote))}</div>`:''}${v.statusAction&&stOf(v)!=='ready'?`<div class="stnote">الإجراء: ${esc(v.statusAction)}</div>`:''}
+        ${v.statusNote&&stOf(v)!=='ready'?`<div class="stnote">${stOf(v)==='away'?'مدعومة إلى: ':''}${esc(enj(v.statusNote))}</div>`:''}${v.statusAction&&stOf(v)!=='ready'?`<div class="stnote">الإجراء: ${esc(v.statusAction)}</div>`:''}${v.incoming?`<div class="stnote">دعم وارد: <b>${esc(v.incoming)}</b></div>`:''}
         <div class="vfoot"><span class="link">عرض التفاصيل ${ICON.arrow}</span>${(v.review||[]).length?`<span class="rvbadge">⚑ للمراجعة ${(v.review||[]).length}</span>`:''}</div></div>
     </button>`;}).join('')}</div>`;
   if (q && !list.length && !eq) body=`<div class="panel empty"><b>لا توجد نتائج لـ «${esc(S.q.trim())}».</b>لا آلية ولا معدّة بهذا الاسم. جرّب جزءاً من الاسم، مثل «ماطور» أو «خرطوم».</div>`;
@@ -1081,7 +1081,7 @@ function downTable(){
   if (!L.length) return '';
   const open=!!S.downOpen;
   return `<section class="sec" aria-label="الآليات غير الجاهزة"><div class="sh"><button type="button" class="dtog" data-act="toggleDown" aria-expanded="${open}" aria-controls="downtbl"><h2>الآليات غير الجاهزة والإجراء المتخذ</h2><span class="muted">${esc(vCount(L.length))}</span><span class="grow"></span><span class="link">${open?'إخفاء':'عرض القائمة'} <span class="chev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></span></button></div>
-    <div class="panel" id="downtbl" style="overflow-x:auto"${open?'':' hidden'}><table><thead><tr><th>الآلية</th><th>الحالة</th><th>السبب / الجهة</th><th>الإجراء المتخذ</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${L.map(v=>`<tr><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${v.code?`<bdi dir="ltr">${esc(v.code)}</bdi> — `:''}${esc(v.name||'آلية')}</button></td><td>${stPill(v)}</td><td>${v.statusNote?esc(enj(v.statusNote)):'—'}</td><td>${v.statusAction?esc(v.statusAction):'<span class="hmut">لم يُسجّل</span>'}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="editStatus" data-id="${esc(v.id)}" aria-label="تعديل حالة ${esc(v.name||'الآلية')}">${ICON.edit}</button></td>`:''}</tr>`).join('')}</tbody></table></div></section>`;
+    <div class="panel" id="downtbl" style="overflow-x:auto"${open?'':' hidden'}><table><thead><tr><th>الآلية</th><th>الحالة</th><th>السبب / الجهة</th><th>الإجراء المتخذ</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${L.map(v=>`<tr><td class="nm"><button type="button" class="vlink" data-act="openVehicle" data-id="${esc(v.id)}">${v.code?`<bdi dir="ltr">${esc(v.code)}</bdi> — `:''}${esc(v.name||'آلية')}</button></td><td>${stPill(v)}</td><td>${v.statusNote?esc(enj(v.statusNote)):'—'}</td><td>${v.statusAction?esc(v.statusAction):'<span class="hmut">لم يُسجّل</span>'}${v.incoming?`<div class="stnote">دعم وارد: <b>${esc(v.incoming)}</b></div>`:''}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="editStatus" data-id="${esc(v.id)}" aria-label="تعديل حالة ${esc(v.name||'الآلية')}">${ICON.edit}</button></td>`:''}</tr>`).join('')}</tbody></table></div></section>`;
 }
 /* ---------- أنواع الآليات: من الملفات التعريفية المشتركة في المكتبة التعليمية (type لكل ملف) ---------- */
 const vTypes = () => (S.lib.profiles.items||[]).filter(p=>p.type).sort((a,b)=>String(a.title||'').localeCompare(String(b.title||''),'ar',{numeric:true}));
@@ -1221,6 +1221,7 @@ function viewVehicle(id){
   <dl class="panel info" style="margin:0">
     <div><dt>اسم الآلية</dt>${dd(v.name)}</div>
     <div><dt>الحالة</dt><dd>${stPill(v)}${v.statusNote&&stOf(v)!=='ready'?`<div class="stnote">${stOf(v)==='away'?'مدعومة إلى: ':'السبب: '}${esc(enj(v.statusNote))}</div>`:''}${v.statusAction&&stOf(v)!=='ready'?`<div class="stnote">الإجراء المتخذ: <b>${esc(v.statusAction)}</b></div>`:''}</dd></div>
+    <div><dt>دعم وارد</dt>${v.incoming?`<dd><b>${esc(v.incoming)}</b></dd>`:'<dd class="none">لا يوجد</dd>'}</div>
     <div><dt>رقم اللوحة</dt>${dd(v.plate)}</div>
     <div><dt>الطراز</dt>${dd(v.make)}</div>
     <div><dt>الموديل</dt>${dd(v.model)}</div>
@@ -1917,6 +1918,7 @@ const vehicleFields = v => [
    {id:'status', label:'الحالة', type:'select', value:stOf(v)==='none'?'':stOf(v), options:[['','غير محددة'],['ready','جاهزة'],['down','متعطلة بالمقر'],['maint','في الصيانة'],['away','مدعومة لجهة أخرى']]}],
   [{id:'statusNote', label:'سبب العطل أو الجهة المدعومة لها (اختياري)', value:v.statusNote, placeholder:'مثال: تهريب هواء — أو: دعم إنجاز ٣'},
    {id:'statusAction', label:'الإجراء المتخذ (اختياري)', value:v.statusAction, placeholder:'مثال: تم رفع طلب صيانة'}],
+  [{id:'incoming', label:'دعم وارد — الآلية الداعمة (اختياري)', value:v.incoming, placeholder:'مثال: 0/5 وايت من قسم الدعم والإسناد'}],
   [{id:'plate', label:'رقم اللوحة', value:v.plate, placeholder:'مثال: أ ح ط 8147'}, {id:'code', label:'الرمز', value:v.code, placeholder:'مثال: 0/1'}],
   [{id:'make', label:'الطراز', value:v.make, placeholder:'مثال: مرسيدس أكتروس'}, {id:'model', label:'الموديل', value:v.model, placeholder:'مثال: 2004'}]
 ];
@@ -2133,6 +2135,7 @@ const ACT = {
   editStatus: id => { const v=getV(id); if(!v) return; openForm({title:'حالة الآلية — '+(v.code?v.code+' ':'')+(v.name||''), fields:[
       {id:'status', label:'الحالة', type:'select', value:stOf(v)==='none'?'':stOf(v), options:[['','غير محددة'],['ready','جاهزة'],['down','متعطلة بالمقر'],['maint','في الصيانة'],['away','مدعومة لجهة أخرى']]},
       {id:'statusNote', label:'سبب العطل أو الجهة المدعومة لها', value:v.statusNote, placeholder:'مثال: تهريب هواء'},
+      {id:'incoming', label:'دعم وارد — الآلية الداعمة (اختياري)', value:v.incoming, placeholder:'مثال: 0/5 من قسم الدعم والإسناد'},
       {id:'statusAction', label:'الإجراء المتخذ', type:'textarea', value:v.statusAction, placeholder:'مثال: تم رفع طلب صيانة', hint:'يُسجَّل أي تغيير في الحالة تلقائياً في «سجل الآلية».'}], onSubmit: async x => { if (!x.statusAction && DEF_ACT[x.status] && x.status!==stOf(v)) x.statusAction=DEF_ACT[x.status]; { const lg=statusLog(getV(id), x); if (x.status==='ready'){ x.statusNote=''; x.statusAction=''; } await saveV(id, Object.assign({}, x, lg)); } toast('حُفظت الحالة وسُجّلت في سجل الآلية'); }}); },
   delVehicle: id => { const v=getV(id); openConfirm(`سيتم حذف «${v.name||'الآلية'}» مع جردها وسجلها. لا يمكن التراجع عن ذلك.`, 'حذف الآلية', async () => { await vref(id).delete(); toast('حُذفت الآلية'); go('vehicles'); }); },
   viewPhoto: (id, i) => { const [key, idx] = i.split(':'); showPhoto(id, key, +idx); },
