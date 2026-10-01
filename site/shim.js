@@ -28,7 +28,13 @@
   // مدير المركز يعدّل برمز مركزه عبر «الحارس» (cfg.editProxy) الذي لا يسمح إلا بملفات مركزه؛ المسؤول يعدّل بمفتاح GitHub
   const PROXY = (cfg.editProxy || '').replace(/\/+$/, '');
   const CODE_KEY = 'isnad-edit-' + (cfg.unit || 'isnad');
-  const unitCode = PROXY ? store.get(CODE_KEY) : null;
+  const sess = {
+    get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} },
+    del: (k) => { try { sessionStorage.removeItem(k); } catch (e) {} },
+  };
+  store.del(CODE_KEY); // رموز قديمة كانت تُحفظ دائمًا على الجهاز
+  const unitCode = PROXY ? sess.get(CODE_KEY) : null;
   const token = cfg.repo ? store.get(TOKEN_KEY) || (unitCode ? 'unit:' + unitCode : null) : null;
   const isUnit = (t) => /^unit:/.test(t || '');
 
@@ -70,6 +76,7 @@
   const signOut = () => {
     ss.del(AUTH_KEY);
     ss.del('isnad-entered');
+    sess.del(CODE_KEY); // الخروج يُنهي وضع التعديل برمز المركز
   };
   const toPortal = () => {
     signOut();
@@ -393,7 +400,7 @@
       (m) => (me = m),
       (e) => {
         unitErr = e;
-        if (e && e.code === 'not_granted') store.del(isUnit(token) ? CODE_KEY : TOKEN_KEY); // مفتاح أو رمز منتهٍ أو بلا صلاحية
+        if (e && e.code === 'not_granted') isUnit(token) ? sess.del(CODE_KEY) : store.del(TOKEN_KEY); // مفتاح أو رمز منتهٍ أو بلا صلاحية
         return null;
       }
     );
@@ -448,11 +455,25 @@
         return;
       }
       enter.disabled = true;
-      let ok = false;
+      let ok = false, editCode = false;
       try {
         ok = await check(input.value);
       } catch (x) {}
+      if (!ok && PROXY && cfg.mode !== 'server') {
+        try {
+          const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value } });
+          ok = editCode = r.ok;
+        } catch (x) {}
+      }
       enter.disabled = false;
+      if (editCode) {
+        // رمز تعديل هذا المركز: دخول مع وضع التعديل على هذا المركز فقط
+        ss.set(AUTH_KEY, '1');
+        ss.set('isnad-entered', '1');
+        sess.set(CODE_KEY, input.value);
+        location.reload();
+        return;
+      }
       if (!ok) {
         err.textContent = 'كلمة المرور غير صحيحة';
         err.style.display = 'block';
@@ -541,7 +562,7 @@
       const r = e.target.dataset && e.target.dataset.r;
       if (r === 'off') {
         store.del(TOKEN_KEY);
-        store.del(CODE_KEY);
+        sess.del(CODE_KEY);
         location.reload();
       } else if (r === 'gh') {
         el.querySelector('[data-r="box"]').hidden = false;
@@ -554,7 +575,7 @@
         e.target.disabled = true;
         try {
           await checkToken('unit:' + c);
-          store.set(CODE_KEY, c);
+          sess.set(CODE_KEY, c);
           location.reload();
         } catch (x) {
           msg.textContent =
