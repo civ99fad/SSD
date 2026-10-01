@@ -5,8 +5,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
 <style>
 :root{
-  --bg:#F3F5F4; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#8DB3A1;--edge:#2F6B53; --line-2:#C6D9CF;
-  --text:#14201B; --muted:#56635D; --faint:#7C8983;
+  --bg:#E8EEEB; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#5E8F79;--edge:#1F5A43; --line-2:#A9C4B7;
+  --text:#0B1612; --muted:#2C3A33; --faint:#4A5852;
   --brand:#0E3D2C; --brand-text:#EAF1EE; --brand-muted:#A9C2B7; --brand-line:rgba(255,255,255,.1);
   --accent:#1F7A56; --accent-hover:#17694A; --on-accent:#FFFFFF; --accent-soft:#E4F1EA;
   --chip:#EDF2EF; --chip-text:#0E3D2C;
@@ -618,7 +618,12 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 }
 
 /* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
-.panel,.kpi,.vcard{border:1.5px solid var(--edge)!important}
+@media not all and (prefers-color-scheme: dark){ :root:not([data-theme="dark"]) th{background:#D9E8E0!important;color:#0E3D2C!important;font-weight:800!important} }
+:root[data-theme="light"] th{background:#D9E8E0!important;color:#0E3D2C!important;font-weight:800!important}
+@media not all and (prefers-color-scheme: dark){ :root:not([data-theme="dark"]) .ph h1,:root:not([data-theme="dark"]) .sh h2{color:#0E3D2C} }
+:root[data-theme="light"] .ph h1,:root[data-theme="light"] .sh h2{color:#0E3D2C}
+.file-t small,.vmeta,.rnote,.muted,.count{font-weight:600}
+.panel,.kpi,.vcard{border:2px solid var(--edge)!important}
 .panel table th{border-bottom:1.5px solid var(--edge)}
 .panel table td,.panel table th{border-color:var(--line-2)}
 .drow{border-bottom-color:var(--line)}
@@ -990,7 +995,7 @@ function render(){
   for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','tx','consum']){ const b=$('#nav-'+k); if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
-    if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الكادر البشري: '+a.length+' — افتح «الكادر البشري»'),600); } }
+    if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
   if (S.lastSect!==sect){ S.lastSect=sect; const nb=$('#nav-'+sect), nv=nb&&nb.closest('.nav'); navOpenFor(nb); if (nv && nv.scrollWidth>nv.clientWidth){ const r=nb.getBoundingClientRect(), R=nv.getBoundingClientRect(); if (r.left<R.left||r.right>R.right) nv.scrollLeft += (r.left+r.width/2)-(R.left+R.width/2); } }
   if (S.dbFailed) return paint(`<div class="panel state"><b>تعذّر الوصول إلى البيانات.</b><br>أعد تحميل الصفحة، وإن استمرت المشكلة فتأكد أن الموقع مشارك معك.</div>`);
   if ((S.gq||'').trim()) paint(gSearchBar()+viewSearch(S.gq));
