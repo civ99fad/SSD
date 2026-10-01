@@ -1,66 +1,38 @@
 {
- "k1": {
+ "k01": {
   "code": "1/10",
-  "name": "إنقاذ فورد",
-  "make": "",
-  "plate": "",
-  "model": "",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "ص ي ط 0187",
+  "model": "2003",
   "status": "down",
-  "statusNote": "بطاريات",
+  "statusNote": "بطارية",
   "statusAction": "",
   "photos": [],
   "contentPhotos": [],
   "documents": [
    {
-    "id": "st-k1",
+    "id": "st-k01",
     "type": "status",
     "date": "٢٠/٤/١٤٤٨هـ",
-    "title": "متعطلة بالمقر — بطاريات",
+    "title": "متعطلة بالمقر — بطارية",
     "note": "",
-    "at": 1790869174366,
+    "at": 1790895337639,
     "by": ""
    }
   ],
   "inventory": [],
   "history": [],
   "notes": [],
-  "created": 1790869174366,
-  "updated": 1790869174366
+  "created": 1790895337639,
+  "updated": 1790895337639
  },
- "k2": {
+ "k02": {
   "code": "2/10",
-  "name": "مزدوجة كوماندر",
-  "make": "",
-  "plate": "",
-  "model": "",
-  "status": "down",
-  "statusNote": "عطل (لم يُذكر السبب)",
-  "statusAction": "",
-  "photos": [],
-  "contentPhotos": [],
-  "documents": [
-   {
-    "id": "st-k2",
-    "type": "status",
-    "date": "٢٠/٤/١٤٤٨هـ",
-    "title": "متعطلة بالمقر — عطل (لم يُذكر السبب)",
-    "note": "",
-    "at": 1790869174366,
-    "by": ""
-   }
-  ],
-  "inventory": [],
-  "history": [],
-  "notes": [],
-  "created": 1790869174366,
-  "updated": 1790869174366
- },
- "k3": {
-  "code": "3/10",
-  "name": "جمس إسعاف",
-  "make": "",
-  "plate": "",
-  "model": "",
+  "name": "إطفاء مرسيدس مزدوجة",
+  "make": "مرسيدس",
+  "plate": "ب أ د 8263",
+  "model": "2015",
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
@@ -70,65 +42,43 @@
   "inventory": [],
   "history": [],
   "notes": [],
-  "created": 1790869174366,
-  "updated": 1790869174366
+  "created": 1790895337639,
+  "updated": 1790895337639
  },
- "k4": {
+ "k03": {
+  "code": "3/10",
+  "name": "جمس إسعاف",
+  "make": "جمس",
+  "plate": "و ص ر 0290",
+  "model": "2006",
+  "status": "down",
+  "statusNote": "بطارية",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k03",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "متعطلة بالمقر — بطارية",
+    "note": "",
+    "at": 1790895337639,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "k04": {
   "code": "4/10",
   "name": "وايت بروبلين",
   "make": "",
-  "plate": "",
-  "model": "",
-  "status": "ready",
-  "statusNote": "",
-  "statusAction": "",
-  "photos": [],
-  "contentPhotos": [],
-  "documents": [],
-  "inventory": [],
-  "history": [],
-  "notes": [
-   {
-    "id": "n-rd-k4",
-    "date": "٢٠/٤/١٤٤٨هـ",
-    "at": 1790869174366,
-    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: جهاز القص والفصل دعم من الإسناد"
-   }
-  ],
-  "created": 1790869174366,
-  "updated": 1790869174366
- },
- "k5": {
-  "code": "5/10",
-  "name": "وايت بوز",
-  "make": "",
-  "plate": "",
-  "model": "",
-  "status": "ready",
-  "statusNote": "",
-  "statusAction": "",
-  "photos": [],
-  "contentPhotos": [],
-  "documents": [],
-  "inventory": [],
-  "history": [],
-  "notes": [
-   {
-    "id": "n-rd-k5",
-    "date": "٢٠/٤/١٤٤٨هـ",
-    "at": 1790869174366,
-    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد مفتاح المصاعد"
-   }
-  ],
-  "created": 1790869174366,
-  "updated": 1790869174366
- },
- "k6": {
-  "code": "6/10",
-  "name": "وايت أكتروس",
-  "make": "",
-  "plate": "",
-  "model": "",
+  "plate": "أ ل ط 6589",
+  "model": "2011",
   "status": "ready",
   "statusNote": "",
   "statusAction": "",
@@ -138,10 +88,145 @@
   "inventory": [],
   "history": [],
   "notes": [],
-  "created": 1790869174366,
-  "updated": 1790869174366
+  "created": 1790895337639,
+  "updated": 1790895337639
  },
- "k7": {
+ "k05": {
+  "code": "5/10",
+  "name": "وايت أكتروس",
+  "make": "مرسيدس",
+  "plate": "ص ل أ 0190",
+  "model": "2006",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "k06": {
+  "code": "6/10",
+  "name": "وايت عادي قاذف",
+  "make": "",
+  "plate": "د ح هـ 0180",
+  "model": "1988",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "k07": {
+  "code": "7/10",
+  "name": "جيب تويوتا شاص",
+  "make": "تويوتا",
+  "plate": "أ ح ك 4249",
+  "model": "2007",
+  "status": "down",
+  "statusNote": "بطارية",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k07",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "متعطلة بالمقر — بطارية",
+    "note": "",
+    "at": 1790895337639,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "k08": {
+  "code": "9/10",
+  "name": "جيب تويوتا بابين",
+  "make": "تويوتا",
+  "plate": "ل م ل 0259",
+  "model": "2003",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "k09": {
+  "code": "10/10",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "أ أ د 9948",
+  "model": "1998",
+  "status": "maint",
+  "statusNote": "رجيع — عطل بالكهرباء وتهريب بنزين",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k09",
+    "type": "status",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "title": "في الصيانة — رجيع — عطل بالكهرباء وتهريب بنزين",
+    "note": "",
+    "at": 1790895337639,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "k10": {
+  "code": "11/10",
+  "name": "جيب تويوتا ٤ أبواب",
+  "make": "تويوتا",
+  "plate": "ب ق م 7015",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-k10",
+    "date": "٢٠/٤/١٤٤٨هـ",
+    "at": 1790895337639,
+    "text": "جاهزة نسبياً (بطارية)"
+   }
+  ],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "kx-k7": {
   "code": "قارب ١",
   "name": "قارب",
   "make": "",
@@ -159,7 +244,7 @@
   "created": 1790869174366,
   "updated": 1790869174366
  },
- "k8": {
+ "kx-k8": {
   "code": "منقذ 3",
   "name": "جيب التدخل السريع",
   "make": "",
