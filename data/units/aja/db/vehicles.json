@@ -35,7 +35,7 @@
   "model": "2013",
   "status": "maint",
   "statusNote": "عطل — شعبة",
-  "statusAction": "بديلة 0/8 من قسم الدعم والإسناد",
+  "statusAction": "",
   "photos": [],
   "contentPhotos": [],
   "documents": [
@@ -53,7 +53,8 @@
   "history": [],
   "notes": [],
   "created": 1790772821159,
-  "updated": 1790772821159
+  "updated": 1790772821159,
+  "incoming": "0/8 من قسم الدعم والإسناد"
  },
  "j7-4": {
   "code": "4/7",
