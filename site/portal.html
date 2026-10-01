@@ -85,6 +85,7 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
 /* الشُّعب: خانات منبثقة تُفتح بالضغط وتظهر تحتها المراكز */
 .tree{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:8px}
 .tree>.units{margin-top:0}
+a.gbar{text-decoration:none}
 .grp{width:100%}
 .gbar{all:unset;box-sizing:border-box;text-align:start;cursor:pointer;width:100%;display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:14px;border:2px solid var(--edge);background:var(--surface);color:var(--text);transition:border-color .15s,box-shadow .15s}
 .gbar:hover{border-color:var(--accent);box-shadow:0 8px 22px rgba(14,61,44,.14)}
@@ -93,6 +94,7 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
 .gbar .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .gbar b{font-size:17px;font-weight:800}
 .gbar small{font-size:13px;color:var(--muted)}
+.gbar .go{flex-shrink:0;font-size:13px;font-weight:700;color:var(--accent)}
 .gbar .chev{flex-shrink:0;transition:transform .2s;color:var(--accent)}
 .gbar[aria-expanded="true"] .chev{transform:rotate(180deg)}
 .gbar[aria-expanded="true"]{border-color:var(--accent);border-end-start-radius:0;border-end-end-radius:0}
@@ -151,7 +153,7 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
   $('units').innerHTML =
     group('south', 'شعبة الجنوب', 'شراف · الصناعية · الدائري · الجبل', pick(south)) +
     group('north', 'شعبة الشمال', 'البلد · المنتزه · العزيزية · أجا', pick(north)) +
-    `<nav class="units" aria-label="مركز التدخل وقسم الدعم">${pick(['hazmat', 'isnad'])}</nav>` +
+    ['hazmat', 'isnad'].filter((i) => byId[i]).map((i) => `<a class="gbar" href="${esc(i)}.html"><span class="ic">${icons[i] || icons.other}</span><span class="tx"><b>${esc(byId[i].name)}</b><small>${i === 'isnad' ? 'قسم' : 'مركز'}</small></span><span class="go">دخول ←</span></a>`).join('') +
     group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', ['مركز الروضة', 'مركز جبة', 'مركز الخطة'].map(soon).join(''));
   $('units').addEventListener('click', (e) => {
     const b = e.target.closest('.gbar'); if (!b) return;
