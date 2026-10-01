@@ -460,7 +460,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     else if (a === 'copyDown') copy(downText());
     else if (a === 'circ') openCirc();
     else if (a === 'circBack') { S.circ = false; render(); }
-    else if (a === 'cdel') { if (confirm('حذف هذا التعميم من جميع المراكز والأقسام؟')) saveCirc((cur) => { const n = Object.assign({}, cur); delete n[b.dataset.v]; return n; }, 'حذف تعميم').then(() => { toast('حُذف التعميم'); circView(); }, (x) => toast('تعذّر الحذف: ' + x.message)); }
+    // لا حذف للتعاميم من اللوحة بعد إرسالها (حفظاً للسجل الرسمي)
     else if (a === 'logout') { ss.del(CODE); ss.del(AUTH); if (cfg.mode === 'server') fetch('logout', { method: 'POST' }); location.replace('index.html'); }
   });
 
@@ -510,7 +510,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
         <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="btn primary" id="cgo">إرسال التعميم لجميع المراكز والأقسام</button><span class="cerr" id="cerr"></span></div>
       </form></section>` : `<section class="panel"><div class="none">لإضافة التعاميم سجّل الدخول برمز لوحة المدير من جديد (الخروج ثم الدخول).</div></section>`;
     const rows = list.length ? `<div class="clist">${list.map((x) => `<div class="crow"><div class="ct"><b>${esc(x.title || 'تعميم')}</b><small>${[x.num ? 'رقم ' + x.num : '', x.date || ''].filter(Boolean).map(esc).join(' · ')}</small>${x.note ? `<p>${esc(x.note)}</p>` : ''}</div>
-      ${x.file ? `<a class="btn" href="${esc(rawUrl(x))}" target="_blank" rel="noopener">عرض المرفق</a>` : ''}${can ? `<button type="button" class="btn" data-act="cdel" data-v="${esc(x.id)}">حذف</button>` : ''}</div>`).join('')}</div>` : '<div class="none">لا توجد تعاميم بعد.</div>';
+      ${x.file ? `<a class="btn" href="${esc(rawUrl(x))}" target="_blank" rel="noopener">عرض المرفق</a>` : ''}</div>`).join('')}</div>` : '<div class="none">لا توجد تعاميم بعد.</div>';
     $('main').innerHTML = `<div class="sh"><h2>التعاميم</h2><span class="grow"></span><button type="button" class="btn" data-act="circBack">→ الرجوع للوحة</button></div>${circErr ? `<p class="cerr">${esc(circErr)}</p>` : ''}${form}<section class="panel" style="margin-top:16px"><div class="sh"><h2>التعاميم المرسلة</h2><span class="cnt">${arD(list.length)}</span></div>${rows}</section>
       <p class="foot">يصل التعميم إلى صفحة «التعاميم» في جميع المراكز والأقسام، ويظهر لمدرائها تنبيه بوصول تعميم جديد (بعد دقيقة أو دقيقتين من الإرسال).</p>`;
     const fm = $('cform'); if (!fm) return;
