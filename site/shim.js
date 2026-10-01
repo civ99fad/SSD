@@ -237,7 +237,8 @@
   function loadDb() {
     if (!dbPromise) {
       dbPromise = authReady
-        .then(() => (token ? loadFromGitHub() : loadStatic()))
+        // مدير المركز: إن تعذّر التحقق أو القراءة عبر الحارس تُعرض البيانات المنشورة للاطلاع بدل صفحة الخطأ
+        .then(() => (!token ? loadStatic() : isUnit(token) ? userReady.then((m) => (m ? loadFromGitHub() : loadStatic())).catch(() => loadStatic()) : loadFromGitHub()))
         .then((d) => {
           blobs = d.blobs || {};
           cols = d.collections || {};
@@ -366,6 +367,15 @@
       const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': t.slice(5) } });
       if (r.status === 401) throw { code: 'not_granted' };
       if (!r.ok) throw { code: 'network' };
+      // الرمز صحيح؛ نتأكد أن مفتاح GitHub المحفوظ في الحارس يعمل وله صلاحية الكتابة
+      let repo = null;
+      try {
+        repo = await gh('', { token: t });
+      } catch (e) {
+        if (e && e.code === 'not_granted') throw { code: 'ghkey', status: e.status };
+        throw e;
+      }
+      if (!repo || !repo.permissions || !repo.permissions.push) throw { code: 'ghkey', status: repo ? 'no-push' : 404 };
       return { name: 'مدير ' + (cfg.unitName || 'المركز'), avatarUrl: '', canEdit: true, unitEditor: true };
     }
     const [repo, u] = await Promise.all([
@@ -377,10 +387,12 @@
   }
 
   let userReady = Promise.resolve(null);
+  let unitErr = null;
   if (token) {
     userReady = checkToken(token).then(
       (m) => (me = m),
       (e) => {
+        unitErr = e;
         if (e && e.code === 'not_granted') store.del(isUnit(token) ? CODE_KEY : TOKEN_KEY); // مفتاح أو رمز منتهٍ أو بلا صلاحية
         return null;
       }
@@ -502,7 +514,7 @@
         `<span data-r="on" style="color:var(--ok);font-weight:700">${isUnit(token) ? 'التعديل على ' + (cfg.unitName || 'المركز') + ' مفعّل على هذا الجهاز' : 'وضع التعديل مفعّل على هذا الجهاز'}</span> · ` +
         `<button type="button" data-r="off" style="${link}">إيقاف التعديل</button>`;
       userReady.then((m) => {
-        if (!m) el.querySelector('[data-r="on"]').textContent = isUnit(token) ? 'تعذّر التحقق من رمز المركز. أوقف التعديل ثم أدخل الرمز مجددًا.' : 'تعذّر التحقق من مفتاح GitHub. أوقف التعديل ثم أدخل مفتاحًا جديدًا.';
+        if (!m) el.querySelector('[data-r="on"]').textContent = isUnit(token) ? 'تعذّر التعديل: ' + (unitErr && unitErr.code === 'ghkey' ? 'مفتاح GitHub المحفوظ في الحارس (GITHUB_TOKEN) لا يعمل أو ليس له صلاحية الكتابة (' + unitErr.status + ').' : 'تعذّر التحقق من رمز المركز.') + ' أوقف التعديل ثم أعد المحاولة.' : 'تعذّر التحقق من مفتاح GitHub. أوقف التعديل ثم أدخل مفتاحًا جديدًا.';
       });
     } else {
       el.innerHTML =
@@ -545,7 +557,12 @@
           store.set(CODE_KEY, c);
           location.reload();
         } catch (x) {
-          msg.textContent = x && x.code === 'not_granted' ? 'رمز المركز غير صحيح.' : 'تعذّر الاتصال. حاول مجددًا.';
+          msg.textContent =
+            x && x.code === 'not_granted'
+              ? 'رمز المركز غير صحيح.'
+              : x && x.code === 'ghkey'
+                ? 'الرمز صحيح، لكن مفتاح GitHub المحفوظ في الحارس (GITHUB_TOKEN) لا يعمل أو ليس له صلاحية الكتابة على المستودع (' + x.status + ').'
+                : 'تعذّر الاتصال بالحارس. حاول مجددًا.';
           msg.style.display = 'block';
           e.target.disabled = false;
         }
