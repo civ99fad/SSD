@@ -1588,8 +1588,9 @@ const advFields = x => [
   {id:'steps',label:'الإجراءات بالترتيب (كل خطوة في سطر)',type:'textarea',value:x.steps,placeholder:'مثال:\nالاتصال على الفرد وضبط محضر اتصال\nضبط محضر غياب\nرفع المحضر لإدارة العمليات'},
   [{id:'f1',label:'محضر مطلوب ١',type:'select',value:(x.forms||[])[0]||'',options:minOpts()},{id:'f2',label:'محضر مطلوب ٢',type:'select',value:(x.forms||[])[1]||'',options:minOpts()}],
   [{id:'f3',label:'محضر مطلوب ٣',type:'select',value:(x.forms||[])[2]||'',options:minOpts()},{id:'f4',label:'محضر مطلوب ٤',type:'select',value:(x.forms||[])[3]||'',options:minOpts()}],
+  [{id:'f5',label:'محضر مطلوب ٥',type:'select',value:(x.forms||[])[4]||'',options:minOpts()},{id:'f6',label:'محضر مطلوب ٦',type:'select',value:(x.forms||[])[5]||'',options:minOpts()}],
   {id:'note',label:'ملاحظات وتنبيهات (اختياري)',type:'textarea',value:x.note}];
-const advVal = x => ({title:x.title, when:x.when||'', steps:x.steps||'', note:x.note||'', forms:[x.f1,x.f2,x.f3,x.f4].filter(Boolean)});
+const advVal = x => ({title:x.title, when:x.when||'', steps:x.steps||'', note:x.note||'', forms:[x.f1,x.f2,x.f3,x.f4,x.f5,x.f6].filter(Boolean)});
 function viewAdvisor(){
   const edit=advEdit(), all=(S.guide||[]).slice().sort((a,b)=>((a.order||9e9)-(b.order||9e9))||((a.at||0)-(b.at||0)));
   const head=`<header class="ph"><div class="ph-t"><h1>المستشار</h1><span class="count">دليل الإجراءات</span></div>${edit?`<button type="button" class="btn primary" data-act="advAdd">${ICON.plus}إضافة حالة</button>`:''}</header>
