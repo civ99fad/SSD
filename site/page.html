@@ -1119,7 +1119,9 @@ function viewVehicles(){
     </button>`;}).join('')}</div>`;
   if (fs==='incoming' && !q) body=incomingPanel(edit);
   if (q && !list.length && !eq) body=`<div class="panel empty"><b>لا توجد نتائج لـ «${esc(S.q.trim())}».</b>لا آلية ولا معدّة بهذا الاسم. جرّب جزءاً من الاسم، مثل «ماطور» أو «خرطوم».</div>`;
-  return head+(q?'':waterStrip()+readiness()+downTable())+tools+eq+body;
+  // في المراكز: آليات الدعم الوارد تظهر في «الكل» بعد آليات المركز
+  const inc = (CENTER && fs==='all' && !q && incAll().length) ? `<section class="sec" style="margin-top:22px">${incomingPanel(edit)}</section>` : '';
+  return head+(q?'':waterStrip()+readiness()+downTable())+tools+eq+body+inc;
 }
 
 /* ---------- equipment search across vehicle inventories and warehouses ---------- */
