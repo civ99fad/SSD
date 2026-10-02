@@ -277,7 +277,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   const HST = { present: 'موجود', absent: 'غياب', lateP: 'تأخير بإذن', lateN: 'تأخير بدون إذن', leave: 'إجازة', permit: 'رخصة', support: 'دعم وردية', proxy: 'وكالة', course: 'دورة', assign: 'تكليف', attach: 'إلحاق' };
   const hStOf = (p) => (HST[p.status] ? p.status : 'present');
   function effSt(p, dk) { const s = hStOf(p); if (s === 'present' || !dk) return s; const f = p.from ? hkey(p.from) : 0, t = p.to ? hkey(p.to) : 0; if (f && dk < f) return 'present'; if (t && dk > t) return 'present'; return s; }
-  const shiftPres = (staff, k, dk) => staff.filter((p) => { const e = effSt(p, dk), own = String(p.shift || '1') === k; return (own && (e === 'present' || e === 'proxy')) || (e === 'support' && String(p.toShift || '') === k); }).length;
+  const shiftPres = (staff, k, dk) => staff.filter((p) => { const e = effSt(p, dk), own = String(p.shift || '1') === k; return (own && (e === 'present' || e === 'proxy' || e === 'lateP' || e === 'lateN')) || (e === 'support' && String(p.toShift || '') === k); }).length;
   function hCfg(h) { h = h || {}; const s = h.shifts || {}, n = (v, d) => (v != null && v !== '' && !isNaN(+v) ? +v : d); return { strength: n(h.strength, 17), shifts: { 1: n(s['1'], 6), 2: n(s['2'], 6), 3: n(s['3'], 5) } }; }
   const SHN = { 1: 'الوردية الأولى', 2: 'الوردية الثانية', 3: 'الوردية الثالثة' };
   const DUTY_H = 9, DUTY_TZ_MS = 3 * 36e5, DUTY_ANCHOR = Date.UTC(2026, 8, 29) / 864e5, DUTY_ANCHOR_SHIFT = 3;

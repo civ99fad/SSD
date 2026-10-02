@@ -1772,7 +1772,8 @@ const hPill = p => { const e=effNow(p), s=hStOf(p);
   const lbl = e==='support' ? `دعم: ${SHN[String(p.shift||'1')].replace('الوردية ','')} ← ${SHN[String(p.toShift||'')]?SHN[String(p.toShift)].replace('الوردية ',''):'؟'}` : HST[e];
   return `<span class="stpill ${HCLS[e]}"><i aria-hidden="true"></i>${lbl}</span>${tag}`; };
 // members actually on duty in shift k on day dk (own members present + supporters coming in)
-const shiftPres = (k, dk) => (S.staff||[]).filter(p=>{ const e=effSt(p,dk), own=String(p.shift||'1')===k; return (own && (e==='present'||e==='proxy')) || (e==='support' && String(p.toShift||'')===k); }).length;
+// المتأخر (بإذن أو بدونه) حضر فعلاً فيُحسب ضمن الموجود
+const shiftPres = (k, dk) => (S.staff||[]).filter(p=>{ const e=effSt(p,dk), own=String(p.shift||'1')===k; return (own && (e==='present'||e==='proxy'||e==='lateP'||e==='lateN')) || (e==='support' && String(p.toShift||'')===k); }).length;
 const shiftSupIn = (k, dk) => (S.staff||[]).filter(p=>effSt(p,dk)==='support' && String(p.toShift||'')===k).length;
 function staffAlerts(){
   const out=[], st=S.staff||[], cfg=hCfg(), d0=dayKey(0); if (!d0) return out;
