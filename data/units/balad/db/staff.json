@@ -390,9 +390,12 @@
   "rank": "عريف",
   "shift": "3",
   "spec": "د / م",
-  "status": "present",
+  "status": "permit",
   "to": "",
-  "updated": 1790771223977
+  "updated": 1790946023868,
+  "sub": "",
+  "toShift": "",
+  "subN": ""
  },
  "b3-06": {
   "at": 1790771223977,
