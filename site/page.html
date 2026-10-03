@@ -544,6 +544,21 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .advb{padding:14px 20px 18px}
 .advs{margin:0 0 12px;padding-inline-start:22px;line-height:1.9}
 .advf{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.advtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
+.advtile{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:22px 22px 18px;background:var(--surface);border:2px solid var(--edge);border-radius:16px;transition:box-shadow .15s,transform .15s}
+.advtile:hover,.advtile:focus-visible{box-shadow:0 6px 22px rgba(0,0,0,.12);transform:translateY(-2px)}
+.advtile:focus-visible{outline:3px solid var(--accent)}
+.advtile b{font-size:18px}.advtile small{color:var(--muted);line-height:1.7}.advtile .count{align-self:flex-start;margin-top:6px}
+.advti{width:52px;height:52px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-bottom:6px}
+.advti svg{width:28px;height:28px}
+.advcat{padding:0;margin-bottom:10px;overflow:hidden}
+.advch{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:none;border:0;padding:14px 18px;font:inherit;color:inherit;cursor:pointer}
+.advch b{font-size:16px;flex:1}
+.advci{width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}
+.advcat.on .advch{border-bottom:1px solid var(--line-2)}.advcat.on .chev{transform:rotate(180deg)}
+.advcb{padding:12px 14px 14px;background:var(--surface-2)}.advcb .advc{margin-bottom:8px}
+.advcm,.advtips{padding:14px 18px;margin-bottom:12px}.advcm .advf{margin-top:8px}.advtips .advs{margin:8px 0 0}
+.advfm{display:inline-flex;gap:4px;align-items:center}
 .advn{margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--accent-soft);font-size:14px}
 .stdoc{margin-top:4px}
 .attc{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -1597,30 +1612,75 @@ function minClose(){
 const getAdv = id => (S.guide||[]).find(x=>x.id===id);
 const advEdit = () => S.canEdit && !(S.me && S.me.unitEditor); // يحرره المسؤول فقط لأنه مشترك
 const minOpts = () => [['','—'],...(S.forms||[]).filter(f=>(f.kind||'minutes')==='minutes').sort((a,b)=>(a.order||0)-(b.order||0)).map(f=>[f.id,f.title||'محضر'])];
-const advFields = x => [
+const dutyOpts = () => [['','—'],...(S.forms||[]).filter(f=>(f.kind||'minutes')==='incident').sort((a,b)=>(a.order||0)-(b.order||0)).map(f=>[f.id,f.title||'نموذج']),...minOpts().slice(1)];
+// أقسام المستشار: الإجراءات الإدارية (الحالات القائمة) + إجراءات ضابط الخفر والحوادث (تصنيف الحوادث وما يلزم لكل حالة)
+const svg = d => `<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const DUTY_CATS = [
+  {id:'home-fire', t:'حرائق المنازل', ic:svg('<path d="M12 3c1 3 4 4.5 4 8.5A4 4 0 0 1 8 12c0-1.5.6-2.5 1.5-3.5C10.5 7.4 12 6 12 3z"/><path d="M4 21h16"/>')},
+  {id:'vehicle', t:'حرائق وحوادث المركبات', ic:svg('<path d="M3 16v-4l2-5h14l2 5v4"/><path d="M3 16h18"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>')},
+  {id:'farm-fire', t:'حرائق المزارع', ic:svg('<path d="M12 21V9"/><path d="M12 12c-3 0-5-2-5-5 3 0 5 2 5 5zM12 15c3 0 5-2 5-5-3 0-5 2-5 5z"/><path d="M4 21h16"/>')},
+  {id:'land-fire', t:'حرائق المخلفات وأراضي الفضاء', ic:svg('<path d="M3 20l5-9 4 6 3-4 6 7z"/><path d="M14 4c.6 1.6 2 2 2 3.6a2 2 0 0 1-4 0c0-.8.4-1.3.8-1.8.5-.6 1.2-1 1.2-1.8z"/>')},
+  {id:'home-rescue', t:'إنقاذ المنازل', ic:svg('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/><path d="M6.3 6.3l3.2 3.2M14.5 14.5l3.2 3.2M17.7 6.3l-3.2 3.2M9.5 14.5l-3.2 3.2"/>')},
+  {id:'doors', t:'فتح الأبواب', ic:svg('<path d="M6 21V4h12v17"/><path d="M4 21h16"/><circle cx="14.5" cy="13" r=".9"/>')},
+  {id:'warehouse', t:'حرائق المستودعات', ic:svg('<path d="M3 9l9-5 9 5v11H3z"/><path d="M8 20v-6h8v6"/>')},
+  {id:'shelter', t:'طلب الإيواء', ic:svg('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-5h6v5"/>')}];
+const advDuty = x => x.sect==='duty', advCatOf = x => x.cat||'';
+const advFields = (x, sect) => [
+  ...(sect==='duty'?[{id:'cat',label:'التصنيف',type:'select',value:x.cat||'',options:DUTY_CATS.map(c=>[c.id,c.t]),required:true}]:[]),
   {id:'title',label:'الحالة',value:x.title,required:true,placeholder:'مثال: غياب فرد عن العمل'},
   {id:'when',label:'متى تنطبق (اختياري)',value:x.when,placeholder:'مثال: إذا لم يحضر الفرد لمناوبته دون إذن'},
   {id:'steps',label:'الإجراءات بالترتيب (كل خطوة في سطر)',type:'textarea',value:x.steps,placeholder:'مثال:\nالاتصال على الفرد وضبط محضر اتصال\nضبط محضر غياب\nرفع المحضر لإدارة العمليات'},
-  [{id:'f1',label:'محضر مطلوب ١',type:'select',value:(x.forms||[])[0]||'',options:minOpts()},{id:'f2',label:'محضر مطلوب ٢',type:'select',value:(x.forms||[])[1]||'',options:minOpts()}],
-  [{id:'f3',label:'محضر مطلوب ٣',type:'select',value:(x.forms||[])[2]||'',options:minOpts()},{id:'f4',label:'محضر مطلوب ٤',type:'select',value:(x.forms||[])[3]||'',options:minOpts()}],
-  [{id:'f5',label:'محضر مطلوب ٥',type:'select',value:(x.forms||[])[4]||'',options:minOpts()},{id:'f6',label:'محضر مطلوب ٦',type:'select',value:(x.forms||[])[5]||'',options:minOpts()}],
+  ...[[0,1],[2,3],[4,5]].map(([i,j])=>[{id:'f'+(i+1),label:'محضر / نموذج مطلوب '+arD(i+1),type:'select',value:(x.forms||[])[i]||'',options:sect==='duty'?dutyOpts():minOpts()},{id:'f'+(j+1),label:'محضر / نموذج مطلوب '+arD(j+1),type:'select',value:(x.forms||[])[j]||'',options:sect==='duty'?dutyOpts():minOpts()}]),
   {id:'note',label:'ملاحظات وتنبيهات (اختياري)',type:'textarea',value:x.note}];
-const advVal = x => ({title:x.title, when:x.when||'', steps:x.steps||'', note:x.note||'', forms:[x.f1,x.f2,x.f3,x.f4,x.f5,x.f6].filter(Boolean)});
-function viewAdvisor(){
-  const edit=advEdit(), all=(S.guide||[]).slice().sort((a,b)=>((a.order||9e9)-(b.order||9e9))||((a.at||0)-(b.at||0)));
-  const head=`<header class="ph"><div class="ph-t"><h1>المستشار</h1><span class="count">دليل الإجراءات</span></div>${edit?`<button type="button" class="btn primary" data-act="advAdd">${ICON.plus}إضافة حالة</button>`:''}</header>
-  <p class="muted" style="margin:-6px 0 16px">اختر الحالة لتعرف الإجراءات المطلوبة خطوة بخطوة والمحاضر التي تُضبط فيها، وافتح المحضر مباشرة لتعبئته وطباعته.</p>`;
-  if (!S.loadedAdv) return head+loading();
-  if (!all.length) return head+`<div class="panel empty"><b>لم تُضف الحالات بعد.</b>ستُضاف هنا تعليمات كل حالة (الغياب، التأخير، الغياب المتصل ٥ أيام فأكثر…) والمحاضر المطلوبة لها.</div>`;
-  const q=norm(S.advq), list=all.filter(x=>!q||norm([x.title,x.when,x.steps,x.note].join(' ')).includes(q));
-  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الحالات</span>${ICON.search}<input id="advq" type="search" placeholder="ابحث عن حالة، مثال: غياب أو تأخير" value="${esc(S.advq||'')}"></label></div>`;
-  if (!list.length) return head+tools+`<div class="panel empty"><b>لا توجد حالة مطابقة.</b></div>`;
-  return head+tools+list.map(x=>{ const st=String(x.steps||'').split('\n').map(t=>t.trim()).filter(Boolean), fs=(x.forms||[]).map(getForm).filter(Boolean), open=S.advOpen===x.id;
-    return `<section class="panel advc${open?' on':''}"><button type="button" class="advh" data-act="advTog" data-id="${esc(x.id)}" aria-expanded="${open}"><b>${esc(x.title||'حالة')}</b>${x.when?`<small>${esc(x.when)}</small>`:''}</button>
+const advVal = (x, sect) => Object.assign({title:x.title, when:x.when||'', steps:x.steps||'', note:x.note||'', forms:[x.f1,x.f2,x.f3,x.f4,x.f5,x.f6].filter(Boolean)}, sect==='duty'?{sect:'duty', cat:x.cat}:{});
+const advSort = (a,b)=>((a.order||9e9)-(b.order||9e9))||((a.at||0)-(b.at||0));
+function advCase(x, edit){
+  const st=String(x.steps||'').split('\n').map(t=>t.trim()).filter(Boolean), fs=(x.forms||[]).map(getForm).filter(Boolean), open=S.advOpen===x.id||!!S.advq;
+  return `<section class="panel advc${open?' on':''}"><button type="button" class="advh" data-act="advTog" data-id="${esc(x.id)}" aria-expanded="${open}"><b>${esc(x.title||'حالة')}</b>${x.when?`<small>${esc(x.when)}</small>`:''}</button>
       ${open?`<div class="advb">${st.length?`<ol class="advs">${st.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:'<p class="muted">لم تُكتب الإجراءات بعد.</p>'}
-        ${fs.length?`<div class="advf"><span class="muted">المحاضر المطلوبة:</span>${fs.map(f=>`<button type="button" class="btn sm" data-act="${f.tpl?'minEdit':'formOpen'}" data-id="${esc(f.id)}">${ICON.doc}${esc(f.title||'محضر')}</button>`).join('')}</div>`:''}
+        ${fs.length?`<div class="advf"><span class="muted">المحاضر المطلوبة:</span>${fs.map(f=>advFormBtns(f)).join('')}</div>`:''}
         ${x.note?`<div class="advn">${esc(x.note)}</div>`:''}
-        ${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(x.id)}">${ICON.edit}تعديل</button><button type="button" class="btn sm danger" data-act="advDel" data-id="${esc(x.id)}">${ICON.del}حذف</button></div>`:''}</div>`:''}</section>`; }).join('');
+        ${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(x.id)}">${ICON.edit}تعديل</button><button type="button" class="btn sm danger" data-act="advDel" data-id="${esc(x.id)}">${ICON.del}حذف</button></div>`:''}</div>`:''}</section>`;
+}
+// زر الاطلاع على النموذج + رابط تحميله (للمحاضر القابلة للتحرير: تحرير وطباعة)
+function advFormBtns(f){
+  const nm=esc(f.title||'محضر');
+  if (f.tpl) return `<span class="advfm"><button type="button" class="btn sm" data-act="minEdit" data-id="${esc(f.id)}">${ICON.doc}${nm}</button>${f.docx?`<a class="btn sm" href="${esc(blob(f.docx))}" download="${esc(f.docxName||((f.title||'محضر')+'.docx'))}" style="text-decoration:none;color:var(--text)" aria-label="تحميل ${nm}">${ICON.dl}</a>`:''}</span>`;
+  return `<span class="advfm"><button type="button" class="btn sm" data-act="formOpen" data-id="${esc(f.id)}">${ICON.doc}${nm}</button>${f.file?`<a class="btn sm" href="${esc(blob(f.file))}" download="${esc(f.fileName||((f.title||'نموذج')+'.pdf'))}" style="text-decoration:none;color:var(--text)" aria-label="تحميل ${nm}">${ICON.dl}</a>`:''}</span>`;
+}
+function viewAdvisor(){
+  const edit=advEdit(), sect=S.advSect||'', all=(S.guide||[]).slice().sort(advSort), duty=all.filter(advDuty), admin=all.filter(x=>!advDuty(x));
+  const back=`<div style="margin-bottom:10px"><button type="button" class="link" data-act="advSect" data-id="">${ICON.arrow} المستشار</button></div>`;
+  if (!sect){
+    const head=`<header class="ph"><div class="ph-t"><h1>المستشار</h1><span class="count">دليل الإجراءات</span></div></header>
+    <p class="muted" style="margin:-6px 0 16px">اختر القسم لتعرف الإجراءات المطلوبة خطوة بخطوة والمحاضر التي تُضبط فيها، وافتح المحضر مباشرة للاطلاع عليه أو تعبئته وطباعته.</p>`;
+    if (!S.loadedAdv) return head+loading();
+    return head+`<div class="advtiles"><button type="button" class="advtile" data-act="advSect" data-id="admin"><span class="advti">${ICON.doc}</span><b>الإجراءات الإدارية</b><small>الغياب والتأخير والانسحاب وغيرها من حالات الأفراد</small><span class="count">${esc(arD(admin.length))} حالة</span></button>
+      <button type="button" class="advtile" data-act="advSect" data-id="duty"><span class="advti">${typeof ICON.shield==="function"?ICON.shield(28):ICON.shield}</span><b>إجراءات ضابط الخفر والحوادث</b><small>حرائق المنازل والمركبات والمزارع والأراضي، الإنقاذ، فتح الأبواب</small><span class="count">${esc(arD(duty.filter(x=>x.cat!=='tips'&&x.cat!=='common').length))} حالة</span></button></div>`;
+  }
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الحالات</span>${ICON.search}<input id="advq" type="search" placeholder="ابحث عن حالة، مثال: ${sect==='duty'?'حريق أو باب':'غياب أو تأخير'}" value="${esc(S.advq||'')}"></label></div>`;
+  const q=norm(S.advq), match=x=>!q||norm([x.title,x.when,x.steps,x.note].join(' ')).includes(q);
+  if (sect==='admin'){
+    const head=back+`<header class="ph"><div class="ph-t"><h1>الإجراءات الإدارية</h1><span class="count">دليل الإجراءات</span></div>${edit?`<button type="button" class="btn primary" data-act="advAdd" data-id="admin">${ICON.plus}إضافة حالة</button>`:''}</header>`;
+    if (!S.loadedAdv) return head+loading();
+    if (!admin.length) return head+`<div class="panel empty"><b>لم تُضف الحالات بعد.</b>ستُضاف هنا تعليمات كل حالة (الغياب، التأخير، الغياب المتصل ٥ أيام فأكثر…) والمحاضر المطلوبة لها.</div>`;
+    const list=admin.filter(match);
+    if (!list.length) return head+tools+`<div class="panel empty"><b>لا توجد حالة مطابقة.</b></div>`;
+    return head+tools+list.map(x=>advCase(x,edit)).join('');
+  }
+  // إجراءات ضابط الخفر والحوادث
+  const head=back+`<header class="ph"><div class="ph-t"><h1>إجراءات ضابط الخفر والحوادث</h1><span class="count">حسب نوع الحادث</span></div>${edit?`<button type="button" class="btn primary" data-act="advAdd" data-id="duty">${ICON.plus}إضافة حالة</button>`:''}</header>`;
+  if (!S.loadedAdv) return head+loading();
+  const common=duty.find(x=>x.cat==='common'), tips=duty.find(x=>x.cat==='tips');
+  const strip=common&&(common.forms||[]).map(getForm).filter(Boolean).length?`<section class="panel advcm"><b>المحاضر الأكثر استخدامًا</b><div class="advf">${common.forms.map(getForm).filter(Boolean).map(f=>advFormBtns(f)).join('')}</div></section>`:'';
+  const cats=DUTY_CATS.map(c=>{ const L=duty.filter(x=>x.cat===c.id&&match(x)); if (q&&!L.length) return '';
+    const open=S.advCat===c.id||!!q;
+    return `<section class="panel advcat${open?' on':''}"><button type="button" class="advch" data-act="advCat" data-id="${c.id}" aria-expanded="${open}"><span class="advci">${c.ic}</span><b>${esc(c.t)}</b><span class="count">${esc(arD(duty.filter(x=>x.cat===c.id).length))} حالات</span><span class="chev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></span></button>
+      ${open?`<div class="advcb">${L.length?L.map(x=>advCase(x,edit)).join(''):'<p class="muted" style="margin:8px 4px">لا توجد حالات في هذا التصنيف بعد.</p>'}${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advAdd" data-id="duty" data-i="${c.id}">${ICON.plus}إضافة حالة لهذا التصنيف</button></div>`:''}</div>`:''}</section>`; }).join('');
+  const tipSteps=tips?String(tips.steps||'').split('\n').map(t=>t.trim()).filter(Boolean):[];
+  const tipHtml=tips&&tipSteps.length&&!q?`<section class="panel advtips"><b>${esc(tips.title||'نصائح عامة')}</b><ol class="advs">${tipSteps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(tips.id)}">${ICON.edit}تعديل</button></div>`:''}</section>`:'';
+  if (!duty.length) return head+`<div class="panel empty"><b>لم تُضف الحالات بعد.</b></div>`;
+  return head+tools+(q?'':strip+tipHtml)+(cats||`<div class="panel empty"><b>لا توجد حالة مطابقة.</b></div>`);
 }
 
 /* ---------- التعاميم: يرسلها مدير الإدارة العامة من لوحته فتصل لجميع المراكز والأقسام، مع تنبيه بالتعاميم الجديدة ---------- */
@@ -2388,10 +2448,12 @@ const ACT = {
       const ref=S.db.collection('letters').doc(); const f=await hStoreFile(x, 'let-'+ref.id);
       await ref.set(Object.assign(hStrip(x), {file:null, db:null, fileName:''}, f, {at:Date.now()})); toast('أُضيف الخطاب'); }}),
   advTog: id => { S.advOpen = S.advOpen===id ? '' : id; render(); },
-  advAdd: () => openForm({title:'إضافة حالة للمستشار', submit:'إضافة', fields:advFields({}), onSubmit: async x => {
-      const n=Math.max(0,...(S.guide||[]).map(y=>+y.order||0))+1; await S.db.collection('guide').doc().set(Object.assign(advVal(x), {order:n, at:Date.now()})); toast('أُضيفت الحالة'); }}),
-  advEdit: id => { const x=getAdv(id); if(!x) return; openForm({title:'تعديل الحالة', fields:advFields(x), onSubmit: async v => {
-      await S.db.doc('guide/'+id).update(Object.assign(advVal(v), {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
+  advSect: id => { S.advSect=id; S.advOpen=''; S.advCat=''; S.advq=''; render(); },
+  advCat: id => { S.advCat = S.advCat===id ? '' : id; S.advOpen=''; render(); },
+  advAdd: (sect, cat) => { sect = sect==='duty' ? 'duty' : 'admin'; openForm({title:'إضافة حالة للمستشار', submit:'إضافة', fields:advFields(cat?{cat}:{}, sect), onSubmit: async x => {
+      const n=Math.max(0,...(S.guide||[]).map(y=>+y.order||0))+1; await S.db.collection('guide').doc().set(Object.assign(advVal(x, sect), {order:n, at:Date.now()})); toast('أُضيفت الحالة'); }}); },
+  advEdit: id => { const x=getAdv(id); if(!x) return; const sect=advDuty(x)?'duty':'admin'; openForm({title:'تعديل الحالة', fields:advFields(x, sect), onSubmit: async v => {
+      await S.db.doc('guide/'+id).update(Object.assign(advVal(v, sect), {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
   advDel: id => { const x=getAdv(id); if(!x) return; openConfirm(`حذف الحالة «${x.title||''}»؟`, 'حذف', async () => { await S.db.doc('guide/'+id).delete(); toast('حُذفت الحالة'); }); },
   pfOpen: id => go('pfile', id),
   pdAdd: pid => openForm({title:'إضافة مستند لملف الفرد', submit:'إضافة', fields:pdFields({}), onSubmit: async x => {
