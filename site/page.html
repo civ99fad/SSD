@@ -2123,6 +2123,11 @@ const CNK = {foam:{t:'الرغاوي', one:'رغوة', unit:'جركل', item:'ر
 const curHY = () => { const m=hYM(hnum()); return m?m.y:0; };
 const arD = n => String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const CNDIR = {in:'وارد', out:'صرف'};
+// الإحصائية ربع سنوية (هجري): الربع الأول محرم–ربيع الأول، الثاني ربيع الآخر–جمادى الآخرة، الثالث رجب–رمضان، الرابع شوال–ذو الحجة
+const CNQ = {1:'الربع الأول', 2:'الربع الثاني', 3:'الربع الثالث', 4:'الربع الرابع'};
+const cnQRange = q => `${arD((q-1)*3+1)}/${arD(1)} – ${arD(q*3)}/${arD(30)}`;
+const cnQCur = () => { const m=hYM(hnum()); return m?Math.min(4,Math.ceil(m.m/3)):1; };
+const cnQSel = () => { const v=S.cnQ; return v==='all' ? 'all' : (CNQ[v] ? +v : cnQCur()); };
 const numA = t => { const x=parseFloat(String(t||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,]/g,'.')); return isNaN(x)?0:x; };
 const nfmt = n => new Intl.NumberFormat('ar-SA',{maximumFractionDigits:2}).format(n);
 const hYM = d => { const t=String(d||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)); const m=t.match(/(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})/); return m?{m:+m[2],y:+m[3]}:null; };
@@ -2131,17 +2136,21 @@ const cnParty = r => { const v=r.vehicle&&getV(r.vehicle); return [r.party?enj(r
 function viewConsum(){
   const edit=S.canEdit, k=S.cnk||'foam', C=CNK[k], all=(S.consum||[]).filter(r=>(r.kind||'foam')===k);
   const head=`<header class="ph"><div class="ph-t"><h1>الرغاوي والمحروقات</h1></div>${edit?`<button type="button" class="btn primary" data-act="cnAdd">${ICON.plus}إضافة حركة ${C.one}</button>`:''}</header>`;
-  const tabs=`<div class="htabs" role="tablist" aria-label="النوع">${Object.entries(CNK).map(([kk,c])=>`<button type="button" role="tab" class="htab${k===kk?' on':''}" aria-selected="${k===kk}" data-act="cnTab" data-id="${kk}">${c.t}${S.loadedC?` <b>${(S.consum||[]).filter(r=>(r.kind||'foam')===kk&&(()=>{const m=hYM(r.date),cy=curHY();return !cy||!m||m.y===cy;})()).length}</b>`:''}</button>`).join('')}</div>`;
+  const QS=cnQSel(), inQ=r=>{ if (QS==='all') return true; const m=hYM(r.date); return !m || Math.ceil(m.m/3)===QS; };
+  const tabs=`<div class="htabs" role="tablist" aria-label="النوع">${Object.entries(CNK).map(([kk,c])=>`<button type="button" role="tab" class="htab${k===kk?' on':''}" aria-selected="${k===kk}" data-act="cnTab" data-id="${kk}">${c.t}${S.loadedC?` <b>${(S.consum||[]).filter(r=>(r.kind||'foam')===kk&&(()=>{const m=hYM(r.date),cy=curHY();return (!cy||!m||m.y===cy)&&inQ(r);})()).length}</b>`:''}</button>`).join('')}</div>`;
   if (!S.loadedC) return head+tabs+loading();
   if (!all.length) return head+tabs+`<div class="panel empty"><b>لا توجد حركات ${C.t} بعد.</b>${edit?`سجّل الوارد (استلام ${C.one}) والصرف (للمراكز والآليات والمهام) بالتاريخ والكمية، وتظهر الإحصائية تلقائياً.`:''}</div>`;
   const CY=curHY(), fy=String(CY), f=S.cnf||'all', q=norm(S.cnq);
   const inY = r => { const m=hYM(r.date); return !CY || !m || m.y===CY; };
-  const base=all.filter(inY);
-  const note=`<p class="rnote" style="margin:0 0 12px">الإحصائية للعام الحالي ${arD(CY)}هـ فقط.</p>`;
-  const units=[...new Set(base.map(r=>r.unit||C.unit))];
+  const yr=all.filter(inY), base=yr.filter(inQ);
+  const qEnd = QS==='all' ? 12 : QS*3;
+  const cum = yr.filter(r=>{ const m=hYM(r.date); return !m || m.m<=qEnd; }); // الرصيد تراكمي من بداية العام حتى نهاية الربع المختار
+  const qchips=`<div class="fchips" role="group" aria-label="الفترة">${[1,2,3,4].map(i=>`<button type="button" class="fchip${QS===i?' on':''}" data-act="cnQ" data-id="${i}" aria-pressed="${QS===i}">${CNQ[i]}${i===cnQCur()?' <b>الحالي</b>':''}</button>`).join('')}<button type="button" class="fchip${QS==='all'?' on':''}" data-act="cnQ" data-id="all" aria-pressed="${QS==='all'}">العام كاملاً</button></div>`;
+  const note=`${qchips}<p class="rnote" style="margin:0 0 12px">${QS==='all'?`الإحصائية للعام الحالي ${arD(CY)}هـ كاملاً.`:`إحصائية ${CNQ[QS]} من عام ${arD(CY)}هـ (${cnQRange(QS)}). الرصيد تراكمي من بداية العام حتى نهاية الربع.`}</p>`;
+  const units=[...new Set(cum.map(r=>r.unit||C.unit))];
   const sum=(arr,d)=>arr.filter(r=>r.dir===d).reduce((a,r)=>a+numA(r.qty),0);
-  const tiles = units.map(u=>{ const a=base.filter(r=>(r.unit||C.unit)===u), i=sum(a,'in'), o=sum(a,'out'), bal=i-o;
-    return `${i>0?`<div class="panel"><b>${nfmt(i)}</b><small>إجمالي الوارد (${esc(u)})</small></div>`:''}<div class="panel"><b>${nfmt(o)}</b><small>إجمالي المصروف (${esc(u)})</small></div>${i>0?`<div class="panel${bal<0?' neg':''}"><b>${nfmt(bal)}</b><small>الرصيد الحالي (${esc(u)})</small></div>`:''}`; }).join('')
+  const tiles = units.map(u=>{ const a=base.filter(r=>(r.unit||C.unit)===u), c=cum.filter(r=>(r.unit||C.unit)===u), i=sum(a,'in'), o=sum(a,'out'), ci=sum(c,'in'), bal=ci-sum(c,'out');
+    return `${i>0?`<div class="panel"><b>${nfmt(i)}</b><small>إجمالي الوارد (${esc(u)})</small></div>`:''}<div class="panel"><b>${nfmt(o)}</b><small>إجمالي المصروف (${esc(u)})</small></div>${ci>0?`<div class="panel${bal<0?' neg':''}"><b>${nfmt(bal)}</b><small>${QS==='all'?'الرصيد الحالي':'الرصيد حتى نهاية '+CNQ[QS]} (${esc(u)})</small></div>`:''}`; }).join('')
     + `<div class="panel"><b>${base.filter(r=>r.dir==='out').length}</b><small>عملية صرف</small></div>`
     + (k==='fuel' ? (()=>{ const c=base.filter(r=>r.dir==='out').reduce((a,r)=>a+numA(r.cost),0); return c?`<div class="panel"><b>${nfmt(c)}</b><small>إجمالي المبلغ (ريال)</small></div>`:''; })() : '')
     + (k==='foam' ? (()=>{ const its=[]; (S.warehouses||[]).forEach(w=>(w.items||[]).forEach(x=>{ if (/رغو/.test(x.name||'') && /جركل|جالون|برميل|لتر/.test(x.name||'')) its.push({w,x}); })); if(!its.length) return '';
@@ -2151,8 +2160,8 @@ function viewConsum(){
   const bars=(rows)=>{ const mx=Math.max(1,...rows.map(r=>r[1])); return rows.map(([n,v])=>`<div class="cnbar ${k}"><div>${esc(n)}</div><i style="width:${(v/mx*100).toFixed(1)}%"></i><span>${nfmt(v)}</span></div>`).join(''); };
   const byParty=agg(cnParty).slice(0,12);
   const byMonth=(()=>{ const m=new Map(); outs.forEach(r=>{ const ym=hYM(r.date); const kk=ym?`${ym.y}-${String(ym.m).padStart(2,'0')}`:'—'; m.set(kk,(m.get(kk)||0)+numA(r.qty)); }); return [...m.entries()].sort((a,b)=>b[0].localeCompare(a[0])).slice(0,12).map(([kk,v])=>{ const [y,mm]=kk.split('-'); return [kk==='—'?'بدون تاريخ':`${HMONTHS[+mm]||mm} ${String(y).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d])}هـ`, v]; }); })();
-  const itemsT = (()=>{ const m=new Map(); base.forEach(r=>{ const kk=(r.item||C.item)+'|'+(r.unit||C.unit); const o=m.get(kk)||{i:0,o:0}; o[r.dir==='in'?'i':'o']+=numA(r.qty); m.set(kk,o); });
-    if (m.size<1) return ''; return `<section class="sec"><div class="sh"><h2>الرصيد حسب الصنف</h2></div><div class="panel" style="overflow-x:auto"><table><thead><tr><th>الصنف</th><th>الوارد</th><th>المصروف</th><th>الرصيد</th></tr></thead><tbody>${[...m.entries()].map(([kk,o])=>{ const [it,u]=kk.split('|'); const b=o.i-o.o; return `<tr><td class="nm">${esc(it)}</td><td class="q">${nfmt(o.i)} ${esc(u)}</td><td class="q">${nfmt(o.o)} ${esc(u)}</td><td class="q"><b${b<0?' style="color:var(--danger)"':''}>${o.i?nfmt(b)+' '+esc(u):'—'}</b></td></tr>`; }).join('')}</tbody></table></div></section>`; })();
+  const itemsT = (()=>{ const m=new Map(); cum.forEach(r=>{ const kk=(r.item||C.item)+'|'+(r.unit||C.unit); const o=m.get(kk)||{i:0,o:0,pi:0,po:0}; o[r.dir==='in'?'i':'o']+=numA(r.qty); if (inQ(r)) o[r.dir==='in'?'pi':'po']+=numA(r.qty); m.set(kk,o); });
+    if (m.size<1) return ''; return `<section class="sec"><div class="sh"><h2>الرصيد حسب الصنف${QS==='all'?'':' — '+CNQ[QS]}</h2></div><div class="panel" style="overflow-x:auto"><table><thead><tr><th>الصنف</th><th>الوارد</th><th>المصروف</th><th>الرصيد</th></tr></thead><tbody>${[...m.entries()].map(([kk,o])=>{ const [it,u]=kk.split('|'); const b=o.i-o.o; return `<tr><td class="nm">${esc(it)}</td><td class="q">${nfmt(o.pi)} ${esc(u)}</td><td class="q">${nfmt(o.po)} ${esc(u)}</td><td class="q"><b${b<0?' style="color:var(--danger)"':''}>${o.i?nfmt(b)+' '+esc(u):'—'}</b></td></tr>`; }).join('')}</tbody></table></div></section>`; })();
   const charts = outs.length ? `<div class="cngrid"><section class="panel" style="padding:14px 16px"><h2 style="margin:0 0 8px;font-size:15px">المصروف حسب الجهة / الآلية (${esc(u0)})</h2>${bars(byParty)}</section><section class="panel" style="padding:14px 16px"><h2 style="margin:0 0 8px;font-size:15px">المصروف حسب الشهر (${esc(u0)})</h2>${bars(byMonth)}</section></div>` : '';
   const text = r => [r.date,CNDIR[r.dir],r.qty,r.unit,r.item,cnParty(r),r.party,r.ref,r.note];
   const list=base.filter(r=>(f==='all'||r.dir===f) && (!q||norm(text(r).join(' ')).includes(q))).sort(byDate);
@@ -2437,6 +2446,7 @@ const ACT = {
     if (r.returned) return openConfirm('إلغاء تسجيل رجوع هذه المعدة؟', 'إلغاء الرجوع', async () => { await S.db.doc('equipment/'+id).update({returned:false, retDate:'', updated:Date.now()}); toast('أُلغي الرجوع'); }, 'تأكيد');
     openForm({title:'تسجيل رجوع المعدة', submit:'تسجيل الرجوع', fields:[{id:'retDate',label:'تاريخ الرجوع',value:hijri(),required:true}], onSubmit: async x => {
       await S.db.doc('equipment/'+id).update({returned:true, retDate:x.retDate, updated:Date.now()}); toast('سُجّل رجوع المعدة'); }}); },
+  cnQ: k => { S.cnQ=k; S.cnf='all'; render(); },
   cnTab: k => { S.cnk=k; S.cnf='all'; S.cnq=''; S.cny=''; render(); },
   cnF: k => { S.cnf=k; render(); },
   cnAdd: () => openForm({title:'إضافة حركة '+CNK[S.cnk||'foam'].one, submit:'إضافة', fields:cnFields({}, S.cnk), onSubmit: async x => {
