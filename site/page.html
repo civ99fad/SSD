@@ -544,6 +544,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .advb{padding:14px 20px 18px}
 .advs{margin:0 0 12px;padding-inline-start:22px;line-height:1.9}
 .advf{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.onum{display:inline-flex;direction:rtl;gap:2px;white-space:nowrap}.onum .osl{opacity:.7}
 .advtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
 .advtile{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:22px 22px 18px;background:var(--surface);border:2px solid var(--edge);border-radius:16px;transition:box-shadow .15s,transform .15s}
 .advtile:hover,.advtile:focus-visible{box-shadow:0 6px 22px rgba(0,0,0,.12);transform:translateY(-2px)}
@@ -1303,6 +1304,9 @@ function invTable(rows, start, edit, vid){
 const DTYPES = {recv:'سند استلام', hand:'سند تسليم', mahdar:'محضر', sanad:'سند', other:'مستند آخر', status:'حركة / حالة'};
 const DCLS = {recv:'recv', hand:'hand', mahdar:'rep', sanad:'rep', other:'rep', status:'st'};
 const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'}); } catch(e){ return null; } })();
+// رقم الصادر/الخطاب (مثل ٣٧/٣٧/٣/٢/٩/١٢٣/دف): يُعرض بترتيب القراءة من اليمين لليسار (كل جزء معزول لئلا ينعكس الترتيب)
+const onum = v => { const t=String(v==null?'':v).trim(); if (t.indexOf('/')<0) return esc(t);
+  return '<span class="onum" dir="rtl">'+t.split(/\s*\/\s*/).map(x=>'<bdi>'+esc(x)+'</bdi>').join('<span class="osl">/</span>')+'</span>'; };
 const hnum = () => HFN ? HFN.format(new Date()).replace(/[\u200f\s]/g,'').replace(/هـ?$/,'')+'هـ' : hijri();
 const ENJ = ['','البلد','شراف','المنتزه','الصناعية','العزيزية','الدائري','أجا','الجبل','التدخل','الخطة'];
 const enj = t => String(t||'').replace(/(إنجاز|انجاز)\s*([0-9٠-٩]+)(?![0-9٠-٩]|\s*\()/g, (m,a,n)=>{ const k=+String(n).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)); return ENJ[k]&&!String(t).includes(ENJ[k])?`${m} (${ENJ[k]})`:m; });
@@ -2085,7 +2089,7 @@ function viewEquip(){
     <div class="fchips" role="group" aria-label="تصفية حسب الحالة">${chip('all','الكل')}${chip('out','لم ترجع')}${chip('back','رجعت لنا')}${chip('in','وارد / داخلي')}${cnt('review')?chip('review','⚑ للمراجعة'):''}</div>`;
   const row = r => { const st=eqSt(r), P=EQST[st];
     return `<div class="eqrow"><div><h3>${esc(r.summary||(r.items||[]).map(i=>i.name).join('، ')||'سند')}</h3>
-      <div class="eqmeta"><span class="stpill ${P[1]}"><i aria-hidden="true"></i>${P[0]}${st==='back'&&r.retDate?' — '+esc(r.retDate):''}</span><span class="pill p-doc">${esc(r.kind||'سند')}</span>${r.date?`<span>${esc(r.date)}</span>`:''}${r.ref?`<span>· صادر ${esc(r.ref)}</span>`:''}</div>
+      <div class="eqmeta"><span class="stpill ${P[1]}"><i aria-hidden="true"></i>${P[0]}${st==='back'&&r.retDate?' — '+esc(r.retDate):''}</span><span class="pill p-doc">${esc(r.kind||'سند')}</span>${r.date?`<span>${esc(r.date)}</span>`:''}${r.ref?`<span>· صادر ${onum(r.ref)}</span>`:''}</div>
       <div class="eqkv"><div><span>الجهة المستفيدة:</span> <b>${r.benef?esc(enj(r.benef)):'—'}</b></div>${g==='veh'?`<div><span>الآلية التابعة لها:</span> ${eqSrcCell(r)}</div>`:`<div><span>المستودع:</span> <b>${esc(eqWh(r))}</b>${r.whGuess?' <small class="muted" title="حُدد تقديرياً حسب محتوى المستودع — عدّله إن لزم">(تقديري)</small>':''}</div>${r.srcV?`<div><span>الآلية:</span> ${eqSrcCell(r)}</div>`:''}`}${r.recvName?`<div><span>المستلم:</span> ${esc(eqPers(r.recvName,r.recvRank))}</div>`:''}${r.delivName?`<div><span>المسلّم:</span> ${esc(eqPers(r.delivName,r.delivRank))}${r.from?` <span>(${esc(r.from)})</span>`:''}</div>`:''}</div>
       ${(r.items||[]).length?`<div class="eqitems">${r.items.map(i=>`<span>${esc(i.name)}${i.qty?' × '+esc(i.qty):''}</span>`).join('')}</div>`:''}
       ${r.notes?`<div class="tlt" style="margin-top:8px">${esc(r.notes)}</div>`:''}${r.flag?`<div class="eqflag">⚑ ${esc(r.flag)}</div>`:''}</div>
@@ -2169,7 +2173,7 @@ function viewConsum(){
   const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث</span>${ICON.search}<input id="cnq" type="search" placeholder="ابحث بالجهة أو الآلية أو المرجع" value="${esc(S.cnq||'')}"></label>
 </div>
     <div class="fchips" role="group" aria-label="تصفية">${chip('all','الكل')}${chip('in','وارد')}${chip('out','صرف')}</div>`;
-  const table = list.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>الحركة</th><th>الكمية</th><th>الصنف</th><th>الجهة / الآلية</th>${k==='fuel'?'<th>المبلغ (ريال)</th>':''}<th>المرجع</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td><span class="stpill ${r.dir==='in'?'hs-ok':'hs-mid'}"><i aria-hidden="true"></i>${CNDIR[r.dir]||'—'}</span></td><td class="q"><b>${esc(nfmt(numA(r.qty)))}</b> ${esc(r.unit||C.unit)}</td><td>${r.item?esc(r.item):DASH}</td><td class="nm">${cnParty(r)?esc(cnParty(r)):DASH}${r.note?`<div class="hper">${esc(r.note)}</div>`:''}</td>${k==='fuel'?`<td class="q">${r.cost?esc(nfmt(numA(r.cost))):DASH}</td>`:''}<td class="hnum">${r.ref?esc(r.ref):DASH}</td><td>${fileBtn('consum',r,'عرض')}</td>${edit?rowActs('consum',r):''}</tr>`).join('')}</tbody></table></div>` : `<div class="panel empty"><b>لا توجد نتائج.</b></div>`;
+  const table = list.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>الحركة</th><th>الكمية</th><th>الصنف</th><th>الجهة / الآلية</th>${k==='fuel'?'<th>المبلغ (ريال)</th>':''}<th>المرجع</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td><span class="stpill ${r.dir==='in'?'hs-ok':'hs-mid'}"><i aria-hidden="true"></i>${CNDIR[r.dir]||'—'}</span></td><td class="q"><b>${esc(nfmt(numA(r.qty)))}</b> ${esc(r.unit||C.unit)}</td><td>${r.item?esc(r.item):DASH}</td><td class="nm">${cnParty(r)?esc(cnParty(r)):DASH}${r.note?`<div class="hper">${esc(r.note)}</div>`:''}</td>${k==='fuel'?`<td class="q">${r.cost?esc(nfmt(numA(r.cost))):DASH}</td>`:''}<td class="hnum">${r.ref?onum(r.ref):DASH}</td><td>${fileBtn('consum',r,'عرض')}</td>${edit?rowActs('consum',r):''}</tr>`).join('')}</tbody></table></div>` : `<div class="panel empty"><b>لا توجد نتائج.</b></div>`;
   return head+tabs+note+`<div class="cnstat">${tiles}</div>`+itemsT+charts+tools+table;
 }
 const cnFields = (r, kind) => { const k=r.kind||kind||S.cnk||'foam', C=CNK[k]; return [
@@ -2256,12 +2260,12 @@ function viewTx(){
   let body;
   if (!all.length) body=`<div class="panel empty"><b>${tab==='letters'?'لا توجد خطابات رسمية بعد.':'لا توجد معاملات أفراد بعد.'}</b>${edit?(tab==='letters'?'أضف الخطابات الواردة والصادرة برقمها وتاريخها وموضوعها ومرفقها.':'أضف معاملات الأفراد (إجازة، نقل، انتداب…) مع اسم الفرد والتاريخ والمرفق.'):''}</div>`;
   else if (!list.length) body=`<div class="panel empty"><b>لا توجد نتائج.</b>جرّب كلمة بحث أخرى أو غيّر التصفية.</div>`;
-  else if (tab==='letters') body=`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>رقم الخطاب</th><th>الموضوع</th><th>الجهة</th><th>الحالة</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td><span class="stpill ${ldOf(r)==='in'?'hs-ok':'hs-in'}"><i aria-hidden="true"></i>${LDIR[ldOf(r)]}</span></td><td class="hnum">${r.num?esc(r.num):DASH}</td><td class="nm">${esc(r.subject||'')}${r.note?`<div class="hper">${esc(r.note)}</div>`:''}</td><td>${r.party?esc(r.party):DASH}</td><td>${txPill(r)}</td><td>${fileBtn('letters',r,'عرض')}</td>${edit?rowActs('letters',r):''}</tr>`).join('')}</tbody></table></div>`;
+  else if (tab==='letters') body=`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>رقم الخطاب</th><th>الموضوع</th><th>الجهة</th><th>الحالة</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td><span class="stpill ${ldOf(r)==='in'?'hs-ok':'hs-in'}"><i aria-hidden="true"></i>${LDIR[ldOf(r)]}</span></td><td class="hnum">${r.num?onum(r.num):DASH}</td><td class="nm">${esc(r.subject||'')}${r.note?`<div class="hper">${esc(r.note)}</div>`:''}</td><td>${r.party?esc(r.party):DASH}</td><td>${txPill(r)}</td><td>${fileBtn('letters',r,'عرض')}</td>${edit?rowActs('letters',r):''}</tr>`).join('')}</tbody></table></div>`;
   else body=`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>الاسم</th><th>نوع المعاملة</th><th>التفاصيل</th><th>الحالة</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td class="nm">${esc(pDisp(r,'p'))}</td><td class="hdate">${esc(r.type||'')}</td><td>${r.details?esc(r.details):DASH}</td><td>${txPill(r)}</td><td>${fileBtn('ptx',r,'عرض')}</td>${edit?rowActs('ptx',r):''}</tr>`).join('')}</tbody></table></div>`;
   return head+tabs+tools+body;
 }
 const letFields = r => [
-  [{id:'dir',label:'النوع',type:'select',value:ldOf(r),options:Object.entries(LDIR)},{id:'num',label:'رقم الخطاب',value:r.num,placeholder:'مثال: ٤٥٦٧/ص'}],
+  [{id:'dir',label:'النوع',type:'select',value:ldOf(r),options:Object.entries(LDIR)},{id:'num',label:'رقم الخطاب',value:r.num,placeholder:'مثال: ٣٧/٣٧/٣/٢/٩/١٢٣/دف'}],
   [{id:'date',label:'التاريخ',value:r.date||hijri(),required:true},{id:'status',label:'الحالة',type:'select',value:txStOf(r),options:Object.entries(TXST)}],
   {id:'subject',label:'الموضوع',value:r.subject,required:true,placeholder:'مثال: طلب صيانة آلية السلالم ٠/٢٦'},
   {id:'party',label:'الجهة (المرسِل أو المرسَل إليه)',value:r.party,placeholder:'مثال: إدارة الصيانة'},
