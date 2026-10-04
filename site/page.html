@@ -1640,7 +1640,7 @@ function advCase(x, edit){
       ${open?`<div class="advb">${st.length?`<ol class="advs">${st.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:'<p class="muted">لم تُكتب الإجراءات بعد.</p>'}
         ${fs.length?`<div class="advf"><span class="muted">المحاضر المطلوبة:</span>${fs.map(f=>advFormBtns(f)).join('')}</div>`:''}
         ${x.note?`<div class="advn">${esc(x.note)}</div>`:''}
-        ${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(x.id)}">${ICON.edit}تعديل</button><button type="button" class="btn sm danger" data-act="advDel" data-id="${esc(x.id)}">${ICON.del}حذف</button></div>`:''}</div>`:''}</section>`;
+        </div>`:''}</section>`;
 }
 // زر الاطلاع على النموذج + رابط تحميله (للمحاضر القابلة للتحرير: تحرير وطباعة)
 function advFormBtns(f){
@@ -1678,7 +1678,7 @@ function viewAdvisor(){
     return `<section class="panel advcat${open?' on':''}"><button type="button" class="advch" data-act="advCat" data-id="${c.id}" aria-expanded="${open}"><span class="advci">${c.ic}</span><b>${esc(c.t)}</b><span class="count">${esc(arD(duty.filter(x=>x.cat===c.id).length))} حالات</span><span class="chev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg></span></button>
       ${open?`<div class="advcb">${L.length?L.map(x=>advCase(x,edit)).join(''):'<p class="muted" style="margin:8px 4px">لا توجد حالات في هذا التصنيف بعد.</p>'}${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advAdd" data-id="duty" data-i="${c.id}">${ICON.plus}إضافة حالة لهذا التصنيف</button></div>`:''}</div>`:''}</section>`; }).join('');
   const tipSteps=tips?String(tips.steps||'').split('\n').map(t=>t.trim()).filter(Boolean):[];
-  const tipHtml=tips&&tipSteps.length&&!q?`<section class="panel advtips"><b>${esc(tips.title||'نصائح عامة')}</b><ol class="advs">${tipSteps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>${edit?`<div class="advf"><button type="button" class="btn sm" data-act="advEdit" data-id="${esc(tips.id)}">${ICON.edit}تعديل</button></div>`:''}</section>`:'';
+  const tipHtml=tips&&tipSteps.length&&!q?`<section class="panel advtips"><b>${esc(tips.title||'نصائح عامة')}</b><ol class="advs">${tipSteps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></section>`:'';
   if (!duty.length) return head+`<div class="panel empty"><b>لم تُضف الحالات بعد.</b></div>`;
   return head+tools+(q?'':strip+tipHtml)+(cats||`<div class="panel empty"><b>لا توجد حالة مطابقة.</b></div>`);
 }
@@ -2462,9 +2462,10 @@ const ACT = {
   advCat: id => { S.advCat = S.advCat===id ? '' : id; S.advOpen=''; render(); },
   advAdd: (sect, cat) => { sect = sect==='duty' ? 'duty' : 'admin'; openForm({title:'إضافة حالة للمستشار', submit:'إضافة', fields:advFields(cat?{cat}:{}, sect), onSubmit: async x => {
       const n=Math.max(0,...(S.guide||[]).map(y=>+y.order||0))+1; await S.db.collection('guide').doc().set(Object.assign(advVal(x, sect), {order:n, at:Date.now()})); toast('أُضيفت الحالة'); }}); },
-  advEdit: id => { const x=getAdv(id); if(!x) return; const sect=advDuty(x)?'duty':'admin'; openForm({title:'تعديل الحالة', fields:advFields(x, sect), onSubmit: async v => {
+  // التعديل والحذف في المستشار معطّلان لجميع المستخدمين
+  advEdit: id => { return; const x=getAdv(id); if(!x) return; const sect=advDuty(x)?'duty':'admin'; openForm({title:'تعديل الحالة', fields:advFields(x, sect), onSubmit: async v => {
       await S.db.doc('guide/'+id).update(Object.assign(advVal(v, sect), {updated:Date.now()})); toast('حُفظ التعديل'); }}); },
-  advDel: id => { const x=getAdv(id); if(!x) return; openConfirm(`حذف الحالة «${x.title||''}»؟`, 'حذف', async () => { await S.db.doc('guide/'+id).delete(); toast('حُذفت الحالة'); }); },
+  advDel: id => { return; const x=getAdv(id); if(!x) return; openConfirm(`حذف الحالة «${x.title||''}»؟`, 'حذف', async () => { await S.db.doc('guide/'+id).delete(); toast('حُذفت الحالة'); }); },
   pfOpen: id => go('pfile', id),
   pdAdd: pid => openForm({title:'إضافة مستند لملف الفرد', submit:'إضافة', fields:pdFields({}), onSubmit: async x => {
       const ref=S.db.collection('pdocs').doc(); const f=await hStoreFile(x, 'pd-'+ref.id);
