@@ -2362,8 +2362,8 @@
   "documents": [
    {
     "id": "tsyas3hjwag3",
-    "title": "خطاب طلب تجديد لون واطارات",
-    "type": "recv",
+    "title": "خطاب -  طلب تجديد لون واطارات",
+    "type": "other",
     "date": "1448/02/13",
     "note": "",
     "file": "c3e3ca96a595d22f3974e3b11b1dba9f",
@@ -2397,7 +2397,7 @@
   "status": "ready",
   "statusAction": "",
   "statusNote": "",
-  "updated": 1791095312692
+  "updated": 1791095462363
  },
  "v16": {
   "code": "0/16",
