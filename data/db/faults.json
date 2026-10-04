@@ -246,10 +246,14 @@
     "text": "تم رفع خطاب",
     "date": "٢٣ ربيع الآخر، ١٤٤٨ هـ",
     "at": 1791111077671,
-    "close": false
+    "close": false,
+    "lnum": "",
+    "file": "73bb2ab4e32a4b2884175d9055eafecc",
+    "db": null,
+    "fileName": "طلب اصلاح مضله .pdf"
    }
   ],
   "at": 1791111077671,
-  "updated": 1791111077671
+  "updated": 1791111110193
  }
 }
