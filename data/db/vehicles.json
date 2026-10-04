@@ -7766,7 +7766,7 @@
    {
     "id": "d1q09sd8xo0w",
     "title": "خطاب طلب تجديد لون",
-    "type": "recv",
+    "type": "other",
     "date": "1447/03/17",
     "note": "",
     "file": "5bc47e6c81ba090625d94e088c283574",
@@ -7817,7 +7817,7 @@
   "review": [],
   "status": "ready",
   "statusNote": "",
-  "updated": 1791095364320
+  "updated": 1791095381691
  },
  "v69": {
   "code": "0/69",
