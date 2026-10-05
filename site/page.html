@@ -2143,12 +2143,12 @@ const hYM = d => { const t=String(d||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧
 const HMONTHS=['','محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
 const cnParty = r => { const v=r.vehicle&&getV(r.vehicle); return [r.party?enj(r.party):'', v?vLab(v):''].filter(Boolean).join(' — '); };
 function viewConsum(){
-  const edit=S.canEdit, k=S.cnk||'foam', C=CNK[k], all=(S.consum||[]).filter(r=>(r.kind||'foam')===k);
-  const head=`<header class="ph"><div class="ph-t"><h1>الرغاوي والمحروقات</h1></div>${edit?`<button type="button" class="btn primary" data-act="cnAdd">${ICON.plus}إضافة حركة ${C.one}</button>`:''}</header>`;
+  const edit=S.canEdit, k=S.cnk||'foam', C=CNK[k], allK=(S.consum||[]).filter(r=>(r.kind||'foam')===k), all=allK.filter(r=>!r.qstat), qsAll=allK.filter(r=>r.qstat);
+  const head=`<header class="ph"><div class="ph-t"><h1>الرغاوي والمحروقات</h1></div>${edit?`<button type="button" class="btn primary" data-act="cnAdd">${ICON.plus}إضافة حركة ${C.one}</button><button type="button" class="btn" data-act="cnQAdd">${ICON.plus}إضافة إحصائية (ربع سنوي)</button>`:''}</header>`;
   const QS=cnQSel(), inQ=r=>{ if (QS==='all') return true; const m=hYM(r.date); return !m || Math.ceil(m.m/3)===QS; };
-  const tabs=`<div class="htabs" role="tablist" aria-label="النوع">${Object.entries(CNK).map(([kk,c])=>`<button type="button" role="tab" class="htab${k===kk?' on':''}" aria-selected="${k===kk}" data-act="cnTab" data-id="${kk}">${c.t}${S.loadedC?` <b>${(S.consum||[]).filter(r=>(r.kind||'foam')===kk&&(()=>{const m=hYM(r.date),cy=curHY();return (!cy||!m||m.y===cy)&&inQ(r);})()).length}</b>`:''}</button>`).join('')}</div>`;
+  const tabs=`<div class="htabs" role="tablist" aria-label="النوع">${Object.entries(CNK).map(([kk,c])=>`<button type="button" role="tab" class="htab${k===kk?' on':''}" aria-selected="${k===kk}" data-act="cnTab" data-id="${kk}">${c.t}${S.loadedC?` <b>${(S.consum||[]).filter(r=>!r.qstat&&(r.kind||'foam')===kk&&(()=>{const m=hYM(r.date),cy=curHY();return (!cy||!m||m.y===cy)&&inQ(r);})()).length}</b>`:''}</button>`).join('')}</div>`;
   if (!S.loadedC) return head+tabs+loading();
-  if (!all.length) return head+tabs+`<div class="panel empty"><b>لا توجد حركات ${C.t} بعد.</b>${edit?`سجّل الوارد (استلام ${C.one}) والصرف (للمراكز والآليات والمهام) بالتاريخ والكمية، وتظهر الإحصائية تلقائياً.`:''}</div>`;
+  if (!all.length && !qsAll.length) return head+tabs+`<div class="panel empty"><b>لا توجد حركات ${C.t} بعد.</b>${edit?`سجّل الوارد (استلام ${C.one}) والصرف (للمراكز والآليات والمهام) بالتاريخ والكمية، وتظهر الإحصائية تلقائياً.`:''}</div>`;
   const CY=curHY(), fy=String(CY), f=S.cnf||'all', q=norm(S.cnq);
   const inY = r => { const m=hYM(r.date); return !CY || !m || m.y===CY; };
   const yr=all.filter(inY), base=yr.filter(inQ);
@@ -2179,9 +2179,20 @@ function viewConsum(){
 </div>
     <div class="fchips" role="group" aria-label="تصفية">${chip('all','الكل')}${chip('in','وارد')}${chip('out','صرف')}</div>`;
   const table = list.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>الحركة</th><th>الكمية</th><th>الصنف</th><th>الجهة / الآلية</th>${k==='fuel'?'<th>المبلغ (ريال)</th>':''}<th>المرجع</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td><span class="stpill ${r.dir==='in'?'hs-ok':'hs-mid'}"><i aria-hidden="true"></i>${CNDIR[r.dir]||'—'}</span></td><td class="q"><b>${esc(nfmt(numA(r.qty)))}</b> ${esc(r.unit||C.unit)}</td><td>${r.item?esc(r.item):DASH}</td><td class="nm">${cnParty(r)?esc(cnParty(r)):DASH}${r.note?`<div class="hper">${esc(r.note)}</div>`:''}</td>${k==='fuel'?`<td class="q">${r.cost?esc(nfmt(numA(r.cost))):DASH}</td>`:''}<td class="hnum">${r.ref?onum(r.ref):DASH}</td><td>${fileBtn('consum',r,'عرض')}</td>${edit?rowActs('consum',r):''}</tr>`).join('')}</tbody></table></div>` : `<div class="panel empty"><b>لا توجد نتائج.</b></div>`;
-  return head+tabs+note+`<div class="cnstat">${tiles}</div>`+itemsT+charts+tools+table;
+  const yN=r=>+String(r.year||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))||CY;
+  const qrows=qsAll.filter(r=>yN(r)===CY && (QS==='all'||+r.q===QS)).sort((a,b)=>((+a.q||0)-(+b.q||0))||((a.at||0)-(b.at||0)));
+  const qstatT = (qrows.length||edit) ? `<section class="sec"><div class="sh"><h2>الإحصائيات الربع سنوية — ${esc(C.t)}</h2><span class="muted">${esc(arD(qrows.length))}</span></div>${qrows.length?`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>الربع</th><th>العام</th><th>الصنف</th><th>الوارد</th><th>المصروف</th><th>الرصيد</th><th>ملاحظة</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${qrows.map(r=>`<tr><td class="nm">${esc(CNQ[+r.q]||'—')}<div class="hper">${esc(cnQRange(+r.q||1))}</div></td><td class="hdate">${esc(arD(r.year||CY))}هـ</td><td>${r.item?esc(r.item):esc(C.item)}</td><td class="q">${r.qin!==undefined&&r.qin!==''?`<b>${esc(nfmt(numA(r.qin)))}</b> ${esc(r.unit||C.unit)}`:DASH}</td><td class="q">${r.qout!==undefined&&r.qout!==''?`<b>${esc(nfmt(numA(r.qout)))}</b> ${esc(r.unit||C.unit)}`:DASH}</td><td class="q">${r.qbal!==undefined&&r.qbal!==''?`<b>${esc(nfmt(numA(r.qbal)))}</b> ${esc(r.unit||C.unit)}`:DASH}</td><td>${r.note?esc(r.note):DASH}</td><td>${fileBtn('consum',r,'عرض')}</td>${edit?rowActs('consum',r):''}</tr>`).join('')}</tbody></table></div>`:`<div class="panel empty"><b>لا توجد إحصائيات ربع سنوية${QS==='all'?'':' لـ'+CNQ[QS]}.</b>أضفها بزر «إضافة إحصائية (ربع سنوي)».</div>`}</section>` : '';
+  return head+tabs+note+(all.length?`<div class="cnstat">${tiles}</div>`+itemsT+charts:'')+qstatT+(all.length?tools+table:'');
 }
-const cnFields = (r, kind) => { const k=r.kind||kind||S.cnk||'foam', C=CNK[k]; return [
+const qFields = (r, kind) => { const k=r.kind||kind||S.cnk||'foam', C=CNK[k];
+  return [
+  [{id:'kind',label:'النوع',type:'select',value:k,options:[['foam','رغاوي'],['fuel','محروقات'],['powder','طفايات البودرة']]},{id:'q',label:'الربع',type:'select',value:String(r.q||cnQCur()),options:[1,2,3,4].map(i=>[String(i),CNQ[i]+' ('+cnQRange(i)+')'])}],
+  [{id:'year',label:'العام الهجري',value:r.year||curHY()||'',required:true,placeholder:'مثال: ١٤٤٨'},{id:'item',label:'الصنف (اختياري)',value:r.item,placeholder:k==='foam'?'مثال: رغوة ٣٪':k==='fuel'?'مثال: ديزل':'مثال: طفاية بودرة (سطل)'}],
+  [{id:'qin',label:'الوارد خلال الربع',value:r.qin,placeholder:'مثال: ٨١'},{id:'qout',label:'المصروف خلال الربع',value:r.qout,placeholder:'مثال: ٣٠'}],
+  [{id:'qbal',label:'الرصيد نهاية الربع (اختياري)',value:r.qbal,placeholder:'مثال: ٥١'},{id:'unit',label:'الوحدة',value:r.unit||C.unit,placeholder:C.unit}],
+  {id:'note',label:'ملاحظة (اختياري)',value:r.note},
+  {id:'file',label:(r.file||r.db)?'استبدال المرفق (اختياري)':'مرفق الإحصائية (اختياري)',type:'file',accept:LIB_ACCEPT}]; };
+const cnFields = (r, kind) => { if (r.qstat) return qFields(r, kind); const k=r.kind||kind||S.cnk||'foam', C=CNK[k]; return [
   [{id:'kind',label:'النوع',type:'select',value:k,options:[['foam','رغاوي'],['fuel','محروقات'],['powder','طفايات البودرة']]},{id:'dir',label:'الحركة',type:'select',value:r.dir||'out',options:[['out','صرف'],['in','وارد']]}],
   [{id:'date',label:'التاريخ',value:r.date||hnum(),required:true},{id:'ref',label:'رقم السند / المرجع (اختياري)',value:r.ref}],
   [{id:'qty',label:'الكمية',value:r.qty,required:true,placeholder:'مثال: ٣٠'},{id:'unit',label:'الوحدة',value:r.unit||C.unit,placeholder:C.unit}],
@@ -2461,6 +2472,9 @@ const ACT = {
   cnAdd: () => openForm({title:'إضافة حركة '+CNK[S.cnk||'foam'].one, submit:'إضافة', fields:cnFields({}, S.cnk), onSubmit: async x => {
       const ref=S.db.collection('consum').doc(); const f=await hStoreFile(x, 'con-'+ref.id);
       await ref.set(Object.assign(hStrip(x), {file:null, db:null, fileName:''}, f, {at:Date.now()})); S.cnk=x.kind; toast('سُجّلت الحركة'); }}),
+  cnQAdd: () => openForm({title:'إضافة إحصائية (ربع سنوي) — '+CNK[S.cnk||'foam'].t, submit:'إضافة', fields:qFields({}, S.cnk), onSubmit: async x => {
+      const ref=S.db.collection('consum').doc(); const f=await hStoreFile(x, 'con-'+ref.id);
+      await ref.set(Object.assign(hStrip(x), {qstat:true, q:+x.q||1, year:String(x.year||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))}, {file:null, db:null, fileName:''}, f, {at:Date.now()})); S.cnk=x.kind; S.cnQ=String(+x.q||1); render(); toast('أُضيفت الإحصائية الربع سنوية'); }}),
   txTab: k => { S.txtab=k; S.txf='all'; S.txq=''; render(); },
   txF: k => { S.txf=k; render(); },
   letAdd: () => openForm({title:'إضافة خطاب رسمي', submit:'إضافة', fields:letFields({}), onSubmit: async x => {
