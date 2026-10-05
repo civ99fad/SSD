@@ -1113,13 +1113,13 @@ function viewSearch(raw){
 function viewDash(){
   const head=`<header class="ph"><div><div class="dsub">${esc(hijri())}</div><h1>لوحة اليوم</h1></div></header>`;
   if (!S.loadedV || !S.loadedH) return head+loading();
-  const cfg=hCfg(), d=dutyDay(), k=dutyShift(d);
-  const off=(Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0;
-  const size=cfg.shifts[k]||0, pres=shiftPres(k, dayKey(off)), miss=Math.max(0,size-pres);
+  const cfg=hCfg(), d=dutyDay(), k=CTRL?(ctNow()||''):dutyShift(d);
+  const off=CTRL?0:((Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0);
+  const size=k?cfg.shifts[k]||0:0, pres=k?shiftPres(k, dayKey(off)):0, miss=Math.max(0,size-pres);
   const c=stCounts(), rated=c.ready+c.down+c.maint, pct=rated?c.ready/rated:null;
   const trainAway=S.vehicles.filter(v=>stOf(v)==='away').length;
   const tiles=`<section class="kpis" aria-label="مؤشرات اليوم">
-    <button type="button" class="kpi main" data-act="nav" data-id="staff"><span class="kt">الوردية المناوبة</span><span class="kv">${SHN[k].replace('الوردية ','')}</span><span class="kd">٩ ص ${esc(dutyDateStr(d))} ← ٩ ص ${esc(dutyDateStr(d+1))}</span></button>
+    <button type="button" class="kpi main" data-act="nav" data-id="staff"><span class="kt">الوردية المناوبة</span><span class="kv">${k?SHN[k].replace('الوردية ',''):'—'}</span><span class="kd">${CTRL?(k?esc(ctTime(k)+' · '+ctGrpN(k)):'حدّد المجموعة المناوبة من «تعديل القوة والورديات»'):`٩ ص ${esc(dutyDateStr(d))} ← ٩ ص ${esc(dutyDateStr(d+1))}`}</span></button>
     <button type="button" class="kpi" data-act="nav" data-id="staff"><span class="kt">قوة الوردية</span><span class="kv">${arD(pres)} <small>من ${arD(size)}</small></span><span class="kbar"><i style="width:${size?Math.min(100,pres/size*100).toFixed(0):0}%"></i></span>${miss?`<span class="kd bad">نقص ${arD(miss)}</span>`:'<span class="kd">مكتملة</span>'}</button>
     <button type="button" class="kpi" data-act="dashVeh" data-id="ready"><span class="kt">جاهزية الآليات</span><span class="kv ok">${pct==null?'—':esc(pctFmt(pct))}</span><span class="kd">${arD(c.ready)} جاهزة من ${arD(rated)} لدينا</span></button>
     ${CENTER?`<button type="button" class="kpi" data-act="dashVeh" data-id="incoming"><span class="kt">دعم وارد</span><span class="kv away">${arD(incAll().length)}</span>`:`<button type="button" class="kpi" data-act="dashVeh" data-id="away"><span class="kt">آليات مدعومة لجهات أخرى</span><span class="kv away">${arD(trainAway)}</span>`}<span class="kd">متعطلة ${arD(c.down)} · صيانة ${arD(c.maint)}</span></button>
@@ -1138,7 +1138,7 @@ function renderGateSum(){
   const el=$('#wsum'); if (!el) return;
   if (!S.loadedV || !S.loadedH){ el.innerHTML=''; return; }
   const c=stCounts(), rated=c.ready+c.down+c.maint;
-  el.innerHTML=`<span>الوردية المناوبة: <b>${SHN[dutyShift()].replace('الوردية ','')}</b></span>${rated?`<span>جاهزية الآليات: <b class="ok">${esc(pctFmt(c.ready/rated))}</b></span>`:''}`;
+  el.innerHTML=`${curShift()?`<span>الوردية المناوبة: <b>${SHN[curShift()].replace('الوردية ','')}</b></span>`:''}${rated?`<span>جاهزية الآليات: <b class="ok">${esc(pctFmt(c.ready/rated))}</b></span>`:''}`;
 }
 
 function viewVehicles(){
@@ -1931,7 +1931,7 @@ function staffAlerts(){
   // النقص يُحسب على أيام مناوبة كل وردية فقط (التناوب ١ ← ٢ ← ٣، من ٩ ص إلى ٩ ص)، مع احتساب الدعم القادم من الورديات الأخرى.
   // يظهر التنبيه قبل مناوبة الوردية بيوم، ويبقى طوال مناوبتها.
   const dd=dutyDay(), off=(Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0;
-  ['1','2','3'].forEach(k=>{ const size=cfg.shifts[k]; if (!size) return;
+  if (!CTRL) ['1','2','3'].forEach(k=>{ const size=cfg.shifts[k]; if (!size) return;
     const duties=[]; for (let j=0;j<=1;j++) if (dutyShift(dd+j)===k) duties.push(j);
     const at = j => { const dk=dayKey(off+j); return {j, pres:shiftPres(k,dk), sup:(S.staff||[]).filter(p=>effSt(p,dk)==='support' && String(p.toShift||'')===k)}; };
     const when = j => j===0 ? 'في مناوبتها الحالية' : off<0 ? `في مناوبتها اليوم (تستلم ٩:٠٠ ص ${dutyDateStr(dd+j)})` : `غداً في مناوبتها يوم ${dutyDateStr(dd+j)} (${dayStr(off+j)})`;
@@ -1946,15 +1946,27 @@ function alertsPanel(){
   const ico={end:'✓',soon:'⏳',info:'ℹ',shift:'⚠'};
   return `<section class="panel halerts" aria-label="تنبيهات الكادر البشري"><h2>تنبيهات <b>${a.length}</b></h2><ul>${a.map(x=>`<li class="al-${x.lvl}"><span class="alic" aria-hidden="true">${ico[x.lvl]}</span><span class="grow">${esc(x.text)}</span>${x.lvl==='end'&&S.canEdit?`<button type="button" class="btn sm" data-act="hBackOk" data-id="${esc(x.id)}">اعتماد العودة</button>`:''}</li>`).join('')}</ul></section>`;
 }
-const SHN = {'1':'الوردية الأولى','2':'الوردية الثانية','3':'الوردية الثالثة'};
+const SHN = {'1':'الوردية الأولى','2':'الوردية الثانية','3':'الوردية الثالثة','4':'الوردية الرابعة','5':'الوردية الخامسة','6':'الوردية السادسة'};
+// مركز التحكم والتوجيه: ٦ ورديات في مجموعتين؛ كل وردية ٨ ساعات (٨ص–٤م، ٤م–١٢ل، ١٢ل–٨ص) لمدة يومين ثم راحة ٦٤ ساعة،
+// فتتناوب المجموعتان كل يومين (دورة ٤ أيام). يُحدَّد يوم البداية من «تعديل القوة والورديات» (ctAnchor = يوم بداية المجموعة الأولى)
+const SHKEYS = CTRL ? ['1','2','3','4','5','6'] : ['1','2','3'];
+const CT_H = ['٨:٠٠ ص – ٤:٠٠ م','٤:٠٠ م – ١٢:٠٠ ل','١٢:٠٠ ل – ٨:٠٠ ص'];
+const ctTime = k => CT_H[(+k-1)%3];
+const ctGrpN = k => +k<=3 ? 'المجموعة الأولى' : 'المجموعة الثانية';
+const ctDay = (t=Date.now()) => Math.floor((t + 3*36e5 - 8*36e5)/864e5);
+const ctAnchor = () => { const a=(S.hrs||{}).ctAnchor; return a!=null && a!=='' && !isNaN(+a) ? +a : null; };
+const ctGroupOn = d => { const a=ctAnchor(); if (a==null) return 0; return ((((d-a)%4)+4)%4) < 2 ? 1 : 2; };
+const ctNow = (t=Date.now()) => { const g=ctGroupOn(ctDay(t)); if (!g) return null; const h=new Date(t+3*36e5).getUTCHours(); const i = h>=8&&h<16 ? 0 : h>=16 ? 1 : 2; return String((g-1)*3+i+1); };
+const curShift = () => CTRL ? ctNow() : dutyShift();
 /* نظام الورديات: كل وردية ٢٤ ساعة من ٩ ص إلى ٩ ص، بالتناوب ١ ← ٢ ← ٣ (الثلاثاء ٢٩/٩/٢٠٢٦ = الوردية الثالثة) */
 const DUTY_H = 9, DUTY_TZ_MS = 3*36e5, DUTY_ANCHOR = Date.UTC(2026,8,29)/864e5, DUTY_ANCHOR_SHIFT = 3;
 const dutyDay = (t=Date.now()) => Math.floor((t + DUTY_TZ_MS - DUTY_H*36e5)/864e5);
 const dutyShift = (d=dutyDay()) => String((((DUTY_ANCHOR_SHIFT-1 + d - DUTY_ANCHOR) % 3) + 3) % 3 + 1);
 const dutyDateStr = d => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-arab',{weekday:'long',day:'numeric',month:'numeric',timeZone:'UTC'}).format(new Date(d*864e5)); } catch(e){ return ''; } };
 function dutyPanel(){
-  const cfg=hCfg(), d=dutyDay(), k=dutyShift(d), nk=dutyShift(d+1);
-  const off = (Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0;
+  if (CTRL && !ctNow()) return `<section class="panel duty" aria-label="الوردية المناوبة"><div class="dlbl">الوردية المناوبة الآن</div><p class="rnote" style="margin:8px 0 0">حدّد المجموعة المناوبة اليوم من زر «تعديل القوة والورديات» ليُحسب تناوب الورديات الست تلقائياً (٨ ساعات لمدة يومين ثم راحة ٦٤ ساعة).</p></section>`;
+  const cfg=hCfg(), d=dutyDay(), k=CTRL?ctNow():dutyShift(d), nk=CTRL?ctNow(Date.now()+8*36e5):dutyShift(d+1);
+  const off = CTRL ? 0 : ((Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0);
   const size=cfg.shifts[k]||0, pres=shiftPres(k, dayKey(off)), sup=shiftSupIn(k, dayKey(off)), miss=Math.max(0,size-pres);
   const pct = size ? Math.round(pres/size*100) : null;
   const dk=dayKey(off), own=staffOf(k), cases=own.filter(p=>effSt(p,dk)!=='present'), supIn=(S.staff||[]).filter(p=>effSt(p,dk)==='support' && String(p.toShift||'')===k), vac=Math.max(0,size-own.length);
@@ -1963,22 +1975,23 @@ function dutyPanel(){
   const cnt = cases.length+vac;
   const casesHtml = `<div class="dcases"><h3>حالات الوردية <b>${arD(cnt)}</b><span class="hper" style="font-weight:500">الرقم بجانب الاسم = رقمه بتشكيل الوردية</span></h3>${cnt?`<ul>${cases.map(p=>`<li><span class="dtno" title="رقمه بالتشكيل">${arD(own.indexOf(p)+1)}</span><span class="dn">${esc(pLabel(p))}</span>${p.num?`<span class="hper">الرقم العسكري ${esc(p.num)}</span>`:''}<span class="stpill ${HCLS[effSt(p,dk)]}"><i aria-hidden="true"></i>${esc(caseLbl(p))}</span>${effSt(p,dk)==='proxy'?`<span class="hper">البديل: <b>${esc(subName(p)||'غير محدد')}</b></span>`:''}${per(p)?`<span class="hper">${esc(per(p))}</span>`:''}${p.note?`<span class="hper">— ${esc(p.note)}</span>`:''}</li>`).join('')}${vac?`<li><span class="dn">خانات شاغرة</span><span class="stpill st-none"><i aria-hidden="true"></i>${arD(vac)}</span></li>`:''}</ul>`:'<span class="dok">لا توجد حالات — الوردية مكتملة</span>'}${supIn.length?`<ul style="margin-top:6px">${supIn.map(p=>`<li><span class="dn">${esc(pLabel(p))}</span><span class="stpill hs-sup"><i aria-hidden="true"></i>دعم من ${esc(SHN[String(p.shift||'1')])}</span></li>`).join('')}</ul>`:''}</div>`;
   return `<section class="panel duty" aria-label="وردية اليوم">
-    <div class="dtop"><div><div class="dlbl">الوردية المناوبة اليوم <span class="dlive"><i></i>على رأس العمل الآن</span></div>
+    <div class="dtop"><div><div class="dlbl">${CTRL?'الوردية المناوبة الآن':'الوردية المناوبة اليوم'} <span class="dlive"><i></i>على رأس العمل الآن</span></div>
       <div class="dname">${SHN[k]}</div>
-      <div class="dtime">من ٩:٠٠ ص ${esc(dutyDateStr(d))} إلى ٩:٠٠ ص ${esc(dutyDateStr(d+1))} (٢٤ ساعة)</div></div>
+      <div class="dtime">${CTRL?esc(ctTime(k)+' (٨ ساعات) · '+ctGrpN(k)):`من ٩:٠٠ ص ${esc(dutyDateStr(d))} إلى ٩:٠٠ ص ${esc(dutyDateStr(d+1))} (٢٤ ساعة)`}</div></div>
       <dl class="rstats"><div><dt>قوة الوردية</dt><dd>${arD(size)}</dd></div><div><dt><i class="dot hd-ok"></i>الموجود</dt><dd>${arD(pres)}</dd></div>${sup?`<div><dt><i class="dot hd-mid"></i>منهم دعم</dt><dd>${arD(sup)}</dd></div>`:''}<div><dt><i class="dot hd-bad"></i>النقص</dt><dd${miss?' class="bad"':''}>${arD(miss)}</dd></div>${pct!=null?`<div><dt>النسبة</dt><dd>${arD(pct)}٪</dd></div>`:''}</dl></div>
     ${casesHtml}
-    <p class="dnext">الوردية القادمة: <b>${SHN[nk]}</b> — تستلم ٩:٠٠ ص ${esc(dutyDateStr(d+1))}، ثم ${SHN[dutyShift(d+2)]} ${esc(dutyDateStr(d+2))}.</p>
+    <p class="dnext">${CTRL?`الوردية القادمة: <b>${SHN[nk]}</b> (${esc(ctTime(nk))})، ثم ${SHN[ctNow(Date.now()+16*36e5)]}.`:`الوردية القادمة: <b>${SHN[nk]}</b> — تستلم ٩:٠٠ ص ${esc(dutyDateStr(d+1))}، ثم ${SHN[dutyShift(d+2)]} ${esc(dutyDateStr(d+2))}.`}</p>
   </section>`;
 }
-const SHOPTS = [['1','الوردية الأولى'],['2','الوردية الثانية'],['3','الوردية الثالثة']];
+const SHOPTS = SHKEYS.map(k=>[k,SHN[k]]);
 function hCfg(){ const h=S.hrs||{}, s=h.shifts||{}, n=(v,d)=>(v!=null&&v!==''&&!isNaN(+v))?+v:d;
-  return {strength:n(h.strength,17), shifts:{'1':n(s['1'],6),'2':n(s['2'],6),'3':n(s['3'],5)}}; }
+  const sh = {}; SHKEYS.forEach(k=>{ sh[k]=n(s[k], CTRL?5:({'1':6,'2':6,'3':5})[k]); });
+  return {strength:n(h.strength,17), shifts:sh}; }
 const getP = id => (S.staff||[]).find(p=>p.id===id);
 const pLabel = p => (p.rank?p.rank+' / ':'')+(p.name||'فرد');
 const byOrder = (a,b)=>((a.order||0)-(b.order||0))||((a.at||0)-(b.at||0));
 const staffOf = k => (S.staff||[]).filter(p=>String(p.shift||'1')===k).sort(byOrder);
-const staffOpts = () => ['1','2','3'].flatMap(k=>staffOf(k)).map(p=>[p.id,pLabel(p)+(p.num?' — '+p.num:'')]);
+const staffOpts = () => SHKEYS.flatMap(k=>staffOf(k)).map(p=>[p.id,pLabel(p)+(p.num?' — '+p.num:'')]);
 function personField(id,label,rec,req){
   if ((S.staff||[]).length) return {id, label, type:'select', value:(rec&&rec[id])||'', options:[['','— اختر —'],...staffOpts()], required:req};
   return {id:id+'N', label, value:(rec&&rec[id+'N'])||'', required:req, placeholder:'مثال: رقيب / فهد الشمري'};
@@ -2014,14 +2027,14 @@ function hSummary(){
 }
 function hTeam(){
   const edit=S.canEdit, cfg=hCfg();
-  return ['1','2','3'].map(k=>{
+  return SHKEYS.map(k=>{
     const ps=staffOf(k), n=Math.max(cfg.shifts[k], ps.length), pres=shiftPres(k, dayKey(0)), supIn=shiftSupIn(k, dayKey(0));
     const rows=Array.from({length:n},(_,i)=>{ const p=ps[i];
       if (!p) return `<tr class="vac"><td class="n">${i+1}</td><td colspan="6">خانة شاغرة</td>${edit?`<td class="ra"><button type="button" class="btn sm" data-act="hAdd" data-id="${k}">${ICON.plus}إضافة</button></td>`:''}</tr>`;
       const per = hStOf(p)!=='present' && (p.from||p.to) ? `${p.from?'من '+esc(p.from):''}${p.from&&p.to?' ':''}${p.to?'إلى '+esc(p.to):''}` : '';
       const sb = hStOf(p)==='proxy' && subName(p) ? `<div>البديل: ${esc(subName(p))}</div>` : '';
       return `<tr><td class="n">${i+1}</td><td class="hdate">${p.rank?esc(p.rank):DASH}</td><td class="nm">${esc(p.name||'فرد')}</td><td class="hnum">${p.num?esc(p.num):DASH}</td><td class="hdate">${p.spec?esc(p.spec):DASH}</td><td>${hPill(p)}</td><td class="hper">${per}${sb}${p.note?`<div>${esc(p.note)}</div>`:''}${!per&&!sb&&!p.note&&!stAttach(p)?DASH:''}${stAttach(p)}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="hEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(pLabel(p))}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(pLabel(p))}">${ICON.del}</button></td>`:''}</tr>`; }).join('');
-    return `<section class="sec"><div class="sh"><h2>${SHN[k]}</h2>${k===dutyShift()?'<span class="onduty"><i></i>مناوبة اليوم</span>':''}<span class="muted">${pres} على رأس العمل من ${cfg.shifts[k]}${supIn?` (منهم ${supIn} دعم من وردية أخرى)`:''}</span></div>
+    return `<section class="sec"><div class="sh"><h2>${SHN[k]}${CTRL?` <small class="muted" style="font-weight:600;font-size:13px">${esc(ctGrpN(k)+' · '+ctTime(k))}</small>`:''}</h2>${k===curShift()?`<span class="onduty"><i></i>${CTRL?'على رأس العمل الآن':'مناوبة اليوم'}</span>`:''}<span class="muted">${pres} على رأس العمل من ${cfg.shifts[k]}${supIn?` (منهم ${supIn} دعم من وردية أخرى)`:''}</span></div>
       <div class="panel hstaff" style="overflow-x:auto"><table><thead><tr><th>م</th><th>الرتبة</th><th>الاسم</th><th>الرقم العسكري</th><th>التخصص</th><th>الحالة</th><th>الفترة / ملاحظة</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${rows||`<tr class="vac"><td colspan="8">لا توجد خانات في هذه الوردية.</td></tr>`}</tbody></table></div></section>`;
   }).join('');
 }
@@ -2309,7 +2322,7 @@ function viewPFiles(){
   const n = id => pdocsOf(id).length + (S.absences||[]).filter(r=>r.p===id).length + (S.rewards||[]).filter(r=>r.p===id).length;
   const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الأفراد</span>${ICON.search}<input id="pfq" type="search" placeholder="ابحث بالاسم أو الرقم العسكري أو الرتبة" value="${esc(S.pfq||'')}"></label></div>`;
   if (!list.length) return head+tools+`<div class="panel empty"><b>لا يوجد فرد مطابق.</b></div>`;
-  return head+tools+['1','2','3',''].map(k=>{ const L=list.filter(p=>(['1','2','3'].includes(String(p.shift))?String(p.shift):'')===k); if(!L.length) return '';
+  return head+tools+[...SHKEYS,''].map(k=>{ const L=list.filter(p=>(SHKEYS.includes(String(p.shift))?String(p.shift):'')===k); if(!L.length) return '';
     return `<section class="sec"><div class="sh"><h2>${k?SHN[k]:'بدون وردية'}</h2><span class="muted">${esc(arD(L.length))}</span></div><div class="panel docs">${L.map(p=>{ const c=n(p.id);
       return `<button type="button" class="drow pfrow" data-act="pfOpen" data-id="${esc(p.id)}"><div class="file-ic sm">${ICON.doc}</div><div class="file-t"><b>${esc(pLabel(p))}</b><small>${p.num?`<span>الرقم ${esc(p.num)}</span>`:''}${p.spec?`<span>${esc(p.spec)}</span>`:''}${p.lic?`<span>رخصة: ${esc(p.lic)}</span>`:''}<span>${c?esc(arD(c))+' سجل':'لا توجد سجلات'}</span></small></div><span class="link">فتح الملف ${ICON.arrow}</span></button>`; }).join('')}</div></section>`; }).join('');
 }
@@ -2475,10 +2488,12 @@ const ACT = {
   hMk: k => { S.hmk=k; render(); },
   hSet: () => { const c=hCfg(); openForm({title:'قوة المركز والورديات', fields:[
       {id:'strength',label:'قوة المركز (عدد الأفراد)',type:'number',value:String(c.strength),required:true},
-      [{id:'s1',label:'خانات الوردية الأولى',type:'number',value:String(c.shifts['1']),required:true},{id:'s2',label:'خانات الوردية الثانية',type:'number',value:String(c.shifts['2']),required:true}],
-      {id:'s3',label:'خانات الوردية الثالثة',type:'number',value:String(c.shifts['3']),required:true}
-    ], onSubmit: async x => { const n=v=>Math.max(0,Math.round(+v||0));
-      await S.db.doc('settings/hr').set({strength:n(x.strength), shifts:{'1':n(x.s1),'2':n(x.s2),'3':n(x.s3)}, updated:Date.now()}); toast('حُفظت قوة المركز'); }}); },
+      ...SHKEYS.map(k=>({id:'s'+k,label:'خانات '+SHN[k],type:'number',value:String(c.shifts[k]),required:true})),
+      ...(CTRL?[[{id:'cgrp',label:'المجموعة المناوبة اليوم',type:'select',value:'',options:[['','بدون تغيير'+(ctAnchor()!=null?' (المحدد حالياً)':'')],['1','المجموعة الأولى (الورديات ١–٣)'],['2','المجموعة الثانية (الورديات ٤–٦)']]},{id:'cday',label:'يوم مناوبتها',type:'select',value:'1',options:[['1','اليوم الأول من اليومين'],['2','اليوم الثاني من اليومين']]}]]:[])
+    ], onSubmit: async x => { const n=v=>Math.max(0,Math.round(+v||0)); const sh={}; SHKEYS.forEach(k=>{ sh[k]=n(x['s'+k]); });
+      const o={strength:n(x.strength), shifts:sh, updated:Date.now()};
+      if (CTRL){ const a=ctAnchor(); if (x.cgrp) o.ctAnchor = ctDay() - ((+x.cgrp-1)*2 + (+x.cday-1)); else if (a!=null) o.ctAnchor=a; }
+      await S.db.doc('settings/hr').set(o); toast('حُفظت قوة المركز'); }}); },
   hAdd: shift => openForm({title:'إضافة فرد — '+SHN[shift||'1'], submit:'إضافة', fields:staffFields({}, shift), onSubmit: async x => {
       const ref=S.db.collection('staff').doc(); const now=Date.now();
       await ref.set(Object.assign(staffClean(x), {order:nextOrder(staffOf(x.shift)), at:now, updated:now}));
