@@ -139,6 +139,7 @@ a.gbar{text-decoration:none}
   $('logo2').innerHTML = logo;
   const icons = {
     isnad: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>',
+    control: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/><path d="M19.5 21a4 4 0 0 1-4 2H13"/></svg>',
     other: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>',
   };
   // الهيكل: شعبة الجنوب، شعبة الشمال، مركز المواد الخطرة، قسم الدعم والإسناد، ثم المراكز الخارجية (بلا صفحات بعد)
@@ -153,7 +154,7 @@ a.gbar{text-decoration:none}
   $('units').innerHTML =
     group('south', 'شعبة الجنوب', 'شراف · الصناعية · الدائري · الجبل', pick(south)) +
     group('north', 'شعبة الشمال', 'البلد · المنتزه · العزيزية · أجا', pick(north)) +
-    ['hazmat', 'isnad'].filter((i) => byId[i]).map((i) => `<a class="gbar" href="${esc(i)}.html"><span class="ic">${icons[i] || icons.other}</span><span class="tx"><b>${esc(byId[i].name)}</b><small>${i === 'isnad' ? 'قسم' : 'مركز'}</small></span><span class="go">دخول ←</span></a>`).join('') +
+    ['hazmat', 'isnad', 'control'].filter((i) => byId[i]).map((i) => `<a class="gbar" href="${esc(i)}.html"><span class="ic">${icons[i] || icons.other}</span><span class="tx"><b>${esc(byId[i].name)}</b><small>${i === 'isnad' ? 'قسم' : 'مركز'}</small></span><span class="go">دخول ←</span></a>`).join('') +
     group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', pick(['rawda', 'jubba', 'khatta']));
   $('units').addEventListener('click', (e) => {
     const b = e.target.closest('.gbar'); if (!b) return;
