@@ -331,9 +331,12 @@
   "rank": "رئيس رقباء",
   "shift": "6",
   "spec": "منسق عمليات",
-  "status": "present",
+  "status": "attach",
   "to": "",
-  "updated": 1791189964572
+  "updated": 1791192105140,
+  "sub": "",
+  "toShift": "",
+  "subN": ""
  },
  "c6-02": {
   "at": 1791189964572,
