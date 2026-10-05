@@ -545,6 +545,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .advs{margin:0 0 12px;padding-inline-start:22px;line-height:1.9}
 .advf{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .onum{display:inline-flex;direction:rtl;gap:2px;white-space:nowrap}.onum .osl{opacity:.7}
+.phb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .advtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
 .advtile{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:22px 22px 18px;background:var(--surface);border:2px solid var(--edge);border-radius:16px;transition:box-shadow .15s,transform .15s}
 .advtile:hover,.advtile:focus-visible{box-shadow:0 6px 22px rgba(0,0,0,.12);transform:translateY(-2px)}
@@ -2144,7 +2145,7 @@ const HMONTHS=['','محرم','صفر','ربيع الأول','ربيع الآخر
 const cnParty = r => { const v=r.vehicle&&getV(r.vehicle); return [r.party?enj(r.party):'', v?vLab(v):''].filter(Boolean).join(' — '); };
 function viewConsum(){
   const edit=S.canEdit, k=S.cnk||'foam', C=CNK[k], allK=(S.consum||[]).filter(r=>(r.kind||'foam')===k), all=allK.filter(r=>!r.qstat), qsAll=allK.filter(r=>r.qstat);
-  const head=`<header class="ph"><div class="ph-t"><h1>الرغاوي والمحروقات</h1></div>${edit?`<button type="button" class="btn primary" data-act="cnAdd">${ICON.plus}إضافة حركة ${C.one}</button><button type="button" class="btn" data-act="cnQAdd">${ICON.plus}إضافة إحصائية (ربع سنوي)</button>`:''}</header>`;
+  const head=`<header class="ph"><div class="ph-t"><h1>الرغاوي والمحروقات</h1></div>${edit?`<div class="phb"><button type="button" class="btn primary" data-act="cnAdd">${ICON.plus}إضافة حركة ${C.one}</button><button type="button" class="btn" data-act="cnQAdd">${ICON.plus}إضافة إحصائية (ربع سنوي)</button></div>`:''}</header>`;
   const QS=cnQSel(), inQ=r=>{ if (QS==='all') return true; const m=hYM(r.date); return !m || Math.ceil(m.m/3)===QS; };
   const tabs=`<div class="htabs" role="tablist" aria-label="النوع">${Object.entries(CNK).map(([kk,c])=>`<button type="button" role="tab" class="htab${k===kk?' on':''}" aria-selected="${k===kk}" data-act="cnTab" data-id="${kk}">${c.t}${S.loadedC?` <b>${(S.consum||[]).filter(r=>!r.qstat&&(r.kind||'foam')===kk&&(()=>{const m=hYM(r.date),cy=curHY();return (!cy||!m||m.y===cy)&&inQ(r);})()).length}</b>`:''}</button>`).join('')}</div>`;
   if (!S.loadedC) return head+tabs+loading();
