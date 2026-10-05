@@ -300,7 +300,9 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     const c = { ready: 0, down: 0, maint: 0, away: 0, none: 0 };
     V.forEach((v) => c[stOf(v)]++);
     const rated = c.ready + c.down + c.maint, pct = rated ? c.ready / rated : null;
-    const W = V.filter(isWater), P = W.filter(isProp), A = W.filter((v) => !isProp(v));
+    // الوايتات الواردة دعماً من الإسناد تُحسب جاهزة لدى المركز (مع وسمها بأنها دعم)
+    const incW = arr('incoming').filter(isWater).map((v) => ({ ...v, status: 'ready', sup: true }));
+    const W = V.filter(isWater).concat(incW), P = W.filter(isProp), A = W.filter((v) => !isProp(v));
     const rd = (L) => L.filter((v) => stOf(v) === 'ready');
     const hc = hCfg(((C.settings || {}).hr) || {}), off = dutyOff(), dd = dutyDay();
     const k = dutyShift(dd);
@@ -310,7 +312,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     const lv = empty ? 'none' : pct != null && pct < 0.5 ? 'bad' : pct != null && pct < 0.8 ? 'mid' : 'ok';
     return {
       u, ok: !!d, empty, lv, V, c, rated, pct,
-      water: { all: [rd(W), W], prop: [rd(P), P], aydi: [rd(A), A] },
+      water: { all: [rd(W), W], prop: [rd(P), P], aydi: [rd(A), A] }, waterSup: incW.length,
       staffN: staff.length, size, pres,
       faults: faults.filter(fOpen), eqOut: equip.filter(eqOut),
       notReady: V.filter((v) => ['down', 'maint'].includes(stOf(v))).sort((a, b) => (stOf(a) === 'down' ? 0 : 1) - (stOf(b) === 'down' ? 0 : 1)),
@@ -361,7 +363,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
         <div><dt>متعطلة بالمقر</dt><dd class="${x.c.down ? 'c-bad' : ''}">${arD(x.c.down)}</dd></div>
         <div><dt>في الصيانة</dt><dd class="${x.c.maint ? 'c-mid' : ''}">${arD(x.c.maint)}</dd></div>
         ${x.center ? `<div><dt>دعم وارد</dt><dd class="${x.inc.length ? 'c-away' : ''}">${arD(x.inc.length)}</dd></div>` : `<div><dt>مدعومة لجهات</dt><dd class="${x.c.away ? 'c-away' : ''}">${arD(x.c.away)}</dd></div>`}
-        <div><dt>الوايتات الجاهزة</dt><dd>${w[1].length ? `${arD(w[0].length)} من ${arD(w[1].length)}` : '—'}</dd></div>
+        <div><dt>الوايتات الجاهزة</dt><dd>${w[1].length ? `${arD(w[0].length)} من ${arD(w[1].length)}` : '—'}${x.waterSup ? `<small class="c-away" style="display:block;font-weight:600">منها ${arD(x.waterSup)} دعم</small>` : ''}</dd></div>
         <div><dt>قوة الوردية</dt><dd>${shiftTxt(x)}</dd></div>
         <div><dt>الأفراد</dt><dd>${arD(x.staffN)}</dd></div>
         <div><dt>أعطال المبنى</dt><dd class="${x.faults.length ? 'c-mid' : ''}">${arD(x.faults.length)}</dd></div>
@@ -372,7 +374,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 
   function totals() {
     const t = { c: { ready: 0, down: 0, maint: 0, away: 0, none: 0 }, size: 0, pres: 0, faults: 0, eq: 0, wr: 0, wt: 0, V: 0 };
-    R.forEach((x) => { for (const s in t.c) t.c[s] += x.c[s]; if (x.size) { t.size += x.size; t.pres += x.pres; } t.faults += x.faults.length; t.eq += x.eqOut.length; t.wr += x.water.all[0].length; t.wt += x.water.all[1].length; t.V += x.V.length; });
+    R.forEach((x) => { for (const s in t.c) t.c[s] += x.c[s]; if (x.size) { t.size += x.size; t.pres += x.pres; } t.faults += x.faults.length; t.eq += x.eqOut.length; t.wr += x.water.all[0].length; t.wt += x.water.all[1].length - (x.waterSup || 0); /* وايت الدعم مُحصى أصلاً عند الإسناد */ t.V += x.V.length; });
     t.rated = t.c.ready + t.c.down + t.c.maint; t.pct = t.rated ? t.c.ready / t.rated : null;
     return t;
   }
