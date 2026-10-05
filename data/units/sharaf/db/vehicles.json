@@ -61,19 +61,29 @@
   "make": "",
   "plate": "أ ن ب 3364",
   "model": "2013",
-  "status": "ready",
-  "statusNote": "",
-  "statusAction": "",
+  "status": "maint",
+  "statusNote": "مشكلة في القير",
+  "statusAction": "تم التحويل",
   "photos": [
    "b4860bf31e60472f107e675e5c91c0ca"
   ],
   "contentPhotos": [],
-  "documents": [],
+  "documents": [
+   {
+    "id": "3oaftgtpuvji",
+    "type": "status",
+    "date": "٢٤ربيعالآخر،١٤٤٨هـ",
+    "title": "في الصيانة — مشكلة في القير",
+    "note": "الإجراء المتخذ: تم التحويل · الحالة السابقة: جاهزة",
+    "at": 1791184253743,
+    "by": "civ99fad"
+   }
+  ],
   "inventory": [],
   "history": [],
   "notes": [],
   "created": 1790773043239,
-  "updated": 1790773043239,
+  "updated": 1791184253743,
   "keepBlobs": [
    "b4860bf31e60472f107e675e5c91c0ca"
   ]
