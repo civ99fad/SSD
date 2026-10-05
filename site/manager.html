@@ -275,7 +275,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   const stOf = (v) => (STATUS[v.status] && v.status !== 'none' ? v.status : 'none');
   const ENJ = ['','البلد','شراف','المنتزه','الصناعية','العزيزية','الدائري','أجا','الجبل','التدخل','الخطة'];
   const enj = (t) => String(t || '').replace(/(إنجاز|انجاز)\s*([0-9٠-٩]+)(?![0-9٠-٩]|\s*\()/g, (m, a, n) => { const k = +String(n).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)); return ENJ[k] && !String(t).includes(ENJ[k]) ? `${m} (${ENJ[k]})` : m; });
-  const HST = { present: 'موجود', absent: 'غياب', lateP: 'تأخير بإذن', lateN: 'تأخير بدون إذن', leave: 'إجازة', permit: 'رخصة', support: 'دعم وردية', proxy: 'وكالة', course: 'دورة', assign: 'تكليف', attach: 'إلحاق' };
+  const HST = { present: 'موجود', absent: 'غياب', lateP: 'تأخير بإذن', lateN: 'تأخير بدون إذن', leave: 'إجازة', permit: 'رخصة', support: 'دعم وردية', proxy: 'وكالة', course: 'دورة', assign: 'تكليف', attach: 'إلحاق', mission: 'مهمة' };
   const hStOf = (p) => (HST[p.status] ? p.status : 'present');
   function effSt(p, dk) { const s = hStOf(p); if (s === 'present' || !dk) return s; const f = p.from ? hkey(p.from) : 0, t = p.to ? hkey(p.to) : 0; if (f && dk < f) return 'present'; if (t && dk > t) return 'present'; return s; }
   const shiftPres = (staff, k, dk) => staff.filter((p) => { const e = effSt(p, dk), own = String(p.shift || '1') === k; return (own && (e === 'present' || e === 'proxy' || e === 'lateP' || e === 'lateN')) || (e === 'support' && String(p.toShift || '') === k); }).length;

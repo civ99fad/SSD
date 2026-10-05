@@ -623,6 +623,7 @@ html:not(.u-ctrl) .ccc{display:none!important}
 .medit.free .mpage{cursor:crosshair}
 .mf{position:absolute;box-sizing:border-box;display:flex;align-items:center;font-family:'Tajawal',"Segoe UI",Tahoma,sans-serif;font-weight:700;font-size:calc(var(--fs) * var(--k,1));line-height:1.15;color:#000;white-space:nowrap;overflow:hidden;padding:0 .35cqw;background:rgba(255,224,102,.3);outline:1px dashed rgba(29,91,216,.5);border-radius:2px;cursor:text}
 .mf.mc{justify-content:center;text-align:center}
+.mf.mtr{background:transparent;outline:1px dashed rgba(0,0,0,.35)}.mf.mtr:focus{background:rgba(255,224,102,.35)}
 .mf:empty::before{content:attr(data-ph);color:rgba(0,0,0,.3);font-weight:400}
 .mf:focus{background:rgba(255,224,102,.55);outline:2px solid #1d5bd8}
 .mck{position:absolute;box-sizing:border-box;padding:0;margin:0;border:.16cqw solid #111;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;color:#000;border-radius:1px}
@@ -1598,7 +1599,7 @@ function minOpen(id, blank){
   const order=(a,b)=>((a.p||0)-(b.p||0)) || (Math.round(a.y/18)-Math.round(b.y/18)) || (b.x+b.w-a.x-a.w); // ترتيب القراءة من اليمين للتنقل بزر Tab
   const field=f=>{ const st=`left:${pc(f.x,W)};top:${pc(f.y,H)};width:${pc(f.w,W)};height:${pc(f.h,H)}`;
     return f.t==='c' ? `<button type="button" class="mck" style="${st}" aria-pressed="false" aria-label="خانة اختيار"${blank?' disabled':''}></button>`
-      : `<div class="mf${f.c?' mc':''}" style="${st};--fs:${fs(f.h)}" data-v="${esc(f.v||'')}" data-ph="${esc(f.ph||'')}"${blank?'':' contenteditable="true"'} spellcheck="false" dir="auto">${esc(f.v||'')}</div>`; };
+      : `<div class="mf${f.c?' mc':''}${f.tr?' mtr':''}" style="${st};--fs:${fs(f.h)}" data-v="${esc(f.v||'')}" data-ph="${esc(f.ph||'')}"${blank?'':' contenteditable="true"'} spellcheck="false" dir="auto">${esc(f.v||'')}</div>`; };
   const el=document.createElement('div'); el.id='medit'; el.className='medit'+(blank?' mblank':''); el.dir='rtl';
   el.innerHTML=`<div class="mbar"><b class="mtitle">${esc(p.title||'محضر')}</b><span class="mhint">${blank?'نسخة فارغة جاهزة للطباعة':'اضغط على أي خانة واكتب فيها، ثم اضغط «طباعة»'}</span><span class="grow"></span>
     ${blank?'':`<button type="button" class="btn" data-m="free" aria-pressed="false" title="اضغط الزر ثم اضغط على أي مكان في المحضر لإضافة نص فيه">${ICON.plus}نص في أي مكان</button><button type="button" class="btn" data-m="clear">مسح الخانات</button>`}
@@ -1901,8 +1902,8 @@ function viewWarehouse(id){
 }
 
 /* ---------- human staff (الكادر البشري) ---------- */
-const HST = {present:'موجود', absent:'غياب', lateP:'تأخير بإذن', lateN:'تأخير بدون إذن', leave:'إجازة', permit:'رخصة', support:'دعم وردية', proxy:'وكالة', course:'دورة', assign:'تكليف', attach:'إلحاق'};
-const HCLS = {present:'hs-ok', absent:'hs-bad', lateP:'hs-mid', lateN:'hs-bad', leave:'hs-in', permit:'hs-in', support:'hs-sup', proxy:'hs-sup', course:'hs-mid', assign:'hs-mid', attach:'hs-mid'};
+const HST = {present:'موجود', absent:'غياب', lateP:'تأخير بإذن', lateN:'تأخير بدون إذن', leave:'إجازة', permit:'رخصة', support:'دعم وردية', proxy:'وكالة', course:'دورة', assign:'تكليف', attach:'إلحاق', mission:'مهمة'};
+const HCLS = {present:'hs-ok', absent:'hs-bad', lateP:'hs-mid', lateN:'hs-bad', leave:'hs-in', permit:'hs-in', support:'hs-sup', proxy:'hs-sup', course:'hs-mid', assign:'hs-mid', attach:'hs-mid', mission:'hs-mid'};
 const hStOf = p => HST[p.status] ? p.status : 'present';
 const dayKey = n => { try { return HFN ? hkey(HFN.format(new Date(Date.now()+n*864e5))) : 0; } catch(e){ return 0; } };
 const dayStr = n => { try { return HFN ? HFN.format(new Date(Date.now()+n*864e5)).replace(/[\u200f\s]/g,'').replace(/هـ?$/,'')+'هـ' : ''; } catch(e){ return ''; } };
@@ -2011,13 +2012,13 @@ function viewStaff(){
   return head+alertsPanel()+tabs+body;
 }
 function hSummary(){
-  const cfg=hCfg(), st=S.staff||[], c={present:0,absent:0,lateP:0,lateN:0,leave:0,permit:0,course:0,assign:0,attach:0};
+  const cfg=hCfg(), st=S.staff||[], c={present:0,absent:0,lateP:0,lateN:0,leave:0,permit:0,course:0,assign:0,attach:0,mission:0};
   st.forEach(p=>{ const e0=effNow(p), e=(e0==='support'||e0==='proxy')?'present':e0; c[e]=(c[e]||0)+1; });
-  const away=c.leave+c.permit+c.course+c.assign+c.attach, vac=Math.max(0,cfg.strength-st.length), base=Math.max(cfg.strength,st.length)||1;
+  const away=c.leave+c.permit+c.course+c.assign+c.attach+c.mission, vac=Math.max(0,cfg.strength-st.length), base=Math.max(cfg.strength,st.length)||1;
   const pct = st.length && cfg.strength ? c.present/cfg.strength : null;
   const w = n => (n/base*100).toFixed(2)+'%';
   const note = !st.length ? 'أضف أسماء الأفراد في خانات الورديات لتظهر النسبة.'
-    : `النسبة = الموجود (${c.present}) ÷ قوة المركز (${cfg.strength}).${away?` خارج المركز: إجازة ${c.leave}، رخصة ${c.permit}، دورة ${c.course}، تكليف ${c.assign}، إلحاق ${c.attach}.`:''}`;
+    : `النسبة = الموجود (${c.present}) ÷ قوة المركز (${cfg.strength}).${away?` خارج المركز: إجازة ${c.leave}، رخصة ${c.permit}، دورة ${c.course}، تكليف ${c.assign}، إلحاق ${c.attach}${c.mission?`، مهمة ${c.mission}`:''}.`:''}`;
   return `<section class="panel ready" aria-label="قوة المركز">
     <div class="rhead"><div><div class="rtitle">نسبة الموجود من قوة المركز</div><div class="rbig${pct==null?' none':''}">${pct==null?'—':esc(pctFmt(pct))}</div></div>
       <dl class="rstats"><div><dt>قوة المركز</dt><dd>${cfg.strength}</dd></div><div><dt><i class="dot hd-ok"></i>الموجود</dt><dd>${c.present}</dd></div><div><dt><i class="dot hd-bad"></i>غياب</dt><dd>${c.absent}</dd></div>${c.lateP+c.lateN?`<div><dt><i class="dot hd-mid"></i>تأخير (بإذن / بدون)</dt><dd>${c.lateP} / ${c.lateN}</dd></div>`:''}<div><dt><i class="dot hd-mid"></i>إجازة / رخصة / دورة / تكليف / إلحاق</dt><dd>${away}</dd></div>${vac?`<div><dt><i class="dot st-none"></i>خانات شاغرة</dt><dd>${vac}</dd></div>`:''}</dl></div>
@@ -2064,7 +2065,7 @@ const RTYPES = ['خطاب شكر','شهادة شكر وتقدير','مكافأة
 
 /* ربط حالة الفرد بسجلاته: كل غياب أو تأخير أو رخصة أو إجازة أو دورة أو تكليف أو إلحاق يُنسخ مرة واحدة إلى سجله
    (الغيابات والتأخيرات / المكافآت والرخص / مستندات ملف الفرد) فيظهر في ملف الفرد ويمكن إرفاق مستنده من أي مكان */
-const ST_DOC = {leave:'إجازة', course:'شهادة / دورة', assign:'معاملة', attach:'معاملة'};
+const ST_DOC = {leave:'إجازة', course:'شهادة / دورة', assign:'معاملة', attach:'معاملة', mission:'معاملة'};
 const stPer = x => [x.from?'من '+x.from:'', x.to?'إلى '+x.to:''].filter(Boolean).join(' ');
 function stRecKey(pid, x){ const st=x.status;
   if (st==='permit') return ['rewards', pid+'|'+(x.from||'')+'|'+(x.to||'')];
