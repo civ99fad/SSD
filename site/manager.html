@@ -315,7 +315,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       faults: faults.filter(fOpen), eqOut: equip.filter(eqOut),
       notReady: V.filter((v) => ['down', 'maint'].includes(stOf(v))).sort((a, b) => (stOf(a) === 'down' ? 0 : 1) - (stOf(b) === 'down' ? 0 : 1)),
       away: V.filter((v) => stOf(v) === 'away'),
-      qst: arr('consum').filter((r) => r.qstat),
+      qst: arr('consum').filter((r) => r.qstat), mov: arr('consum').filter((r) => !r.qstat),
       center: u.id !== 'isnad', inc: arr('incoming'), // المراكز تستقبل «دعم وارد» ولا تدعم غيرها
     };
   }
@@ -488,6 +488,23 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   function qView() {
     const now = hNow(), curQ = Math.min(4, Math.ceil(now.m / 3));
     const all = []; R.forEach((x) => (x.qst || []).forEach((r) => all.push({ u: x.u, r })));
+    // إحصائية محسوبة تلقائياً من حركات الوارد والصرف للجهة (لأي ربع لم تُضف له الجهة إحصائية يدوية لنفس النوع)
+    const DEF = { foam: ['رغوة', 'جركل'], fuel: ['ديزل', 'لتر'], powder: ['طفاية بودرة (سطل)', 'سطل'] };
+    const ymOf = (r) => { const k = hkey(r.date); return k ? { y: Math.floor(k / 10000), m: Math.floor((k % 10000) / 100) } : null; };
+    const manual = new Set(all.map((o) => `${o.u.id}|${o.r.kind || 'foam'}|${qYear(o.r)}|${+o.r.q}`));
+    R.forEach((x) => {
+      const groups = {};
+      (x.mov || []).forEach((r) => { const ym = ymOf(r); if (!ym) return; const kd = r.kind || 'foam', d = DEF[kd] || DEF.foam, item = r.item || d[0], unit = r.unit || d[1], key = `${kd}|${ym.y}|${item}|${unit}`; (groups[key] = groups[key] || { kd, y: ym.y, item, unit, rows: [] }).rows.push({ ...r, q: Math.min(4, Math.ceil(ym.m / 3)) }); });
+      Object.values(groups).forEach((g) => {
+        for (let q = 1; q <= 4; q++) {
+          if (manual.has(`${x.u.id}|${g.kd}|${g.y}|${q}`)) continue;
+          const inQ = g.rows.filter((r) => r.q === q); if (!inQ.length) continue;
+          const sum = (L, dir) => L.filter((r) => r.dir === dir).reduce((a, r) => a + numQ(r.qty), 0);
+          const cumIn = sum(g.rows.filter((r) => r.q <= q), 'in'), cumOut = sum(g.rows.filter((r) => r.q <= q), 'out');
+          all.push({ u: x.u, r: { qstat: true, calc: true, kind: g.kd, q, year: String(g.y), item: g.item, unit: g.unit, qin: sum(inQ, 'in') || '', qout: sum(inQ, 'out') || '', qbal: cumIn > 0 ? cumIn - cumOut : '', note: 'محسوبة تلقائياً من حركات الوارد والصرف' } });
+        }
+      });
+    });
     const years = [...new Set([now.y, ...all.map((o) => qYear(o.r))])].sort((a, b) => b - a);
     const y = S.qy && years.includes(S.qy) ? S.qy : now.y; S.qy = y;
     const inY = all.filter((o) => qYear(o.r) === y);
@@ -498,7 +515,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
         const rows = inY.filter((o) => +o.r.q === q), units = new Set(rows.map((o) => o.u.id)).size;
         return `<button type="button" class="panel qcard" data-act="qOpen" data-v="${q}" style="text-align:start;cursor:pointer;display:flex;flex-direction:column;gap:6px;font:inherit;color:inherit"><b style="font-size:16px">إحصائية المراكز والأقسام — ${QN[q]}</b><span class="muted">${QR(q)} ${arD(y)}هـ${q === curQ && y === now.y ? ' · <b>الربع الحالي</b>' : ''}</span><span class="cnt">${rows.length ? `وردت ${arD(rows.length)} إحصائية من ${arD(units)} جهة` : 'لم ترد إحصائيات بعد'}</span></button>`;
       }).join('');
-      $('main').innerHTML = `${head('إحصائية المراكز والأقسام', 'qBack')}${yearChips}<p class="muted" style="margin:6px 0 14px">الإحصائيات الربع سنوية للرغاوي والمحروقات وطفايات البودرة التي يضيفها كل مركز وقسم من صفحة «الرغاوي والمحروقات». اختر الربع لعرض ما ورد.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">${cards}</div>`;
+      $('main').innerHTML = `${head('إحصائية المراكز والأقسام', 'qBack')}${yearChips}<p class="muted" style="margin:6px 0 14px">إحصائيات الرغاوي والمحروقات وطفايات البودرة لكل مركز وقسم: ما يضيفه المركز من «إضافة إحصائية (ربع سنوي)»، وإن لم يضف فتُحسب من حركات الوارد والصرف المسجلة عنده. اختر الربع لعرض ما ورد.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">${cards}</div>`;
       return;
     }
     const q = S.qq, k = S.qk || 'foam', rows = inY.filter((o) => +o.r.q === q);
@@ -508,7 +525,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     const tabs = `<div class="chips" role="tablist" aria-label="النوع">${Object.entries(QK).map(([id, t]) => `<button type="button" class="chip" role="tab" data-act="qKind" data-v="${id}" aria-pressed="${id === k}">${t} <b>${arD(rows.filter((o) => (o.r.kind || 'foam') === id).length)}</b></button>`).join('')}</div>`;
     const sums = {}; mine.forEach((o) => { const u = o.r.unit || ''; (sums[u] = sums[u] || { i: 0, o: 0, b: 0, nb: 0 }); sums[u].i += numQ(o.r.qin); sums[u].o += numQ(o.r.qout); if (o.r.qbal !== undefined && o.r.qbal !== '') { sums[u].b += numQ(o.r.qbal); sums[u].nb++; } });
     const cell = (v, u) => (v !== undefined && v !== '' ? `<b>${esc(nfQ(numQ(v)))}</b> ${esc(u || '')}` : '—');
-    const tbl = mine.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>الجهة</th><th>الصنف</th><th>الوارد</th><th>المصروف</th><th>الرصيد</th><th>ملاحظة</th><th>المرفق</th></tr></thead><tbody>${mine.map((o) => `<tr><td class="n">${esc(o.u.name)}</td><td>${esc(o.r.item || '—')}</td><td>${cell(o.r.qin, o.r.unit)}</td><td>${cell(o.r.qout, o.r.unit)}</td><td>${cell(o.r.qbal, o.r.unit)}</td><td>${esc(o.r.note || '—')}</td><td>${qFile(o.r) ? `<a href="${esc(qFile(o.r))}" target="_blank" rel="noopener">عرض</a>` : '—'}</td></tr>`).join('')}</tbody><tfoot>${Object.entries(sums).map(([u, v]) => `<tr><th>الإجمالي ${u ? '(' + esc(u) + ')' : ''}</th><th></th><th>${nfQ(v.i)}</th><th>${nfQ(v.o)}</th><th>${v.nb ? nfQ(v.b) : '—'}</th><th></th><th></th></tr>`).join('')}</tfoot></table></div>` : `<div class="panel empty"><b>لم ترد إحصائيات ${QK[k]} لـ${QN[q]} بعد.</b></div>`;
+    const tbl = mine.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>الجهة</th><th>الصنف</th><th>الوارد</th><th>المصروف</th><th>الرصيد</th><th>ملاحظة</th><th>المرفق</th></tr></thead><tbody>${mine.map((o) => `<tr><td class="n">${esc(o.u.name)}</td><td>${esc(o.r.item || '—')}</td><td>${cell(o.r.qin, o.r.unit)}</td><td>${cell(o.r.qout, o.r.unit)}</td><td>${cell(o.r.qbal, o.r.unit)}</td><td>${o.r.calc ? '<span class="muted">' + esc(o.r.note) + '</span>' : esc(o.r.note || '—')}</td><td>${qFile(o.r) ? `<a href="${esc(qFile(o.r))}" target="_blank" rel="noopener">عرض</a>` : '—'}</td></tr>`).join('')}</tbody><tfoot>${Object.entries(sums).map(([u, v]) => `<tr><th>الإجمالي ${u ? '(' + esc(u) + ')' : ''}</th><th></th><th>${nfQ(v.i)}</th><th>${nfQ(v.o)}</th><th>${v.nb ? nfQ(v.b) : '—'}</th><th></th><th></th></tr>`).join('')}</tfoot></table></div>` : `<div class="panel empty"><b>لم ترد إحصائيات ${QK[k]} لـ${QN[q]} بعد.</b></div>`;
     const miss = missing.length && mine.length ? `<p class="muted" style="margin-top:10px">لم ترد من: ${missing.map((u) => esc(u.name)).join('، ')}</p>` : '';
     $('main').innerHTML = `${head(`إحصائية المراكز والأقسام — ${QN[q]} ${arD(y)}هـ`, 'qList')}<p class="muted" style="margin:-4px 0 10px">${QR(q)}</p>${tabs}${tbl}${miss}`;
   }
