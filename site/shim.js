@@ -372,6 +372,9 @@
     },
   };
 
+  // مفتاح GitHub: نحذف المسافات والعلامات المخفية (مثل علامات الاتجاه) التي تُنسخ معه فتُفسد الطلب
+  const cleanTok = (v) => String(v || '').replace(/[^\x21-\x7E]/g, '');
+  const ghErr = (x) => 'تعذّر الاتصال بـ GitHub. حاول مجددًا.' + (x && (x.status || x.message) ? ` (التفاصيل: ${String(x.status || x.message).slice(0, 80)})` : '');
   // يتحقق من المفتاح ويعيد بيانات صاحبه إن كان له صلاحية الكتابة على المستودع
   async function checkToken(t) {
     if (isUnit(t)) {
@@ -456,7 +459,7 @@
           gbox.querySelector('[data-g="box"]').hidden = false;
           gbox.querySelector('[data-g="tok"]').focus();
         } else if (g === 'save') {
-          const t = gbox.querySelector('[data-g="tok"]').value.trim(), m = gbox.querySelector('[data-g="err"]');
+          const t = cleanTok(gbox.querySelector('[data-g="tok"]').value), m = gbox.querySelector('[data-g="err"]');
           m.style.display = 'none';
           if (!t) return;
           e.target.disabled = true;
@@ -465,7 +468,7 @@
             store.set(TOKEN_KEY, t);
             location.reload();
           } catch (x) {
-            m.textContent = x && x.code === 'not_granted' ? 'المفتاح غير صحيح أو ليس له صلاحية الكتابة على المستودع.' : 'تعذّر الاتصال بـ GitHub. حاول مجددًا.';
+            m.textContent = x && x.code === 'not_granted' ? 'المفتاح غير صحيح أو ليس له صلاحية الكتابة على المستودع.' : ghErr(x);
             m.style.display = 'block';
             e.target.disabled = false;
           }
@@ -687,7 +690,7 @@
         b.hidden = false;
         b.querySelector('input').focus();
       } else if (r === 'save') {
-        const t = el.querySelector('[data-r="tok"]').value.trim();
+        const t = cleanTok(el.querySelector('[data-r="tok"]').value);
         const msg = el.querySelector('[data-r="err"]');
         msg.style.display = 'none';
         e.target.disabled = true;
@@ -696,7 +699,7 @@
           store.set(TOKEN_KEY, t);
           location.reload();
         } catch (x) {
-          msg.textContent = x && x.code === 'not_granted' ? 'المفتاح غير صحيح أو ليس له صلاحية الكتابة على المستودع.' : 'تعذّر الاتصال بـ GitHub. حاول مجددًا.';
+          msg.textContent = x && x.code === 'not_granted' ? 'المفتاح غير صحيح أو ليس له صلاحية الكتابة على المستودع.' : ghErr(x);
           msg.style.display = 'block';
           e.target.disabled = false;
         }
