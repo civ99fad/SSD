@@ -2498,7 +2498,7 @@
   ],
   "make": "جمس",
   "model": "2006",
-  "name": "جمس حوض",
+  "name": "نيسان حوض (رغاوي)",
   "notes": [],
   "photos": [
    "47b525d7bfb3757810dfe186f89f594e",
@@ -2512,7 +2512,8 @@
   "review": [],
   "status": "ready",
   "statusNote": "",
-  "updated": 1790590823229
+  "updated": 1791181968604,
+  "statusAction": ""
  },
  "v19": {
   "code": "0/19",
