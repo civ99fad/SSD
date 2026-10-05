@@ -785,7 +785,8 @@ html:not(.u-ctrl) .ccc{display:none!important}
 <script>
 (function(){
 // مركز التحكم والتوجيه: أقسام خاصة به (أرقام المسؤولين، الجهات المساندة، الخرائط)
-const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL) document.documentElement.classList.add('u-ctrl');
+const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
+  if (nv) ['profiles','advisor'].forEach(id=>{ const b=document.getElementById('nav-'+id); if (b) nv.appendChild(b); }); }
 const $ = s => document.querySelector(s);
 const S = { db:null, user:null, assets:null, canEdit:false, me:null,
   vehicles:[], warehouses:[], settings:{}, loadedV:false, loadedW:false, dbFailed:false,

@@ -39,8 +39,8 @@ const UNITS = {};
 for (const [id, name] of CENTERS) {
   UNITS[id] = { name, desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name) };
 }
-// مركز التحكم والتوجيه: لا معدات ولا رغاوي/إحصائيات، وله أقسامه الخاصة (أرقام المسؤولين، الجهات المساندة، الخرائط)
-UNITS.control.hide = ['equip', 'consum'];
+// مركز التحكم والتوجيه: لا معدات ولا رغاوي/إحصائيات ولا حدود/منشآت، وله أقسامه الخاصة (أرقام المسؤولين، الجهات المساندة، الخرائط)
+UNITS.control.hide = ['equip', 'consum', 'bounds', 'sites'];
 // قسم الدعم والإسناد آخر البوابة
 UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {}, hide: ['bounds', 'sites'] }; // قسم الإسناد ليس له حدود ولا منشآت هامة
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
