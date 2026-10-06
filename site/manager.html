@@ -199,11 +199,19 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     <div class="logo" data-logo></div>
     <h1>لوحة مدير الإدارة العامة</h1>
     <div class="sub">جاهزية المراكز والأقسام في صفحة واحدة</div>
+    <div class="fld" id="usrf" hidden>
+      <label for="usr">اسم المستخدم</label>
+      <input id="usr" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="اسم المستخدم">
+    </div>
     <div class="fld">
       <label for="pw">كلمة المرور</label>
       <input id="pw" type="password" autocomplete="current-password" placeholder="أدخل كلمة مرور لوحة المدير">
-      <div class="err" id="perr" role="alert" hidden></div>
     </div>
+    <div class="fld" id="reff" hidden>
+      <label for="ref">رمز المرجع</label>
+      <input id="ref" type="password" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="رمز المرجع">
+    </div>
+    <div class="fld"><div class="err" id="perr" role="alert" hidden></div></div>
     <button type="submit" class="btn primary wide" id="pgo">دخول</button>
     <a class="back" href="index.html">→ الرجوع للقائمة الرئيسية</a>
   </form>
@@ -474,7 +482,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     else if (a === 'qYear') { S.qy = +b.dataset.v; qView(); }
     else if (a === 'circBack') { S.circ = false; S.qv = false; render(); }
     // لا حذف للتعاميم من اللوحة بعد إرسالها (حفظاً للسجل الرسمي)
-    else if (a === 'logout') { ss.del(CODE); ss.del(AUTH); if (cfg.mode === 'server') fetch('logout', { method: 'POST' }); location.replace('index.html'); }
+    else if (a === 'logout') { ss.del(CODE); ss.del(USR); ss.del(REF); ss.del(AUTH); if (cfg.mode === 'server') fetch('logout', { method: 'POST' }); location.replace('index.html'); }
   });
 
 
@@ -535,7 +543,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   }
 
   /* ---------- التعاميم: يضيفها مدير الإدارة فتصل لجميع المراكز والأقسام (data/shared/db/circulars.json) ---------- */
-  const CODE = 'isnad-mgr-code', CPATH = 'data/shared/db/circulars.json';
+  const CODE = 'isnad-mgr-code', USR = 'isnad-mgr-usr', REF = 'isnad-mgr-ref', CPATH = 'data/shared/db/circulars.json';
   const PROXY = (cfg.editProxy || '').replace(/\/+$/, '');
   let circ = null, circSha = null, circErr = '';
   const b64u = (str) => { const by = new TextEncoder().encode(str); let s = ''; for (let i = 0; i < by.length; i += 0x8000) s += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000)); return btoa(s); };
@@ -544,7 +552,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   async function gh(path, opts = {}) {
     const w = ghWho(); if (!w) throw new Error('nokey');
     const url = w.proxy ? PROXY + '/gh' + path : 'https://api.github.com/repos/' + cfg.repo + path;
-    const headers = w.proxy ? { 'X-Unit': 'manager', 'X-Code': w.c } : { Authorization: 'Bearer ' + w.t, Accept: 'application/vnd.github+json' };
+    const headers = w.proxy ? { 'X-Unit': 'manager', 'X-Code': w.c, 'X-User': ss.get(USR) || '', 'X-Ref': ss.get(REF) || '' } : { Authorization: 'Bearer ' + w.t, Accept: 'application/vnd.github+json' };
     const r = await fetch(url, Object.assign({ cache: 'no-store' }, opts, { headers: Object.assign(headers, opts.body ? { 'Content-Type': 'application/json' } : {}) }));
     if (r.status === 404) return null;
     if (!r.ok) throw new Error(String(r.status));
@@ -607,12 +615,13 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   async function openCirc() { S.circ = true; $('main').innerHTML = '<div class="panel loading">جارٍ تحميل التعاميم…</div>'; await loadCirc(); circView(); }
 
   /* ---------- الدخول ---------- */
+  if (cfg.editProxy) { $('usrf').hidden = false; $('reff').hidden = false; }
   function showGate() { $('app').hidden = true; $('gate').hidden = false; setTimeout(() => $('pw').focus(), 50); }
   function showApp() { $('gate').hidden = true; $('app').hidden = false; load(); }
-  async function check(pw) {
+  async function check(pw, usr, rf) {
     // عند وجود «الحارس»: كلمة دخول اللوحة هي رمز manager فيه (لا تُكتب في الموقع العام)
     if (cfg.editProxy) {
-      const r = await fetch(cfg.editProxy.replace(/\/+$/, '') + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw } });
+      const r = await fetch(cfg.editProxy.replace(/\/+$/, '') + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw, 'X-User': usr || '', 'X-Ref': rf || '' } });
       return r.ok;
     }
     if (cfg.mode === 'server') {
@@ -624,15 +633,17 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   }
   $('gform').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pw = $('pw').value, err = $('perr');
+    const pw = $('pw').value, err = $('perr'), usr = $('usr').value.trim(), rf = $('ref').value.trim();
     err.hidden = true;
+    if (cfg.editProxy && !usr) { err.textContent = 'الرجاء إدخال اسم المستخدم'; err.hidden = false; $('usr').focus(); return; }
+    if (cfg.editProxy && !rf) { err.textContent = 'الرجاء إدخال رمز المرجع'; err.hidden = false; $('ref').focus(); return; }
     if (!pw) { err.textContent = 'الرجاء إدخال كلمة المرور'; err.hidden = false; return; }
     $('pgo').disabled = true;
     let ok = false;
-    try { ok = await check(pw); } catch (x) {}
+    try { ok = await check(pw, usr, rf); } catch (x) {}
     $('pgo').disabled = false;
-    if (!ok) { err.textContent = 'كلمة المرور غير صحيحة'; err.hidden = false; $('pw').select(); return; }
-    ss.set(AUTH, '1'); if (cfg.editProxy) ss.set(CODE, pw); $('pw').value = ''; showApp();
+    if (!ok) { err.textContent = cfg.editProxy ? 'بيانات الدخول غير صحيحة' : 'كلمة المرور غير صحيحة'; err.hidden = false; $('pw').select(); return; }
+    ss.set(AUTH, '1'); if (cfg.editProxy) { ss.set(CODE, pw); ss.set(USR, usr); ss.set(REF, rf); } $('pw').value = ''; $('ref').value = ''; showApp();
   });
 
   // المسؤول بمفتاح GitHub المحفوظ على جهازه (له صلاحية الكتابة على المستودع) يدخل اللوحة مباشرة

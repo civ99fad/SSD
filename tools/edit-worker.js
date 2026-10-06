@@ -43,8 +43,9 @@ export default {
     // USERS (اختياري): {"balad":{"u":"ALbalad-1075","r":"105"}} — اسم المستخدم ورمز المرجع لكل جهة (لا يُطلبان لرمز المسؤول admin)
     let users = {};
     try { users = JSON.parse(env.USERS || '{}'); } catch (e) {}
-    const want = users[unit];
-    const userOk = !want || (same(String(want.u || '').toLowerCase(), (req.headers.get('X-User') || '').trim().toLowerCase()) && same(String(want.r || ''), (req.headers.get('X-Ref') || '').trim()));
+    const want = users[unit]; // كائن {u,r} أو مصفوفة منها (لوحة المدير ولوحة العمليات تشتركان في رمز manager)
+    const xu = (req.headers.get('X-User') || '').trim().toLowerCase(), xr = (req.headers.get('X-Ref') || '').trim();
+    const userOk = !want || [].concat(want).some((w) => same(String(w.u || '').toLowerCase(), xu) && same(String(w.r || ''), xr));
     const valid = NAMES[unit] && (ok('admin') || (ok(unit) && userOk));
     if (!valid) {
       await new Promise((r) => setTimeout(r, 700)); // إبطاء محاولات التخمين
