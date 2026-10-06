@@ -33,6 +33,9 @@
     set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} },
     del: (k) => { try { sessionStorage.removeItem(k); } catch (e) {} },
   };
+  const USR_KEY = 'isnad-usr-' + (cfg.unit || 'isnad'), REF_KEY = 'isnad-ref-' + (cfg.unit || 'isnad');
+  // اسم المستخدم ورمز المرجع (يُتحقق منهما في «الحارس» مع رمز الدخول)
+  const uh = () => { const h = {}, u = sess.get(USR_KEY), r = sess.get(REF_KEY); if (u) h['X-User'] = u; if (r) h['X-Ref'] = r; return h; };
   store.del(CODE_KEY); // رموز قديمة كانت تُحفظ دائمًا على الجهاز
   const unitCode = PROXY ? sess.get(CODE_KEY) : null;
   const token = cfg.repo ? store.get(TOKEN_KEY) || (unitCode ? 'unit:' + unitCode : null) : null;
@@ -80,7 +83,7 @@
   const signOut = () => {
     ss.del(AUTH_KEY);
     ss.del('isnad-entered');
-    sess.del(CODE_KEY); // الخروج يُنهي وضع التعديل برمز المركز
+    sess.del(CODE_KEY); sess.del(USR_KEY); sess.del(REF_KEY); // الخروج يُنهي وضع التعديل برمز المركز
   };
   const toPortal = () => {
     signOut();
@@ -113,7 +116,7 @@
       ...opts,
       cache: 'no-store',
       headers: isUnit(t)
-        ? { 'X-Unit': cfg.unit || 'isnad', 'X-Code': t.slice(5), ...(opts.headers || {}) }
+        ? { 'X-Unit': cfg.unit || 'isnad', 'X-Code': t.slice(5), ...uh(), ...(opts.headers || {}) }
         : { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json', ...(opts.headers || {}) },
     });
     if (r.status === 401 || r.status === 403) throw { code: 'not_granted', status: r.status };
@@ -378,7 +381,7 @@
   // يتحقق من المفتاح ويعيد بيانات صاحبه إن كان له صلاحية الكتابة على المستودع
   async function checkToken(t) {
     if (isUnit(t)) {
-      const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': t.slice(5) } });
+      const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': t.slice(5), ...uh() } });
       if (r.status === 401) throw { code: 'not_granted' };
       if (!r.ok) throw { code: 'network' };
       // الرمز صحيح؛ نتأكد أن مفتاح GitHub المحفوظ في الحارس يعمل وله صلاحية الكتابة
@@ -433,9 +436,12 @@
   if (enter) {
     const box = document.createElement('div');
     box.style.cssText = 'width:100%;margin-top:18px;text-align:start';
+    const lbl = 'display:block;font-size:13px;font-weight:700;color:var(--muted);margin:10px 0 6px';
     box.innerHTML =
-      `<label for="isnadPw" style="display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px">${GATE ? 'رمز الدخول' : 'كلمة المرور'}</label>` +
+      (GATE ? `<label for="isnadUsr" style="${lbl};margin-top:0">اسم المستخدم</label><input id="isnadUsr" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="اسم المستخدم" style="${field}">` : '') +
+      `<label for="isnadPw" style="${lbl}">${GATE ? 'كلمة المرور' : 'كلمة المرور'}</label>` +
       `<input id="isnadPw" type="password" autocomplete="current-password" placeholder="أدخل ${GATE ? 'رمز' : 'كلمة مرور'} ${String(cfg.unitName || '').replace(/[<>&"]/g, '')}" style="${field}">` +
+      (GATE ? `<label for="isnadRef" style="${lbl}">رمز المرجع</label><input id="isnadRef" type="password" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="رمز المرجع" style="${field}">` : '') +
       '<div id="isnadPwErr" role="alert" style="display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600"></div>';
     enter.before(box);
     const back = document.createElement('a');
@@ -475,7 +481,7 @@
         }
       });
     }
-    const input = box.querySelector('input');
+    const input = box.querySelector('#isnadPw'), usrIn = box.querySelector('#isnadUsr'), refIn = box.querySelector('#isnadRef');
     const err = box.querySelector('#isnadPwErr');
     let passed = false;
     const check = async (pw) => {
@@ -491,6 +497,8 @@
       if (passed) return;
       e.stopImmediatePropagation();
       err.style.display = 'none';
+      if (usrIn && !usrIn.value.trim()) { err.textContent = 'الرجاء إدخال اسم المستخدم'; err.style.display = 'block'; usrIn.focus(); return; }
+      if (refIn && !refIn.value.trim()) { err.textContent = 'الرجاء إدخال رمز المرجع'; err.style.display = 'block'; refIn.focus(); return; }
       if (!input.value) {
         err.textContent = 'الرجاء إدخال كلمة المرور';
         err.style.display = 'block';
@@ -502,7 +510,7 @@
       if (GATE) {
         // الدخول برمز الجهة في «الحارس» فقط (أو الرمز العام للمسؤول)، ويفتح وضع التعديل مباشرة
         try {
-          const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value } });
+          const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value, 'X-User': usrIn ? usrIn.value.trim() : '', 'X-Ref': refIn ? refIn.value.trim() : '' } });
           ok = editCode = r.ok;
           netErr = !r.ok && r.status !== 401;
         } catch (x) {
@@ -524,11 +532,12 @@
         ss.set(AUTH_KEY, '1');
         ss.set('isnad-entered', '1');
         sess.set(CODE_KEY, input.value);
+        if (usrIn) { sess.set(USR_KEY, usrIn.value.trim()); sess.set(REF_KEY, refIn.value.trim()); }
         location.reload();
         return;
       }
       if (!ok) {
-        err.textContent = GATE ? 'الرمز غير صحيح' : 'كلمة المرور غير صحيحة';
+        err.textContent = GATE ? 'بيانات الدخول غير صحيحة' : 'كلمة المرور غير صحيحة';
         err.style.display = 'block';
         input.select();
         return;
@@ -540,9 +549,9 @@
       enter.click();
       passed = false;
     });
-    input.addEventListener('keydown', (e) => {
+    [input, usrIn, refIn].forEach((el) => el && el.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') enter.click();
-    });
+    }));
   }
 
 
