@@ -4,6 +4,7 @@
 //
 // الإعداد في Cloudflare (Settings ← Variables and Secrets):
 //   GITHUB_TOKEN  (Secret) مفتاح GitHub بصلاحية Contents: Read and write على المستودع
+//   USERS         (Secret، اختياري) اسم المستخدم ورمز المرجع لكل جهة: {"balad":{"u":"ALbalad-1075","r":"105"}}
 //   CODES         (Secret) رموز المراكز بصيغة JSON، مثال: {"balad":"رمز-البلد","sharaf":"رمز-شراف","manager":"رمز-لوحة-المدير"}
 //                 (manager: كلمة دخول لوحة مدير الإدارة، ويسمح بإرسال التعاميم فقط)
 //                 (admin اختياري: رمز المسؤول العام يفتح أي مركز أو قسم أو لوحة المدير، ويعدّل على الجهة المفتوحة)
@@ -22,7 +23,7 @@ export default {
     const cors = {
       'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, X-Unit, X-Code',
+      'Access-Control-Allow-Headers': 'Content-Type, X-Unit, X-Code, X-User, X-Ref',
       'Access-Control-Max-Age': '86400',
       Vary: 'Origin',
     };
@@ -39,7 +40,12 @@ export default {
       return json(500, { message: 'CODES غير صالح' });
     }
     const ok = (k) => typeof codes[k] === 'string' && codes[k].length > 0 && same(codes[k], code);
-    const valid = NAMES[unit] && (ok(unit) || ok('admin'));
+    // USERS (اختياري): {"balad":{"u":"ALbalad-1075","r":"105"}} — اسم المستخدم ورمز المرجع لكل جهة (لا يُطلبان لرمز المسؤول admin)
+    let users = {};
+    try { users = JSON.parse(env.USERS || '{}'); } catch (e) {}
+    const want = users[unit];
+    const userOk = !want || (same(String(want.u || '').toLowerCase(), (req.headers.get('X-User') || '').trim().toLowerCase()) && same(String(want.r || ''), (req.headers.get('X-Ref') || '').trim()));
+    const valid = NAMES[unit] && (ok('admin') || (ok(unit) && userOk));
     if (!valid) {
       await new Promise((r) => setTimeout(r, 700)); // إبطاء محاولات التخمين
       return json(401, { message: 'رمز المركز غير صحيح' });
