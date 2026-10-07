@@ -128,6 +128,22 @@
 
   const q = '?ref=' + encodeURIComponent(cfg.branch || '');
 
+  // سجل التدقيق (يقرؤه قسم الإسناد): ملفات الأحداث في فرع audit، ملف لكل حدث
+  window.ISNAD_AUDIT = {
+    async day(day) {
+      if (!token) throw { code: 'not_granted' };
+      const ls = await gh('/contents/data/audit/' + encodeURIComponent(day) + '?ref=audit');
+      if (!Array.isArray(ls)) return [];
+      const items = ls.filter((x) => /\.json$/.test(x.name)).slice(-400), out = [];
+      for (let i = 0; i < items.length; i += 8) {
+        await Promise.all(items.slice(i, i + 8).map(async (x) => {
+          try { const m = await gh('/contents/' + x.path + '?ref=audit'); out.push(JSON.parse(utf8.dec(m.content))); } catch (e) {}
+        }));
+      }
+      return out.sort((a, b) => a.t - b.t);
+    },
+  };
+
   // يعيد { sha, text } لملف في المستودع، أو null إن لم يوجد
   async function readFile(path) {
     const meta = await gh('/contents/' + path.split('/').map(encodeURIComponent).join('/') + q);
@@ -510,7 +526,7 @@
       if (GATE) {
         // الدخول برمز الجهة في «الحارس» فقط (أو الرمز العام للمسؤول)، ويفتح وضع التعديل مباشرة
         try {
-          const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value, 'X-User': usrIn ? usrIn.value.trim() : '', 'X-Ref': refIn ? refIn.value.trim() : '' } });
+          const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value, 'X-Login': '1', 'X-User': usrIn ? usrIn.value.trim() : '', 'X-Ref': refIn ? refIn.value.trim() : '' } });
           ok = editCode = r.ok;
           netErr = !r.ok && r.status !== 401;
         } catch (x) {

@@ -91,7 +91,7 @@ function pageHtml(unit, config) {
     html = html.split(from).join(to);
   };
   patch("const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';", "const blob = id => id ? window.ISNAD.blob(id) : '';");
-  const cfg = Object.assign(repo(), config, { unit, unitName: u.name, dbDir: u.dbDir, web: u.web });
+  const cfg = Object.assign(repo(), config, { unit, unitName: u.name, dbDir: u.dbDir, web: u.web, units: Object.entries(UNITS).map(([id, x]) => ({ id, name: x.name })) });
   // ?v= بصمة الشيم: يجبر المتصفح على تحميل النسخة الجديدة بعد كل تحديث بدل نسخته المخزّنة
   const ver = crypto.createHash('sha1').update(fs.readFileSync(path.join(SITE_DIR, 'shim.js'))).digest('hex').slice(0, 10);
   patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(cfg)};</script>\n<script src="shim.js?v=${ver}"></script>\n<script>\n(function(){`);

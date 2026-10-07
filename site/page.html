@@ -547,6 +547,8 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .onb{display:flex;direction:rtl;gap:4px;align-items:center}.onb input{min-width:0;flex:1 1 0;width:0;padding:8px 2px;text-align:center;background:transparent;border:1px dashed var(--line,#9aa4b2);border-radius:6px}.onb input.onl{flex:2.4}.onb input.ond{flex:1.3}.onb .osl{opacity:.7}.onum{display:inline-flex;direction:rtl;gap:2px;white-space:nowrap}.onum .osl{opacity:.7}
 .phb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 html:not(.u-ctrl) .ccc{display:none!important}
+html:not(.u-iso) .iso-only{display:none!important}
+.au-who{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}.au-who .chip2{padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);font-size:13px}.au-who .chip2.ok{background:var(--accent-soft);border-color:transparent}.au-ch{margin:0;padding:0;list-style:none;display:grid;gap:2px}.au-ch .op{font-weight:700}
 .cctbl td.tel a{font-weight:800;text-decoration:none;color:var(--accent);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
 .ccgrp{margin:0 0 16px}.ccgrp h2{font-size:15.5px;margin:0 0 8px}
 .advtiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
@@ -737,6 +739,10 @@ html:not(.u-ctrl) .ccc{display:none!important}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a7 7 0 0 0-4 12.7V18h8v-2.3A7 7 0 0 0 12 3Z"/><path d="M9.5 21h5"/><path d="M12 7v4"/><path d="M12 13.5v.5"/></svg>
         <span>المستشار</span>
       </button>
+      <button type="button" class="iso-only" data-act="nav" data-id="audit" id="nav-audit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 7.8-8 9-4.8-1.2-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+        <span>سجل التدقيق</span>
+      </button>
       <button type="button" class="ccc" data-act="nav" data-id="officials" id="nav-officials">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/></svg>
         <span>أرقام المسؤولين</span>
@@ -786,6 +792,7 @@ html:not(.u-ctrl) .ccc{display:none!important}
 <script>
 (function(){
 // مركز التحكم والتوجيه: أقسام خاصة به (أرقام المسؤولين، الجهات المساندة، الخرائط)
+if (((window.ISNAD_CONFIG||{}).unit||'isnad')==='isnad') document.documentElement.classList.add('u-iso');
 const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
   if (nv) ['profiles','advisor'].forEach(id=>{ const b=document.getElementById('nav-'+id); if (b) nv.appendChild(b); }); }
 const $ = s => document.querySelector(s);
@@ -1046,8 +1053,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
@@ -1074,6 +1081,7 @@ function render(){
   else if (v.name==='tx') paint(gSearchBar()+viewTx());
   else if (v.name==='pfiles') paint(gSearchBar()+viewPFiles());
   else if (v.name==='advisor') paint(gSearchBar()+viewAdvisor());
+  else if (v.name==='audit') paint(gSearchBar()+viewAudit());
   else if (v.name==='circ') paint(gSearchBar()+viewCirc());
   else if (v.name==='pfile') paint(gSearchBar()+viewPFile(v.id));
   else if (v.name==='consum') paint(gSearchBar()+viewConsum());
@@ -1689,6 +1697,35 @@ function advFormBtns(f){
   if (f.tpl) return `<span class="advfm"><button type="button" class="btn sm" data-act="minEdit" data-id="${esc(f.id)}">${ICON.doc}${nm}</button>${f.docx?`<a class="btn sm" href="${esc(blob(f.docx))}" download="${esc(f.docxName||((f.title||'محضر')+'.docx'))}" style="text-decoration:none;color:var(--text)" aria-label="تحميل ${nm}">${ICON.dl}</a>`:''}</span>`;
   return `<span class="advfm"><button type="button" class="btn sm" data-act="formOpen" data-id="${esc(f.id)}">${ICON.doc}${nm}</button>${f.file?`<a class="btn sm" href="${esc(blob(f.file))}" download="${esc(f.fileName||((f.title||'نموذج')+'.pdf'))}" style="text-decoration:none;color:var(--text)" aria-label="تحميل ${nm}">${ICON.dl}</a>`:''}</span>`;
 }
+// ---------- سجل التدقيق (قسم الإسناد فقط): من دخل ومن عدّل وماذا عدّل ----------
+const AUCOLL = {staff:'الأفراد والقوة',vehicles:'الآليات',equipment:'المعدات',warehouses:'المستودعات',consum:'الرغاوي والمحروقات',faults:'الأعطال',letters:'الخطابات الرسمية',ptx:'معاملات الأفراد',pdocs:'ملفات الأفراد',settings:'الإعدادات',sites:'المنشآت',absences:'الغيابات',tasks:'المهام',returns:'تقارير الرجيع',rewards:'المكافآت',missions:'المهمات',profiles:'المكتبة التعليمية',incoming:'الوارد',circulars:'التعاميم',officials:'المسؤولون',agencies:'الجهات المساندة',hr:'الورديات'};
+const AUFLD = {name:'الاسم',rank:'الرتبة',status:'الحالة',note:'الملاحظة',spec:'التخصص',shift:'الوردية',num:'الرقم',title:'العنوان',qty:'الكمية',date:'التاريخ',from:'من',to:'إلى',lic:'تصنيف الرخصة',licExp:'انتهاء الرخصة',idExp:'انتهاء الهوية',plate:'اللوحة',kind:'النوع',type:'النوع',location:'الموقع',statusNote:'ملاحظة الحالة',sub:'البديل',toShift:'الوردية المنقول إليها'};
+const auToday = () => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Riyadh'}).format(new Date());
+const auTime = t => new Date(t).toLocaleTimeString('ar-SA-u-nu-latn',{timeZone:'Asia/Riyadh',hour:'2-digit',minute:'2-digit'});
+async function auditLoad(){
+  S.auditDay = S.auditDay || auToday(); S.audit = null; S.auditErr = ''; render();
+  try { S.audit = await window.ISNAD_AUDIT.day(S.auditDay); }
+  catch(e){ S.audit = []; S.auditErr = e && e.code==='not_granted' ? 'سجّل الدخول برمز القسم أو بمفتاح المسؤول لعرض السجل.' : 'تعذّر تحميل السجل الآن. حاول مجددًا.'; }
+  if (S.view.name==='audit') render();
+}
+function viewAudit(){
+  if (!isIsnadUnit()) return '<div class="panel empty"><b>هذا القسم لقسم الدعم والإسناد فقط.</b></div>';
+  const day = S.auditDay || auToday(), units = ((window.ISNAD_CONFIG||{}).units||[]), nm = id => (units.find(u=>u.id===id)||{}).name || (id==='manager'?'لوحة المدير':id);
+  const head = `<header class="ph"><div class="ph-t"><h1>سجل التدقيق</h1><span class="count">من دخل ومن عدّل</span></div></header>
+    <div class="panel" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end"><div class="fld" style="margin:0"><label for="au_day">اليوم (ميلادي)</label><input id="au_day" type="date" value="${esc(day)}" data-change="auditDay"></div><button type="button" class="btn" data-act="auditReload">تحديث</button></div>`;
+  if (S.audit==null) return head+loading();
+  if (S.auditErr) return head+`<div class="panel empty"><b>${esc(S.auditErr)}</b></div>`;
+  const ev = S.audit, logins = ev.filter(e=>e.k==='login'), edits = ev.filter(e=>e.k==='edit'||e.k==='upload');
+  const by = {}; logins.forEach(e=>{ (by[e.unit]=by[e.unit]||[]).push(e); });
+  const ids = units.map(u=>u.id).concat(by.manager?['manager']:[]);
+  const inn = ids.filter(id=>by[id]), out = ids.filter(id=>!by[id]&&id!=='manager');
+  const who = `<div class="panel"><h2 style="margin:0 0 6px;font-size:16px">الدخول في هذا اليوم</h2>
+    <div class="au-who">${inn.length?inn.map(id=>`<span class="chip2 ok"><b>${esc(nm(id))}</b> · ${by[id].length} ${by[id].length>2?'مرات':'مرة'} · آخر دخول ${esc(auTime(by[id][by[id].length-1].t))}${by[id].some(e=>e.by==='admin')?' · (المسؤول)':''}</span>`).join(''):'<span class="chip2">لا يوجد دخول مسجّل</span>'}</div>
+    ${out.length?`<h3 style="margin:12px 0 4px;font-size:14px;color:var(--muted)">لم يدخلوا</h3><div class="au-who">${out.map(id=>`<span class="chip2">${esc(nm(id))}</span>`).join('')}</div>`:''}</div>`;
+  const chHtml = e => e.k==='upload' ? 'رفع ملف/صورة' : `<ul class="au-ch">${(e.ch||[]).map(c=>`<li><span class="op">${c.op==='add'?'إضافة':c.op==='del'?'حذف':'تعديل'}:</span> ${esc(c.l||'')}${(c.f||[]).length?' — '+c.f.map(f=>esc((AUFLD[f.f]||f.f))+(f.o||f.n?` (${esc(f.f==='status'&&HST[f.o]||f.o||'—')} ← ${esc(f.f==='status'&&HST[f.n]||f.n||'—')})`:'')).join('، '):''}</li>`).join('')}</ul>`;
+  const tbl = edits.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>الوقت</th><th>الجهة</th><th>القسم</th><th>ماذا تغيّر</th></tr></thead><tbody>${edits.slice().reverse().map(e=>`<tr><td class="hdate">${esc(auTime(e.t))}</td><td class="nm">${esc(nm(e.unit))}${e.by==='admin'?' <small>(المسؤول)</small>':''}</td><td>${esc(e.k==='upload'?'ملفات':(AUCOLL[e.file]||e.file||''))}</td><td>${chHtml(e)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="panel empty"><b>لا توجد تعديلات مسجّلة في هذا اليوم.</b></div>';
+  return head+who+`<h2 style="margin:14px 0 6px;font-size:16px">التعديلات (${edits.length})</h2>`+tbl+`<p class="hint" style="font-size:12.5px;color:var(--muted)">يُسجَّل ما يتم عبر رموز الجهات. تعديلات المسؤول بمفتاح GitHub مباشرة لا تظهر هنا (تجدها في سجل GitHub).</p>`;
+}
 function viewAdvisor(){
   const edit=advEdit(), sect=S.advSect||'', all=(S.guide||[]).slice().sort(advSort), duty=all.filter(advDuty), admin=all.filter(x=>!advDuty(x));
   const back=`<div style="margin-bottom:10px"><button type="button" class="link" data-act="advSect" data-id="">${ICON.arrow} المستشار</button></div>`;
@@ -2126,7 +2163,7 @@ const staffFields = (p, shift) => [
   [{id:'name',label:'اسم الفرد',value:p.name,required:true,placeholder:'مثال: فهد عبدالله الشمري'},{id:'rank',label:'الرتبة (اختياري)',value:p.rank,placeholder:'مثال: رقيب'}],
   [{id:'num',label:'الرقم العسكري (اختياري)',value:p.num,placeholder:'مثال: ٣٢٣٠٨'},{id:'spec',label:'التخصص (اختياري)',value:p.spec,placeholder:'مثال: سائق'}],
   [{id:'shift',label:'الوردية',type:'select',value:String(p.shift||shift||'1'),options:SHOPTS},{id:'status',label:'الحالة',type:'select',value:hStOf(p),options:Object.entries(HST)}],
-  Object.assign(personField('sub','البديل (لحالة «وكالة» فقط)',p,false),{hint:'الفرد اللي يداوم بدلاً عنه.'}),
+  Object.assign(personField('sub','البديل (لحالة «وكالة» فقط)',p,false),{hint:'الفرد الذي يداوم بدلًا عنه.'}),
   {id:'toShift',label:'الوردية المدعومة (لحالة «دعم وردية» فقط)',type:'select',value:String(p.toShift||''),options:[['','—'],...SHOPTS]},
   [{id:'from',label:'من تاريخ',value:p.from,placeholder:'مثال: ١/٤/١٤٤٨هـ'},{id:'to',label:'إلى تاريخ',value:p.to,placeholder:'مثال: ١٥/٤/١٤٤٨هـ'}],
   ...(isIsnadUnit()?[[{id:'lic',label:'تصنيف رخصة القيادة',type:'select',value:p.lic||'',options:[['','—'],...LICK.map(k=>[k,k])]},{id:'licExp',label:'انتهاء الرخصة',value:p.licExp,placeholder:'مثال: ١٤٤٩/٦/٨'}],{id:'idExp',label:'انتهاء الهوية الوطنية',value:p.idExp,placeholder:'مثال: ١٤٥٠/١٠/٢٩'}]:[]),
@@ -2437,7 +2474,9 @@ const ACT = {
   ccMapEdit: k => { if(!CCMAPS[k]) return; openForm({title:'رابط '+CCMAPS[k].t, submit:'حفظ', fields:[{id:'url',label:'الرابط',value:ccUrl(k),required:true}], onSubmit: async x => {
       await S.db.doc('settings/ccmaps').set(Object.assign({}, S.ccmaps||{}, {[k]:x.url, updated:Date.now()})); toast('حُفظ الرابط'); }}); },
   closeModal: closeModal,
-  nav: id => go(id),
+  nav: id => { go(id); if (id==='audit') auditLoad(); },
+  auditDay: () => { const el=$('#au_day'); if (el&&el.value){ S.auditDay=el.value; auditLoad(); } },
+  auditReload: () => auditLoad(),
   navGrp: k => { const b=$('#navg-'+k), g=$('#navb-'+k); if(!b||!g) return; const open=b.getAttribute('aria-expanded')!=='true'; b.setAttribute('aria-expanded',open); g.classList.toggle('closed',!open); navSave(); },
   openType: id => go('ltype', id),
   logout: () => { S.entered=false; store.del('isnad-entered'); closeModal(); render(); },
@@ -2776,6 +2815,7 @@ document.addEventListener('input', e => {
   else if (e.target.dataset && e.target.dataset.lib){ S.lib[e.target.dataset.lib][e.target.dataset.f]=e.target.value; render(); }
   else if (e.target.id==='wq'){ S.wq=e.target.value; render(); }
 });
+document.addEventListener('change', e => { if (e.target && e.target.id==='au_day' && e.target.value){ S.auditDay=e.target.value; auditLoad(); } });
 document.addEventListener('change', async e => {
   const el=e.target, key=el.dataset && el.dataset.up; if (!key) return;
   const id=el.dataset.id, files=[...el.files]; el.value=''; if (!files.length) return;
