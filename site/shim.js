@@ -28,6 +28,11 @@
   // مدير المركز يعدّل برمز مركزه عبر «الحارس» (cfg.editProxy) الذي لا يسمح إلا بملفات مركزه؛ المسؤول يعدّل بمفتاح GitHub
   const PROXY = (cfg.editProxy || '').replace(/\/+$/, '');
   const CODE_KEY = 'isnad-edit-' + (cfg.unit || 'isnad');
+  // لوحات مفاتيح الجوال قد تكتب أرقامًا عربية أو شرطة طويلة أو مسافات خفية؛ نوحّدها قبل الإرسال (الترويسات لا تقبل غير ASCII)
+  const cleanCred = (v) => String(v == null ? '' : v)
+    .replace(/[٠-٩]/g, (c) => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g, (c) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(c))
+    .replace(/[\u2010-\u2015\u2212\uFE63\uFF0D]/g, '-').replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF\u00A0]/g, '').trim();
+  const asciiOk = (v) => /^[\x21-\x7E]+$/.test(v);
   const sess = {
     get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
     set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} },
@@ -520,6 +525,15 @@
         err.style.display = 'block';
         input.focus();
         return;
+      }
+      if (GATE) {
+        const u0 = cleanCred(usrIn ? usrIn.value : ''), r0 = cleanCred(refIn ? refIn.value : ''), p0 = cleanCred(input.value);
+        if ((usrIn && !asciiOk(u0)) || (refIn && !asciiOk(r0)) || !asciiOk(p0)) {
+          err.textContent = 'اكتب البيانات بالأحرف والأرقام الإنجليزية فقط (غيّر لغة لوحة المفاتيح) وبدون مسافات.';
+          err.style.display = 'block';
+          return;
+        }
+        input.value = p0; if (usrIn) usrIn.value = u0; if (refIn) refIn.value = r0;
       }
       enter.disabled = true;
       let ok = false, editCode = false, netErr = false;
