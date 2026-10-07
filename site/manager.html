@@ -553,7 +553,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   async function gh(path, opts = {}) {
     const w = ghWho(); if (!w) throw new Error('nokey');
     const url = w.proxy ? PROXY + '/gh' + path : 'https://api.github.com/repos/' + cfg.repo + path;
-    const headers = w.proxy ? { 'X-Unit': 'manager', 'X-Code': w.c, 'X-User': ss.get(USR) || '', 'X-Ref': ss.get(REF) || '' } : { Authorization: 'Bearer ' + w.t, Accept: 'application/vnd.github+json' };
+    const headers = w.proxy ? Object.assign({ 'X-Unit': 'manager', 'X-Code': w.c }, ss.get('isnad-mgr-oldw') ? {} : { 'X-User': ss.get(USR) || '', 'X-Ref': ss.get(REF) || '' }) : { Authorization: 'Bearer ' + w.t, Accept: 'application/vnd.github+json' };
     const r = await fetch(url, Object.assign({ cache: 'no-store' }, opts, { headers: Object.assign(headers, opts.body ? { 'Content-Type': 'application/json' } : {}) }));
     if (r.status === 404) return null;
     if (!r.ok) throw new Error(String(r.status));
@@ -622,8 +622,17 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   async function check(pw, usr, rf) {
     // عند وجود «الحارس»: كلمة دخول اللوحة هي رمز manager فيه (لا تُكتب في الموقع العام)
     if (cfg.editProxy) {
-      const r = await fetch(cfg.editProxy.replace(/\/+$/, '') + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw, 'X-Login': '1', 'X-User': usr || '', 'X-Ref': rf || '' } });
-      return r.ok;
+      const base = cfg.editProxy.replace(/\/+$/, '');
+      ss.del('isnad-mgr-oldw');
+      try {
+        const r = await fetch(base + '/check?login=1', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw, 'X-User': usr || '', 'X-Ref': rf || '' } });
+        return r.ok;
+      } catch (x0) {
+        // نسخة الحارس المنشورة قديمة: نتحقق بالرمز وحده
+        const r = await fetch(base + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw } });
+        if (r.ok) ss.set('isnad-mgr-oldw', '1');
+        return r.ok;
+      }
     }
     if (cfg.mode === 'server') {
       const r = await fetch('api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw, unit: 'manager' }) });

@@ -55,7 +55,7 @@ export default {
     // من دخل: admin إن كان رمز المسؤول، وإلا مستخدم الجهة (لا يُخزَّن اسم المستخدم ولا الرموز)
     const by = ok('admin') && !ok(unit) ? 'admin' : 'user';
     if (url.pathname === '/check') {
-      if (req.headers.get('X-Login') === '1') ctx.waitUntil(audit(env, { k: 'login', unit, by }));
+      if (req.headers.get('X-Login') === '1' || url.searchParams.get('login') === '1') ctx.waitUntil(audit(env, { k: 'login', unit, by }));
       return json(200, { ok: true, unit, name: NAMES[unit] });
     }
     if (!url.pathname.startsWith('/gh')) return json(404, { message: 'not found' });
