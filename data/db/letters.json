@@ -220,7 +220,7 @@
  },
  "vjm4hsjkm2": {
   "dir": "in",
-  "status": "open",
+  "status": "done",
   "num": "٣٧/٣٧/٣/٢/٩/٢٣/دف",
   "date": "١٤٤٨/٠٤/٢٦ هـ",
   "subject": "نقل آلية الشنان",
@@ -229,6 +229,7 @@
   "file": "304315b0669c50063b0e9b90cceab0f9",
   "db": null,
   "fileName": "WhatsApp Scan� 2026-10-07 at 09.09.40.pdf",
-  "at": 1791354168246
+  "at": 1791354168246,
+  "updated": 1791354216670
  }
 }
