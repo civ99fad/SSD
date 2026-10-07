@@ -18,12 +18,12 @@ const NAMES = {
 const unitDir = (u) => (u === 'isnad' ? 'data/db/' : `data/units/${u}/db/`);
 
 export default {
-  async fetch(req, env) {
+  async fetch(req, env, ctx) {
     const origin = env.ORIGIN || 'https://civ99fad.github.io';
     const cors = {
       'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'GET, PUT, DELETE, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, X-Unit, X-Code, X-User, X-Ref',
+      'Access-Control-Allow-Headers': 'Content-Type, X-Unit, X-Code, X-User, X-Ref, X-Login',
       'Access-Control-Max-Age': '86400',
       Vary: 'Origin',
     };
@@ -52,12 +52,17 @@ export default {
       return json(401, { message: 'رمز المركز غير صحيح' });
     }
 
-    if (url.pathname === '/check') return json(200, { ok: true, unit, name: NAMES[unit] });
+    // من دخل: admin إن كان رمز المسؤول، وإلا مستخدم الجهة (لا يُخزَّن اسم المستخدم ولا الرموز)
+    const by = ok('admin') && !ok(unit) ? 'admin' : 'user';
+    if (url.pathname === '/check') {
+      if (req.headers.get('X-Login') === '1') ctx.waitUntil(audit(env, { k: 'login', unit, by }));
+      return json(200, { ok: true, unit, name: NAMES[unit] });
+    }
     if (!url.pathname.startsWith('/gh')) return json(404, { message: 'not found' });
 
     const path = url.pathname.slice(3); // مسار واجهة GitHub بعد /repos/<المستودع>
     const m = req.method;
-    let body;
+    let body, oldDb = null, auditFile = '', isUpload = false;
     if (m === 'GET') {
       if (!(path === '' || /^\/(contents|git\/trees|git\/blobs)\//.test(path))) return json(403, { message: 'غير مسموح' });
     } else if (m === 'PUT' || m === 'DELETE') {
@@ -80,6 +85,11 @@ export default {
       const newBlob = m === 'PUT' && !body.sha && /^data\/blobs\/[0-9a-f]{32}\.[a-z0-9]+$/.test(file);
       if (!own && !newBlob) return json(403, { message: 'هذا الرمز يسمح بالتعديل على ' + NAMES[unit] + ' فقط' });
       if (env.BRANCH) body.branch = env.BRANCH;
+      isUpload = newBlob;
+      if (own && m === 'PUT' && /\.json$/.test(file)) {
+        auditFile = file;
+        oldDb = await readOld(env, file); // نسخة الملف قبل التعديل لمعرفة ما تغيّر
+      }
       body.message = `[${NAMES[unit]}] ` + String(body.message || 'تعديل من الموقع').slice(0, 200);
     } else {
       return json(405, { message: 'غير مسموح' });
@@ -95,9 +105,73 @@ export default {
       },
       body: body ? JSON.stringify(body) : undefined,
     });
+    if (r.ok && m !== 'GET') {
+      if (auditFile && oldDb !== undefined) {
+        let neu = null;
+        try { neu = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(String(body.content || '').replace(/\s/g, '')), (c) => c.charCodeAt(0)))); } catch (e) {}
+        const ch = diffDb(oldDb, neu);
+        if (ch.length) ctx.waitUntil(audit(env, { k: 'edit', unit, by, file: auditFile.split('/').pop().replace(/\.json$/, ''), ch }));
+      } else if (isUpload) ctx.waitUntil(audit(env, { k: 'upload', unit, by }));
+    }
     return new Response(r.body, { status: r.status, headers: { ...cors, 'Content-Type': r.headers.get('Content-Type') || 'application/json' } });
   },
 };
+
+// ---------- سجل التدقيق: ملف صغير لكل حدث في فرع audit (لا يعيد نشر الموقع) ----------
+const GH = (env) => 'https://api.github.com/repos/' + (env.REPO || 'civ99fad/SSD');
+const ghHeaders = (env, extra) => ({ Authorization: 'Bearer ' + env.GITHUB_TOKEN, Accept: 'application/vnd.github+json', 'User-Agent': 'isnad-edit-worker', ...(extra || {}) });
+
+// محتوى الملف قبل التعديل كائنًا (أو {} إن لم يوجد، أو undefined إن تعذّرت القراءة)
+async function readOld(env, file) {
+  try {
+    const r = await fetch(GH(env) + '/contents/' + file.split('/').map(encodeURIComponent).join('/') + (env.BRANCH ? '?ref=' + encodeURIComponent(env.BRANCH) : ''), { headers: ghHeaders(env, { Accept: 'application/vnd.github.raw' }) });
+    if (r.status === 404) return {};
+    if (!r.ok) return undefined;
+    return JSON.parse(await r.text());
+  } catch (e) {
+    return undefined;
+  }
+}
+
+async function audit(env, entry) {
+  try {
+    const t = Date.now();
+    const day = new Date(t + 3 * 3600 * 1000).toISOString().slice(0, 10); // توقيت الرياض
+    const path = `data/audit/${day}/${t}-${entry.unit}-${Math.random().toString(36).slice(2, 6)}.json`;
+    const bytes = new TextEncoder().encode(JSON.stringify({ ...entry, t }));
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    await fetch(GH(env) + '/contents/' + path, {
+      method: 'PUT',
+      headers: ghHeaders(env, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ message: `[تدقيق] ${entry.unit} ${entry.k}`, content: btoa(bin), branch: env.AUDIT_BRANCH || 'audit' }),
+    });
+  } catch (e) {}
+}
+
+// ملخص الفرق بين نسختين من ملف قاعدة بيانات (خريطة معرّف ← سجل): إضافة / تعديل (أسماء الحقول) / حذف
+function diffDb(a, b) {
+  const isO = (x) => x && typeof x === 'object' && !Array.isArray(x);
+  if (!isO(a) || !isO(b)) return JSON.stringify(a) === JSON.stringify(b) ? [] : [{ op: 'edit', l: '(الملف)' }];
+  const lab = (r, id) => String((isO(r) && (r.name || r.title || r.plate || r.subject || r.num || r.text || r.item || r.pN)) || id).slice(0, 60);
+  const short = (v) => (v == null ? '' : typeof v === 'object' ? '…' : String(v).slice(0, 40));
+  const out = [];
+  for (const k of Object.keys(b)) {
+    if (!(k in a)) out.push({ op: 'add', l: lab(b[k], k) });
+    else if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) {
+      const f = [];
+      if (isO(a[k]) && isO(b[k])) {
+        for (const x of new Set([...Object.keys(a[k]), ...Object.keys(b[k])])) {
+          if (['at', 'updated', 'ts'].includes(x)) continue;
+          if (JSON.stringify(a[k][x]) !== JSON.stringify(b[k][x])) f.push({ f: x, o: short(a[k][x]), n: short(b[k][x]) });
+        }
+      }
+      if (f.length || !isO(a[k])) out.push({ op: 'edit', l: lab(b[k], k), f: f.slice(0, 6) });
+    }
+  }
+  for (const k of Object.keys(a)) if (!(k in b)) out.push({ op: 'del', l: lab(a[k], k) });
+  return out.slice(0, 30);
+}
 
 // مقارنة بزمن ثابت
 function same(a, b) {

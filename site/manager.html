@@ -423,7 +423,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     </section>`;
 
     const cards = `<section class="panel" aria-label="جاهزية المراكز"><div class="sh"><h2>جاهزية المراكز والأقسام</h2><span class="cnt">${arD(R.length)}</span><span class="grow"></span>
-      <div class="chips" role="group" aria-label="الترتيب">${chip('sort', 'order', 'الترتيب الأساسي')}${chip('sort', 'lv', 'الأحرج أولًا')}${chip('sort', 'pct', 'الأقل جاهزية')}</div>
+      <div class="chips" role="group" aria-label="الترتيب">${chip('sort', 'order', 'الترتيب الأساسي')}${chip('sort', 'lv', 'الأكثر حرجًا أولًا')}${chip('sort', 'pct', 'الأقل جاهزية')}</div>
       <div class="chips" role="group" aria-label="العرض">${chip('show', 'all', 'كل الجهات')}${chip('show', 'data', 'التي فيها بيانات')}</div></div>
       <div class="cards">${list.map(card).join('') || '<div class="none">لا توجد جهات فيها بيانات بعد.</div>'}</div></section>`;
 
@@ -621,7 +621,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   async function check(pw, usr, rf) {
     // عند وجود «الحارس»: كلمة دخول اللوحة هي رمز manager فيه (لا تُكتب في الموقع العام)
     if (cfg.editProxy) {
-      const r = await fetch(cfg.editProxy.replace(/\/+$/, '') + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw, 'X-User': usr || '', 'X-Ref': rf || '' } });
+      const r = await fetch(cfg.editProxy.replace(/\/+$/, '') + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw, 'X-Login': '1', 'X-User': usr || '', 'X-Ref': rf || '' } });
       return r.ok;
     }
     if (cfg.mode === 'server') {
