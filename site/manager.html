@@ -634,7 +634,9 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   }
   $('gform').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pw = $('pw').value, err = $('perr'), usr = $('usr').value.trim(), rf = $('ref').value.trim();
+    const cc = (v) => String(v == null ? '' : v).replace(/[٠-٩]/g, (c) => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g, (c) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(c)).replace(/[\u2010-\u2015\u2212\uFE63\uFF0D]/g, '-').replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF\u00A0]/g, '').trim();
+    const pw = cc($('pw').value), err = $('perr'), usr = cc($('usr').value), rf = cc($('ref').value);
+    if (cfg.editProxy && (!/^[\x21-\x7E]*$/.test(pw) || !/^[\x21-\x7E]*$/.test(usr) || !/^[\x21-\x7E]*$/.test(rf))) { err.textContent = 'اكتب البيانات بالأحرف والأرقام الإنجليزية فقط (غيّر لغة لوحة المفاتيح) وبدون مسافات.'; err.hidden = false; return; }
     err.hidden = true;
     if (cfg.editProxy && !usr) { err.textContent = 'الرجاء إدخال اسم المستخدم'; err.hidden = false; $('usr').focus(); return; }
     if (cfg.editProxy && !rf) { err.textContent = 'الرجاء إدخال رمز المرجع'; err.hidden = false; $('ref').focus(); return; }
