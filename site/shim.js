@@ -40,7 +40,8 @@
   };
   const USR_KEY = 'isnad-usr-' + (cfg.unit || 'isnad'), REF_KEY = 'isnad-ref-' + (cfg.unit || 'isnad');
   // اسم المستخدم ورمز المرجع (يُتحقق منهما في «الحارس» مع رمز الدخول)
-  const uh = () => { const h = {}, u = sess.get(USR_KEY), r = sess.get(REF_KEY); if (u) h['X-User'] = u; if (r) h['X-Ref'] = r; return h; };
+  const OLDW_KEY = 'isnad-oldw-' + (cfg.unit || 'isnad'); // الحارس بنسخة قديمة لا تقبل ترويستي الاسم والمرجع
+  const uh = () => { if (sess.get(OLDW_KEY)) return {}; const h = {}, u = sess.get(USR_KEY), r = sess.get(REF_KEY); if (u) h['X-User'] = u; if (r) h['X-Ref'] = r; return h; };
   store.del(CODE_KEY); // رموز قديمة كانت تُحفظ دائمًا على الجهاز
   const unitCode = PROXY ? sess.get(CODE_KEY) : null;
   const token = cfg.repo ? store.get(TOKEN_KEY) || (unitCode ? 'unit:' + unitCode : null) : null;
@@ -540,7 +541,15 @@
       if (GATE) {
         // الدخول برمز الجهة في «الحارس» فقط (أو الرمز العام للمسؤول)، ويفتح وضع التعديل مباشرة
         try {
-          const r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value, 'X-Login': '1', 'X-User': usrIn ? usrIn.value.trim() : '', 'X-Ref': refIn ? refIn.value.trim() : '' } });
+          let r;
+          sess.del(OLDW_KEY);
+          try {
+            r = await fetch(PROXY + '/check?login=1', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value, 'X-User': usrIn ? usrIn.value.trim() : '', 'X-Ref': refIn ? refIn.value.trim() : '' } });
+          } catch (x0) {
+            // نسخة الحارس المنشورة قديمة (ترفض الترويسات الجديدة): نتحقق بالرمز وحده
+            r = await fetch(PROXY + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': cfg.unit || 'isnad', 'X-Code': input.value } });
+            if (r.ok) { sess.set(OLDW_KEY, '1'); console.warn('الحارس يحتاج تحديث الكود (Edit code ← Deploy)'); }
+          }
           ok = editCode = r.ok;
           netErr = !r.ok && r.status !== 401;
         } catch (x) {
