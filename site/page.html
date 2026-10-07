@@ -804,7 +804,10 @@ const S = { db:null, user:null, assets:null, canEdit:false, me:null,
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';
 const HF = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'long',year:'numeric'}); } catch(e){ return null; } })();
-const hijri = ts => { const d = new Date(ts || Date.now()); return HF ? HF.format(d) : d.toLocaleDateString('ar-u-nu-latn'); };
+// التاريخ الهجري رقميًا بصيغة موحدة: يوم/شهر/سنة هـ (مثل 26/04/1448هـ)
+const HP = (() => { try { return new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'Asia/Riyadh'}); } catch(e){ return null; } })();
+const hijri = ts => { const d = new Date(ts || Date.now()); if (!HP) return d.toLocaleDateString('en-GB'); const o={}; HP.formatToParts(d).forEach(p=>o[p.type]=p.value); return o.day+'/'+o.month+'/'+o.year+'هـ'; };
+const hijriDay = () => { try { return new Intl.DateTimeFormat('ar-SA',{weekday:'long',timeZone:'Asia/Riyadh'}).format(new Date())+' '+hijri(); } catch(e){ return hijri(); } };
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
 const norm = s => String(s ?? '').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim();
 function plural(n, one, two, few, many){ if(n===0) return 'لا يوجد'; if(n===1) return one; if(n===2) return two; if(n<=10) return n+' '+few; return n+' '+many; }
@@ -1123,7 +1126,7 @@ function viewSearch(raw){
 
 /* ---------- dashboard (لوحة اليوم) ---------- */
 function viewDash(){
-  const head=`<header class="ph"><div><div class="dsub">${esc(hijri())}</div><h1>لوحة اليوم</h1></div></header>`;
+  const head=`<header class="ph"><div><div class="dsub">${esc(hijriDay())}</div><h1>لوحة اليوم</h1></div></header>`;
   if (!S.loadedV || !S.loadedH) return head+loading();
   const cfg=hCfg(), d=dutyDay(), k=CTRL?(ctNow()||''):dutyShift(d);
   const off=CTRL?0:((Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0);
@@ -1353,7 +1356,7 @@ const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-um
 const LAT = s => String(s==null?'':s).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
 const onum = v => { const t=LAT(v).trim(); if (t.indexOf('/')<0) return esc(t);
   return '<span class="onum" dir="rtl">'+t.split(/\s*\/\s*/).map(x=>'<bdi>'+esc(x||'-')+'</bdi>').join('<span class="osl">/</span>')+'</span>'; };
-const hnum = () => HFN ? HFN.format(new Date()).replace(/[\u200f\s]/g,'').replace(/هـ?$/,'')+'هـ' : hijri();
+const hnum = () => hijri();
 const ENJ = ['','البلد','شراف','المنتزه','الصناعية','العزيزية','الدائري','أجا','الجبل','التدخل','الخطة'];
 const enj = t => String(t||'').replace(/(إنجاز|انجاز)\s*([0-9٠-٩]+)(?![0-9٠-٩]|\s*\()/g, (m,a,n)=>{ const k=+String(n).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)); return ENJ[k]&&!String(t).includes(ENJ[k])?`${m} (${ENJ[k]})`:m; });
 const DEF_ACT = {down:'تم رفع طلب صيانة', maint:'تم التحويل', away:'تم التحويل'};
@@ -2726,7 +2729,7 @@ const ACT = {
   delInv: (id, i) => { const v=getV(id), r=(v.inventory||[])[+i]; if(!r) return;
     openConfirm(`حذف «${r.name}» من جرد الآلية؟`, 'حذف الصنف', async () => { const arr=(getV(id).inventory||[]).slice(); arr.splice(+i,1); await saveV(id,{inventory:arr, invUpdated:Date.now()}); toast('حُذف الصنف'); }); },
   addDoc: id => openForm({title:'إضافة سند أو محضر', submit:'إضافة', fields:[
-      [{id:'type',label:'النوع',type:'select',value:'recv',options:DOPTS},{id:'date',label:'التاريخ',value:hijri(),required:true,hint:'مثال: ٢١/٢/١٤٤٥هـ'}],
+      [{id:'type',label:'النوع',type:'select',value:'recv',options:DOPTS},{id:'date',label:'التاريخ',value:hijri(),required:true,hint:'مثال: 21/02/1448هـ'}],
       {id:'title',label:'العنوان',required:true,placeholder:'مثال: استلام الآلية من الورشة'},
       {id:'note',label:'التفاصيل (اختياري)',type:'textarea',placeholder:'مثال: تركيب بطارية 80 أمبير عدد 2، فحص الكهرباء'},
       {id:'file',label:'الملف',type:'file',required:true,accept:'application/pdf,image/jpeg,image/png,image/webp,.doc,.docx',hint:'PDF أو صورة، حتى 20 ميجابايت'}

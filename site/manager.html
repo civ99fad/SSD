@@ -358,7 +358,8 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   const lvColor = (x) => (x.pct == null ? '' : x.pct >= 0.8 ? 'c-ok' : x.pct >= 0.5 ? 'c-mid' : 'c-bad');
   const bar = (c) => { const t = c.ready + c.down + c.maint + c.away + c.none; const w = (n) => (t ? ((n / t) * 100).toFixed(2) : 0) + '%'; return `<div class="bar" role="img" aria-label="جاهزة ${c.ready}، متعطلة ${c.down}، صيانة ${c.maint}، مدعومة ${c.away}">${['ready', 'down', 'maint', 'away', 'none'].map((s) => `<span class="st-${s}" style="width:${w(c[s])}"></span>`).join('')}</div>`; };
   const shiftTxt = (x) => (x.size ? `${arD(x.pres)} من ${arD(x.size)}` : '—');
-  const hijri = () => (HF ? HF.format(new Date()) : new Date().toLocaleDateString('ar-u-nu-latn'));
+  const hijriNum = () => { try { const o = {}; new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Riyadh' }).formatToParts(new Date()).forEach((p) => (o[p.type] = p.value)); return o.day + '/' + o.month + '/' + o.year + 'هـ'; } catch (e) { return new Date().toLocaleDateString('en-GB'); } };
+  const hijri = () => { try { return new Intl.DateTimeFormat('ar-SA', { weekday: 'long', timeZone: 'Asia/Riyadh' }).format(new Date()) + ' ' + hijriNum(); } catch (e) { return hijriNum(); } };
   const timeStr = (t) => new Intl.DateTimeFormat('ar-SA', { hour: 'numeric', minute: '2-digit' }).format(new Date(t));
 
   function card(x) {
@@ -581,7 +582,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       <form class="cform" id="cform">
         <label class="full">عنوان التعميم<input name="title" required placeholder="مثال: تعميم بشأن الالتزام بأوقات الدوام"></label>
         <label>رقم التعميم (اختياري)<input name="num" placeholder="مثال: ١٢٣٤/ص"></label>
-        <label>التاريخ<input name="date" value="${esc(hijri())}"></label>
+        <label>التاريخ<input name="date" value="${esc(hijriNum())}"></label>
         <label class="full">نص مختصر أو ملاحظات (اختياري)<textarea name="note"></textarea></label>
         <label class="full">المرفق (PDF أو صورة أو Word)<input name="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.docx,application/pdf,image/*"></label>
         <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="btn primary" id="cgo">إرسال التعميم لجميع المراكز والأقسام</button><span class="cerr" id="cerr"></span></div>
