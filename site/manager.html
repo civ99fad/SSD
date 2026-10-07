@@ -551,6 +551,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   const ub64 = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, '')), (c) => c.charCodeAt(0)));
   function ghWho() { const t = ls.get('isnad-gh-token'), c = ss.get(CODE); if (c && PROXY) return { proxy: true, c }; if (t) return { t }; return null; }
   async function gh(path, opts = {}) {
+    if (window.ISNAD_MOVED && opts.method && opts.method !== 'GET') throw new Error('الموقع القديم للاطلاع فقط — استخدم civofhail.pages.dev');
     const w = ghWho(); if (!w) throw new Error('nokey');
     const url = w.proxy ? PROXY + '/gh' + path : 'https://api.github.com/repos/' + cfg.repo + path;
     const headers = w.proxy ? Object.assign({ 'X-Unit': 'manager', 'X-Code': w.c }, ss.get('isnad-mgr-oldw') ? {} : { 'X-User': ss.get(USR) || '', 'X-Ref': ss.get(REF) || '' }) : { Authorization: 'Bearer ' + w.t, Accept: 'application/vnd.github+json' };
