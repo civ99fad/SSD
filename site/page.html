@@ -544,7 +544,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .advb{padding:14px 20px 18px}
 .advs{margin:0 0 12px;padding-inline-start:22px;line-height:1.9}
 .advf{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-.onb{display:flex;direction:ltr;gap:4px;align-items:center}.onb input{min-width:0;flex:1 1 0;width:0;padding:8px 2px;text-align:center;background:transparent;border:1px dashed var(--line,#9aa4b2);border-radius:6px}.onb input.onl{flex:2.4}.onb input.ond{flex:1.3}.onb .osl{opacity:.7}.onum{display:inline-flex;direction:ltr;gap:2px;white-space:nowrap}.onum .osl{opacity:.7}
+.onb{display:flex;direction:rtl;gap:4px;align-items:center}.onb input{min-width:0;flex:1 1 0;width:0;padding:8px 2px;text-align:center;background:transparent;border:1px dashed var(--line,#9aa4b2);border-radius:6px}.onb input.onl{flex:2.4}.onb input.ond{flex:1.3}.onb .osl{opacity:.7}.onum{display:inline-flex;direction:rtl;gap:2px;white-space:nowrap}.onum .osl{opacity:.7}
 .phb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 html:not(.u-ctrl) .ccc{display:none!important}
 html:not(.u-iso) .iso-only{display:none!important}
@@ -804,9 +804,9 @@ const S = { db:null, user:null, assets:null, canEdit:false, me:null,
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';
 const HF = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'long',year:'numeric'}); } catch(e){ return null; } })();
-// التاريخ الهجري رقميًا بصيغة موحدة: يوم/شهر/سنة هـ (مثل 26/04/1448هـ)
+// التاريخ الهجري رقميًا بصيغة موحدة: سنة/شهر/يوم (مثل 1448/04/26) — السنة يسار والشهر وسط واليوم يمين
 const HP = (() => { try { return new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'Asia/Riyadh'}); } catch(e){ return null; } })();
-const hijri = ts => { const d = new Date(ts || Date.now()); if (!HP) return d.toLocaleDateString('en-GB'); const o={}; HP.formatToParts(d).forEach(p=>o[p.type]=p.value); return o.day+'/'+o.month+'/'+o.year+'هـ'; };
+const hijri = ts => { const d = new Date(ts || Date.now()); if (!HP) return d.toLocaleDateString('en-GB'); const o={}; HP.formatToParts(d).forEach(p=>o[p.type]=p.value); return o.year+'/'+o.month+'/'+o.day; };
 const hijriDay = () => { try { return new Intl.DateTimeFormat('ar-SA',{weekday:'long',timeZone:'Asia/Riyadh'}).format(new Date())+' '+hijri(); } catch(e){ return hijri(); } };
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
 const norm = s => String(s ?? '').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim();
@@ -1355,7 +1355,7 @@ const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-um
 // رقم الصادر/الخطاب (مثل ٣٧/٣٧/٣/٢/٩/١٢٣/دف): يُعرض بترتيب القراءة من اليمين لليسار (كل جزء معزول لئلا ينعكس الترتيب)
 const LAT = s => String(s==null?'':s).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
 const onum = v => { const t=LAT(v).trim(); if (t.indexOf('/')<0) return esc(t);
-  return '<span class="onum" dir="ltr">'+t.split(/\s*\/\s*/).map(x=>'<bdi>'+esc(x||'-')+'</bdi>').join('<span class="osl">/</span>')+'</span>'; };
+  return '<span class="onum" dir="rtl">'+t.split(/\s*\/\s*/).map(x=>'<bdi>'+esc(x||'-')+'</bdi>').join('<span class="osl">/</span>')+'</span>'; };
 const hnum = () => hijri();
 const ENJ = ['','البلد','شراف','المنتزه','الصناعية','العزيزية','الدائري','أجا','الجبل','التدخل','الخطة'];
 const enj = t => String(t||'').replace(/(إنجاز|انجاز)\s*([0-9٠-٩]+)(?![0-9٠-٩]|\s*\()/g, (m,a,n)=>{ const k=+String(n).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)); return ENJ[k]&&!String(t).includes(ENJ[k])?`${m} (${ENJ[k]})`:m; });
@@ -2276,7 +2276,7 @@ const cnQCur = () => { const m=hYM(hnum()); return m?Math.min(4,Math.ceil(m.m/3)
 const cnQSel = () => { const v=S.cnQ; return v==='all' ? 'all' : (CNQ[v] ? +v : cnQCur()); };
 const numA = t => { const x=parseFloat(String(t||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,]/g,'.')); return isNaN(x)?0:x; };
 const nfmt = n => new Intl.NumberFormat('ar-SA',{maximumFractionDigits:2}).format(n);
-const hYM = d => { const t=String(d||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)); const m=t.match(/(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})/); return m?{m:+m[2],y:+m[3]}:null; };
+const hYM = d => { const t=String(d||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)); const m0=t.match(/(\d{4})\s*\/\s*(\d{1,2})\s*\/\s*(\d{1,2})/), m=m0?[0,m0[3],m0[2],m0[1]]:t.match(/(\d{1,2})\s*\/\s*(\d{1,2})\s*\/\s*(\d{4})/); return m?{m:+m[2],y:+m[3]}:null; };
 const HMONTHS=['','محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
 const cnParty = r => { const v=r.vehicle&&getV(r.vehicle); return [r.party?enj(r.party):'', v?vLab(v):''].filter(Boolean).join(' — '); };
 function viewConsum(){
@@ -2729,7 +2729,7 @@ const ACT = {
   delInv: (id, i) => { const v=getV(id), r=(v.inventory||[])[+i]; if(!r) return;
     openConfirm(`حذف «${r.name}» من جرد الآلية؟`, 'حذف الصنف', async () => { const arr=(getV(id).inventory||[]).slice(); arr.splice(+i,1); await saveV(id,{inventory:arr, invUpdated:Date.now()}); toast('حُذف الصنف'); }); },
   addDoc: id => openForm({title:'إضافة سند أو محضر', submit:'إضافة', fields:[
-      [{id:'type',label:'النوع',type:'select',value:'recv',options:DOPTS},{id:'date',label:'التاريخ',value:hijri(),required:true,hint:'مثال: 21/02/1448هـ'}],
+      [{id:'type',label:'النوع',type:'select',value:'recv',options:DOPTS},{id:'date',label:'التاريخ',value:hijri(),required:true,hint:'مثال: 1448/02/21'}],
       {id:'title',label:'العنوان',required:true,placeholder:'مثال: استلام الآلية من الورشة'},
       {id:'note',label:'التفاصيل (اختياري)',type:'textarea',placeholder:'مثال: تركيب بطارية 80 أمبير عدد 2، فحص الكهرباء'},
       {id:'file',label:'الملف',type:'file',required:true,accept:'application/pdf,image/jpeg,image/png,image/webp,.doc,.docx',hint:'PDF أو صورة، حتى 20 ميجابايت'}
@@ -2855,13 +2855,6 @@ $('#enter').addEventListener('click', () => { S.entered=true; store.set('isnad-e
 S.entered = store.get('isnad-entered')==='1';
 S.openPh = {}; try { S.openPh = JSON.parse(localStorage.getItem('isnad-ph')||'{}') || {}; } catch(e){}
 renderBrand(); render();
-// التواريخ الرقمية (26/04/1448هـ) تُعزل في اتجاه يسار←يمين كي لا تنعكس داخل النص العربي
-(function(){ const RX=/(\d{1,2}\/\d{1,2}\/\d{4}\s?هـ?)/g; let busy=false;
-  const fix=root=>{ if(busy||!root) return; busy=true; try{ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null); const hit=[]; let n; while((n=w.nextNode())){ const t=n.nodeValue; if(t.length<9||t.indexOf('/')<0) continue; const par=n.parentNode&&n.parentNode.nodeName; if(par==='SCRIPT'||par==='STYLE'||par==='TEXTAREA') continue; RX.lastIndex=0; if(RX.test(t.replace(/\u2066[^\u2069]*\u2069/g,''))) hit.push(n); }
-      hit.forEach(n=>{ n.nodeValue=n.nodeValue.replace(/\u2066|\u2069/g,'').replace(RX,'\u2066$1\u2069'); }); }catch(e){} busy=false; };
-  let tm=0; new MutationObserver(()=>{ clearTimeout(tm); tm=setTimeout(()=>fix(document.body),30); }).observe(document.body,{childList:true,subtree:true,characterData:true});
-  fix(document.body); })();
-const _dstyle=document.createElement('style'); _dstyle.textContent='input[id$="date"],input[id$="Date"],#f_licExp,#f_idExp,#f_from,#f_to{direction:ltr;text-align:right}'; document.head.appendChild(_dstyle);
 const use = n => (window.claude && window.claude.use) ? window.claude.use(n).catch(()=>null) : Promise.resolve(null);
 (async () => {
   const [db, user, assets, downloads] = await Promise.all([use('db'), use('user'), use('assets'), use('downloads')]);
