@@ -300,7 +300,7 @@
   }
 
   async function write(c, id, mutate) {
-    if (!token) throw { code: 'not_granted' };
+    if (!token || window.ISNAD_MOVED) throw { code: 'not_granted' }; // الموقع القديم للاطلاع فقط
     const next = await commitDoc(c, id, mutate);
     if (c !== 'files') {
       cols[c] = cols[c] || {};
@@ -446,8 +446,8 @@
     use(name) {
       if (name === 'db') return loadDb().then(() => db);
       if (name === 'downloads') return Promise.resolve(downloads);
-      if (name === 'user') return userReady.then((m) => (m ? user : Promise.reject(new Error('view only'))));
-      if (name === 'assets') return userReady.then((m) => (m ? assets : Promise.reject(new Error('view only'))));
+      if (name === 'user') return window.ISNAD_MOVED ? Promise.reject(new Error('view only')) : userReady.then((m) => (m ? user : Promise.reject(new Error('view only'))));
+      if (name === 'assets') return window.ISNAD_MOVED ? Promise.reject(new Error('view only')) : userReady.then((m) => (m ? assets : Promise.reject(new Error('view only'))));
       return Promise.reject(new Error('unavailable'));
     },
   };
