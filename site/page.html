@@ -544,7 +544,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .advb{padding:14px 20px 18px}
 .advs{margin:0 0 12px;padding-inline-start:22px;line-height:1.9}
 .advf{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
-.onb{display:flex;direction:rtl;gap:4px;align-items:center}.onb input{min-width:0;flex:1 1 0;width:0;padding:8px 2px;text-align:center;background:transparent;border:1px dashed var(--line,#9aa4b2);border-radius:6px}.onb input.onl{flex:2.4}.onb input.ond{flex:1.3}.onb .osl{opacity:.7}.onum{display:inline-flex;direction:rtl;gap:2px;white-space:nowrap}.onum .osl{opacity:.7}
+.onb{display:flex;direction:ltr;gap:4px;align-items:center}.onb input{min-width:0;flex:1 1 0;width:0;padding:8px 2px;text-align:center;background:transparent;border:1px dashed var(--line,#9aa4b2);border-radius:6px}.onb input.onl{flex:2.4}.onb input.ond{flex:1.3}.onb .osl{opacity:.7}.onum{display:inline-flex;direction:ltr;gap:2px;white-space:nowrap}.onum .osl{opacity:.7}
 .phb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 html:not(.u-ctrl) .ccc{display:none!important}
 html:not(.u-iso) .iso-only{display:none!important}
@@ -1355,7 +1355,7 @@ const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-um
 // رقم الصادر/الخطاب (مثل ٣٧/٣٧/٣/٢/٩/١٢٣/دف): يُعرض بترتيب القراءة من اليمين لليسار (كل جزء معزول لئلا ينعكس الترتيب)
 const LAT = s => String(s==null?'':s).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
 const onum = v => { const t=LAT(v).trim(); if (t.indexOf('/')<0) return esc(t);
-  return '<span class="onum" dir="rtl">'+t.split(/\s*\/\s*/).map(x=>'<bdi>'+esc(x||'-')+'</bdi>').join('<span class="osl">/</span>')+'</span>'; };
+  return '<span class="onum" dir="ltr">'+t.split(/\s*\/\s*/).map(x=>'<bdi>'+esc(x||'-')+'</bdi>').join('<span class="osl">/</span>')+'</span>'; };
 const hnum = () => hijri();
 const ENJ = ['','البلد','شراف','المنتزه','الصناعية','العزيزية','الدائري','أجا','الجبل','التدخل','الخطة'];
 const enj = t => String(t||'').replace(/(إنجاز|انجاز)\s*([0-9٠-٩]+)(?![0-9٠-٩]|\s*\()/g, (m,a,n)=>{ const k=+String(n).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)); return ENJ[k]&&!String(t).includes(ENJ[k])?`${m} (${ENJ[k]})`:m; });
@@ -2855,6 +2855,13 @@ $('#enter').addEventListener('click', () => { S.entered=true; store.set('isnad-e
 S.entered = store.get('isnad-entered')==='1';
 S.openPh = {}; try { S.openPh = JSON.parse(localStorage.getItem('isnad-ph')||'{}') || {}; } catch(e){}
 renderBrand(); render();
+// التواريخ الرقمية (26/04/1448هـ) تُعزل في اتجاه يسار←يمين كي لا تنعكس داخل النص العربي
+(function(){ const RX=/(\d{1,2}\/\d{1,2}\/\d{4}\s?هـ?)/g; let busy=false;
+  const fix=root=>{ if(busy||!root) return; busy=true; try{ const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null); const hit=[]; let n; while((n=w.nextNode())){ const t=n.nodeValue; if(t.length<9||t.indexOf('/')<0) continue; const par=n.parentNode&&n.parentNode.nodeName; if(par==='SCRIPT'||par==='STYLE'||par==='TEXTAREA') continue; RX.lastIndex=0; if(RX.test(t.replace(/\u2066[^\u2069]*\u2069/g,''))) hit.push(n); }
+      hit.forEach(n=>{ n.nodeValue=n.nodeValue.replace(/\u2066|\u2069/g,'').replace(RX,'\u2066$1\u2069'); }); }catch(e){} busy=false; };
+  let tm=0; new MutationObserver(()=>{ clearTimeout(tm); tm=setTimeout(()=>fix(document.body),30); }).observe(document.body,{childList:true,subtree:true,characterData:true});
+  fix(document.body); })();
+const _dstyle=document.createElement('style'); _dstyle.textContent='input[id$="date"],input[id$="Date"],#f_licExp,#f_idExp,#f_from,#f_to{direction:ltr;text-align:right}'; document.head.appendChild(_dstyle);
 const use = n => (window.claude && window.claude.use) ? window.claude.use(n).catch(()=>null) : Promise.resolve(null);
 (async () => {
   const [db, user, assets, downloads] = await Promise.all([use('db'), use('user'), use('assets'), use('downloads')]);
