@@ -266,8 +266,8 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   /* ---------- نفس حسابات صفحة الجهة (page.html) ---------- */
   const arD = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
   const pctFmt = (n) => new Intl.NumberFormat('ar-SA', { style: 'percent', maximumFractionDigits: 0 }).format(n);
-  const HF = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return null; } })();
-  const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' }); } catch (e) { return null; } })();
+  const HF = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return null; } })();
+  const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'numeric', year: 'numeric' }); } catch (e) { return null; } })();
   const HM = [['محرم'],['صفر'],['ربيع الأول','ربيع الاول'],['ربيع الآخر','ربيع الثاني','ربيع الاخر'],['جمادى الأولى','جمادى الاولى','جمادى الأول'],['جمادى الآخرة','جمادى الثانية','جمادى الاخرة'],['رجب'],['شعبان'],['رمضان'],['شوال'],['ذو القعدة','ذي القعدة'],['ذو الحجة','ذي الحجة']];
   function hkey(s) {
     if (!s) return 0;
@@ -358,7 +358,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   const lvColor = (x) => (x.pct == null ? '' : x.pct >= 0.8 ? 'c-ok' : x.pct >= 0.5 ? 'c-mid' : 'c-bad');
   const bar = (c) => { const t = c.ready + c.down + c.maint + c.away + c.none; const w = (n) => (t ? ((n / t) * 100).toFixed(2) : 0) + '%'; return `<div class="bar" role="img" aria-label="جاهزة ${c.ready}، متعطلة ${c.down}، صيانة ${c.maint}، مدعومة ${c.away}">${['ready', 'down', 'maint', 'away', 'none'].map((s) => `<span class="st-${s}" style="width:${w(c[s])}"></span>`).join('')}</div>`; };
   const shiftTxt = (x) => (x.size ? `${arD(x.pres)} من ${arD(x.size)}` : '—');
-  const hijri = () => (HF ? HF.format(new Date()) : new Date().toLocaleDateString('ar'));
+  const hijri = () => (HF ? HF.format(new Date()) : new Date().toLocaleDateString('ar-u-nu-latn'));
   const timeStr = (t) => new Intl.DateTimeFormat('ar-SA', { hour: 'numeric', minute: '2-digit' }).format(new Date(t));
 
   function card(x) {

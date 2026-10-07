@@ -803,8 +803,8 @@ const S = { db:null, user:null, assets:null, canEdit:false, me:null,
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';
-const HF = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}); } catch(e){ return null; } })();
-const hijri = ts => { const d = new Date(ts || Date.now()); return HF ? HF.format(d) : d.toLocaleDateString('ar'); };
+const HF = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'long',year:'numeric'}); } catch(e){ return null; } })();
+const hijri = ts => { const d = new Date(ts || Date.now()); return HF ? HF.format(d) : d.toLocaleDateString('ar-u-nu-latn'); };
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
 const norm = s => String(s ?? '').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim();
 function plural(n, one, two, few, many){ if(n===0) return 'لا يوجد'; if(n===1) return one; if(n===2) return two; if(n<=10) return n+' '+few; return n+' '+many; }
@@ -901,7 +901,7 @@ function fieldHtml(f){
   let ctl;
   if (f.type==='select') ctl=`<select id="${id}">${f.options.map(o=>`<option value="${esc(o[0])}"${o[0]===f.value?' selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
   else if (f.type==='textarea') ctl=`<textarea id="${id}" placeholder="${esc(f.placeholder||'')}"${req}>${esc(f.value||'')}</textarea>`;
-  else if (f.type==='onum'){ const v=String(f.value||'').trim(); let p=v?v.split(/\s*\/\s*/):[]; if(v&&p.length<2) p=['','','','','',v,'']; while(p.length<7) p.push(''); p=p.slice(0,7);
+  else if (f.type==='onum'){ const v=LAT(f.value||'').trim(); let p=v?v.split(/\s*\/\s*/):[]; if(v&&p.length<2) p=['','','','','',v,'']; while(p.length<7) p.push(''); p=p.slice(0,7);
     ctl='<div class="onb" dir="rtl" id="'+id+'">'+p.map((x,i)=>(i?'<span class="osl">/</span>':'')+'<input type="text" inputmode="'+(i===6?'text':'numeric')+'" class="'+(i===5?'onl':i===6?'ond':'')+'" data-i="'+i+'" value="'+esc(x)+'" placeholder="'+(i===5?'رقم الخطاب':i===6?'دف':'-')+'" aria-label="'+(i===5?'رقم الخطاب':i===6?'دف':'الجزء '+(i+1))+'" autocomplete="off">').join('')+'</div>'; }
   else if (f.type==='file') ctl=`<input id="${id}" type="file" accept="${esc(f.accept||'')}"${req}>`;
   else ctl=`<input id="${id}" type="${f.type||'text'}" value="${esc(f.value||'')}" placeholder="${esc(f.placeholder||'')}" autocomplete="off"${f.list?` list="${id}_dl"`:''}${req}>${f.list?`<datalist id="${id}_dl">${f.list.map(o=>`<option value="${esc(o)}"></option>`).join('')}</datalist>`:''}`;
@@ -916,7 +916,7 @@ function openForm({title, fields, submit='حفظ', onSubmit}){
     const vals={}, err=$('#ferr');
     for (const f of flat){
       const el=document.getElementById('f_'+f.id);
-      if (f.type==='onum'){ const ps=[...el.querySelectorAll('input')].map(i=>i.value.trim()); vals[f.id]=ps.some(Boolean)?ps.join('/'):''; continue; }
+      if (f.type==='onum'){ const ps=[...el.querySelectorAll('input')].map(i=>LAT(i.value).trim()); vals[f.id]=ps.some(Boolean)?ps.join('/'):''; continue; }
       vals[f.id] = f.type==='file' ? (el.files[0]||null) : el.value.trim();
       if (f.required && !vals[f.id]){ err.textContent='أكمل الحقل: '+f.label; err.hidden=false; el.focus(); return; }
     }
@@ -1348,9 +1348,10 @@ function invTable(rows, start, edit, vid){
 }
 const DTYPES = {recv:'سند استلام', hand:'سند تسليم', mahdar:'محضر', sanad:'سند', other:'مستند آخر', status:'حركة / حالة'};
 const DCLS = {recv:'recv', hand:'hand', mahdar:'rep', sanad:'rep', other:'rep', status:'st'};
-const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'}); } catch(e){ return null; } })();
+const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'}); } catch(e){ return null; } })();
 // رقم الصادر/الخطاب (مثل ٣٧/٣٧/٣/٢/٩/١٢٣/دف): يُعرض بترتيب القراءة من اليمين لليسار (كل جزء معزول لئلا ينعكس الترتيب)
-const onum = v => { const t=String(v==null?'':v).trim(); if (t.indexOf('/')<0) return esc(t);
+const LAT = s => String(s==null?'':s).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
+const onum = v => { const t=LAT(v).trim(); if (t.indexOf('/')<0) return esc(t);
   return '<span class="onum" dir="rtl">'+t.split(/\s*\/\s*/).map(x=>'<bdi>'+esc(x||'-')+'</bdi>').join('<span class="osl">/</span>')+'</span>'; };
 const hnum = () => HFN ? HFN.format(new Date()).replace(/[\u200f\s]/g,'').replace(/هـ?$/,'')+'هـ' : hijri();
 const ENJ = ['','البلد','شراف','المنتزه','الصناعية','العزيزية','الدائري','أجا','الجبل','التدخل','الخطة'];
@@ -2003,7 +2004,7 @@ const curShift = () => CTRL ? ctNow() : dutyShift();
 const DUTY_H = 9, DUTY_TZ_MS = 3*36e5, DUTY_ANCHOR = Date.UTC(2026,8,29)/864e5, DUTY_ANCHOR_SHIFT = 3;
 const dutyDay = (t=Date.now()) => Math.floor((t + DUTY_TZ_MS - DUTY_H*36e5)/864e5);
 const dutyShift = (d=dutyDay()) => String((((DUTY_ANCHOR_SHIFT-1 + d - DUTY_ANCHOR) % 3) + 3) % 3 + 1);
-const dutyDateStr = d => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-arab',{weekday:'long',day:'numeric',month:'numeric',timeZone:'UTC'}).format(new Date(d*864e5)); } catch(e){ return ''; } };
+const dutyDateStr = d => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn',{weekday:'long',day:'numeric',month:'numeric',timeZone:'UTC'}).format(new Date(d*864e5)); } catch(e){ return ''; } };
 function dutyPanel(){
   if (CTRL && !ctNow()) return `<section class="panel duty" aria-label="الوردية المناوبة"><div class="dlbl">الوردية المناوبة الآن</div><p class="rnote" style="margin:8px 0 0">حدّد المجموعة المناوبة اليوم من زر «تعديل القوة والورديات» ليُحسب تناوب الورديات الست تلقائياً (٨ ساعات لمدة يومين ثم راحة ٦٤ ساعة).</p></section>`;
   const cfg=hCfg(), d=dutyDay(), k=CTRL?ctNow():dutyShift(d), nk=CTRL?ctNow(Date.now()+8*36e5):dutyShift(d+1);
@@ -2414,7 +2415,7 @@ function viewTx(){
   return head+tabs+tools+body;
 }
 const letFields = r => [
-  [{id:'dir',label:'النوع',type:'select',value:ldOf(r),options:Object.entries(LDIR)},{id:'status',label:'الحالة',type:'select',value:txStOf(r),options:Object.entries(TXST)}],
+  [{id:'dir',label:'النوع',type:'select',value:r.id?ldOf(r):'out',options:[['out',LDIR.out],['in',LDIR.in]]},{id:'status',label:'الحالة',type:'select',value:txStOf(r),options:Object.entries(TXST)}],
   {id:'num',label:'رقم الخطاب',type:'onum',value:r.num},
   {id:'date',label:'التاريخ',value:r.date||hijri(),required:true},
   {id:'subject',label:'الموضوع',value:r.subject,required:true,placeholder:'مثال: طلب صيانة آلية السلالم ٠/٢٦'},
