@@ -548,10 +548,10 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .phb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 html:not(.u-ctrl) .ccc{display:none!important}
 html:not(.u-iso) .iso-only{display:none!important}
-html:not(.u-supply):not(.u-admin):not(.u-tech):not(.u-safety) .dpt{display:none!important}
+html:not(.u-supply):not(.u-admin):not(.u-tech):not(.u-patrol):not(.u-lic) .dpt{display:none!important}
 html.u-supply #navg-fleet{display:none!important}
 html.u-supply #navb-fleet,html.u-supply #navb-fleet.closed{display:flex!important;padding:0;border:0;margin:0}
-html.u-safety .dpt:not(.d-safety),html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .dpt:not(.d-tech){display:none!important}
+html.u-patrol .dpt:not(.d-patrol),html.u-lic .dpt:not(.d-lic),html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .dpt:not(.d-tech){display:none!important}
 .dcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
 .dcard{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface)}
 .dcard:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(14,61,44,.12)}
@@ -694,9 +694,17 @@ html.u-safety .dpt:not(.d-safety),html.u-supply .dpt:not(.d-supply),html.u-admin
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>
         <span>الآليات</span>
       </button>
-      <button type="button" class="dpt d-safety" data-act="nav" data-id="insp" id="nav-insp">
+      <button type="button" class="dpt d-patrol" data-act="nav" data-id="rounds" id="nav-rounds">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
-        <span>إحصائيات الكشفيات</span>
+        <span>الجولات التفتيشية</span>
+      </button>
+      <button type="button" class="dpt d-lic" data-act="nav" data-id="lfac" id="nav-lfac">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10h6M9 14h6"/></svg>
+        <span>المنشآت والتراخيص</span>
+      </button>
+      <button type="button" class="dpt d-patrol d-lic" data-act="nav" data-id="sfstat" id="nav-sfstat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+        <span>إحصائيات الشعبة</span>
       </button>
       <button type="button" class="dpt d-supply" data-act="nav" data-id="handover" id="nav-handover">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 15 2 2 4-4"/></svg>
@@ -823,14 +831,14 @@ html.u-safety .dpt:not(.d-safety),html.u-supply .dpt:not(.d-supply),html.u-admin
 // مركز التحكم والتوجيه: أقسام خاصة به (أرقام المسؤولين، الجهات المساندة، الخرائط)
 if (((window.ISNAD_CONFIG||{}).unit||'isnad')==='isnad') document.documentElement.classList.add('u-iso');
 const DEPT = (window.ISNAD_CONFIG||{}).dept||''; if (DEPT) document.documentElement.classList.add('u-'+DEPT);
-// أقسام السلامة: «ملفات الأفراد» أول القائمة
-if (DEPT==='safety'){ const nv=document.querySelector('.nav'), pf=document.getElementById('nav-pfiles'), ins=document.getElementById('nav-insp'); if (nv&&pf) nv.insertBefore(pf, nv.firstChild); if (nv&&ins) nv.insertBefore(ins, nv.firstChild); }
+// أقسام السلامة: الجولات التفتيشية (الدوريات) أو المنشآت والتراخيص، ثم ملفات الأفراد، ثم إحصائيات الشعبة
+if (DEPT==='patrol'||DEPT==='lic'){ const nv=document.querySelector('.nav'); if (nv) ['nav-sfstat','nav-pfiles',DEPT==='patrol'?'nav-rounds':'nav-lfac'].forEach(id=>{ const b=document.getElementById(id); if (b) nv.insertBefore(b, nv.firstChild); }); }
 const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
   if (nv) ['profiles','advisor'].forEach(id=>{ const b=document.getElementById('nav-'+id); if (b) nv.appendChild(b); }); }
 const $ = s => document.querySelector(s);
 const S = { db:null, user:null, assets:null, canEdit:false, me:null,
   vehicles:[], warehouses:[], settings:{}, loadedV:false, loadedW:false, dbFailed:false,
-  view:{name:DEPT==='tech'?'dfleet':(DEPT==='supply'||DEPT==='admin')?'dcenters':DEPT==='safety'?'insp':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false };
+  view:{name:DEPT==='tech'?'dfleet':(DEPT==='supply'||DEPT==='admin')?'dcenters':DEPT==='patrol'?'rounds':DEPT==='lic'?'lfac':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false, sib:{} };
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -896,8 +904,8 @@ async function saveV(id, patch){ await vref(id).update(Object.assign({updated:Da
 const fref = id => S.db.doc('faults/' + id);
 const getF = id => (S.faults||[]).find(f => f.id===id);
 async function saveF(id, patch){ await fref(id).update(Object.assign({updated:Date.now()}, patch)); }
-const ownGet = id => String(id).startsWith('f:') ? getF(String(id).slice(2)) : getV(id);
-const ownSave = (id, patch) => String(id).startsWith('f:') ? saveF(String(id).slice(2), patch) : saveV(id, patch);
+const ownGet = id => String(id).startsWith('f:') ? getF(String(id).slice(2)) : String(id).startsWith('r:') ? (S.rounds||[]).find(r=>r.id===String(id).slice(2)) : getV(id);
+const ownSave = (id, patch) => String(id).startsWith('f:') ? saveF(String(id).slice(2), patch) : String(id).startsWith('r:') ? S.db.doc('rounds/'+String(id).slice(2)).update(Object.assign({updated:Date.now()}, patch)) : saveV(id, patch);
 async function saveW(id, patch){ await wref(id).update(Object.assign({updated:Date.now()}, patch)); }
 
 /* ---------- modal ---------- */
@@ -914,7 +922,7 @@ function showPhoto(vid, key, idx, list){
   idx=((idx%arr.length)+arr.length)%arr.length;
   const reuse = S.lb && !$('#modal').hidden;
   S.lb={vid, key, idx};
-  const n=arr.length, label=vid.startsWith('f:')?'صورة العطل':key==='contentPhotos'?'صورة المحتويات':'صورة الآلية';
+  const n=arr.length, label=vid.startsWith('f:')?'صورة العطل':vid.startsWith('r:')?'صورة الجولة':key==='contentPhotos'?'صورة المحتويات':'صورة الآلية';
   const chev = d => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="${d}"/></svg>`;
   const html=`<h2 id="mt" class="vh">${label}</h2>
     <div class="lbstage" id="lbstage"><img src="${blob(arr[idx])}" alt="${label} ${idx+1} من ${n}">
@@ -939,6 +947,7 @@ function fieldHtml(f){
   else if (f.type==='onum'){ const v=LAT(f.value||'').trim(); let p=v?v.split(/\s*\/\s*/):[]; if(v&&p.length<2) p=['','','','','',v,'']; while(p.length<7) p.push(''); p=p.slice(0,7);
     ctl='<div class="onb" dir="rtl" id="'+id+'">'+p.map((x,i)=>(i?'<span class="osl">/</span>':'')+'<input type="text" inputmode="'+(i===6?'text':'numeric')+'" class="'+(i===5?'onl':i===6?'ond':'')+'" data-i="'+i+'" value="'+esc(x)+'" placeholder="'+(i===5?'رقم الخطاب':i===6?'دف':'-')+'" aria-label="'+(i===5?'رقم الخطاب':i===6?'دف':'الجزء '+(i+1))+'" autocomplete="off">').join('')+'</div>'; }
   else if (f.type==='file') ctl=`<input id="${id}" type="file" accept="${esc(f.accept||'')}"${req}>`;
+  else if (f.type==='files') ctl=`<input id="${id}" type="file" multiple accept="${esc(f.accept||'')}">`;
   else ctl=`<input id="${id}" type="${f.type||'text'}" value="${esc(f.value||'')}" placeholder="${esc(f.placeholder||'')}" autocomplete="off"${f.list?` list="${id}_dl"`:''}${req}>${f.list?`<datalist id="${id}_dl">${f.list.map(o=>`<option value="${esc(o)}"></option>`).join('')}</datalist>`:''}`;
   return `<div class="fld"><label for="${id}">${esc(f.label)}</label>${ctl}${f.hint?`<small>${esc(f.hint)}</small>`:''}</div>`;
 }
@@ -952,7 +961,7 @@ function openForm({title, fields, submit='حفظ', onSubmit}){
     for (const f of flat){
       const el=document.getElementById('f_'+f.id);
       if (f.type==='onum'){ const ps=[...el.querySelectorAll('input')].map(i=>LAT(i.value).trim()); vals[f.id]=ps.some(Boolean)?ps.join('/'):''; continue; }
-      vals[f.id] = f.type==='file' ? (el.files[0]||null) : el.value.trim();
+      vals[f.id] = f.type==='file' ? (el.files[0]||null) : f.type==='files' ? [...el.files] : el.value.trim();
       if (f.required && !vals[f.id]){ err.textContent='أكمل الحقل: '+f.label; err.hidden=false; el.focus(); return; }
     }
     const b=$('#msub'); b.disabled=true; const old=b.textContent; b.textContent='جارٍ الحفظ…';
@@ -1088,8 +1097,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : (v.name==='dcenters'||v.name==='dcenter'||(v.name==='dperson'&&S.dpFrom!=='dpfiles')) ? 'dcenters' : (v.name==='dpfiles'||v.name==='dperson') ? 'dpfiles' : (v.name==='dfleet'||v.name==='dveh') ? 'dfleet' : (v.name==='insp'||v.name==='inspf') ? 'insp' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','insp','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : (v.name==='dcenters'||v.name==='dcenter'||(v.name==='dperson'&&S.dpFrom!=='dpfiles')) ? 'dcenters' : (v.name==='dpfiles'||v.name==='dperson') ? 'dpfiles' : (v.name==='dfleet'||v.name==='dveh') ? 'dfleet' : (v.name==='rounds'||v.name==='pfac') ? 'rounds' : (v.name==='lfac'||v.name==='lfile') ? 'lfac' : v.name==='sfstat' ? 'sfstat' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','rounds','lfac','sfstat','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
@@ -1123,8 +1132,11 @@ function render(){
   else if (v.name==='dpfiles') paint(viewDPfiles());
   else if (v.name==='dfleet') paint(viewDFleet());
   else if (v.name==='dveh') paint(viewDVeh(v.id));
-  else if (v.name==='insp') paint(viewInsp());
-  else if (v.name==='inspf') paint(viewInspF(v.id));
+  else if (v.name==='rounds') paint(viewRounds());
+  else if (v.name==='pfac') paint(viewPFac(v.id));
+  else if (v.name==='lfac') paint(viewLFac());
+  else if (v.name==='lfile') paint(viewLFile(v.id));
+  else if (v.name==='sfstat') paint(viewSfStat());
   else if (v.name==='circ') paint(gSearchBar()+viewCirc());
   else if (v.name==='pfile') paint(gSearchBar()+viewPFile(v.id));
   else if (v.name==='consum') paint(gSearchBar()+viewConsum());
@@ -1857,38 +1869,150 @@ function viewDVeh(key){
   return head+info+tbl;
 }
 const dSave = async (col, base, x) => { const rec=Object.assign({}, base, hStrip(x), {at:Date.now()}); delete rec.file; if (x.file) Object.assign(rec, await storeLibFile(x.file, col+'-'+uid())); else Object.assign(rec,{file:null, db:null, fileName:''}); await S.db.collection(col).doc().set(rec); };
-/* ---------- أقسام السلامة: إحصائيات الكشفيات على المنشآت ---------- */
-function viewInsp(){
-  const all=(S.insp||[]).slice(), f=S.inf||'all', t=S.int||'', q=norm(S.inq||'');
-  const edit=S.canEdit, ok=all.filter(r=>r.status!=='act').length, act=all.length-ok;
+/* ---------- أقسام السلامة: الدوريات (الجولات التفتيشية) والتراخيص (ملفات المنشآت) وإحصائيات الشعبة ---------- */
+const RISK = {low:'منخفضة', mid:'متوسطة', high:'عالية'};
+const RISKC = {low:'hs-ok', mid:'hs-mid', high:'hs-bad'};
+const riskOf = r => RISK[r.risk]?r.risk:'mid';
+const LST = {ready:'جاهزة', proc:'تحت الإجراء', docs:'متطلب مستندات'};
+const LSTC = {ready:'hs-ok', proc:'hs-mid', docs:'hs-bad'};
+const lstOf = r => LST[r.status]?r.status:'proc';
+const sfPill = (cls, t) => `<span class="stpill ${cls}"><i aria-hidden="true"></i>${esc(t)}</span>`;
+const sfN = v => { const x=parseInt(LAT(v),10); return isNaN(x)||x<0?0:x; };
+const sfFix = r => Math.min(sfN(r.fixed), sfN(r.viol));
+const sfTile = (label, val, color, sub) => `<div class="dcard" style="cursor:default${color?';border-color:'+color:''}"><small>${esc(label)}</small><b style="font-size:26px${color?';color:'+color:''}">${val}</b>${sub?`<small>${esc(sub)}</small>`:''}</div>`;
+const sfTiles = t => `<div class="dcards" style="margin-bottom:16px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">${t}</div>`;
+const sfCrumb = (nav, label, name) => `<nav class="crumbs"><button type="button" data-act="nav" data-id="${nav}">${esc(label)}</button><span>/</span><span>${esc(name||'')}</span></nav>`;
+const sfChip = (act, cur, k, l, n) => `<button type="button" class="fchip${cur===k?' on':''}" data-act="${act}" data-id="${esc(k)}" aria-pressed="${cur===k}">${esc(l)}${n!=null?` <b>${n}</b>`:''}</button>`;
+const sfPct = (a, b) => b ? Math.round(a/b*100)+'%' : '—';
+const sfSearch = (id, val, ph) => `<div class="toolbar"><label class="search"><span class="vh">بحث</span>${ICON.search}<input id="${id}" type="search" placeholder="${esc(ph)}" value="${esc(val||'')}"></label></div>`;
+const byName = (a,b) => String(a.name||'').localeCompare(String(b.name||''),'ar',{numeric:true});
+const PHOTO_ACCEPT = 'image/jpeg,image/png,image/webp';
+
+/* قسم الدوريات: المنشآت وتصنيفها، وسجل الجولات التفتيشية لكل منشأة بصورها */
+const roundsOf = id => (S.rounds||[]).filter(r=>r.f===id).sort(byDate);
+const pfacFields = r => [{id:'name',label:'اسم المنشأة',value:r.name,required:true,placeholder:'مثال: مجمع الراشد التجاري'},
+  [{id:'type',label:'نوع المنشأة (التصنيف)',value:r.type,list:INTYPES,required:true,placeholder:'مثال: تجاري'},{id:'risk',label:'درجة الخطورة',type:'select',value:riskOf(r),options:Object.entries(RISK)}],
+  [{id:'loc',label:'الموقع / الحي (اختياري)',value:r.loc,placeholder:'مثال: حي المنتزه'},{id:'owner',label:'المسؤول ورقم التواصل (اختياري)',value:r.owner}],
+  {id:'note',label:'ملاحظات (اختياري)',type:'textarea',value:r.note}];
+const roundFields = r => [[{id:'date',label:'تاريخ الجولة',value:r.date||hijri(),required:true},{id:'insp',label:'القائم بالجولة',value:r.insp,placeholder:'مثال: ملازم / سعد العتيبي'}],
+  [{id:'viol',label:'عدد المخالفات',type:'number',value:r.viol||'0'},{id:'fixed',label:'تم تلافيها',type:'number',value:r.fixed||'0'}],
+  {id:'notes',label:'الملاحظات والمخالفات',type:'textarea',value:r.notes,placeholder:'مثال: طفايات منتهية الصلاحية، مخرج طوارئ مغلق'}];
+const roundRow = (r, withFac) => { const ph=r.photos||[], edit=S.canEdit;
+  return `<tr><td class="hdate">${esc(r.date||'')}</td>${withFac?`<td class="nm"><button type="button" class="link" data-act="pfacOpen" data-id="${esc(r.f)}">${esc(((S.pfac||[]).find(o=>o.id===r.f)||{}).name||r.fN||'')}</button></td>`:''}<td>${r.insp?esc(r.insp):DASH}</td><td class="n">${sfN(r.viol)}</td><td class="n">${sfFix(r)}</td><td>${r.notes?esc(r.notes):DASH}</td><td>${ph.length?`<button type="button" class="link" data-act="viewPhoto" data-id="r:${esc(r.id)}" data-i="photos:0">📷 ${ph.length} ${ph.length>1?'صور':'صورة'}</button>`:DASH}</td>${edit?rowActs('rounds',r):''}</tr>`; };
+const ROUND_COLS = ['التاريخ','القائم بالجولة','المخالفات','تم تلافيها','الملاحظات','الصور'];
+function viewRounds(){
+  const all=(S.pfac||[]), rs=S.rounds||[], edit=S.canEdit, tab=S.rtab||'fac', t=S.rty||'', q=norm(S.rq||'');
+  const viol=rs.reduce((s,r)=>s+sfN(r.viol),0), fixed=rs.reduce((s,r)=>s+sfFix(r),0);
+  const head=`<header class="ph"><div class="ph-t"><h1>الجولات التفتيشية</h1><span class="count">${all.length} منشأة · ${rs.length} جولة</span></div>${edit?`<div class="phb"><button type="button" class="btn" data-act="pfacAdd">${ICON.plus}إضافة منشأة</button><button type="button" class="btn primary" data-act="roundAdd" data-id="">${ICON.plus}تسجيل جولة</button></div>`:''}</header>`;
+  if (!S.loadedSf) return head+loading();
+  const tiles=sfTiles(sfTile('المنشآت',all.length)+sfTile('الجولات',rs.length)+sfTile('المخالفات',viol,'#B42318')+sfTile('تم تلافيها',fixed,'#1F7A56')+sfTile('لم تُتلافَ بعد',viol-fixed,'#B54708'));
+  const tabs=`<div class="fchips" role="tablist" aria-label="العرض" style="margin-bottom:12px">${sfChip('rTab',tab,'fac','المنشآت',all.length)}${sfChip('rTab',tab,'log','سجل الجولات',rs.length)}</div>`;
+  if (!all.length) return head+tiles+`<div class="panel empty"><b>لا توجد منشآت مسجلة بعد.</b>${edit?'أضف المنشأة وتصنيفها بزر «إضافة منشأة»، ثم سجّل جولاتها التفتيشية وصورها.':''}</div>`;
+  if (tab==='log'){
+    const list=rs.filter(r=>!q||norm([r.fN,r.insp,r.notes,r.date].join(' ')).includes(q)).sort(byDate);
+    return head+tiles+tabs+sfSearch('rq',S.rq,'ابحث باسم المنشأة أو القائم بالجولة أو الملاحظة')+(list.length?dTable(['التاريخ','المنشأة',...ROUND_COLS.slice(1),...(edit?['']:[])], list.map(r=>roundRow(r,true)).join('')):`<div class="panel empty"><b>${rs.length?'لا توجد نتائج.':'لم تُسجّل جولات بعد.'}</b></div>`);
+  }
   const types={}; all.forEach(r=>{ const k=r.type||'غير محدد'; types[k]=(types[k]||0)+1; });
-  const head=`<header class="ph"><div class="ph-t"><h1>إحصائيات الكشفيات</h1><span class="count">${all.length} منشأة</span></div>${edit?`<button type="button" class="btn primary" data-act="inspAdd">${ICON.plus}إضافة منشأة</button>`:''}</header>`;
-  if (!S.loadedInsp) return head+loading();
-  const tiles=`<div class="dcards" style="margin-bottom:16px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))">
-    <div class="dcard" style="cursor:default"><small>إجمالي المنشآت</small><b style="font-size:26px">${all.length}</b></div>
-    <div class="dcard" style="cursor:default;border-color:#2e7d5b"><small>سليم</small><b style="font-size:26px;color:#1F7A56">${ok}</b></div>
-    <div class="dcard" style="cursor:default;border-color:#b42318"><small>متطلب إجراء</small><b style="font-size:26px;color:#B42318">${act}</b></div>
-    <div class="dcard" style="cursor:default"><small>أنواع المنشآت</small><b style="font-size:26px">${Object.keys(types).length}</b></div></div>`;
-  const chip=(k,l,n)=>`<button type="button" class="fchip${f===k?' on':''}" data-act="inspF" data-id="${k}" aria-pressed="${f===k}">${esc(l)} <b>${n}</b></button>`;
-  const tchip=(k,n)=>`<button type="button" class="fchip${t===k?' on':''}" data-act="inspT" data-id="${esc(k)}" aria-pressed="${t===k}">${esc(k||'كل الأنواع')} <b>${n}</b></button>`;
-  const tools=`<div class="fchips" role="group" aria-label="الحالة" style="margin-bottom:8px">${chip('all','الكل',all.length)}${chip('ok','سليم',ok)}${chip('act','متطلب إجراء',act)}</div>
-    ${all.length?`<div class="fchips" role="group" aria-label="النوع" style="margin-bottom:12px">${tchip('',all.length)}${Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([k,n])=>tchip(k,n)).join('')}</div>`:''}
-    ${all.length>8?`<div class="toolbar"><label class="search"><span class="vh">بحث</span>${ICON.search}<input id="inq" type="search" placeholder="ابحث باسم المنشأة أو الموقع" value="${esc(S.inq||'')}"></label></div>`:''}`;
-  if (!all.length) return head+tiles+`<div class="panel empty"><b>لا توجد منشآت مسجلة بعد.</b>${edit?'أضف المنشآت ونوعها وآخر كشف وحالتها بزر «إضافة منشأة».':''}</div>`;
-  const list=all.filter(r=>(f==='all'||(f==='act'?r.status==='act':r.status!=='act'))&&(!t||(r.type||'غير محدد')===t)&&(!q||norm([r.name,r.loc,r.type,r.notes].join(' ')).includes(q))).sort((a,b)=>(b.status==='act')-(a.status==='act')||(hkey(b.last)-hkey(a.last)));
-  const rows=list.map(r=>{ const nd=(S.inspdocs||[]).filter(d=>d.f===r.id).length;
-    return `<tr><td class="nm"><button type="button" class="link" data-act="inspOpen" data-id="${esc(r.id)}">${esc(r.name||'')}</button>${r.loc?`<div class="hper">${esc(r.loc)}</div>`:''}</td><td>${esc(r.type||'—')}</td><td class="hdate">${esc(r.last||'')||DASH}</td><td>${r.notes?esc(r.notes):DASH}</td><td><span class="stpill ${r.status==='act'?'hs-bad':'hs-ok'}"><i aria-hidden="true"></i>${INST[r.status==='act'?'act':'ok']}</span></td><td><button type="button" class="link" data-act="inspOpen" data-id="${esc(r.id)}">${nd?nd+' مستند':'المستندات'} ${ICON.arrow}</button></td>${edit?rowActs('insp',r):''}</tr>`; }).join('');
-  return head+tiles+tools+(list.length?dTable(['المنشأة','النوع','آخر كشف','الملاحظات','الحالة','المستندات',...(edit?['']:[])], rows):`<div class="panel empty"><b>لا توجد نتائج.</b></div>`);
+  const list=all.filter(r=>(!t||(r.type||'غير محدد')===t)&&(!q||norm([r.name,r.loc,r.type,r.owner].join(' ')).includes(q))).sort(byName);
+  const tchips=`<div class="fchips" role="group" aria-label="التصنيف" style="margin-bottom:12px">${sfChip('rType',t,'','كل الأنواع',all.length)}${Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([k,n])=>sfChip('rType',t,k,k,n)).join('')}</div>`;
+  const rows=list.map(r=>{ const rr=roundsOf(r.id), last=rr[0], open=rr.reduce((s,x)=>s+sfN(x.viol)-sfFix(x),0);
+    return `<tr><td class="nm"><button type="button" class="link" data-act="pfacOpen" data-id="${esc(r.id)}">${esc(r.name||'')}</button>${r.loc?`<div class="hper">${esc(r.loc)}</div>`:''}</td><td>${esc(r.type||'—')}</td><td>${sfPill(RISKC[riskOf(r)],RISK[riskOf(r)])}</td><td class="n">${rr.length}</td><td class="hdate">${last?esc(last.date||''):DASH}</td><td class="n" style="${open?'color:var(--danger)':''}">${open}</td><td><button type="button" class="link" data-act="pfacOpen" data-id="${esc(r.id)}">ملف المنشأة ${ICON.arrow}</button></td>${edit?rowActs('pfac',r):''}</tr>`; }).join('');
+  return head+tiles+tabs+tchips+sfSearch('rq',S.rq,'ابحث باسم المنشأة أو الموقع')+(list.length?dTable(['المنشأة','النوع','درجة الخطورة','الجولات','آخر جولة','مخالفات قائمة','',...(edit?['']:[])], rows):`<div class="panel empty"><b>لا توجد نتائج.</b></div>`);
 }
-function viewInspF(id){
-  const r=(S.insp||[]).find(x=>x.id===id), edit=S.canEdit;
-  const back=`<nav class="crumbs"><button type="button" data-act="nav" data-id="insp">إحصائيات الكشفيات</button><span>/</span><span>${esc((r||{}).name||'')}</span></nav>`;
+function viewPFac(id){
+  const r=(S.pfac||[]).find(x=>x.id===id), edit=S.canEdit;
+  const back=sfCrumb('rounds','الجولات التفتيشية',(r||{}).name);
   if (!r) return back+`<div class="panel empty"><b>المنشأة غير موجودة.</b></div>`;
-  const docs=(S.inspdocs||[]).filter(d=>d.f===id).sort((a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0)));
-  const head=`${back}<header class="ph"><div class="ph-t"><h1>${esc(r.name||'')}</h1><span class="stpill ${r.status==='act'?'hs-bad':'hs-ok'}"><i aria-hidden="true"></i>${INST[r.status==='act'?'act':'ok']}</span></div>${edit?`<button type="button" class="btn" data-act="hRecEdit" data-id="insp" data-i="${esc(id)}">${ICON.edit}تعديل البيانات</button><button type="button" class="btn primary" data-act="inspDocAdd" data-id="${esc(id)}">${ICON.plus}إضافة مستند</button>`:''}</header>`;
-  const info=`<dl class="panel info" style="margin:0 0 16px"><div><dt>نوع المنشأة</dt><dd>${esc(r.type||'—')}</dd></div><div><dt>الموقع</dt><dd>${esc(r.loc||'—')}</dd></div><div><dt>آخر كشف</dt><dd>${esc(r.last||'—')}</dd></div><div><dt>الحالة</dt><dd>${INST[r.status==='act'?'act':'ok']}</dd></div><div><dt>الملاحظات الموجودة</dt><dd>${esc(r.notes||'—')}</dd></div></dl>`;
-  const tbl=docs.length?dTable(['التاريخ','المستند','الملف',...(edit?['']:[])], docs.map(d=>`<tr><td class="hdate">${esc(d.date||'')}</td><td class="nm">${esc(d.title||'')}</td><td>${fileBtn('inspdocs',d,'عرض')}</td>${edit?rowActs('inspdocs',d):''}</tr>`).join('')):`<div class="panel empty"><b>لا توجد مستندات لهذه المنشأة بعد.</b>${edit?'أرفق محاضر الكشف والتراخيص بزر «إضافة مستند».':''}</div>`;
-  return head+info+`<h2 style="font-size:17px;margin:0 0 8px">مستندات المنشأة</h2>`+tbl;
+  const rr=roundsOf(id), viol=rr.reduce((s,x)=>s+sfN(x.viol),0), fixed=rr.reduce((s,x)=>s+sfFix(x),0), photos=rr.reduce((s,x)=>s+(x.photos||[]).length,0);
+  const head=`${back}<header class="ph"><div class="ph-t"><h1>${esc(r.name||'')}</h1>${sfPill(RISKC[riskOf(r)],'خطورة '+RISK[riskOf(r)])}</div>${edit?`<div class="phb"><button type="button" class="btn" data-act="hRecEdit" data-id="pfac" data-i="${esc(id)}">${ICON.edit}تعديل البيانات</button><button type="button" class="btn primary" data-act="roundAdd" data-id="${esc(id)}">${ICON.plus}تسجيل جولة</button></div>`:''}</header>`;
+  const info=`<dl class="panel info" style="margin:0 0 16px"><div><dt>نوع المنشأة (التصنيف)</dt><dd>${esc(r.type||'—')}</dd></div><div><dt>درجة الخطورة</dt><dd>${RISK[riskOf(r)]}</dd></div><div><dt>الموقع</dt><dd>${esc(r.loc||'—')}</dd></div><div><dt>المسؤول / التواصل</dt><dd>${esc(r.owner||'—')}</dd></div><div><dt>آخر جولة</dt><dd>${esc((rr[0]||{}).date||'—')}</dd></div>${r.note?`<div><dt>ملاحظات</dt><dd>${esc(r.note)}</dd></div>`:''}</dl>`;
+  const tiles=sfTiles(sfTile('الجولات',rr.length)+sfTile('المخالفات',viol,'#B42318')+sfTile('تم تلافيها',fixed,'#1F7A56')+sfTile('صور الجولات',photos));
+  const log=rr.length?rr.map(x=>`<section class="panel" style="margin:0 0 12px;padding:14px 16px"><div class="sh" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 8px"><h3 style="margin:0;font-size:16px">جولة <bdi class="hdate">${esc(x.date||'')}</bdi></h3>${sfN(x.viol)?sfPill(sfFix(x)>=sfN(x.viol)?'hs-ok':'hs-bad',`${sfN(x.viol)} مخالفة · تم تلافي ${sfFix(x)}`):sfPill('hs-ok','بلا مخالفات')}<span class="grow" style="flex:1"></span>${edit?`<button type="button" class="icon-btn" data-act="hRecEdit" data-id="rounds" data-i="${esc(x.id)}" aria-label="تعديل الجولة">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hRecDel" data-id="rounds" data-i="${esc(x.id)}" aria-label="حذف الجولة">${ICON.del}</button>`:''}</div>
+    ${x.insp?`<div class="hper">القائم بالجولة: ${esc(x.insp)}</div>`:''}${x.notes?`<p style="margin:6px 0 10px;white-space:pre-wrap">${esc(x.notes)}</p>`:''}${gallery({id:'r:'+x.id, photos:x.photos||[]}, 'photos', 'صورة الجولة')}</section>`).join(''):`<div class="panel empty"><b>لم تُسجّل جولات لهذه المنشأة بعد.</b>${edit?'سجّل الجولة وارفع صورها بزر «تسجيل جولة».':''}</div>`;
+  return head+info+tiles+`<h2 style="font-size:17px;margin:0 0 8px">سجل الجولات التفتيشية</h2>`+log;
+}
+
+/* قسم التراخيص: ملف لكل منشأة فيه السجل والمستندات وسجل المخالفات ووضع المنشأة */
+const lOf = (col, id) => (S[col]||[]).filter(r=>r.f===id).sort(byDate);
+const lOpenViol = id => (S.lviol||[]).filter(r=>r.f===id&&!r.fixed).length;
+const lfacFields = r => [{id:'name',label:'اسم المنشأة',value:r.name,required:true,placeholder:'مثال: مجمع الراشد التجاري'},
+  [{id:'type',label:'نوع المنشأة',value:r.type,list:INTYPES,required:true,placeholder:'مثال: تجاري'},{id:'status',label:'وضع المنشأة',type:'select',value:lstOf(r),options:Object.entries(LST)}],
+  [{id:'lic',label:'رقم الترخيص (اختياري)',value:r.lic},{id:'exp',label:'تاريخ انتهاء الترخيص (اختياري)',value:r.exp,placeholder:'مثال: 1448/05/20'}],
+  [{id:'owner',label:'المالك / المسؤول (اختياري)',value:r.owner},{id:'loc',label:'الموقع / الحي (اختياري)',value:r.loc,placeholder:'مثال: حي المنتزه'}],
+  {id:'note',label:'ملاحظات (اختياري)',type:'textarea',value:r.note}];
+const lrecFields = r => [{id:'text',label:'البيان / الإجراء',value:r.text,required:true,placeholder:'مثال: استلام طلب الترخيص ومراجعة المخططات'},
+  [{id:'date',label:'التاريخ',value:r.date||hijri(),required:true},{id:'note',label:'ملاحظة (اختياري)',value:r.note}]];
+const ldocFields = r => [[{id:'title',label:'عنوان المستند',value:r.title,required:true,placeholder:'مثال: شهادة الدفاع المدني'},{id:'date',label:'التاريخ',value:r.date||hijri(),required:true}]];
+const lviolFields = r => [{id:'text',label:'المخالفة',type:'textarea',value:r.text,required:true,placeholder:'مثال: عدم وجود نظام إنذار'},
+  [{id:'date',label:'تاريخ المخالفة',value:r.date||hijri(),required:true},{id:'fixed',label:'الحالة',type:'select',value:r.fixed?'1':'',options:[['','قائمة'],['1','تم تلافيها']]}],
+  {id:'fixDate',label:'تاريخ التلافي (اختياري)',value:r.fixDate}];
+const lExpired = r => { const k=hkey(r.exp); return !!k && k<hkey(hijri()); };
+function viewLFac(){
+  const all=S.lfac||[], edit=S.canEdit, f=S.lsf||'all', q=norm(S.lq||'');
+  const c={ready:0,proc:0,docs:0}; all.forEach(r=>c[lstOf(r)]++);
+  const vo=(S.lviol||[]).filter(v=>!v.fixed).length;
+  const head=`<header class="ph"><div class="ph-t"><h1>المنشآت والتراخيص</h1><span class="count">${all.length} منشأة</span></div>${edit?`<button type="button" class="btn primary" data-act="lfacAdd">${ICON.plus}إضافة منشأة</button>`:''}</header>`;
+  if (!S.loadedSf) return head+loading();
+  const tiles=sfTiles(sfTile('إجمالي المنشآت',all.length)+sfTile(LST.ready,c.ready,'#1F7A56')+sfTile(LST.proc,c.proc,'#B54708')+sfTile(LST.docs,c.docs,'#B42318')+sfTile('مخالفات قائمة',vo,vo?'#B42318':''));
+  if (!all.length) return head+tiles+`<div class="panel empty"><b>لا توجد منشآت مسجلة بعد.</b>${edit?'أضف المنشأة بزر «إضافة منشأة»، ثم افتح ملفها لإضافة السجل والمستندات والمخالفات.':''}</div>`;
+  const chips=`<div class="fchips" role="group" aria-label="وضع المنشأة" style="margin-bottom:12px">${sfChip('lsF',f,'all','الكل',all.length)}${Object.keys(LST).map(k=>sfChip('lsF',f,k,LST[k],c[k])).join('')}</div>`;
+  const list=all.filter(r=>(f==='all'||lstOf(r)===f)&&(!q||norm([r.name,r.loc,r.type,r.owner,r.lic].join(' ')).includes(q))).sort(byName);
+  const rows=list.map(r=>{ const last=lOf('lrec',r.id)[0], ov=lOpenViol(r.id);
+    return `<tr><td class="nm"><button type="button" class="link" data-act="lfacOpen" data-id="${esc(r.id)}">${esc(r.name||'')}</button>${r.loc?`<div class="hper">${esc(r.loc)}</div>`:''}</td><td>${esc(r.type||'—')}</td><td>${r.lic?`<bdi>${esc(r.lic)}</bdi>`:DASH}${r.exp?`<div class="hper" style="${lExpired(r)?'color:var(--danger);font-weight:700':''}">${lExpired(r)?'منتهي':'ينتهي'} ${esc(r.exp)}</div>`:''}</td><td>${sfPill(LSTC[lstOf(r)],LST[lstOf(r)])}</td><td class="n" style="${ov?'color:var(--danger)':''}">${ov}</td><td>${last?`<span class="hdate">${esc(last.date||'')}</span><div class="hper">${esc(last.text||'')}</div>`:DASH}</td><td><button type="button" class="link" data-act="lfacOpen" data-id="${esc(r.id)}">ملف المنشأة ${ICON.arrow}</button></td>${edit?rowActs('lfac',r):''}</tr>`; }).join('');
+  return head+tiles+chips+sfSearch('lq',S.lq,'ابحث باسم المنشأة أو رقم الترخيص أو الموقع')+(list.length?dTable(['المنشأة','النوع','الترخيص','وضع المنشأة','مخالفات قائمة','آخر إجراء','',...(edit?['']:[])], rows):`<div class="panel empty"><b>لا توجد نتائج.</b></div>`);
+}
+function viewLFile(id){
+  const r=(S.lfac||[]).find(x=>x.id===id), edit=S.canEdit, tab=S.ltab||'rec';
+  const back=sfCrumb('lfac','المنشآت والتراخيص',(r||{}).name);
+  if (!r) return back+`<div class="panel empty"><b>المنشأة غير موجودة.</b></div>`;
+  const st=lstOf(r), rec=lOf('lrec',id), docs=lOf('ldocs',id), viol=lOf('lviol',id), vo=viol.filter(v=>!v.fixed).length;
+  const head=`${back}<header class="ph"><div class="ph-t"><h1>${esc(r.name||'')}</h1>${sfPill(LSTC[st],LST[st])}</div>${edit?`<button type="button" class="btn" data-act="hRecEdit" data-id="lfac" data-i="${esc(id)}">${ICON.edit}تعديل البيانات</button>`:''}</header>`;
+  const stBox=`<section class="panel" style="margin:0 0 16px;padding:14px 16px"><div style="font-weight:800;margin-bottom:8px">وضع المنشأة</div><div class="fchips" role="group" aria-label="وضع المنشأة">${Object.keys(LST).map(k=>edit?`<button type="button" class="fchip${st===k?' on':''}" data-act="lstSet" data-id="${esc(id)}" data-i="${k}" aria-pressed="${st===k}">${LST[k]}</button>`:`<span class="fchip${st===k?' on':''}" style="cursor:default">${LST[k]}</span>`).join('')}</div>${edit?'<small class="hper" style="display:block;margin-top:6px">تغيير الوضع يُسجَّل تلقائياً في سجل المنشأة.</small>':''}</section>`;
+  const info=`<dl class="panel info" style="margin:0 0 16px"><div><dt>نوع المنشأة</dt><dd>${esc(r.type||'—')}</dd></div><div><dt>رقم الترخيص</dt><dd>${esc(r.lic||'—')}</dd></div><div><dt>انتهاء الترخيص</dt><dd style="${lExpired(r)?'color:var(--danger)':''}">${esc(r.exp||'—')}${lExpired(r)?' (منتهي)':''}</dd></div><div><dt>المالك / المسؤول</dt><dd>${esc(r.owner||'—')}</dd></div><div><dt>الموقع</dt><dd>${esc(r.loc||'—')}</dd></div>${r.note?`<div><dt>ملاحظات</dt><dd>${esc(r.note)}</dd></div>`:''}</dl>`;
+  const tabs=`<div class="fchips" role="tablist" aria-label="ملف المنشأة" style="margin-bottom:12px">${sfChip('lTab',tab,'rec','السجل',rec.length)}${sfChip('lTab',tab,'docs','المستندات',docs.length)}${sfChip('lTab',tab,'viol','سجل المخالفات',viol.length)}</div>`;
+  let body;
+  if (tab==='docs') body=`<div class="phb" style="margin-bottom:10px">${dAddBtn('ldocAdd',id,'إضافة مستند')}</div>`+(docs.length?dTable(['التاريخ','المستند','الملف',...(edit?['']:[])], docs.map(d=>`<tr><td class="hdate">${esc(d.date||'')}</td><td class="nm">${esc(d.title||'')}</td><td>${fileBtn('ldocs',d,'عرض')}</td>${edit?rowActs('ldocs',d):''}</tr>`).join('')):`<div class="panel empty"><b>لا توجد مستندات لهذه المنشأة بعد.</b></div>`);
+  else if (tab==='viol') body=`<div class="phb" style="margin-bottom:10px">${dAddBtn('lviolAdd',id,'تسجيل مخالفة')}<span class="hper">قائمة: <b>${vo}</b> · تم تلافيها: <b>${viol.length-vo}</b></span></div>`+(viol.length?dTable(['التاريخ','المخالفة','الحالة','المرفق',...(edit?['']:[])], viol.map(v=>`<tr><td class="hdate">${esc(v.date||'')}</td><td>${esc(v.text||'')}</td><td>${v.fixed?sfPill('hs-ok','تم تلافيها'+(v.fixDate?' '+v.fixDate:'')):sfPill('hs-bad','قائمة')}</td><td>${fileBtn('lviol',v,'عرض')}</td>${edit?rowActs('lviol',v,`<button type="button" class="btn sm" data-act="lviolFix" data-id="${esc(v.id)}">${v.fixed?'إعادة فتح':'✓ تم تلافيها'}</button>`):''}</tr>`).join('')):`<div class="panel empty"><b>لا توجد مخالفات مسجلة لهذه المنشأة.</b></div>`);
+  else body=`<div class="phb" style="margin-bottom:10px">${dAddBtn('lrecAdd',id,'إضافة للسجل')}</div>`+(rec.length?dTable(['التاريخ','البيان / الإجراء','ملاحظة','المرفق',...(edit?['']:[])], rec.map(x=>`<tr><td class="hdate">${esc(x.date||'')}</td><td class="nm">${esc(x.text||'')}</td><td>${x.note?esc(x.note):DASH}</td><td>${fileBtn('lrec',x,'عرض')}</td>${edit?rowActs('lrec',x):''}</tr>`).join('')):`<div class="panel empty"><b>السجل فارغ.</b>${edit?'سجّل إجراءات المنشأة (الطلب، الكشف، الإحالة…) بزر «إضافة للسجل».':''}</div>`);
+  return head+stBox+info+tabs+body;
+}
+
+/* إحصائيات الشعبة: تجمع قسم الدوريات وقسم التراخيص في الشعبة (بيانات القسم الحالي مباشرة، والقسم الآخر من آخر نسخة منشورة) */
+const sfArr = (C, k) => Object.entries((C||{})[k]||{}).map(([id,x])=>Object.assign({id},x));
+async function sfSibLoad(force){
+  const cfg=window.ISNAD_CONFIG||{};
+  if (S.sibBusy || (!force && S.sibAt && Date.now()-S.sibAt<60000)) return; S.sibBusy=true;
+  await Promise.all((cfg.sib||[]).filter(u=>u.id!==cfg.unit).map(async u => { try { const r=await fetch((u.web||'')+'db.json',{cache:'no-store'}); const d=r.ok?await r.json():{}; S.sib[u.id]=d.collections||{}; } catch(e){ S.sib[u.id]=null; } }));
+  S.sibAt=Date.now(); S.sibBusy=false; render();
+}
+function sfData(u){
+  const me=(window.ISNAD_CONFIG||{}).unit===u.id, C=me?null:S.sib[u.id];
+  const g = k => me ? (S[k]||[]) : sfArr(C,k);
+  return u.kind==='patrol' ? {ok:me||C!==undefined&&C!==null, fac:g('pfac'), rounds:g('rounds')} : {ok:me||C!==undefined&&C!==null, fac:g('lfac'), viol:g('lviol'), docs:g('ldocs'), rec:g('lrec')};
+}
+function viewSfStat(){
+  const cfg=window.ISNAD_CONFIG||{}, sib=cfg.sib||[], y=S.sfy||'all';
+  if (!S.sibAt) sfSibLoad();
+  const head=`<header class="ph"><div class="ph-t"><h1>إحصائيات ${esc(cfg.sbranch||'الشعبة')}</h1><span class="count">قسم الدوريات + قسم التراخيص</span></div><button type="button" class="btn" data-act="sfRefresh">تحديث</button></header>`;
+  if (!S.loadedSf || !S.sibAt) return head+loading();
+  const pu=sib.find(u=>u.kind==='patrol'), lu=sib.find(u=>u.kind==='lic'), P=pu?sfData(pu):{fac:[],rounds:[]}, L=lu?sfData(lu):{fac:[],viol:[],docs:[]};
+  const yr = r => Math.floor(hkey(r.date)/10000), years=[...new Set([...P.rounds,...L.viol].map(yr).filter(Boolean))].sort((a,b)=>b-a);
+  const inY = r => y==='all' || yr(r)===+y;
+  const R=P.rounds.filter(inY), V=L.viol.filter(inY);
+  const pv=R.reduce((s,r)=>s+sfN(r.viol),0), pf=R.reduce((s,r)=>s+sfFix(r),0), lv=V.length, lf=V.filter(v=>v.fixed).length;
+  const ychips=years.length?`<div class="fchips" role="group" aria-label="الفترة" style="margin-bottom:12px">${sfChip('sfYear',String(y),'all','كل الفترات')}${years.map(v=>sfChip('sfYear',String(y),String(v),String(v))).join('')}</div>`:'';
+  const total=sfTiles(sfTile('المنشآت',P.fac.length+L.fac.length,'',`دوريات ${P.fac.length} · تراخيص ${L.fac.length}`)+sfTile('الجولات التفتيشية',R.length)+sfTile('المخالفات المرصودة',pv+lv,'#B42318')+sfTile('تم تلافيها',pf+lf,'#1F7A56')+sfTile('لم تُتلافَ بعد',pv+lv-pf-lf,'#B54708')+sfTile('نسبة التلافي',sfPct(pf+lf,pv+lv)));
+  const miss=sib.filter(u=>!sfData(u).ok).map(u=>u.name);
+  const types={}; P.fac.forEach(f=>{ const k=f.type||'غير محدد'; (types[k]=types[k]||{n:0,r:0,v:0,x:0}).n++; });
+  R.forEach(r=>{ const f=P.fac.find(o=>o.id===r.f); const k=(f&&f.type)||'غير محدد'; const t=(types[k]=types[k]||{n:0,r:0,v:0,x:0}); t.r++; t.v+=sfN(r.viol); t.x+=sfFix(r); });
+  const risk={low:0,mid:0,high:0}; P.fac.forEach(f=>risk[riskOf(f)]++);
+  const pSec=`<section class="dsec"><h2>قسم الدوريات — الجولات التفتيشية</h2>${sfTiles(sfTile('المنشآت',P.fac.length)+sfTile('الجولات',R.length)+sfTile('المخالفات',pv,'#B42318')+sfTile('تم تلافيها',pf,'#1F7A56')+sfTile('خطورة عالية',risk.high,'#B42318')+sfTile('خطورة متوسطة',risk.mid,'#B54708')+sfTile('خطورة منخفضة',risk.low,'#1F7A56'))}
+    ${Object.keys(types).length?dTable(['نوع المنشأة','المنشآت','الجولات','المخالفات','تم تلافيها','نسبة التلافي'], Object.entries(types).sort((a,b)=>b[1].n-a[1].n).map(([k,t])=>`<tr><td class="nm">${esc(k)}</td><td class="n">${t.n}</td><td class="n">${t.r}</td><td class="n">${t.v}</td><td class="n">${t.x}</td><td class="n">${sfPct(t.x,t.v)}</td></tr>`).join('')):''}</section>`;
+  const lc={ready:0,proc:0,docs:0}; L.fac.forEach(f=>lc[lstOf(f)]++);
+  const exp=L.fac.filter(lExpired).length;
+  const lSec=`<section class="dsec"><h2>قسم التراخيص — المنشآت والمخالفات</h2>${sfTiles(sfTile('المنشآت',L.fac.length)+sfTile(LST.ready,lc.ready,'#1F7A56')+sfTile(LST.proc,lc.proc,'#B54708')+sfTile(LST.docs,lc.docs,'#B42318')+sfTile('المخالفات',lv,'#B42318')+sfTile('تم تلافيها',lf,'#1F7A56')+sfTile('تراخيص منتهية',exp,exp?'#B42318':'')+sfTile('المستندات',L.docs.length))}
+    ${L.fac.filter(f=>lstOf(f)!=='ready'||L.viol.some(v=>v.f===f.id&&!v.fixed)).length?dTable(['منشآت تحتاج متابعة','الوضع','مخالفات قائمة'], L.fac.filter(f=>lstOf(f)!=='ready'||L.viol.some(v=>v.f===f.id&&!v.fixed)).sort(byName).map(f=>`<tr><td class="nm">${esc(f.name||'')}</td><td>${sfPill(LSTC[lstOf(f)],LST[lstOf(f)])}</td><td class="n">${L.viol.filter(v=>v.f===f.id&&!v.fixed).length}</td></tr>`).join('')):''}</section>`;
+  return head+ychips+(miss.length?`<p class="hper" style="margin:0 0 10px">تعذّر تحميل بيانات: ${esc(miss.join('، '))}</p>`:'')+`<p class="hper" style="margin:0 0 12px">بيانات القسم الآخر في الشعبة من آخر نسخة منشورة له.</p>`+total+pSec+lSec;
 }
 function viewAdvisor(){
   const edit=advEdit(), sect=S.advSect||'', all=(S.guide||[]).slice().sort(advSort), duty=all.filter(advDuty), admin=all.filter(x=>!advDuty(x));
@@ -2507,14 +2631,8 @@ const cptxFields = r => [[{id:'kind',label:'النوع',type:'select',value:r.ki
   {id:'title',label:'العنوان',value:r.title,required:true,placeholder:'مثال: طلب إجازة اعتيادية'}, {id:'note',label:'ملاحظة (اختياري)',type:'textarea',value:r.note}];
 const vactFields = r => [{id:'text',label:'الإجراء المتخذ',type:'textarea',value:r.text,required:true,placeholder:'مثال: رُفع خطاب للصيانة برقم …'},
   [{id:'date',label:'التاريخ',value:r.date||hijri(),required:true},{id:'fault',label:'نوع العطل (اختياري)',value:r.fault,placeholder:'مثال: عطل كهربائي'}]];
-const INST = {ok:'سليم', act:'متطلب إجراء'};
 const INTYPES = ['تجاري','صناعي','سكني','تعليمي','صحي','فندقي','ترفيهي','مستودعات','محطة وقود','حكومي','ديني','أخرى'];
-const inspFields = r => [{id:'name',label:'اسم المنشأة',value:r.name,required:true,placeholder:'مثال: مجمع الراشد التجاري'},
-  [{id:'type',label:'نوع المنشأة',value:r.type,list:INTYPES,required:true,placeholder:'مثال: تجاري'},{id:'status',label:'حالة المنشأة',type:'select',value:r.status||'ok',options:Object.entries(INST)}],
-  [{id:'last',label:'تاريخ آخر كشف',value:r.last||hijri(),required:true},{id:'loc',label:'الموقع / الحي (اختياري)',value:r.loc,placeholder:'مثال: حي المنتزه'}],
-  {id:'notes',label:'الملاحظات الموجودة',type:'textarea',value:r.notes,placeholder:'مثال: طفايات منتهية الصلاحية، مخرج طوارئ مغلق'}];
-const inspDocFields = r => [[{id:'title',label:'عنوان المستند',value:r.title,required:true,placeholder:'مثال: محضر كشف'},{id:'date',label:'التاريخ',value:r.date||hijri(),required:true}]];
-const HCOLS = {insp:{fields:inspFields,title:'المنشأة'}, inspdocs:{fields:inspDocFields,title:'المستند'}, deliv:{fields:delivFields,title:'التسليم'}, cptx:{fields:cptxFields,title:'السجل'}, vact:{fields:vactFields,title:'الإجراء'}, pdocs:{fields:r=>pdFields(r),title:'المستند'}, letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
+const HCOLS = {pfac:{fields:r=>pfacFields(r),title:'المنشأة'}, rounds:{fields:r=>roundFields(r),title:'الجولة'}, lfac:{fields:r=>lfacFields(r),title:'المنشأة'}, lrec:{fields:r=>lrecFields(r),title:'السجل'}, ldocs:{fields:r=>ldocFields(r),title:'المستند'}, lviol:{fields:r=>lviolFields(r),title:'المخالفة'}, deliv:{fields:delivFields,title:'التسليم'}, cptx:{fields:cptxFields,title:'السجل'}, vact:{fields:vactFields,title:'الإجراء'}, pdocs:{fields:r=>pdFields(r),title:'المستند'}, letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
 const hRec = (col, id) => (S[col]||[]).find(r=>r.id===id);
 async function hStoreFile(x, ref, old){
   if (!x.file) return {};
@@ -2655,14 +2773,28 @@ const ACT = {
   closeModal: closeModal,
   nav: id => { go(id); if (id==='audit') auditLoad(); },
   dOpenC: id => go('dcenter', id),
-  inspF: k => { S.inf=k; render(); },
-  inspT: k => { S.int=k; render(); },
-  inspOpen: id => go('inspf', id),
-  inspAdd: () => openForm({title:'إضافة منشأة', submit:'إضافة', fields:inspFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('insp', {}, x); toast('أُضيفت المنشأة'); }}),
-  inspDocAdd: id => { const r=(S.insp||[]).find(o=>o.id===id)||{}; openForm({title:'مستند — '+(r.name||''), submit:'حفظ', fields:inspDocFields({}).concat([Object.assign({},DCOL_ATT,{label:'الملف',required:true})]), onSubmit: async x => { await dSave('inspdocs', {f:id, fN:r.name||''}, x); toast('أُضيف المستند'); }}); },
-  dOpenP: (id, from) => { S.dpFrom=from||'dcenters'; go('dperson', id); },
-  dOpenV: id => go('dveh', id),
-  dFleetF: k => { S.dff=k; render(); },
+  rTab: k => { S.rtab=k; render(); },
+  rType: k => { S.rty=k; render(); },
+  pfacOpen: id => go('pfac', id),
+  pfacAdd: () => openForm({title:'إضافة منشأة', submit:'إضافة', fields:pfacFields({}), onSubmit: async x => { await S.db.collection('pfac').doc().set(Object.assign({}, x, {at:Date.now()})); toast('أُضيفت المنشأة'); }}),
+  roundAdd: id => { const fac=(S.pfac||[]).slice().sort(byName); if (!fac.length) return toast('أضف المنشأة أولاً بزر «إضافة منشأة»'); const fr=id&&fac.find(o=>o.id===id);
+    openForm({title:'تسجيل جولة تفتيشية'+(fr?' — '+(fr.name||''):''), submit:'حفظ الجولة', fields:(fr?[]:[{id:'f',label:'المنشأة',type:'select',value:'',options:fac.map(o=>[o.id,o.name||''])}]).concat(roundFields({}), [{id:'photos',label:'صور الجولة (يمكن اختيار أكثر من صورة)',type:'files',accept:PHOTO_ACCEPT}]), onSubmit: async x => {
+      const f=fr?fr.id:x.f, fo=fac.find(o=>o.id===f)||{}, ids=[]; for (const p of (x.photos||[])) ids.push(await upload(p));
+      const rec=Object.assign({}, x, {f, fN:fo.name||'', viol:String(sfN(x.viol)), fixed:String(Math.min(sfN(x.fixed),sfN(x.viol))), photos:ids, at:Date.now()});
+      await S.db.collection('rounds').doc().set(rec); toast('سُجّلت الجولة'); }}); },
+  lsF: k => { S.lsf=k; render(); },
+  lTab: k => { S.ltab=k; render(); },
+  lfacOpen: id => { S.ltab='rec'; go('lfile', id); },
+  lfacAdd: () => openForm({title:'إضافة منشأة', submit:'إضافة', fields:lfacFields({}), onSubmit: async x => { await S.db.collection('lfac').doc().set(Object.assign({}, x, {at:Date.now()})); toast('أُضيفت المنشأة'); }}),
+  lstSet: async (id, k) => { const r=(S.lfac||[]).find(o=>o.id===id); if (!r || !LST[k] || lstOf(r)===k) return;
+    try { await S.db.doc('lfac/'+id).update({status:k, updated:Date.now()}); await S.db.collection('lrec').doc().set({f:id, fN:r.name||'', date:hijri(), text:'تغيير وضع المنشأة إلى «'+LST[k]+'»', note:'', file:null, db:null, fileName:'', at:Date.now()}); toast('تغيّر وضع المنشأة'); } catch(x){ toast(errMsg(x)); } },
+  lrecAdd: id => { const r=(S.lfac||[]).find(o=>o.id===id)||{}; openForm({title:'السجل — '+(r.name||''), submit:'حفظ', fields:lrecFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('lrec', {f:id, fN:r.name||''}, x); toast('أُضيف للسجل'); }}); },
+  ldocAdd: id => { const r=(S.lfac||[]).find(o=>o.id===id)||{}; openForm({title:'مستند — '+(r.name||''), submit:'حفظ', fields:ldocFields({}).concat([Object.assign({},DCOL_ATT,{label:'الملف',required:true})]), onSubmit: async x => { await dSave('ldocs', {f:id, fN:r.name||''}, x); toast('أُضيف المستند'); }}); },
+  lviolAdd: id => { const r=(S.lfac||[]).find(o=>o.id===id)||{}; openForm({title:'مخالفة — '+(r.name||''), submit:'حفظ', fields:lviolFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('lviol', {f:id, fN:r.name||''}, x); toast('سُجّلت المخالفة'); }}); },
+  lviolFix: async id => { const v=(S.lviol||[]).find(o=>o.id===id); if (!v) return;
+    try { await S.db.doc('lviol/'+id).update(v.fixed?{fixed:'', fixDate:'', updated:Date.now()}:{fixed:'1', fixDate:hijri(), updated:Date.now()}); toast(v.fixed?'أُعيد فتح المخالفة':'سُجّل تلافي المخالفة'); } catch(x){ toast(errMsg(x)); } },
+  sfYear: k => { S.sfy=k; render(); },
+  sfRefresh: () => sfSibLoad(true),
   delivAdd: c => openForm({title:'تسليم عهدة — '+cName(c), submit:'حفظ', fields:delivFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('deliv', {c, cN:cName(c)}, x); toast('سُجّل التسليم'); }}),
   cptxAdd: key => { const [c,p]=String(key).split('|'), pr=cStaff(c).find(o=>o.id===p)||{};
     openForm({title:'إضافة معاملة أو ملف — '+(pr.name||''), submit:'حفظ', fields:cptxFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('cptx', {c, p, pN:[pr.rank,pr.name].filter(Boolean).join(' / ')}, x); toast('حُفظ السجل'); }}); },
@@ -2774,7 +2906,7 @@ const ACT = {
       else Object.assign(patch, ('p' in x||'pN' in x)?personVal(x,'p'):{}, await hStoreFile(x, col.slice(0,3)+'-'+id+'-'+Date.now().toString(36), fileShared(r)?null:r));
       await S.db.doc(col+'/'+id).update(Object.assign(patch,{updated:Date.now()})); toast('حُفظ التعديل'); }}); },
   hRecDel: (col, id) => { const r=hRec(col,id); if(!r) return; openConfirm('حذف هذا السجل نهائياً؟', 'حذف', async () => {
-      await S.db.doc(col+'/'+id).delete(); if ((r.file||r.db) && !fileShared(r)) dropLibFile(r); toast('حُذف السجل'); }); },
+      await S.db.doc(col+'/'+id).delete(); if ((r.file||r.db) && !fileShared(r)) dropLibFile(r); if (S.assets) (r.photos||[]).forEach(p=>S.assets.delete(p).catch(()=>{})); toast('حُذف السجل'); }); },
   misDone: id => { const m=hRec('missions',id); if(!m) return;
     if (m.done) return openConfirm(`إلغاء علامة الإنجاز عن مهمة ${pDisp(m,'a')} و${pDisp(m,'b')}؟`, 'إلغاء الإنجاز', async () => {
       await S.db.doc('missions/'+id).update({done:false, updated:Date.now()}); toast('أُلغيت علامة الإنجاز'); }, 'تأكيد');
@@ -3008,7 +3140,7 @@ document.addEventListener('input', e => {
   else if (e.target.dataset && e.target.dataset.lib){ S.lib[e.target.dataset.lib][e.target.dataset.f]=e.target.value; render(); }
   else if (e.target.id==='wq'){ S.wq=e.target.value; render(); }
 });
-document.addEventListener('input', e => { if (e.target && e.target.id==='inq'){ S.inq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#inq'); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } return; } if (e.target && e.target.id==='dpq'){ S.dpq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#dpq'); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } } });
+document.addEventListener('input', e => { if (e.target && (e.target.id==='rq'||e.target.id==='lq')){ const k=e.target.id; S[k]=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#'+k); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } return; } if (e.target && e.target.id==='dpq'){ S.dpq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#dpq'); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } } });
 document.addEventListener('change', e => { if (e.target && e.target.id==='au_day' && e.target.value){ S.auditDay=e.target.value; auditLoad(); } });
 document.addEventListener('change', async e => {
   const el=e.target, key=el.dataset && el.dataset.up; if (!key) return;
@@ -3066,8 +3198,8 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
   db.collection('circulars').onSnapshot(s => { S.circulars=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedCirc=true; render(); }, () => { S.loadedCirc=true; render(); });
   db.collection('guide').onSnapshot(s => { S.guide=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedAdv=true; render(); }, () => { S.loadedAdv=true; render(); });
-  if (DEPT==='safety') for (const c of ['insp','inspdocs']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); if (c==='insp') S.loadedInsp=true; render(); }, () => { S.loadedInsp=true; render(); });
-  if (DEPT && DEPT!=='safety'){ for (const c of ['deliv','cptx','vact']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, () => {}); loadCenters(); }
+  if (DEPT==='patrol'||DEPT==='lic'){ const cs=DEPT==='patrol'?['pfac','rounds']:['lfac','lrec','ldocs','lviol']; let n=0; for (const c of cs) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); if (++n>=cs.length) S.loadedSf=true; render(); }, () => { S.loadedSf=true; render(); }); }
+  if (DEPT && DEPT!=='patrol' && DEPT!=='lic'){ for (const c of ['deliv','cptx','vact']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, () => {}); loadCenters(); }
   db.collection('pdocs').onSnapshot(s => { S.pdocs=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);

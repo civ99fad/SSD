@@ -189,6 +189,25 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 .crow p{margin:6px 0 0;font-size:14px;white-space:pre-wrap}
 .cerr{color:var(--bad);font-weight:700;font-size:13.5px}
 @media (max-width:640px){ .cform{grid-template-columns:1fr} }
+
+/* شاشة الاختيار وأقسام اللوحة */
+.choose{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.chs{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:2px solid var(--edge);border-radius:20px;box-shadow:var(--shadow);padding:24px 22px;min-height:220px;transition:transform .15s,box-shadow .15s}
+.chs:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(16,24,40,.12)}
+.chs:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.chs .ic{width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.chs b{font-size:21px;font-weight:800}
+.chs small{color:var(--muted);font-size:14px}
+.chs .nums{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.chs .nums span{font-size:13px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px 11px}
+.chs .go{font-weight:800;color:var(--accent);font-size:14px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface);border:2px solid var(--edge);border-radius:14px;padding:8px;box-shadow:var(--shadow)}
+.tabs .chip{font-size:14px;padding:7px 14px}
+.vtitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.vtitle h2{margin:0;font-size:20px;font-weight:800}
+.ghead{font-size:14px;font-weight:800;color:var(--muted);margin:14px 0 8px}
+.ghead:first-child{margin-top:0}
+@media (max-width:700px){ .choose{grid-template-columns:1fr} .chs{min-height:0} }
 </style>
 </head>
 <body>
@@ -226,10 +245,10 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
         <div class="meta" id="meta"></div>
       </div>
       <div class="acts">
+        <button type="button" class="btn" data-act="home" id="homeBtn" hidden>الرئيسية</button>
         <button type="button" class="btn" data-act="circ" id="circBtn">التعاميم</button>
-        <button type="button" class="btn" data-act="qst" id="qstBtn">إحصائية المراكز والأقسام</button>
         <button type="button" class="btn" data-act="refresh">تحديث</button>
-        <button type="button" class="btn" data-act="copySum">نسخ الملخص</button>
+        <button type="button" class="btn" data-act="copySum" data-only="centers">نسخ الملخص</button>
         <button type="button" class="btn" data-act="print">طباعة التقرير</button>
         <a class="btn" href="index.html">القائمة الرئيسية</a>
         <button type="button" class="btn" data-act="logout">خروج</button>
@@ -337,6 +356,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   const S = { sort: ls.get('isnad-mgr-sort') || 'order', show: ls.get('isnad-mgr-show') || 'all' };
   async function load() {
     if (busy) return; busy = true;
+    const sfP = loadSafety().catch(() => {});
     try {
       const res = await Promise.all((cfg.units || []).map(async (u) => {
         try {
@@ -345,7 +365,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
           return analyze(u, r.ok ? await r.json() : null);
         } catch (e) { if (e.auth) throw e; return analyze(u, null); }
       }));
-      R = res; loadedAt = Date.now(); render();
+      await sfP; R = res; loadedAt = Date.now(); render();
     } catch (e) {
       if (e.auth) { ss.del(AUTH); showGate(); }
     } finally { busy = false; }
@@ -402,11 +422,20 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     return out.sort((a, b) => r[a[0]] - r[b[0]]);
   }
 
+  // أعلى اللوحة: زر «الرئيسية» خارج شاشة الاختيار، وأزرار المراكز (الإحصائية الربعية ونسخ الملخص) في قسم المراكز فقط
+  function syncTop() {
+    $('homeBtn').hidden = !S.mode && !S.circ;
+    document.querySelectorAll('[data-only]').forEach((b) => (b.hidden = S.mode !== b.dataset.only || !!S.circ));
+    const d = dutyDay(), k = dutyShift(d);
+    $('meta').innerHTML = `<span>${esc(hijri())}</span>${S.mode === 'safety' ? '<span><b>إحصائيات السلامة</b></span>' : `<span>الوردية المناوبة: <b>${SHN[k].replace('الوردية ', '')}</b> (٩ ص ← ٩ ص)</span>`}<span>آخر تحديث: ${esc(timeStr(loadedAt))}</span>`;
+  }
   function render() {
-    if (S.qv) return qView();
+    syncTop();
     if (S.circ) return;
-    const t = totals(), d = dutyDay(), k = dutyShift(d);
-    $('meta').innerHTML = `<span>${esc(hijri())}</span><span>الوردية المناوبة: <b>${SHN[k].replace('الوردية ', '')}</b> (٩ ص ← ٩ ص)</span><span>آخر تحديث: ${esc(timeStr(loadedAt))}</span>`;
+    if (!S.mode) return homeView();
+    if (S.mode === 'safety') return safetyView();
+    if (S.qv) return qView();
+    const t = totals();
     const withData = R.filter((x) => !x.empty);
     let list = S.show === 'data' ? withData : R.slice();
     if (S.sort === 'pct') list.sort((a, b) => (a.empty - b.empty) || ((a.pct ?? 2) - (b.pct ?? 2)));
@@ -423,10 +452,12 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       <div class="kpi"><span class="kt">أعطال المباني</span><span class="kv ${t.faults ? 'c-mid' : ''}">${arD(t.faults)} <small>غير منجزة</small></span><span class="kd">معدات عند جهات ولم ترجع: ${arD(t.eq)}</span></div>
     </section>`;
 
+    // بالترتيب الأساسي تُجمع البطاقات حسب الشعبة (كما في البوابة)
+    const grouped = () => { const used = new Set(), out = GROUPS.map(([g, ids]) => { const L = list.filter((x) => ids.includes(x.u.id)); L.forEach((x) => used.add(x)); return L.length ? `<div class="ghead">${esc(g)} <span class="cnt">${arD(L.length)}</span></div><div class="cards">${L.map(card).join('')}</div>` : ''; }).join(''); const rest = list.filter((x) => !used.has(x)); return out + (rest.length ? `<div class="ghead">أخرى</div><div class="cards">${rest.map(card).join('')}</div>` : ''); };
     const cards = `<section class="panel" aria-label="جاهزية المراكز"><div class="sh"><h2>جاهزية المراكز والأقسام</h2><span class="cnt">${arD(R.length)}</span><span class="grow"></span>
-      <div class="chips" role="group" aria-label="الترتيب">${chip('sort', 'order', 'الترتيب الأساسي')}${chip('sort', 'lv', 'الأكثر حرجًا أولًا')}${chip('sort', 'pct', 'الأقل جاهزية')}</div>
+      <div class="chips" role="group" aria-label="الترتيب">${chip('sort', 'order', 'حسب الشعبة')}${chip('sort', 'lv', 'الأكثر حرجًا أولًا')}${chip('sort', 'pct', 'الأقل جاهزية')}</div>
       <div class="chips" role="group" aria-label="العرض">${chip('show', 'all', 'كل الجهات')}${chip('show', 'data', 'التي فيها بيانات')}</div></div>
-      <div class="cards">${list.map(card).join('') || '<div class="none">لا توجد جهات فيها بيانات بعد.</div>'}</div></section>`;
+      ${!list.length ? '<div class="none">لا توجد جهات فيها بيانات بعد.</div>' : S.sort === 'order' ? grouped() : `<div class="cards">${list.map(card).join('')}</div>`}</section>`;
 
     const row = (x) => `<tr><td class="n">${esc(x.u.name)}</td><td><span class="badge lv-${x.lv}"><i></i>${LV[x.lv]}</span></td><td class="n ${lvColor(x)}">${esc(pct0(x))}${x.pct != null ? `<span class="minibar"><i class="${x.pct >= 0.8 ? 'st-ready' : x.pct >= 0.5 ? 'st-maint' : 'st-down'}" style="width:${(x.pct * 100).toFixed(0)}%"></i></span>` : ''}</td><td>${arD(x.V.length)}</td><td>${arD(x.c.ready)}</td><td>${arD(x.c.down)}</td><td>${arD(x.c.maint)}</td><td>${x.center ? (x.inc.length ? 'وارد ' + arD(x.inc.length) : '—') : arD(x.c.away)}</td><td>${x.water.all[1].length ? arD(x.water.all[0].length) + ' / ' + arD(x.water.all[1].length) : '—'}</td><td>${arD(x.staffN)}</td><td>${shiftTxt(x)}</td><td>${arD(x.faults.length)}</td></tr>`;
     const table = `<section class="panel" aria-label="جدول المقارنة"><div class="sh"><h2>جدول المقارنة</h2></div><div class="tw"><table>
@@ -444,7 +475,88 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     const awHtml = `<section class="panel" aria-label="تحركات الدعم"><div class="sh"><h2>تحركات الدعم بين الجهات</h2><span class="cnt">${arD(t.c.away)}</span></div>
       ${aw.length ? aw.map((x) => `<div class="grp"><h3>من ${esc(x.u.name)}</h3>${x.away.map((v) => `<div class="row"><span class="code"><bdi dir="ltr">${esc(v.code || '—')}</bdi></span><span class="grow">${esc(v.name || 'آلية')}<small>${esc(v.statusNote ? 'إلى: ' + enj(v.statusNote) : 'الجهة غير محددة')}${v.statusAction ? ' — ' + esc(v.statusAction) : ''}</small></span><span class="pill p-away"><i></i>مدعومة</span></div>`).join('')}</div>`).join('') : '<div class="none">لا توجد آليات مدعومة لجهات أخرى الآن.</div>'}</section>`;
 
-    $('main').innerHTML = kpis + alertsHtml + cards + `<div class="two">${nrHtml}${awHtml}</div>` + table + `<p class="foot">البيانات من آخر نسخة منشورة لكل جهة، وتتحدث تلقائيًا كل ٥ دقائق. الحالة حسب جاهزية الآليات: «حرج» = أقل من ٥٠٪، «يحتاج متابعة» = أقل من ٨٠٪.</p>`;
+    const tab = S.ctab || 'sum';
+    const tabs = `<nav class="tabs" aria-label="أقسام المراكز"><b style="align-self:center;margin-inline-end:6px;font-size:16px">المراكز وإحصائياتها</b>${CTABS.map(([k, l]) => `<button type="button" class="chip" data-act="ctab" data-v="${k}" aria-pressed="${tab === k}">${l}</button>`).join('')}<button type="button" class="chip" data-act="qst">إحصائية الربع (الرغاوي والمحروقات)</button></nav>`;
+    const two = `<div class="two">${nrHtml}${awHtml}</div>`;
+    const body = { sum: kpis + alertsHtml, cards, veh: two, table, all: kpis + alertsHtml + cards + two + table }[tab] || kpis + alertsHtml;
+    $('main').innerHTML = tabs + body + `<p class="foot">البيانات من آخر نسخة منشورة لكل جهة، وتتحدث تلقائيًا كل ٥ دقائق. الحالة حسب جاهزية الآليات: «حرج» = أقل من ٥٠٪، «يحتاج متابعة» = أقل من ٨٠٪.</p>`;
+  }
+
+  /* ---------- شاشة الاختيار: إحصائيات السلامة أو المراكز وإحصائياتها ---------- */
+  const GROUPS = [['شعبة الجنوب', ['sharaf', 'sinaiya', 'dairi', 'jabal']], ['شعبة الشمال', ['balad', 'muntazah', 'aziziya', 'aja']], ['المراكز الخارجية', ['rawda', 'jubba', 'khatta']], ['الأقسام المتخصصة', ['hazmat', 'isnad', 'control']]];
+  const CTABS = [['sum', 'الملخص والتنبيهات'], ['cards', 'جاهزية الجهات'], ['veh', 'الآليات غير الجاهزة والدعم'], ['table', 'جدول المقارنة'], ['all', 'عرض الكل']];
+  const ICS = {
+    safety: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>',
+    centers: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>',
+  };
+  function homeView() {
+    const t = totals(), T = sfTotal(0);
+    $('main').innerHTML = `<div class="choose">
+      <button type="button" class="chs" data-act="mode" data-v="safety"><span class="ic">${ICS.safety}</span><b>إحصائيات السلامة</b><small>شعبة الشمال وشعبة الجنوب: الجولات التفتيشية، والمنشآت والتراخيص، والمخالفات وما تم تلافيه.</small>
+        <span class="nums"><span>المنشآت ${arD(T.pfac + T.lfac)}</span><span>الجولات ${arD(T.R)}</span><span>مخالفات لم تُتلافَ ${arD(T.pv + T.lv - T.pf - T.lf)}</span></span><span class="go">دخول ←</span></button>
+      <button type="button" class="chs" data-act="mode" data-v="centers"><span class="ic">${ICS.centers}</span><b>المراكز وإحصائياتها</b><small>جاهزية المراكز والأقسام: الآليات والوايتات والقوة المناوبة والتنبيهات، وإحصائية الربع.</small>
+        <span class="nums"><span>الجاهزية ${t.pct == null ? '—' : esc(pctFmt(t.pct))}</span><span>الجهات ${arD(R.length)}</span><span>آليات غير جاهزة ${arD(t.c.down + t.c.maint)}</span></span><span class="go">دخول ←</span></button>
+    </div><p class="foot">اختر القسم الذي تريد الاطلاع عليه، ويمكنك الرجوع لهذه الشاشة من زر «الرئيسية» أعلى اللوحة.</p>`;
+  }
+
+  /* ---------- إحصائيات السلامة: أقسام الدوريات والتراخيص في الشعبتين (من آخر نسخة منشورة لكل قسم) ---------- */
+  let SF = [];
+  const sfArr = (C, k) => Object.entries((C || {})[k] || {}).map(([id, x]) => Object.assign({ id }, x));
+  const sfN = (v) => { const x = parseInt(toLat(v), 10); return isNaN(x) || x < 0 ? 0 : x; };
+  const RISK = { low: 'منخفضة', mid: 'متوسطة', high: 'عالية' }, LST = { ready: 'جاهزة', proc: 'تحت الإجراء', docs: 'متطلب مستندات' };
+  const riskOf = (r) => (RISK[r.risk] ? r.risk : 'mid'), lstOf = (r) => (LST[r.status] ? r.status : 'proc');
+  const yrOf = (r) => Math.floor(hkey(r.date) / 10000);
+  async function loadSafety() {
+    SF = await Promise.all((cfg.safety || []).map(async (b) => {
+      const parts = await Promise.all(b.units.map(async (u) => { try { const r = await fetch((u.web || '') + 'db.json', { cache: 'no-store' }); return { u, C: r.ok ? (await r.json()).collections || {} : null }; } catch (e) { return { u, C: null }; } }));
+      const P = parts.find((x) => x.u.kind === 'patrol') || {}, L = parts.find((x) => x.u.kind === 'lic') || {};
+      return { name: b.name, miss: parts.filter((x) => !x.C).map((x) => x.u.name), pfac: sfArr(P.C, 'pfac'), rounds: sfArr(P.C, 'rounds'), lfac: sfArr(L.C, 'lfac'), lviol: sfArr(L.C, 'lviol'), ldocs: sfArr(L.C, 'ldocs') };
+    }));
+  }
+  function sfCalc(b, y) {
+    const inY = (r) => !y || yrOf(r) === y, R = b.rounds.filter(inY), V = b.lviol.filter(inY);
+    const lc = { ready: 0, proc: 0, docs: 0 }; b.lfac.forEach((f) => lc[lstOf(f)]++);
+    const risk = { low: 0, mid: 0, high: 0 }; b.pfac.forEach((f) => risk[riskOf(f)]++);
+    const today = HFN ? hkey(HFN.format(new Date())) : 0;
+    return {
+      R: R.length, pv: R.reduce((s, r) => s + sfN(r.viol), 0), pf: R.reduce((s, r) => s + Math.min(sfN(r.fixed), sfN(r.viol)), 0),
+      lv: V.length, lf: V.filter((v) => v.fixed).length, lc, risk, pfac: b.pfac.length, lfac: b.lfac.length, docs: b.ldocs.length,
+      exp: b.lfac.filter((f) => { const k = hkey(f.exp); return k && today && k < today; }).length,
+      follow: b.lfac.filter((f) => lstOf(f) !== 'ready' || b.lviol.some((v) => v.f === f.id && !v.fixed)),
+    };
+  }
+  function sfTotal(y) {
+    const T = { R: 0, pv: 0, pf: 0, lv: 0, lf: 0, exp: 0, pfac: 0, lfac: 0, docs: 0, lc: { ready: 0, proc: 0, docs: 0 }, risk: { low: 0, mid: 0, high: 0 } };
+    SF.forEach((b) => { const x = sfCalc(b, y); for (const k of ['R', 'pv', 'pf', 'lv', 'lf', 'exp', 'pfac', 'lfac', 'docs']) T[k] += x[k]; for (const k in x.lc) T.lc[k] += x.lc[k]; for (const k in x.risk) T.risk[k] += x.risk[k]; });
+    return T;
+  }
+  function safetyView() {
+    const years = [...new Set(SF.flatMap((b) => [...b.rounds, ...b.lviol].map(yrOf)).filter(Boolean))].sort((a, b) => b - a);
+    const y = S.sy && years.includes(S.sy) ? S.sy : 0;
+    const X = SF.map((b) => Object.assign({ b }, sfCalc(b, y))), T = sfTotal(y);
+    const pc = (a, b) => (b ? pctFmt(a / b) : '—');
+    const yc = years.length ? `<div class="chips" role="group" aria-label="الفترة"><button type="button" class="chip" data-act="sYear" data-v="0" aria-pressed="${!y}">كل الفترات</button>${years.map((v) => `<button type="button" class="chip" data-act="sYear" data-v="${v}" aria-pressed="${v === y}">${arD(v)}</button>`).join('')}</div>` : '';
+    const top = `<nav class="tabs" aria-label="إحصائيات السلامة"><b style="align-self:center;margin-inline-end:6px;font-size:16px">إحصائيات السلامة</b><span style="flex:1"></span>${yc}</nav>`;
+    const V = T.pv + T.lv, F = T.pf + T.lf;
+    const kpis = `<section class="kpis" aria-label="مؤشرات السلامة">
+      <div class="kpi main"><span class="kt">نسبة تلافي المخالفات</span><span class="kv">${esc(pc(F, V))}</span><span class="kd">تم تلافي ${arD(F)} من ${arD(V)} مخالفة</span></div>
+      <div class="kpi"><span class="kt">المنشآت</span><span class="kv">${arD(T.pfac + T.lfac)}</span><span class="kd">الدوريات ${arD(T.pfac)} · التراخيص ${arD(T.lfac)}</span></div>
+      <div class="kpi"><span class="kt">الجولات التفتيشية</span><span class="kv">${arD(T.R)}</span><span class="kd">مخالفات الجولات ${arD(T.pv)} · تم تلافي ${arD(T.pf)}</span></div>
+      <div class="kpi"><span class="kt">مخالفات لم تُتلافَ</span><span class="kv ${V - F ? 'c-bad' : ''}">${arD(V - F)}</span><span class="kd">الجولات ${arD(T.pv - T.pf)} · التراخيص ${arD(T.lv - T.lf)}</span></div>
+      <div class="kpi"><span class="kt">منشآت التراخيص</span><span class="kv c-ok">${arD(T.lc.ready)} <small>جاهزة</small></span><span class="kd"><span class="c-mid">تحت الإجراء ${arD(T.lc.proc)}</span> · <span class="c-bad">متطلب مستندات ${arD(T.lc.docs)}</span></span></div>
+      <div class="kpi"><span class="kt">تراخيص منتهية</span><span class="kv ${T.exp ? 'c-bad' : ''}">${arD(T.exp)}</span><span class="kd">المستندات المرفوعة ${arD(T.docs)}</span></div>
+    </section>`;
+    const row = (n, x, cls) => `<tr${cls ? ` class="${cls}"` : ''}><td class="n">${esc(n)}</td><td>${arD(x.pfac)}</td><td>${arD(x.R)}</td><td>${arD(x.pv)}</td><td>${arD(x.pf)}</td><td>${esc(pc(x.pf, x.pv))}</td><td>${arD(x.lfac)}</td><td>${arD(x.lc.ready)}</td><td>${arD(x.lc.proc)}</td><td>${arD(x.lc.docs)}</td><td>${arD(x.lv)}</td><td>${arD(x.lf)}</td><td>${arD(x.exp)}</td></tr>`;
+    const table = `<section class="panel" aria-label="مقارنة الشعبتين"><div class="sh"><h2>مقارنة الشعبتين</h2></div><div class="tw"><table>
+      <thead><tr><th rowspan="2">الشعبة</th><th colspan="5">قسم الدوريات</th><th colspan="7">قسم التراخيص</th></tr><tr><th>المنشآت</th><th>الجولات</th><th>المخالفات</th><th>تم تلافيها</th><th>النسبة</th><th>المنشآت</th><th>جاهزة</th><th>تحت الإجراء</th><th>متطلب مستندات</th><th>المخالفات</th><th>تم تلافيها</th><th>تراخيص منتهية</th></tr></thead>
+      <tbody>${X.map((x) => row(x.b.name, x)).join('')}${X.length > 1 ? row('الإجمالي', T, 'tot') : ''}</tbody></table></div></section>`;
+    const dl = (L) => `<dl class="ustats">${L.map(([k, v, c]) => `<div><dt>${esc(k)}</dt><dd class="${c || ''}">${v}</dd></div>`).join('')}</dl>`;
+    const branch = (x) => `<section class="panel" aria-label="${esc(x.b.name)}"><div class="sh"><h2>${esc(x.b.name)}</h2>${x.b.miss.length ? `<span class="small c-bad">تعذّر تحميل: ${esc(x.b.miss.join('، '))}</span>` : ''}</div>
+      <div class="grp"><h3>قسم الدوريات — الجولات التفتيشية</h3>${dl([['المنشآت', arD(x.pfac)], ['الجولات', arD(x.R)], ['المخالفات', arD(x.pv), x.pv ? 'c-bad' : ''], ['تم تلافيها', arD(x.pf), 'c-ok'], ['خطورة عالية', arD(x.risk.high), x.risk.high ? 'c-bad' : ''], ['خطورة متوسطة / منخفضة', arD(x.risk.mid) + ' / ' + arD(x.risk.low)]])}</div>
+      <div class="grp"><h3>قسم التراخيص — المنشآت</h3>${dl([['المنشآت', arD(x.lfac)], ['جاهزة', arD(x.lc.ready), 'c-ok'], ['تحت الإجراء', arD(x.lc.proc), x.lc.proc ? 'c-mid' : ''], ['متطلب مستندات', arD(x.lc.docs), x.lc.docs ? 'c-bad' : ''], ['المخالفات', arD(x.lv)], ['تم تلافيها', arD(x.lf), 'c-ok']])}</div>
+      <div class="grp"><h3>منشآت التراخيص التي تحتاج متابعة <span class="cnt">${arD(x.follow.length)}</span></h3>${x.follow.length ? x.follow.slice(0, 12).map((f) => { const ov = x.b.lviol.filter((v) => v.f === f.id && !v.fixed).length, st = lstOf(f); return `<div class="row"><span class="grow">${esc(f.name || 'منشأة')}${ov ? `<small>مخالفات قائمة: ${arD(ov)}</small>` : ''}</span><span class="pill ${st === 'docs' ? 'p-down' : st === 'proc' ? 'p-maint' : 'p-none'}"><i></i>${LST[st]}</span></div>`; }).join('') + (x.follow.length > 12 ? `<div class="none">و${arD(x.follow.length - 12)} منشأة أخرى…</div>` : '') : '<div class="none">كل المنشآت جاهزة وبلا مخالفات قائمة.</div>'}</div></section>`;
+    const empty = !T.pfac && !T.lfac && !T.R;
+    $('main').innerHTML = top + kpis + (empty ? '<section class="panel"><div class="none">لم تُدخل أقسام السلامة بياناتها بعد. تظهر هنا الجولات والمنشآت والمخالفات فور إضافتها في صفحات أقسام الدوريات والتراخيص.</div></section>' : '') + `<div class="two">${X.map(branch).join('')}</div>` + table + '<p class="foot">البيانات من آخر نسخة منشورة لكل قسم، وتتحدث تلقائيًا كل ٥ دقائق. «لم تُتلافَ» = المخالفات المسجلة ناقص ما تم تلافيه.</p>';
   }
 
   /* ---------- نصوص للنسخ ---------- */
@@ -475,6 +587,10 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     else if (a === 'copySum') copy(sumText());
     else if (a === 'copyDown') copy(downText());
     else if (a === 'circ') { S.qv = false; openCirc(); }
+    else if (a === 'home') { S.mode = ''; S.circ = false; S.qv = false; render(); window.scrollTo(0, 0); }
+    else if (a === 'mode') { S.mode = b.dataset.v; S.circ = false; S.qv = false; render(); window.scrollTo(0, 0); }
+    else if (a === 'ctab') { S.ctab = b.dataset.v; render(); }
+    else if (a === 'sYear') { S.sy = +b.dataset.v || 0; render(); }
     else if (a === 'qst') { S.qv = true; S.circ = false; S.qq = null; qView(); }
     else if (a === 'qBack') { S.qv = false; render(); }
     else if (a === 'qOpen') { S.qq = +b.dataset.v || null; if (S.qq) S.qk = S.qk || 'foam'; qView(); }
@@ -521,7 +637,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     const years = [...new Set([now.y, ...all.map((o) => qYear(o.r))])].sort((a, b) => b - a);
     const y = S.qy && years.includes(S.qy) ? S.qy : now.y; S.qy = y;
     const inY = all.filter((o) => qYear(o.r) === y);
-    const head = (t, back) => `<div class="panel" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px"><h2 style="margin:0;font-size:18px">${t}</h2><span style="flex:1"></span><button type="button" class="btn" data-act="${back}">→ الرجوع ${back === 'qList' ? 'للأرباع' : 'للوحة'}</button></div>`;
+    const head = (t, back) => `<div class="panel" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px"><h2 style="margin:0;font-size:18px">${t}</h2><span style="flex:1"></span><button type="button" class="btn" data-act="${back}">→ الرجوع ${back === 'qList' ? 'للأرباع' : 'للمراكز'}</button></div>`;
     const yearChips = years.length > 1 ? `<div class="chips" role="group" aria-label="العام">${years.map((v) => `<button type="button" class="chip" data-act="qYear" data-v="${v}" aria-pressed="${v === y}">${arD(v)}هـ</button>`).join('')}</div>` : '';
     if (!S.qq) {
       const cards = [1, 2, 3, 4].map((q) => {
@@ -614,7 +730,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       } catch (x) { er.textContent = 'تعذّر الإرسال: ' + (x.message === '403' ? 'رمز لوحة المدير لا يملك صلاحية الإرسال بعد (يلزم تحديث «الحارس»).' : x.message); go.disabled = false; go.textContent = 'إرسال التعميم لجميع المراكز والأقسام'; }
     });
   }
-  async function openCirc() { S.circ = true; $('main').innerHTML = '<div class="panel loading">جارٍ تحميل التعاميم…</div>'; await loadCirc(); circView(); }
+  async function openCirc() { S.circ = true; syncTop(); $('main').innerHTML = '<div class="panel loading">جارٍ تحميل التعاميم…</div>'; await loadCirc(); circView(); }
 
   /* ---------- الدخول ---------- */
   if (cfg.editProxy) { $('usrf').hidden = false; $('reff').hidden = false; }

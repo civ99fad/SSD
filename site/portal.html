@@ -210,12 +210,12 @@ a.gbar{text-decoration:none}
       const centers = `<section class="blk"><h3>المراكز<span class="cnt">${[...south, ...north, 'rawda', 'jubba', 'khatta'].filter((i) => byId[i]).length}</span></h3>${sub('شعبة الجنوب', many(south))}${sub('شعبة الشمال', many(north))}${sub('المراكز الخارجية', many(['rawda', 'jubba', 'khatta']))}</section>`;
       return dash + centers + block('الأقسام المتخصصة', many(['hazmat', 'isnad', 'control'])) + block('الأقسام الإدارية', many(['supply', 'admaff', 'techaff', 'hrdiv']));
     },
-    safety: () => ['sfn', 'sfs'].map((k) => block('قسم السلامة في ' + (k === 'sfn' ? 'الشمال' : 'الجنوب'), uc(k + 'pat', 'قسم الدوريات') + uc(k + 'lic', 'قسم التراخيص'))).join(''),
+    safety: () => ['sfn', 'sfs'].map((k) => block('شعبة ' + (k === 'sfn' ? 'الشمال' : 'الجنوب'), uc(k + 'pat', 'قسم الدوريات') + uc(k + 'lic', 'قسم التراخيص'))).join(''),
   };
-  const TITLES = { ops: ['إدارة العمليات', 'المراكز والأقسام ولوحات القيادة'], safety: ['إدارة السلامة', 'أقسام السلامة في الشمال والجنوب'] };
+  const TITLES = { ops: ['إدارة العمليات', 'المراكز والأقسام ولوحات القيادة'], safety: ['إدارة السلامة', 'شعبة الشمال وشعبة الجنوب: قسم الدوريات وقسم التراخيص'] };
   const home = () => `<div class="admins">
       <a class="adm" href="#ops"><span class="ic">${IC.ops}</span><b>إدارة العمليات</b><small>11 مركزًا · 3 أقسام متخصصة · 4 أقسام إدارية · لوحات القيادة</small><span class="go">فتح ${ARW}</span></a>
-      <a class="adm" href="#safety"><span class="ic">${IC.safety}</span><b>إدارة السلامة</b><small>قسم السلامة في الشمال · قسم السلامة في الجنوب</small><span class="go">فتح ${ARW}</span></a>
+      <a class="adm" href="#safety"><span class="ic">${IC.safety}</span><b>إدارة السلامة</b><small>شعبة الشمال · شعبة الجنوب</small><span class="go">فتح ${ARW}</span></a>
     </div>`;
   const draw = () => {
     const v = (location.hash || '').slice(1);

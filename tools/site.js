@@ -50,17 +50,20 @@ const EXTRA = [
   ['admaff', 'إدارة الشؤون الإدارية'],
   ['techaff', 'شعبة الشؤون الفنية'],
   ['hrdiv', 'شعبة الموارد البشرية'],
-  ['sfnpat', 'قسم الدوريات — السلامة في الشمال'],
-  ['sfnlic', 'قسم التراخيص — السلامة في الشمال'],
-  ['sfspat', 'قسم الدوريات — السلامة في الجنوب'],
-  ['sfslic', 'قسم التراخيص — السلامة في الجنوب'],
+  ['sfnpat', 'قسم الدوريات — شعبة الشمال'],
+  ['sfnlic', 'قسم التراخيص — شعبة الشمال'],
+  ['sfspat', 'قسم الدوريات — شعبة الجنوب'],
+  ['sfslic', 'قسم التراخيص — شعبة الجنوب'],
 ];
 for (const [id, name] of EXTRA) {
   UNITS[id] = { name, desc: 'أرشيف الجهة', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name), noMgr: true };
 }
 // شعب بقوائم خاصة (dept): تُخفى قوائم القالب كلها إلا ما يخصها، وتظهر لها أقسامها (المراكز، آليات حائل، سندات العهد…)
 const ALLNAV = ['dash', 'tasks', 'vehicles', 'equip', 'warehouses', 'consum', 'circ', 'staff', 'pfiles', 'tx', 'forms', 'returns', 'faults', 'profiles', 'advisor', 'sites', 'bounds'];
-const DEPT = { supply: ['supply', ['warehouses', 'circ', 'pfiles', 'returns']], admaff: ['admin', []], techaff: ['tech', ['pfiles', 'tx']], hrdiv: ['admin', []], sfnpat: ['safety', ALLNAV], sfnlic: ['safety', ALLNAV], sfspat: ['safety', ALLNAV], sfslic: ['safety', ALLNAV] };
+const DEPT = { supply: ['supply', ['warehouses', 'circ', 'pfiles', 'returns']], admaff: ['admin', []], techaff: ['tech', ['pfiles', 'tx']], hrdiv: ['admin', []], sfnpat: ['patrol', ['pfiles']], sfnlic: ['lic', ['pfiles']], sfspat: ['patrol', ['pfiles']], sfslic: ['lic', ['pfiles']] };
+// أقسام السلامة: كل شعبة (الشمال/الجنوب) فيها قسم دوريات وقسم تراخيص، و«إحصائيات الشعبة» تجمع القسمين
+const SAFETY = [['sfnpat', 'sfnlic', 'شعبة الشمال'], ['sfspat', 'sfslic', 'شعبة الجنوب']];
+const safetyOf = (id) => { const b = SAFETY.find((x) => x.includes(id)); return b ? { sbranch: b[2], sib: [b[0], b[1]].map((k) => ({ id: k, name: UNITS[k].name, web: UNITS[k].web, kind: UNITS[k].dept })) } : {}; };
 for (const [id, [dept, show]] of Object.entries(DEPT)) Object.assign(UNITS[id], { dept, hide: ALLNAV.filter((k) => !show.includes(k)) });
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
@@ -110,7 +113,7 @@ function pageHtml(unit, config) {
     html = html.split(from).join(to);
   };
   patch("const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';", "const blob = id => id ? window.ISNAD.blob(id) : '';");
-  const cfg = Object.assign(repo(), config, { unit, unitName: u.name, dbDir: u.dbDir, web: u.web, units: Object.entries(UNITS).map(([id, x]) => ({ id, name: x.name })), dept: u.dept || '', centers: CENTERS.map(([id, name]) => ({ id, name, web: UNITS[id].web })).concat([{ id: 'isnad', name: UNITS.isnad.name, web: '' }]) });
+  const cfg = Object.assign(repo(), config, { unit, unitName: u.name, dbDir: u.dbDir, web: u.web, units: Object.entries(UNITS).map(([id, x]) => ({ id, name: x.name })), dept: u.dept || '', ...safetyOf(unit), centers: CENTERS.map(([id, name]) => ({ id, name, web: UNITS[id].web })).concat([{ id: 'isnad', name: UNITS.isnad.name, web: '' }]) });
   // ?v= بصمة الشيم: يجبر المتصفح على تحميل النسخة الجديدة بعد كل تحديث بدل نسخته المخزّنة
   const ver = crypto.createHash('sha1').update(fs.readFileSync(path.join(SITE_DIR, 'shim.js'))).digest('hex').slice(0, 10);
   patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(cfg)};</script>\n<script src="shim.js?v=${ver}"></script>\n<script>\n(function(){`);
@@ -134,10 +137,11 @@ function portalHtml(config) {
 // لوحة المدير: تقرأ db.json لكل جهة وتعرض جاهزيتها
 function managerHtml(config) {
   const units = Object.entries(UNITS).filter(([, u]) => !u.noMgr).map(([id, u]) => ({ id, name: u.name, web: u.web }));
+  const safety = SAFETY.map(([p, l, name]) => ({ name, units: [p, l].map((k) => ({ id: k, name: UNITS[k].name, web: UNITS[k].web, kind: UNITS[k].dept })) }));
   const logo = logoFile();
   let html = fs.readFileSync(path.join(SITE_DIR, 'manager.html'), 'utf8');
   if (logo) html = html.replace('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);
-  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, unit: MANAGER.id, editProxy: editProxy(), repo: repo().repo, branch: repo().branch, logo: logo ? 'blobs/' + logo : '' }, config))};`);
+  return html.replace('/*CONFIG*/', `window.ISNAD_CONFIG=${JSON.stringify(Object.assign({ units, safety, unit: MANAGER.id, editProxy: editProxy(), repo: repo().repo, branch: repo().branch, logo: logo ? 'blobs/' + logo : '' }, config))};`);
 }
 
 // كل مجموعات الجهة (عدا ملفات Word الكبيرة في db/files) + خريطة معرّف الملف ← مساره
