@@ -60,7 +60,7 @@ for (const [id, name] of EXTRA) {
 }
 // شعب بقوائم خاصة (dept): تُخفى قوائم القالب كلها إلا ما يخصها، وتظهر لها أقسامها (المراكز، آليات حائل، سندات العهد…)
 const ALLNAV = ['dash', 'tasks', 'vehicles', 'equip', 'warehouses', 'consum', 'circ', 'staff', 'pfiles', 'tx', 'forms', 'returns', 'faults', 'profiles', 'advisor', 'sites', 'bounds'];
-const DEPT = { supply: ['supply', ['warehouses', 'circ', 'pfiles', 'returns']], admaff: ['admin', []], techaff: ['tech', ['pfiles', 'tx']] };
+const DEPT = { supply: ['supply', ['warehouses', 'circ', 'pfiles', 'returns']], admaff: ['admin', []], techaff: ['tech', ['pfiles', 'tx']], hrdiv: ['admin', []], sfnpat: ['safety', ALLNAV], sfnlic: ['safety', ALLNAV], sfspat: ['safety', ALLNAV], sfslic: ['safety', ALLNAV] };
 for (const [id, [dept, show]] of Object.entries(DEPT)) Object.assign(UNITS[id], { dept, hide: ALLNAV.filter((k) => !show.includes(k)) });
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files

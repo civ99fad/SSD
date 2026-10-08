@@ -549,6 +549,8 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 html:not(.u-ctrl) .ccc{display:none!important}
 html:not(.u-iso) .iso-only{display:none!important}
 html:not(.u-supply):not(.u-admin):not(.u-tech) .dpt{display:none!important}
+html.u-supply #navg-fleet{display:none!important}
+html.u-supply #navb-fleet,html.u-supply #navb-fleet.closed{display:flex!important;padding:0;border:0;margin:0}
 html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .dpt:not(.d-tech){display:none!important}
 .dcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
 .dcard{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface)}
@@ -817,12 +819,14 @@ html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .d
 // مركز التحكم والتوجيه: أقسام خاصة به (أرقام المسؤولين، الجهات المساندة، الخرائط)
 if (((window.ISNAD_CONFIG||{}).unit||'isnad')==='isnad') document.documentElement.classList.add('u-iso');
 const DEPT = (window.ISNAD_CONFIG||{}).dept||''; if (DEPT) document.documentElement.classList.add('u-'+DEPT);
+// أقسام السلامة: «ملفات الأفراد» أول القائمة
+if (DEPT==='safety'){ const nv=document.querySelector('.nav'), pf=document.getElementById('nav-pfiles'); if (nv&&pf) nv.insertBefore(pf, nv.firstChild); }
 const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
   if (nv) ['profiles','advisor'].forEach(id=>{ const b=document.getElementById('nav-'+id); if (b) nv.appendChild(b); }); }
 const $ = s => document.querySelector(s);
 const S = { db:null, user:null, assets:null, canEdit:false, me:null,
   vehicles:[], warehouses:[], settings:{}, loadedV:false, loadedW:false, dbFailed:false,
-  view:{name:DEPT==='tech'?'dfleet':DEPT?'dcenters':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false };
+  view:{name:DEPT==='tech'?'dfleet':(DEPT==='supply'||DEPT==='admin')?'dcenters':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false };
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1796,8 +1800,11 @@ function viewDCenter(id){
   const st=cStaff(id);
   const head=`${back}<header class="ph"><div class="ph-t"><h1>التشكيل الإداري — ${esc(cName(id))}</h1><span class="count">${st.length} فرد</span></div></header>`;
   if (!st.length) return head+`<div class="panel empty"><b>لا يوجد أفراد مسجلون في هذا المركز.</b></div>`;
-  return head+dTable(['م','الرتبة','الاسم','الرقم العسكري','التخصص','الوردية','المعاملات والملفات'], st.map((p,i)=>{ const n=(S.cptx||[]).filter(r=>r.c===id&&r.p===p.id).length;
-    return `<tr><td>${i+1}</td><td>${esc(p.rank||'')}</td><td class="nm">${esc(p.name||'')}</td><td>${p.num?`<bdi>${esc(p.num)}</bdi>`:DASH}</td><td>${p.spec?esc(p.spec):DASH}</td><td>${p.shift?esc(p.shift):DASH}</td><td><button type="button" class="link" data-act="dOpenP" data-id="${esc(id+'|'+p.id)}" data-i="dcenters">${n?n+' سجل':'فتح'} ${ICON.arrow}</button></td></tr>`; }).join(''));
+  // التشكيل مقسّم حسب الوردية (الأولى، الثانية، الثالثة…)، ومن بلا وردية في آخره
+  const groups={}; st.forEach(p=>{ const k=SHN[String(p.shift||'')]?String(p.shift):'0'; (groups[k]=groups[k]||[]).push(p); });
+  const keys=Object.keys(groups).sort((a,b)=>(a==='0')-(b==='0')||(+a)-(+b));
+  return head+keys.map(k=>`<section class="dsec"><h2>${esc(k==='0'?'بدون وردية محددة':SHN[k])} <small style="color:var(--muted);font-weight:600">(${groups[k].length} فرد)</small></h2>${dTable(['م','الرتبة','الاسم','الرقم العسكري','التخصص','المعاملات والملفات'], groups[k].map((p,i)=>{ const n=(S.cptx||[]).filter(r=>r.c===id&&r.p===p.id).length;
+    return `<tr><td>${i+1}</td><td>${esc(p.rank||'')}</td><td class="nm">${esc(p.name||'')}</td><td>${p.num?`<bdi>${esc(p.num)}</bdi>`:DASH}</td><td>${p.spec?esc(p.spec):DASH}</td><td><button type="button" class="link" data-act="dOpenP" data-id="${esc(id+'|'+p.id)}" data-i="dcenters">${n?n+' سجل':'فتح'} ${ICON.arrow}</button></td></tr>`; }).join(''))}</section>`).join('');
 }
 function viewDPerson(key){
   const [cid,pid]=String(key).split('|'); const p=cStaff(cid).find(x=>x.id===pid)||{name:'—'};
@@ -3008,7 +3015,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
   db.collection('circulars').onSnapshot(s => { S.circulars=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedCirc=true; render(); }, () => { S.loadedCirc=true; render(); });
   db.collection('guide').onSnapshot(s => { S.guide=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedAdv=true; render(); }, () => { S.loadedAdv=true; render(); });
-  if (DEPT){ for (const c of ['deliv','cptx','vact']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, () => {}); loadCenters(); }
+  if (DEPT && DEPT!=='safety'){ for (const c of ['deliv','cptx','vact']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, () => {}); loadCenters(); }
   db.collection('pdocs').onSnapshot(s => { S.pdocs=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);
