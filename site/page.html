@@ -548,10 +548,10 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .phb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 html:not(.u-ctrl) .ccc{display:none!important}
 html:not(.u-iso) .iso-only{display:none!important}
-html:not(.u-supply):not(.u-admin):not(.u-tech) .dpt{display:none!important}
+html:not(.u-supply):not(.u-admin):not(.u-tech):not(.u-safety) .dpt{display:none!important}
 html.u-supply #navg-fleet{display:none!important}
 html.u-supply #navb-fleet,html.u-supply #navb-fleet.closed{display:flex!important;padding:0;border:0;margin:0}
-html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .dpt:not(.d-tech){display:none!important}
+html.u-safety .dpt:not(.d-safety),html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .dpt:not(.d-tech){display:none!important}
 .dcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
 .dcard{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface)}
 .dcard:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(14,61,44,.12)}
@@ -694,6 +694,10 @@ html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .d
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>
         <span>الآليات</span>
       </button>
+      <button type="button" class="dpt d-safety" data-act="nav" data-id="insp" id="nav-insp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+        <span>إحصائيات الكشفيات</span>
+      </button>
       <button type="button" class="dpt d-supply" data-act="nav" data-id="handover" id="nav-handover">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 15 2 2 4-4"/></svg>
         <span>سندات تسليم العهد</span>
@@ -820,13 +824,13 @@ html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .d
 if (((window.ISNAD_CONFIG||{}).unit||'isnad')==='isnad') document.documentElement.classList.add('u-iso');
 const DEPT = (window.ISNAD_CONFIG||{}).dept||''; if (DEPT) document.documentElement.classList.add('u-'+DEPT);
 // أقسام السلامة: «ملفات الأفراد» أول القائمة
-if (DEPT==='safety'){ const nv=document.querySelector('.nav'), pf=document.getElementById('nav-pfiles'); if (nv&&pf) nv.insertBefore(pf, nv.firstChild); }
+if (DEPT==='safety'){ const nv=document.querySelector('.nav'), pf=document.getElementById('nav-pfiles'), ins=document.getElementById('nav-insp'); if (nv&&pf) nv.insertBefore(pf, nv.firstChild); if (nv&&ins) nv.insertBefore(ins, nv.firstChild); }
 const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
   if (nv) ['profiles','advisor'].forEach(id=>{ const b=document.getElementById('nav-'+id); if (b) nv.appendChild(b); }); }
 const $ = s => document.querySelector(s);
 const S = { db:null, user:null, assets:null, canEdit:false, me:null,
   vehicles:[], warehouses:[], settings:{}, loadedV:false, loadedW:false, dbFailed:false,
-  view:{name:DEPT==='tech'?'dfleet':(DEPT==='supply'||DEPT==='admin')?'dcenters':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false };
+  view:{name:DEPT==='tech'?'dfleet':(DEPT==='supply'||DEPT==='admin')?'dcenters':DEPT==='safety'?'insp':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false };
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1084,8 +1088,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : (v.name==='dcenters'||v.name==='dcenter'||(v.name==='dperson'&&S.dpFrom!=='dpfiles')) ? 'dcenters' : (v.name==='dpfiles'||v.name==='dperson') ? 'dpfiles' : (v.name==='dfleet'||v.name==='dveh') ? 'dfleet' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : (v.name==='dcenters'||v.name==='dcenter'||(v.name==='dperson'&&S.dpFrom!=='dpfiles')) ? 'dcenters' : (v.name==='dpfiles'||v.name==='dperson') ? 'dpfiles' : (v.name==='dfleet'||v.name==='dveh') ? 'dfleet' : (v.name==='insp'||v.name==='inspf') ? 'insp' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','insp','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
@@ -1119,6 +1123,8 @@ function render(){
   else if (v.name==='dpfiles') paint(viewDPfiles());
   else if (v.name==='dfleet') paint(viewDFleet());
   else if (v.name==='dveh') paint(viewDVeh(v.id));
+  else if (v.name==='insp') paint(viewInsp());
+  else if (v.name==='inspf') paint(viewInspF(v.id));
   else if (v.name==='circ') paint(gSearchBar()+viewCirc());
   else if (v.name==='pfile') paint(gSearchBar()+viewPFile(v.id));
   else if (v.name==='consum') paint(gSearchBar()+viewConsum());
@@ -1851,6 +1857,39 @@ function viewDVeh(key){
   return head+info+tbl;
 }
 const dSave = async (col, base, x) => { const rec=Object.assign({}, base, hStrip(x), {at:Date.now()}); delete rec.file; if (x.file) Object.assign(rec, await storeLibFile(x.file, col+'-'+uid())); else Object.assign(rec,{file:null, db:null, fileName:''}); await S.db.collection(col).doc().set(rec); };
+/* ---------- أقسام السلامة: إحصائيات الكشفيات على المنشآت ---------- */
+function viewInsp(){
+  const all=(S.insp||[]).slice(), f=S.inf||'all', t=S.int||'', q=norm(S.inq||'');
+  const edit=S.canEdit, ok=all.filter(r=>r.status!=='act').length, act=all.length-ok;
+  const types={}; all.forEach(r=>{ const k=r.type||'غير محدد'; types[k]=(types[k]||0)+1; });
+  const head=`<header class="ph"><div class="ph-t"><h1>إحصائيات الكشفيات</h1><span class="count">${all.length} منشأة</span></div>${edit?`<button type="button" class="btn primary" data-act="inspAdd">${ICON.plus}إضافة منشأة</button>`:''}</header>`;
+  if (!S.loadedInsp) return head+loading();
+  const tiles=`<div class="dcards" style="margin-bottom:16px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))">
+    <div class="dcard" style="cursor:default"><small>إجمالي المنشآت</small><b style="font-size:26px">${all.length}</b></div>
+    <div class="dcard" style="cursor:default;border-color:#2e7d5b"><small>سليم</small><b style="font-size:26px;color:#1F7A56">${ok}</b></div>
+    <div class="dcard" style="cursor:default;border-color:#b42318"><small>متطلب إجراء</small><b style="font-size:26px;color:#B42318">${act}</b></div>
+    <div class="dcard" style="cursor:default"><small>أنواع المنشآت</small><b style="font-size:26px">${Object.keys(types).length}</b></div></div>`;
+  const chip=(k,l,n)=>`<button type="button" class="fchip${f===k?' on':''}" data-act="inspF" data-id="${k}" aria-pressed="${f===k}">${esc(l)} <b>${n}</b></button>`;
+  const tchip=(k,n)=>`<button type="button" class="fchip${t===k?' on':''}" data-act="inspT" data-id="${esc(k)}" aria-pressed="${t===k}">${esc(k||'كل الأنواع')} <b>${n}</b></button>`;
+  const tools=`<div class="fchips" role="group" aria-label="الحالة" style="margin-bottom:8px">${chip('all','الكل',all.length)}${chip('ok','سليم',ok)}${chip('act','متطلب إجراء',act)}</div>
+    ${all.length?`<div class="fchips" role="group" aria-label="النوع" style="margin-bottom:12px">${tchip('',all.length)}${Object.entries(types).sort((a,b)=>b[1]-a[1]).map(([k,n])=>tchip(k,n)).join('')}</div>`:''}
+    ${all.length>8?`<div class="toolbar"><label class="search"><span class="vh">بحث</span>${ICON.search}<input id="inq" type="search" placeholder="ابحث باسم المنشأة أو الموقع" value="${esc(S.inq||'')}"></label></div>`:''}`;
+  if (!all.length) return head+tiles+`<div class="panel empty"><b>لا توجد منشآت مسجلة بعد.</b>${edit?'أضف المنشآت ونوعها وآخر كشف وحالتها بزر «إضافة منشأة».':''}</div>`;
+  const list=all.filter(r=>(f==='all'||(f==='act'?r.status==='act':r.status!=='act'))&&(!t||(r.type||'غير محدد')===t)&&(!q||norm([r.name,r.loc,r.type,r.notes].join(' ')).includes(q))).sort((a,b)=>(b.status==='act')-(a.status==='act')||(hkey(b.last)-hkey(a.last)));
+  const rows=list.map(r=>{ const nd=(S.inspdocs||[]).filter(d=>d.f===r.id).length;
+    return `<tr><td class="nm"><button type="button" class="link" data-act="inspOpen" data-id="${esc(r.id)}">${esc(r.name||'')}</button>${r.loc?`<div class="hper">${esc(r.loc)}</div>`:''}</td><td>${esc(r.type||'—')}</td><td class="hdate">${esc(r.last||'')||DASH}</td><td>${r.notes?esc(r.notes):DASH}</td><td><span class="stpill ${r.status==='act'?'hs-bad':'hs-ok'}"><i aria-hidden="true"></i>${INST[r.status==='act'?'act':'ok']}</span></td><td><button type="button" class="link" data-act="inspOpen" data-id="${esc(r.id)}">${nd?nd+' مستند':'المستندات'} ${ICON.arrow}</button></td>${edit?rowActs('insp',r):''}</tr>`; }).join('');
+  return head+tiles+tools+(list.length?dTable(['المنشأة','النوع','آخر كشف','الملاحظات','الحالة','المستندات',...(edit?['']:[])], rows):`<div class="panel empty"><b>لا توجد نتائج.</b></div>`);
+}
+function viewInspF(id){
+  const r=(S.insp||[]).find(x=>x.id===id), edit=S.canEdit;
+  const back=`<nav class="crumbs"><button type="button" data-act="nav" data-id="insp">إحصائيات الكشفيات</button><span>/</span><span>${esc((r||{}).name||'')}</span></nav>`;
+  if (!r) return back+`<div class="panel empty"><b>المنشأة غير موجودة.</b></div>`;
+  const docs=(S.inspdocs||[]).filter(d=>d.f===id).sort((a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0)));
+  const head=`${back}<header class="ph"><div class="ph-t"><h1>${esc(r.name||'')}</h1><span class="stpill ${r.status==='act'?'hs-bad':'hs-ok'}"><i aria-hidden="true"></i>${INST[r.status==='act'?'act':'ok']}</span></div>${edit?`<button type="button" class="btn" data-act="hRecEdit" data-id="insp" data-i="${esc(id)}">${ICON.edit}تعديل البيانات</button><button type="button" class="btn primary" data-act="inspDocAdd" data-id="${esc(id)}">${ICON.plus}إضافة مستند</button>`:''}</header>`;
+  const info=`<dl class="panel info" style="margin:0 0 16px"><div><dt>نوع المنشأة</dt><dd>${esc(r.type||'—')}</dd></div><div><dt>الموقع</dt><dd>${esc(r.loc||'—')}</dd></div><div><dt>آخر كشف</dt><dd>${esc(r.last||'—')}</dd></div><div><dt>الحالة</dt><dd>${INST[r.status==='act'?'act':'ok']}</dd></div><div><dt>الملاحظات الموجودة</dt><dd>${esc(r.notes||'—')}</dd></div></dl>`;
+  const tbl=docs.length?dTable(['التاريخ','المستند','الملف',...(edit?['']:[])], docs.map(d=>`<tr><td class="hdate">${esc(d.date||'')}</td><td class="nm">${esc(d.title||'')}</td><td>${fileBtn('inspdocs',d,'عرض')}</td>${edit?rowActs('inspdocs',d):''}</tr>`).join('')):`<div class="panel empty"><b>لا توجد مستندات لهذه المنشأة بعد.</b>${edit?'أرفق محاضر الكشف والتراخيص بزر «إضافة مستند».':''}</div>`;
+  return head+info+`<h2 style="font-size:17px;margin:0 0 8px">مستندات المنشأة</h2>`+tbl;
+}
 function viewAdvisor(){
   const edit=advEdit(), sect=S.advSect||'', all=(S.guide||[]).slice().sort(advSort), duty=all.filter(advDuty), admin=all.filter(x=>!advDuty(x));
   const back=`<div style="margin-bottom:10px"><button type="button" class="link" data-act="advSect" data-id="">${ICON.arrow} المستشار</button></div>`;
@@ -2468,7 +2507,14 @@ const cptxFields = r => [[{id:'kind',label:'النوع',type:'select',value:r.ki
   {id:'title',label:'العنوان',value:r.title,required:true,placeholder:'مثال: طلب إجازة اعتيادية'}, {id:'note',label:'ملاحظة (اختياري)',type:'textarea',value:r.note}];
 const vactFields = r => [{id:'text',label:'الإجراء المتخذ',type:'textarea',value:r.text,required:true,placeholder:'مثال: رُفع خطاب للصيانة برقم …'},
   [{id:'date',label:'التاريخ',value:r.date||hijri(),required:true},{id:'fault',label:'نوع العطل (اختياري)',value:r.fault,placeholder:'مثال: عطل كهربائي'}]];
-const HCOLS = {deliv:{fields:delivFields,title:'التسليم'}, cptx:{fields:cptxFields,title:'السجل'}, vact:{fields:vactFields,title:'الإجراء'}, pdocs:{fields:r=>pdFields(r),title:'المستند'}, letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
+const INST = {ok:'سليم', act:'متطلب إجراء'};
+const INTYPES = ['تجاري','صناعي','سكني','تعليمي','صحي','فندقي','ترفيهي','مستودعات','محطة وقود','حكومي','ديني','أخرى'];
+const inspFields = r => [{id:'name',label:'اسم المنشأة',value:r.name,required:true,placeholder:'مثال: مجمع الراشد التجاري'},
+  [{id:'type',label:'نوع المنشأة',value:r.type,list:INTYPES,required:true,placeholder:'مثال: تجاري'},{id:'status',label:'حالة المنشأة',type:'select',value:r.status||'ok',options:Object.entries(INST)}],
+  [{id:'last',label:'تاريخ آخر كشف',value:r.last||hijri(),required:true},{id:'loc',label:'الموقع / الحي (اختياري)',value:r.loc,placeholder:'مثال: حي المنتزه'}],
+  {id:'notes',label:'الملاحظات الموجودة',type:'textarea',value:r.notes,placeholder:'مثال: طفايات منتهية الصلاحية، مخرج طوارئ مغلق'}];
+const inspDocFields = r => [[{id:'title',label:'عنوان المستند',value:r.title,required:true,placeholder:'مثال: محضر كشف'},{id:'date',label:'التاريخ',value:r.date||hijri(),required:true}]];
+const HCOLS = {insp:{fields:inspFields,title:'المنشأة'}, inspdocs:{fields:inspDocFields,title:'المستند'}, deliv:{fields:delivFields,title:'التسليم'}, cptx:{fields:cptxFields,title:'السجل'}, vact:{fields:vactFields,title:'الإجراء'}, pdocs:{fields:r=>pdFields(r),title:'المستند'}, letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
 const hRec = (col, id) => (S[col]||[]).find(r=>r.id===id);
 async function hStoreFile(x, ref, old){
   if (!x.file) return {};
@@ -2609,6 +2655,11 @@ const ACT = {
   closeModal: closeModal,
   nav: id => { go(id); if (id==='audit') auditLoad(); },
   dOpenC: id => go('dcenter', id),
+  inspF: k => { S.inf=k; render(); },
+  inspT: k => { S.int=k; render(); },
+  inspOpen: id => go('inspf', id),
+  inspAdd: () => openForm({title:'إضافة منشأة', submit:'إضافة', fields:inspFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('insp', {}, x); toast('أُضيفت المنشأة'); }}),
+  inspDocAdd: id => { const r=(S.insp||[]).find(o=>o.id===id)||{}; openForm({title:'مستند — '+(r.name||''), submit:'حفظ', fields:inspDocFields({}).concat([Object.assign({},DCOL_ATT,{label:'الملف',required:true})]), onSubmit: async x => { await dSave('inspdocs', {f:id, fN:r.name||''}, x); toast('أُضيف المستند'); }}); },
   dOpenP: (id, from) => { S.dpFrom=from||'dcenters'; go('dperson', id); },
   dOpenV: id => go('dveh', id),
   dFleetF: k => { S.dff=k; render(); },
@@ -2957,7 +3008,7 @@ document.addEventListener('input', e => {
   else if (e.target.dataset && e.target.dataset.lib){ S.lib[e.target.dataset.lib][e.target.dataset.f]=e.target.value; render(); }
   else if (e.target.id==='wq'){ S.wq=e.target.value; render(); }
 });
-document.addEventListener('input', e => { if (e.target && e.target.id==='dpq'){ S.dpq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#dpq'); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } } });
+document.addEventListener('input', e => { if (e.target && e.target.id==='inq'){ S.inq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#inq'); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } return; } if (e.target && e.target.id==='dpq'){ S.dpq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#dpq'); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } } });
 document.addEventListener('change', e => { if (e.target && e.target.id==='au_day' && e.target.value){ S.auditDay=e.target.value; auditLoad(); } });
 document.addEventListener('change', async e => {
   const el=e.target, key=el.dataset && el.dataset.up; if (!key) return;
@@ -3015,6 +3066,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
   db.collection('circulars').onSnapshot(s => { S.circulars=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedCirc=true; render(); }, () => { S.loadedCirc=true; render(); });
   db.collection('guide').onSnapshot(s => { S.guide=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedAdv=true; render(); }, () => { S.loadedAdv=true; render(); });
+  if (DEPT==='safety') for (const c of ['insp','inspdocs']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); if (c==='insp') S.loadedInsp=true; render(); }, () => { S.loadedInsp=true; render(); });
   if (DEPT && DEPT!=='safety'){ for (const c of ['deliv','cptx','vact']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, () => {}); loadCenters(); }
   db.collection('pdocs').onSnapshot(s => { S.pdocs=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
