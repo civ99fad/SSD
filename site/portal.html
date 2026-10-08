@@ -202,6 +202,10 @@ a.gbar{text-decoration:none}
   const block = (title, cards) => { const n = (cards.match(/class="uc"/g) || []).length; return n ? `<section class="blk"><h3>${esc(title)}<span class="cnt">${n}</span></h3><div class="ucs">${cards}</div></section>` : ''; };
   const sub = (title, cards) => cards ? `<div class="subh">${esc(title)}</div><div class="ucs">${cards}</div>` : '';
   const many = (ids) => ids.map((i) => uc(i)).join('');
+  const lk = (href, label, ic) => `<a class="uc" href="${esc(href)}" data-q="${esc(label)}"><span class="ic">${ic || IC.doc}</span><b>${esc(label)}</b><span class="arw">${ARW}</span></a>`;
+  const SFN = { sfn: 'قسم السلامة شمال', sfs: 'قسم السلامة جنوب' };
+  const sfView = (k) => (byId[k + 'pat'] ? block('قسم الدوريات', lk(k + 'pat.html#rounds', 'الجولات التفتيشية') + lk(k + 'pat.html#sfstat', 'الإحصائيات', IC.chart) + lk(k + 'pat.html#pfiles', 'ملفات أفراد قسم الدوريات')) : '')
+    + (byId[k + 'lic'] ? block('قسم التراخيص', lk(k + 'lic.html#lfac', 'المنشآت والتراخيص') + lk(k + 'lic.html#sfstat', 'إحصائيات الشعبة', IC.chart) + lk(k + 'lic.html#pfiles', 'ملفات أفراد القسم')) : '');
   const VIEWS = {
     ops: () => {
       const dash = cfg.manager ? `<section class="blk"><h3>لوحات القيادة</h3><div class="dashes">
@@ -210,17 +214,21 @@ a.gbar{text-decoration:none}
       const centers = `<section class="blk"><h3>المراكز<span class="cnt">${[...south, ...north, 'rawda', 'jubba', 'khatta'].filter((i) => byId[i]).length}</span></h3>${sub('شعبة الجنوب', many(south))}${sub('شعبة الشمال', many(north))}${sub('المراكز الخارجية', many(['rawda', 'jubba', 'khatta']))}</section>`;
       return dash + centers + block('الأقسام المتخصصة', many(['hazmat', 'isnad', 'control'])) + block('الأقسام الإدارية', many(['supply', 'admaff', 'techaff', 'hrdiv']));
     },
-    safety: () => ['sfn', 'sfs'].map((k) => block('شعبة ' + (k === 'sfn' ? 'الشمال' : 'الجنوب'), uc(k + 'pat', 'قسم الدوريات') + uc(k + 'lic', 'قسم التراخيص'))).join(''),
+    // إدارة السلامة: قسم السلامة شمال وجنوب، وبداخل كل منهما قسم الدوريات وقسم التراخيص بقوائمهما (كل قسم بدخوله)
+    safety: () => `<section class="blk"><div class="ucs">${['sfn', 'sfs'].map((k) => lk('#' + k, SFN[k], IC.safety)).join('')}</div></section>`,
+    sfn: () => sfView('sfn'),
+    sfs: () => sfView('sfs'),
   };
-  const TITLES = { ops: ['إدارة العمليات', 'المراكز والأقسام ولوحات القيادة'], safety: ['إدارة السلامة', 'شعبة الشمال وشعبة الجنوب: قسم الدوريات وقسم التراخيص'] };
+  const TITLES = { ops: ['إدارة العمليات', 'المراكز والأقسام ولوحات القيادة'], safety: ['إدارة السلامة', 'قسم السلامة شمال · قسم السلامة جنوب'], sfn: ['قسم السلامة شمال', 'قسم الدوريات · قسم التراخيص'], sfs: ['قسم السلامة جنوب', 'قسم الدوريات · قسم التراخيص'] };
+  const PARENT = { sfn: ['#safety', 'إدارة السلامة'], sfs: ['#safety', 'إدارة السلامة'] };
   const home = () => `<div class="admins">
       <a class="adm" href="#ops"><span class="ic">${IC.ops}</span><b>إدارة العمليات</b><small>11 مركزًا · 3 أقسام متخصصة · 4 أقسام إدارية · لوحات القيادة</small><span class="go">فتح ${ARW}</span></a>
-      <a class="adm" href="#safety"><span class="ic">${IC.safety}</span><b>إدارة السلامة</b><small>شعبة الشمال · شعبة الجنوب</small><span class="go">فتح ${ARW}</span></a>
+      <a class="adm" href="#safety"><span class="ic">${IC.safety}</span><b>إدارة السلامة</b><small>قسم السلامة شمال · قسم السلامة جنوب</small><span class="go">فتح ${ARW}</span></a>
     </div>`;
   const draw = () => {
     const v = (location.hash || '').slice(1);
     if (!VIEWS[v]) { $('units').innerHTML = home(); return; }
-    $('units').innerHTML = `<div class="vhead"><a class="back" href="#">→ الإدارات</a><div class="vt"><h2>${TITLES[v][0]}</h2><small>${TITLES[v][1]}</small></div>
+    $('units').innerHTML = `<div class="vhead"><a class="back" href="${(PARENT[v] || ['#'])[0]}">→ ${(PARENT[v] || [0, 'الإدارات'])[1]}</a><div class="vt"><h2>${TITLES[v][0]}</h2><small>${TITLES[v][1]}</small></div>
       <label class="srch"><span class="vh">بحث</span><input id="uq" type="search" placeholder="ابحث عن مركز أو قسم…" autocomplete="off"></label></div><div id="vbody">${VIEWS[v]()}</div><p class="none" id="nores" hidden>لا توجد نتائج مطابقة.</p>`;
     const q = $('uq');
     q.addEventListener('input', () => {

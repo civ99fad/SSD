@@ -50,10 +50,10 @@ const EXTRA = [
   ['admaff', 'إدارة الشؤون الإدارية'],
   ['techaff', 'شعبة الشؤون الفنية'],
   ['hrdiv', 'شعبة الموارد البشرية'],
-  ['sfnpat', 'قسم الدوريات — شعبة الشمال'],
-  ['sfnlic', 'قسم التراخيص — شعبة الشمال'],
-  ['sfspat', 'قسم الدوريات — شعبة الجنوب'],
-  ['sfslic', 'قسم التراخيص — شعبة الجنوب'],
+  ['sfnpat', 'قسم الدوريات — السلامة شمال'],
+  ['sfnlic', 'قسم التراخيص — السلامة شمال'],
+  ['sfspat', 'قسم الدوريات — السلامة جنوب'],
+  ['sfslic', 'قسم التراخيص — السلامة جنوب'],
 ];
 for (const [id, name] of EXTRA) {
   UNITS[id] = { name, desc: 'أرشيف الجهة', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name), noMgr: true };
@@ -62,7 +62,7 @@ for (const [id, name] of EXTRA) {
 const ALLNAV = ['dash', 'tasks', 'vehicles', 'equip', 'warehouses', 'consum', 'circ', 'staff', 'pfiles', 'tx', 'forms', 'returns', 'faults', 'profiles', 'advisor', 'sites', 'bounds'];
 const DEPT = { supply: ['supply', ['warehouses', 'circ', 'pfiles', 'returns']], admaff: ['admin', []], techaff: ['tech', ['pfiles', 'tx']], hrdiv: ['admin', []], sfnpat: ['patrol', ['pfiles']], sfnlic: ['lic', ['pfiles']], sfspat: ['patrol', ['pfiles']], sfslic: ['lic', ['pfiles']] };
 // أقسام السلامة: كل شعبة (الشمال/الجنوب) فيها قسم دوريات وقسم تراخيص، و«إحصائيات الشعبة» تجمع القسمين
-const SAFETY = [['sfnpat', 'sfnlic', 'شعبة الشمال'], ['sfspat', 'sfslic', 'شعبة الجنوب']];
+const SAFETY = [['sfnpat', 'sfnlic', 'قسم السلامة شمال'], ['sfspat', 'sfslic', 'قسم السلامة جنوب']];
 const safetyOf = (id) => { const b = SAFETY.find((x) => x.includes(id)); return b ? { sbranch: b[2], sib: [b[0], b[1]].map((k) => ({ id: k, name: UNITS[k].name, web: UNITS[k].web, kind: UNITS[k].dept })) } : {}; };
 for (const [id, [dept, show]] of Object.entries(DEPT)) Object.assign(UNITS[id], { dept, hide: ALLNAV.filter((k) => !show.includes(k)) });
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
