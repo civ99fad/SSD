@@ -43,6 +43,19 @@ for (const [id, name] of CENTERS) {
 UNITS.control.hide = ['equip', 'consum', 'bounds', 'sites'];
 // قسم الدعم والإسناد آخر البوابة
 UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف الآليات والمستودعات والكادر البشري', dbDir: 'data/db', web: '', names: {}, hide: ['bounds', 'sites'] }; // قسم الإسناد ليس له حدود ولا منشآت هامة
+// جهات إضافية: إدارة العمليات (شعبة التحقيق، الشؤون الإدارية) وإدارة السلامة (الدوريات والتراخيص في الشمال والجنوب)
+// لا تظهر في لوحة المدير (ليست جهات آليات)
+const EXTRA = [
+  ['invest', 'شعبة التحقيق'],
+  ['admaff', 'إدارة الشؤون الإدارية'],
+  ['sfnpat', 'قسم الدوريات — السلامة في الشمال'],
+  ['sfnlic', 'قسم التراخيص — السلامة في الشمال'],
+  ['sfspat', 'قسم الدوريات — السلامة في الجنوب'],
+  ['sfslic', 'قسم التراخيص — السلامة في الجنوب'],
+];
+for (const [id, name] of EXTRA) {
+  UNITS[id] = { name, desc: 'أرشيف الجهة', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name), noMgr: true };
+}
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
@@ -114,7 +127,7 @@ function portalHtml(config) {
 
 // لوحة المدير: تقرأ db.json لكل جهة وتعرض جاهزيتها
 function managerHtml(config) {
-  const units = Object.entries(UNITS).map(([id, u]) => ({ id, name: u.name, web: u.web }));
+  const units = Object.entries(UNITS).filter(([, u]) => !u.noMgr).map(([id, u]) => ({ id, name: u.name, web: u.web }));
   const logo = logoFile();
   let html = fs.readFileSync(path.join(SITE_DIR, 'manager.html'), 'utf8');
   if (logo) html = html.replace('<title>', `<link rel="icon" href="blobs/${logo}">\n<title>`);

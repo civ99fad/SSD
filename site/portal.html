@@ -72,6 +72,15 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
 .mgr b{font-size:18px;font-weight:800}
 .mgr small{font-size:13px;opacity:.85}
 .mgr .go{font-size:13px;font-weight:700;white-space:nowrap}
+.big{font-size:28px;font-weight:900;line-height:1.35}
+.sect>.gbar{padding:18px 20px;border-width:2px;background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.sect>.gbar b{font-size:20px;font-weight:900}
+.sect>.gbar small{color:var(--on-accent);opacity:.85}
+.sect>.gbar .ic{background:rgba(255,255,255,.16)}
+.sect>.gbar .chev{color:var(--on-accent)}
+.sect>.gbody{display:flex;flex-direction:column;gap:12px}
+.sect>.gbody[hidden]{display:none}
+.sect .mgr{margin-top:0}
 .lbl{width:100%;margin-top:20px;text-align:start;font-size:13px;font-weight:800;color:var(--muted)}
 .lbl + .units{margin-top:8px}
 .out{all:unset;cursor:pointer;margin-top:18px;font-size:13px;font-weight:700;color:var(--muted)}
@@ -112,13 +121,11 @@ a.gbar{text-decoration:none}
 
   <section class="card wide" id="choose">
     <div class="logo" id="logo2"></div>
-    <h1>بوابة الإدارة العامة للدفاع المدني</h1>
-    <div class="org">الإدارة العامة للعمليات</div>
-    <div class="sub">اختر الجهة</div>
-    <a class="mgr" id="mgr" href="manager.html" hidden><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b></b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a>
-    <a class="mgr" id="ops" href="ops.html" hidden style="margin-top:12px"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b>لوحة مدير إدارة العمليات</b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a>
-    <div class="lbl">الشُّعب والمراكز والأقسام</div>
+    <h1 class="big">بوابة الإدارة العامة للدفاع المدني في حائل</h1>
+    <div class="sub">اختر الإدارة ثم الجهة</div>
     <div class="tree" id="units" aria-label="الجهات"></div>
+    <template id="mgrtpl"><a class="mgr" id="mgr" href="manager.html" hidden><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b></b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a>
+    <a class="mgr" id="ops" href="ops.html" hidden style="margin-top:12px"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b>لوحة مدير إدارة العمليات</b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a></template>
     <button type="button" class="out" id="out" hidden>تسجيل الخروج من جميع الجهات</button>
   </section>
 </main>
@@ -151,19 +158,29 @@ a.gbar{text-decoration:none}
   const group = (id, title, sub, inner) => `<div class="grp"><button type="button" class="gbar" data-g="${id}" aria-expanded="false" aria-controls="gb-${id}"><span class="ic">${FOLD}</span><span class="tx"><b>${esc(title)}</b><small>${esc(sub)}</small></span>${CHEV}</button><div class="gbody" id="gb-${id}" hidden><nav class="units" aria-label="${esc(title)}">${inner}</nav></div></div>`;
   const pick = (ids) => ids.filter((i) => byId[i]).map((i) => card(byId[i])).join('');
   const south = ['sharaf', 'sinaiya', 'dairi', 'jabal'], north = ['balad', 'muntazah', 'aziziya', 'aja'];
-  $('units').innerHTML =
+  const bar = (i, kind) => byId[i] ? `<a class="gbar" href="${esc(i)}.html"><span class="ic">${icons[i] || icons.other}</span><span class="tx"><b>${esc(byId[i].name)}</b><small>${kind}</small></span><span class="go">دخول ←</span></a>` : '';
+  // قسم رئيسي (إدارة) يحوي الشعب والجهات
+  const sect = (id, title, sub, inner) => `<div class="grp sect"><button type="button" class="gbar" data-g="${id}" aria-expanded="false" aria-controls="gb-${id}"><span class="ic">${FOLD}</span><span class="tx"><b>${esc(title)}</b><small>${esc(sub)}</small></span>${CHEV}</button><div class="gbody" id="gb-${id}" hidden>${inner}</div></div>`;
+  const mgrLinks = cfg.manager ? $('mgrtpl').innerHTML : '';
+  const opsInner = mgrLinks +
     group('south', 'شعبة الجنوب', 'شراف · الصناعية · الدائري · الجبل', pick(south)) +
     group('north', 'شعبة الشمال', 'البلد · المنتزه · العزيزية · أجا', pick(north)) +
-    ['hazmat', 'isnad', 'control'].filter((i) => byId[i]).map((i) => `<a class="gbar" href="${esc(i)}.html"><span class="ic">${icons[i] || icons.other}</span><span class="tx"><b>${esc(byId[i].name)}</b><small>${i === 'isnad' ? 'قسم' : 'مركز'}</small></span><span class="go">دخول ←</span></a>`).join('') +
-    group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', pick(['rawda', 'jubba', 'khatta']));
+    ['hazmat', 'isnad', 'control'].map((i) => bar(i, i === 'isnad' ? 'قسم' : 'مركز')).join('') +
+    group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', pick(['rawda', 'jubba', 'khatta'])) +
+    bar('invest', 'شعبة') + bar('admaff', 'إدارة');
+  const safety = (k, side) => group(k, 'قسم السلامة في ' + side, 'قسم الدوريات · قسم التراخيص',
+    ['pat', 'lic'].map((t) => byId[k + t] ? `<a class="unit" href="${esc(k + t)}.html"><span class="ic">${icons.other}</span><b>${t === 'pat' ? 'قسم الدوريات' : 'قسم التراخيص'}</b><span class="go">دخول ←</span></a>` : '').join(''));
+  $('units').innerHTML =
+    sect('ops', 'إدارة العمليات', 'المراكز والأقسام ولوحتا مديري الإدارة والعمليات', opsInner) +
+    sect('safety', 'إدارة السلامة', 'قسم السلامة في الشمال · قسم السلامة في الجنوب', safety('sfn', 'الشمال') + safety('sfs', 'الجنوب'));
   $('units').addEventListener('click', (e) => {
     const b = e.target.closest('.gbar'); if (!b) return;
     const open = b.getAttribute('aria-expanded') !== 'true';
     b.setAttribute('aria-expanded', open);
-    $('gb-' + b.dataset.g).hidden = !open;
+    const g = $('gb-' + b.dataset.g); if (g) g.hidden = !open;
   });
 
-  if (cfg.manager) {
+  if (cfg.manager && $('mgr')) {
     $('mgr').querySelector('b').textContent = cfg.manager.name;
     $('mgr').hidden = false;
     $('ops').hidden = false; // لوحة مدير إدارة العمليات: نفس لوحة مدير الإدارة ورمزها
