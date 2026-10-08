@@ -81,6 +81,40 @@ h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
 .sect>.gbody{display:flex;flex-direction:column;gap:12px}
 .sect>.gbody[hidden]{display:none}
 .sect .mgr{margin-top:0}
+.admins{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+.adm{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:start;padding:26px 24px;border-radius:18px;background:var(--accent);color:var(--on-accent);min-height:190px;transition:transform .15s,box-shadow .15s}
+.adm:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(14,61,44,.28);background:var(--accent-hover)}
+.adm:focus-visible{outline:3px solid var(--edge);outline-offset:3px}
+.adm .ic{width:56px;height:56px;border-radius:15px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
+.adm b{font-size:22px;font-weight:900}.adm small{font-size:13.5px;opacity:.9;line-height:1.7}
+.adm .go{margin-top:auto;display:flex;align-items:center;gap:4px;font-weight:800;font-size:14px}
+.vhead{width:100%;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:20px;padding-bottom:14px;border-bottom:1.5px solid var(--line);text-align:start}
+.vhead .back{font-weight:800;font-size:14px;color:var(--accent);text-decoration:none;white-space:nowrap}
+.vhead .back:hover{text-decoration:underline}
+.vt{flex:1;min-width:180px}.vt h2{margin:0;font-size:22px;font-weight:900}.vt small{color:var(--muted);font-size:13px}
+.srch{flex:0 1 260px}.srch input{width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);outline:none}
+.srch input:focus{border-color:var(--accent)}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+#vbody{width:100%;text-align:start}
+.blk{margin-top:22px}.blk h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:16px;font-weight:900;color:var(--text)}
+.blk .cnt{font-size:12px;font-weight:800;background:var(--accent-soft);color:var(--accent);padding:1px 9px;border-radius:999px}
+.subh{margin:12px 0 8px;font-size:13px;font-weight:800;color:var(--muted)}
+.ucs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.uc{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);transition:border-color .15s,box-shadow .15s,transform .15s}
+.uc:hover{border-color:var(--accent);box-shadow:0 8px 20px rgba(14,61,44,.12);transform:translateY(-1px)}
+.uc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.uc .ic{width:34px;height:34px;flex-shrink:0;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.uc .ic svg{width:19px;height:19px}
+.uc b{flex:1;min-width:0;font-size:14.5px;font-weight:800;line-height:1.4}
+.uc .arw,.dsh .arw{color:var(--accent);display:flex;flex-shrink:0}
+.dashes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dsh{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:var(--accent);color:var(--on-accent)}
+.dsh:hover{background:var(--accent-hover)}
+.dsh .ic{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dsh .tx{flex:1;min-width:0;display:flex;flex-direction:column}.dsh b{font-size:15px;font-weight:800}.dsh small{font-size:12.5px;opacity:.85}
+.dsh .arw{color:var(--on-accent)}
+.none{color:var(--muted);margin-top:18px}
+@media (max-width:640px){.admins,.dashes{grid-template-columns:1fr}.adm{min-height:0}.srch{flex-basis:100%}.ucs{grid-template-columns:1fr 1fr;gap:8px}.uc{padding:10px;gap:8px}.uc .ic{width:30px;height:30px}.uc .arw{display:none}.uc b{font-size:13.5px}.card.wide{padding:28px 16px}.big{font-size:24px}}
 .lbl{width:100%;margin-top:20px;text-align:start;font-size:13px;font-weight:800;color:var(--muted)}
 .lbl + .units{margin-top:8px}
 .out{all:unset;cursor:pointer;margin-top:18px;font-size:13px;font-weight:700;color:var(--muted)}
@@ -124,8 +158,6 @@ a.gbar{text-decoration:none}
     <h1 class="big">بوابة الإدارة العامة للدفاع المدني في حائل</h1>
     <div class="sub">اختر الإدارة ثم الجهة</div>
     <div class="tree" id="units" aria-label="الجهات"></div>
-    <template id="mgrtpl"><a class="mgr" id="mgr" href="manager.html" hidden><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b></b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a>
-    <a class="mgr" id="ops" href="ops.html" hidden style="margin-top:12px"><span class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tx"><b>لوحة مدير إدارة العمليات</b><small>جاهزية الآليات في كل المراكز والأقسام في صفحة واحدة</small></span><span class="go">دخول ←</span></a></template>
     <button type="button" class="out" id="out" hidden>تسجيل الخروج من جميع الجهات</button>
   </section>
 </main>
@@ -158,33 +190,51 @@ a.gbar{text-decoration:none}
   const group = (id, title, sub, inner) => `<div class="grp"><button type="button" class="gbar" data-g="${id}" aria-expanded="false" aria-controls="gb-${id}"><span class="ic">${FOLD}</span><span class="tx"><b>${esc(title)}</b><small>${esc(sub)}</small></span>${CHEV}</button><div class="gbody" id="gb-${id}" hidden><nav class="units" aria-label="${esc(title)}">${inner}</nav></div></div>`;
   const pick = (ids) => ids.filter((i) => byId[i]).map((i) => card(byId[i])).join('');
   const south = ['sharaf', 'sinaiya', 'dairi', 'jabal'], north = ['balad', 'muntazah', 'aziziya', 'aja'];
-  const bar = (i, kind) => byId[i] ? `<a class="gbar" href="${esc(i)}.html"><span class="ic">${icons[i] || icons.other}</span><span class="tx"><b>${esc(byId[i].name)}</b><small>${kind}</small></span><span class="go">دخول ←</span></a>` : '';
-  // قسم رئيسي (إدارة) يحوي الشعب والجهات
-  const sect = (id, title, sub, inner) => `<div class="grp sect"><button type="button" class="gbar" data-g="${id}" aria-expanded="false" aria-controls="gb-${id}"><span class="ic">${FOLD}</span><span class="tx"><b>${esc(title)}</b><small>${esc(sub)}</small></span>${CHEV}</button><div class="gbody" id="gb-${id}" hidden>${inner}</div></div>`;
-  const mgrLinks = cfg.manager ? $('mgrtpl').innerHTML : '';
-  const opsInner = mgrLinks +
-    group('south', 'شعبة الجنوب', 'شراف · الصناعية · الدائري · الجبل', pick(south)) +
-    group('north', 'شعبة الشمال', 'البلد · المنتزه · العزيزية · أجا', pick(north)) +
-    ['hazmat', 'isnad', 'control'].map((i) => bar(i, i === 'isnad' ? 'قسم' : 'مركز')).join('') +
-    group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', pick(['rawda', 'jubba', 'khatta'])) +
-    group('adm', 'الأقسام الإدارية', 'التموين · الشؤون الإدارية · الشؤون الفنية · الموارد البشرية', pick(['supply', 'admaff', 'techaff', 'hrdiv']));
-  const safety = (k, side) => group(k, 'قسم السلامة في ' + side, 'قسم الدوريات · قسم التراخيص',
-    ['pat', 'lic'].map((t) => byId[k + t] ? `<a class="unit" href="${esc(k + t)}.html"><span class="ic">${icons.other}</span><b>${t === 'pat' ? 'قسم الدوريات' : 'قسم التراخيص'}</b><span class="go">دخول ←</span></a>` : '').join(''));
-  $('units').innerHTML =
-    sect('ops', 'إدارة العمليات', 'المراكز والأقسام ولوحتا مديري الإدارة والعمليات', opsInner) +
-    sect('safety', 'إدارة السلامة', 'قسم السلامة في الشمال · قسم السلامة في الجنوب', safety('sfn', 'الشمال') + safety('sfs', 'الجنوب'));
-  $('units').addEventListener('click', (e) => {
-    const b = e.target.closest('.gbar'); if (!b) return;
-    const open = b.getAttribute('aria-expanded') !== 'true';
-    b.setAttribute('aria-expanded', open);
-    const g = $('gb-' + b.dataset.g); if (g) g.hidden = !open;
-  });
+  // ---------- تنقّل بمستويين: الإدارات ← صفحة الإدارة (أقسام مرتبة + بحث) ----------
+  const ARW = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
+  const IC = {
+    chart: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>',
+    ops: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2c2 3 6 5 6 10a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-3 0-5 1-7Z"/></svg>',
+    safety: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>',
+    doc: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
+  };
+  const uc = (id, label) => byId[id] ? `<a class="uc" href="${esc(id)}.html" data-q="${esc(label || byId[id].name)}"><span class="ic">${icons[id] || (id.length > 5 && /^sf/.test(id) ? IC.doc : icons.other)}</span><b>${esc(label || byId[id].name)}</b><span class="arw">${ARW}</span></a>` : '';
+  const block = (title, cards) => { const n = (cards.match(/class="uc"/g) || []).length; return n ? `<section class="blk"><h3>${esc(title)}<span class="cnt">${n}</span></h3><div class="ucs">${cards}</div></section>` : ''; };
+  const sub = (title, cards) => cards ? `<div class="subh">${esc(title)}</div><div class="ucs">${cards}</div>` : '';
+  const many = (ids) => ids.map((i) => uc(i)).join('');
+  const VIEWS = {
+    ops: () => {
+      const dash = cfg.manager ? `<section class="blk"><h3>لوحات القيادة</h3><div class="dashes">
+        <a class="dsh" href="manager.html"><span class="ic">${IC.chart}</span><span class="tx"><b>${esc(cfg.manager.name)}</b><small>جاهزية كل المراكز والأقسام</small></span><span class="arw">${ARW}</span></a>
+        <a class="dsh" href="ops.html"><span class="ic">${IC.chart}</span><span class="tx"><b>لوحة مدير إدارة العمليات</b><small>جاهزية كل المراكز والأقسام</small></span><span class="arw">${ARW}</span></a></div></section>` : '';
+      const centers = `<section class="blk"><h3>المراكز<span class="cnt">${[...south, ...north, 'rawda', 'jubba', 'khatta'].filter((i) => byId[i]).length}</span></h3>${sub('شعبة الجنوب', many(south))}${sub('شعبة الشمال', many(north))}${sub('المراكز الخارجية', many(['rawda', 'jubba', 'khatta']))}</section>`;
+      return dash + centers + block('الأقسام المتخصصة', many(['hazmat', 'isnad', 'control'])) + block('الأقسام الإدارية', many(['supply', 'admaff', 'techaff', 'hrdiv']));
+    },
+    safety: () => ['sfn', 'sfs'].map((k) => block('قسم السلامة في ' + (k === 'sfn' ? 'الشمال' : 'الجنوب'), uc(k + 'pat', 'قسم الدوريات') + uc(k + 'lic', 'قسم التراخيص'))).join(''),
+  };
+  const TITLES = { ops: ['إدارة العمليات', 'المراكز والأقسام ولوحات القيادة'], safety: ['إدارة السلامة', 'أقسام السلامة في الشمال والجنوب'] };
+  const home = () => `<div class="admins">
+      <a class="adm" href="#ops"><span class="ic">${IC.ops}</span><b>إدارة العمليات</b><small>11 مركزًا · 3 أقسام متخصصة · 4 أقسام إدارية · لوحات القيادة</small><span class="go">فتح ${ARW}</span></a>
+      <a class="adm" href="#safety"><span class="ic">${IC.safety}</span><b>إدارة السلامة</b><small>قسم السلامة في الشمال · قسم السلامة في الجنوب</small><span class="go">فتح ${ARW}</span></a>
+    </div>`;
+  const draw = () => {
+    const v = (location.hash || '').slice(1);
+    if (!VIEWS[v]) { $('units').innerHTML = home(); return; }
+    $('units').innerHTML = `<div class="vhead"><a class="back" href="#">→ الإدارات</a><div class="vt"><h2>${TITLES[v][0]}</h2><small>${TITLES[v][1]}</small></div>
+      <label class="srch"><span class="vh">بحث</span><input id="uq" type="search" placeholder="ابحث عن مركز أو قسم…" autocomplete="off"></label></div><div id="vbody">${VIEWS[v]()}</div><p class="none" id="nores" hidden>لا توجد نتائج مطابقة.</p>`;
+    const q = $('uq');
+    q.addEventListener('input', () => {
+      const t = q.value.trim().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه');
+      let shown = 0;
+      document.querySelectorAll('#vbody .uc, #vbody .dsh').forEach((a) => { const ok = !t || (a.dataset.q || a.textContent).replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').includes(t); a.hidden = !ok; if (ok) shown++; });
+      document.querySelectorAll('#vbody .ucs, #vbody .dashes').forEach((g) => { g.hidden = ![...g.children].some((c) => !c.hidden); const h = g.previousElementSibling; if (h && h.classList.contains('subh')) h.hidden = g.hidden; });
+      document.querySelectorAll('#vbody .blk').forEach((b) => { b.hidden = !b.querySelector('.uc:not([hidden]), .dsh:not([hidden])'); });
+      $('nores').hidden = shown > 0;
+    });
+  };
+  window.addEventListener('hashchange', () => { draw(); window.scrollTo(0, 0); });
+  draw();
 
-  if (cfg.manager && $('mgr')) {
-    $('mgr').querySelector('b').textContent = cfg.manager.name;
-    $('mgr').hidden = false;
-    $('ops').hidden = false; // لوحة مدير إدارة العمليات: نفس لوحة مدير الإدارة ورمزها
-  }
 
   // البوابة بلا كلمة مرور؛ كل جهة تطلب كلمتها عند دخولها. زر الخروج يظهر إن كانت أي جهة مفتوحة
   const authKeys = () => {
