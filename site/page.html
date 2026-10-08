@@ -832,13 +832,19 @@ html.u-patrol .dpt:not(.d-patrol),html.u-lic .dpt:not(.d-lic),html.u-supply .dpt
 if (((window.ISNAD_CONFIG||{}).unit||'isnad')==='isnad') document.documentElement.classList.add('u-iso');
 const DEPT = (window.ISNAD_CONFIG||{}).dept||''; if (DEPT) document.documentElement.classList.add('u-'+DEPT);
 // أقسام السلامة: الجولات التفتيشية (الدوريات) أو المنشآت والتراخيص، ثم ملفات الأفراد، ثم إحصائيات الشعبة
-if (DEPT==='patrol'||DEPT==='lic'){ const nv=document.querySelector('.nav'); if (nv) ['nav-sfstat','nav-pfiles',DEPT==='patrol'?'nav-rounds':'nav-lfac'].forEach(id=>{ const b=document.getElementById(id); if (b) nv.insertBefore(b, nv.firstChild); }); }
+if (DEPT==='patrol'||DEPT==='lic'){ const nv=document.querySelector('.nav'), P=DEPT==='patrol';
+  // قائمة منبثقة باسم القسم تحتها: الجولات/المنشآت، ثم الإحصائيات، ثم ملفات أفراد القسم
+  const lab=(id,t)=>{ const b=document.getElementById(id), sp=b&&b.querySelector('span'); if (sp) sp.textContent=t; return b; };
+  if (nv){ nv.insertAdjacentHTML('afterbegin', `<button type="button" class="navh navt" data-act="navGrp" data-id="sf" id="navg-sf" aria-expanded="true" aria-controls="navb-sf"><span>${P?'قسم الدوريات':'قسم التراخيص'}</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="navg" id="navb-sf"></div>`);
+    const g=document.getElementById('navb-sf'); [P?lab('nav-rounds','الجولات التفتيشية'):lab('nav-lfac','المنشآت والتراخيص'), lab('nav-sfstat',P?'الإحصائيات':'إحصائيات الشعبة'), lab('nav-pfiles',P?'ملفات أفراد قسم الدوريات':'ملفات أفراد القسم')].forEach(b=>{ if (b) g.appendChild(b); }); } }
+// فتح قائمة محددة من رابط البوابة (مثل sfnpat.html#rounds)
+const H0 = (location.hash||'').slice(1), HOK = DEPT==='patrol'?['rounds','sfstat','pfiles']:DEPT==='lic'?['lfac','sfstat','pfiles']:[];
 const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
   if (nv) ['profiles','advisor'].forEach(id=>{ const b=document.getElementById('nav-'+id); if (b) nv.appendChild(b); }); }
 const $ = s => document.querySelector(s);
 const S = { db:null, user:null, assets:null, canEdit:false, me:null,
   vehicles:[], warehouses:[], settings:{}, loadedV:false, loadedW:false, dbFailed:false,
-  view:{name:DEPT==='tech'?'dfleet':(DEPT==='supply'||DEPT==='admin')?'dcenters':DEPT==='patrol'?'rounds':DEPT==='lic'?'lfac':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false, sib:{} };
+  view:{name:HOK.includes(H0)?H0:DEPT==='tech'?'dfleet':(DEPT==='supply'||DEPT==='admin')?'dcenters':DEPT==='patrol'?'rounds':DEPT==='lic'?'lfac':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false, sib:{} };
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1101,7 +1107,7 @@ function render(){
   for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','rounds','lfac','sfstat','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
-    if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
+    if (!DEPT && S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
   circBadge();
   if (S.loadedCirc && !S.circToasted){ S.circToasted=true; const n=circNew().length; if (n) setTimeout(()=>toast(n===1?'وصل تعميم جديد من مدير الإدارة العامة / مدير إدارة العمليات — افتح «التعاميم»':'وصلت '+n+' تعاميم جديدة من الإدارة — افتح «التعاميم»'),900); }
   if (v.name==='circ' && S.loadedCirc && circNew().length){ if (S.circSeenAt==null) S.circSeenAt=circSeen(); circMarkSeen(); setTimeout(circBadge,0); }
@@ -1991,10 +1997,11 @@ function sfData(u){
   return u.kind==='patrol' ? {ok:me||C!==undefined&&C!==null, fac:g('pfac'), rounds:g('rounds')} : {ok:me||C!==undefined&&C!==null, fac:g('lfac'), viol:g('lviol'), docs:g('ldocs'), rec:g('lrec')};
 }
 function viewSfStat(){
-  const cfg=window.ISNAD_CONFIG||{}, sib=cfg.sib||[], y=S.sfy||'all';
-  if (!S.sibAt) sfSibLoad();
-  const head=`<header class="ph"><div class="ph-t"><h1>إحصائيات ${esc(cfg.sbranch||'الشعبة')}</h1><span class="count">قسم الدوريات + قسم التراخيص</span></div><button type="button" class="btn" data-act="sfRefresh">تحديث</button></header>`;
-  if (!S.loadedSf || !S.sibAt) return head+loading();
+  // قسم الدوريات: إحصائياته وحده، وقسم التراخيص: إحصائيات الشعبة (القسمان معاً)
+  const ONLY=DEPT==='patrol', cfg=window.ISNAD_CONFIG||{}, sib=(cfg.sib||[]).filter(u=>!ONLY||u.kind==='patrol'), y=S.sfy||'all';
+  if (!ONLY && !S.sibAt) sfSibLoad();
+  const head=`<header class="ph"><div class="ph-t"><h1>${ONLY?'إحصائيات قسم الدوريات':'إحصائيات الشعبة — '+esc(cfg.sbranch||'')}</h1><span class="count">${ONLY?esc(cfg.sbranch||''):'قسم الدوريات + قسم التراخيص'}</span></div>${ONLY?'':'<button type="button" class="btn" data-act="sfRefresh">تحديث</button>'}</header>`;
+  if (!S.loadedSf || (!ONLY && !S.sibAt)) return head+loading();
   const pu=sib.find(u=>u.kind==='patrol'), lu=sib.find(u=>u.kind==='lic'), P=pu?sfData(pu):{fac:[],rounds:[]}, L=lu?sfData(lu):{fac:[],viol:[],docs:[]};
   const yr = r => Math.floor(hkey(r.date)/10000), years=[...new Set([...P.rounds,...L.viol].map(yr).filter(Boolean))].sort((a,b)=>b-a);
   const inY = r => y==='all' || yr(r)===+y;
@@ -2012,6 +2019,7 @@ function viewSfStat(){
   const exp=L.fac.filter(lExpired).length;
   const lSec=`<section class="dsec"><h2>قسم التراخيص — المنشآت والمخالفات</h2>${sfTiles(sfTile('المنشآت',L.fac.length)+sfTile(LST.ready,lc.ready,'#1F7A56')+sfTile(LST.proc,lc.proc,'#B54708')+sfTile(LST.docs,lc.docs,'#B42318')+sfTile('المخالفات',lv,'#B42318')+sfTile('تم تلافيها',lf,'#1F7A56')+sfTile('تراخيص منتهية',exp,exp?'#B42318':'')+sfTile('المستندات',L.docs.length))}
     ${L.fac.filter(f=>lstOf(f)!=='ready'||L.viol.some(v=>v.f===f.id&&!v.fixed)).length?dTable(['منشآت تحتاج متابعة','الوضع','مخالفات قائمة'], L.fac.filter(f=>lstOf(f)!=='ready'||L.viol.some(v=>v.f===f.id&&!v.fixed)).sort(byName).map(f=>`<tr><td class="nm">${esc(f.name||'')}</td><td>${sfPill(LSTC[lstOf(f)],LST[lstOf(f)])}</td><td class="n">${L.viol.filter(v=>v.f===f.id&&!v.fixed).length}</td></tr>`).join('')):''}</section>`;
+  if (ONLY) return head+ychips+pSec;
   return head+ychips+(miss.length?`<p class="hper" style="margin:0 0 10px">تعذّر تحميل بيانات: ${esc(miss.join('، '))}</p>`:'')+`<p class="hper" style="margin:0 0 12px">بيانات القسم الآخر في الشعبة من آخر نسخة منشورة له.</p>`+total+pSec+lSec;
 }
 function viewAdvisor(){
@@ -3171,6 +3179,7 @@ document.addEventListener('change', async e => {
   } catch(x){ toast(errMsg(x)); }
 });
 navInit();
+window.addEventListener('hashchange', () => { const h=(location.hash||'').slice(1); if (HOK.includes(h)) go(h); });
 $('#enter').addEventListener('click', () => { S.entered=true; store.set('isnad-entered','1'); render(); });
 
 /* ---------- boot ---------- */
