@@ -167,7 +167,7 @@ a.gbar{text-decoration:none}
     group('north', 'شعبة الشمال', 'البلد · المنتزه · العزيزية · أجا', pick(north)) +
     ['hazmat', 'isnad', 'control'].map((i) => bar(i, i === 'isnad' ? 'قسم' : 'مركز')).join('') +
     group('ext', 'المراكز الخارجية', 'الروضة · جبة · الخطة', pick(['rawda', 'jubba', 'khatta'])) +
-    group('adm', 'الأقسام الإدارية', 'التحقيق · الشؤون الإدارية · الشؤون الفنية · الموارد البشرية', pick(['invest', 'admaff', 'techaff', 'hrdiv']));
+    group('adm', 'الأقسام الإدارية', 'التموين · الشؤون الإدارية · الشؤون الفنية · الموارد البشرية', pick(['supply', 'admaff', 'techaff', 'hrdiv']));
   const safety = (k, side) => group(k, 'قسم السلامة في ' + side, 'قسم الدوريات · قسم التراخيص',
     ['pat', 'lic'].map((t) => byId[k + t] ? `<a class="unit" href="${esc(k + t)}.html"><span class="ic">${icons.other}</span><b>${t === 'pat' ? 'قسم الدوريات' : 'قسم التراخيص'}</b><span class="go">دخول ←</span></a>` : '').join(''));
   $('units').innerHTML =

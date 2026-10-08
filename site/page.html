@@ -548,6 +548,13 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 .phb{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 html:not(.u-ctrl) .ccc{display:none!important}
 html:not(.u-iso) .iso-only{display:none!important}
+html:not(.u-supply):not(.u-admin):not(.u-tech) .dpt{display:none!important}
+html.u-supply .dpt:not(.d-supply),html.u-admin .dpt:not(.d-admin),html.u-tech .dpt:not(.d-tech){display:none!important}
+.dcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.dcard{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface)}
+.dcard:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(14,61,44,.12)}
+.dcard b{font-size:16px}.dcard small{color:var(--muted);font-size:13px}
+.dsec{margin:0 0 18px}.dsec h2{font-size:17px;margin:0 0 8px}
 .au-who{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}.au-who .chip2{padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);font-size:13px}.au-who .chip2.ok{background:var(--accent-soft);border-color:transparent}.au-ch{margin:0;padding:0;list-style:none;display:grid;gap:2px}.au-ch .op{font-weight:700}
 .cctbl td.tel a{font-weight:800;text-decoration:none;color:var(--accent);direction:ltr;unicode-bidi:isolate;white-space:nowrap}
 .ccgrp{margin:0 0 16px}.ccgrp h2{font-size:15.5px;margin:0 0 8px}
@@ -673,6 +680,22 @@ html:not(.u-iso) .iso-only{display:none!important}
       <div><b>قسم الدعم والإسناد</b><small>الدفاع المدني</small></div>
     </div>
     <nav class="nav" aria-label="القائمة الرئيسية">
+      <button type="button" class="dpt d-supply d-admin" data-act="nav" data-id="dcenters" id="nav-dcenters">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
+        <span>المراكز</span>
+      </button>
+      <button type="button" class="dpt d-admin" data-act="nav" data-id="dpfiles" id="nav-dpfiles">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        <span>ملفات الأفراد</span>
+      </button>
+      <button type="button" class="dpt d-tech" data-act="nav" data-id="dfleet" id="nav-dfleet">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>
+        <span>الآليات</span>
+      </button>
+      <button type="button" class="dpt d-supply" data-act="nav" data-id="handover" id="nav-handover">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 15 2 2 4-4"/></svg>
+        <span>سندات تسليم العهد</span>
+      </button>
       <button type="button" data-act="nav" data-id="dash" id="nav-dash">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
         <span>لوحة اليوم</span>
@@ -793,12 +816,13 @@ html:not(.u-iso) .iso-only{display:none!important}
 (function(){
 // مركز التحكم والتوجيه: أقسام خاصة به (أرقام المسؤولين، الجهات المساندة، الخرائط)
 if (((window.ISNAD_CONFIG||{}).unit||'isnad')==='isnad') document.documentElement.classList.add('u-iso');
+const DEPT = (window.ISNAD_CONFIG||{}).dept||''; if (DEPT) document.documentElement.classList.add('u-'+DEPT);
 const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
   if (nv) ['profiles','advisor'].forEach(id=>{ const b=document.getElementById('nav-'+id); if (b) nv.appendChild(b); }); }
 const $ = s => document.querySelector(s);
 const S = { db:null, user:null, assets:null, canEdit:false, me:null,
   vehicles:[], warehouses:[], settings:{}, loadedV:false, loadedW:false, dbFailed:false,
-  view:{name:'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false };
+  view:{name:DEPT==='tech'?'dfleet':DEPT?'dcenters':'dash'}, q:'', gq:'', wq:'', entered:false, staff:[], absences:[], rewards:[], missions:[], hrs:{}, hl:{}, loadedH:false, letters:[], ptx:[], tl:{}, loadedT:false };
 
 /* ---------- helpers ---------- */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1056,8 +1080,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : (v.name==='dcenters'||v.name==='dcenter'||(v.name==='dperson'&&S.dpFrom!=='dpfiles')) ? 'dcenters' : (v.name==='dpfiles'||v.name==='dperson') ? 'dpfiles' : (v.name==='dfleet'||v.name==='dveh') ? 'dfleet' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
@@ -1085,6 +1109,12 @@ function render(){
   else if (v.name==='pfiles') paint(gSearchBar()+viewPFiles());
   else if (v.name==='advisor') paint(gSearchBar()+viewAdvisor());
   else if (v.name==='audit') paint(gSearchBar()+viewAudit());
+  else if (v.name==='dcenters') paint(viewDCenters());
+  else if (v.name==='dcenter') paint(viewDCenter(v.id));
+  else if (v.name==='dperson') paint(viewDPerson(v.id));
+  else if (v.name==='dpfiles') paint(viewDPfiles());
+  else if (v.name==='dfleet') paint(viewDFleet());
+  else if (v.name==='dveh') paint(viewDVeh(v.id));
   else if (v.name==='circ') paint(gSearchBar()+viewCirc());
   else if (v.name==='pfile') paint(gSearchBar()+viewPFile(v.id));
   else if (v.name==='consum') paint(gSearchBar()+viewConsum());
@@ -1474,10 +1504,14 @@ const LIBS = {
   returns:{ title:'تقارير الرجيع', add:'إضافة تقرير', one:'التقرير', formTitle:'تقرير رجيع', dated:true,
     empty:'لا توجد تقارير رجيع بعد.', hint:'أضف تقارير المواد المرتجعة بزر «إضافة تقرير».',
     namePh:'مثال: رجيع قطع غيار بعد الصيانة', notePh:'مثال: المواد المرتجعة وأعدادها وسبب الإرجاع', general:'تقرير عام', generalOpt:'تقرير عام (غير مرتبط بآلية)', generalFilter:'تقارير عامة',
-    count:n=>n===0?'لا توجد تقارير':plural(n,'تقرير واحد','تقريران','تقارير','تقريراً') }
+    count:n=>n===0?'لا توجد تقارير':plural(n,'تقرير واحد','تقريران','تقارير','تقريراً') },
+  handover:{ title:'سندات تسليم العهد', add:'إضافة سند', one:'السند', formTitle:'سند تسليم عهدة', dated:true,
+    empty:'لا توجد سندات تسليم بعد.', hint:'أضف سندات تسليم العهد بزر «إضافة سند».',
+    namePh:'مثال: سند تسليم عهدة مركز البلد', notePh:'مثال: الأصناف المسلّمة وأعدادها', general:'سند عام', generalOpt:'سند عام (غير مرتبط بآلية)', generalFilter:'سندات عامة',
+    count:n=>n===0?'لا توجد سندات':plural(n,'سند واحد','سندان','سندات','سنداً') }
 };
 try { S.downOpen = localStorage.getItem('isnad-down')==='1'; S.vview = localStorage.getItem('isnad-vview')||''; } catch(e){}
-S.lib = {profiles:{items:[],loaded:false,q:'',v:''}, returns:{items:[],loaded:false,q:'',v:''}};
+S.lib = {profiles:{items:[],loaded:false,q:'',v:''}, returns:{items:[],loaded:false,q:'',v:''}, handover:{items:[],loaded:false,q:'',v:''}};
 const KIND = p => p.db ? 'Word' : /\.pdf$/i.test(p.fileName||'') ? 'PDF' : /\.(jpe?g|png|webp|gif)$/i.test(p.fileName||'') ? 'صورة' : 'ملف';
 const libItem = (key,id) => S.lib[key].items.find(x=>x.id===id);
 function viewLibrary(key){
@@ -1730,6 +1764,86 @@ function viewAudit(){
   const tbl = edits.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>الوقت</th><th>الجهة</th><th>القسم</th><th>ماذا تغيّر</th></tr></thead><tbody>${edits.slice().reverse().map(e=>`<tr><td class="hdate">${esc(auTime(e.t))}</td><td class="nm">${esc(nm(e.unit))}${e.by==='admin'?' <small>(المسؤول)</small>':''}</td><td>${esc(e.k==='upload'?'ملفات':(AUCOLL[e.file]||e.file||''))}</td><td>${chHtml(e)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="panel empty"><b>لا توجد تعديلات مسجّلة في هذا اليوم.</b></div>';
   return head+who+`<h2 style="margin:14px 0 6px;font-size:16px">التعديلات (${edits.length})</h2>`+tbl+`<p class="hint" style="font-size:12.5px;color:var(--muted)">يُسجَّل ما يتم عبر رموز الجهات. تعديلات المسؤول بمفتاح GitHub مباشرة لا تظهر هنا (تجدها في سجل GitHub).</p>`;
 }
+
+/* ---------- الشعب الإدارية (التموين، الشؤون الإدارية، الشؤون الفنية): المراكز وآليات حائل وملفات أفراد المراكز ---------- */
+const DCENTERS = (window.ISNAD_CONFIG||{}).centers||[];
+S.cdata = {}; S.cload = false;
+async function loadCenters(){
+  await Promise.all(DCENTERS.map(async c => { try { const r=await fetch((c.web||'')+'db.json',{cache:'no-store'}); const d=r.ok?await r.json():{}; S.cdata[c.id]=d.collections||{}; } catch(e){ S.cdata[c.id]={}; } }));
+  S.cload=true; render();
+}
+const cName = id => (DCENTERS.find(c=>c.id===id)||{}).name||id;
+const cStaff = id => Object.entries((S.cdata[id]||{}).staff||{}).map(([k,v])=>Object.assign({id:k},v)).sort((a,b)=>String(a.shift||'').localeCompare(String(b.shift||''))||((a.order||0)-(b.order||0)));
+const cVeh = id => Object.entries((S.cdata[id]||{}).vehicles||{}).map(([k,v])=>Object.assign({id:k},v)).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'ar',{numeric:true}));
+const dAddBtn = (act, id, label) => S.canEdit ? `<button type="button" class="btn primary" data-act="${act}" data-id="${esc(id)}">${ICON.plus}${esc(label)}</button>` : '';
+const dTable = (cols, rows) => `<div class="panel" style="overflow-x:auto"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
+function viewDCenters(){
+  const sup = DEPT==='supply';
+  const head = `<header class="ph"><div class="ph-t"><h1>المراكز</h1><span class="count">${sup?'العهد المسلّمة لكل مركز':'التشكيل الإداري للأفراد في كل مركز'}</span></div></header>`;
+  if (!S.cload) return head+loading();
+  return head+`<div class="dcards">${DCENTERS.map(c=>{ const n = sup ? (S.deliv||[]).filter(r=>r.c===c.id).length : cStaff(c.id).length;
+    return `<button type="button" class="dcard" data-act="dOpenC" data-id="${esc(c.id)}"><b>${esc(c.name)}</b><small>${sup?`${n} تسليم`:`${n} فرد`}</small></button>`; }).join('')}</div>`;
+}
+function viewDCenter(id){
+  const back = `<nav class="crumbs"><button type="button" data-act="nav" data-id="dcenters">المراكز</button><span>/</span><span>${esc(cName(id))}</span></nav>`;
+  if (!S.cload) return back+loading();
+  if (DEPT==='supply'){
+    const list=(S.deliv||[]).filter(r=>r.c===id).sort((a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0)));
+    const head=`${back}<header class="ph"><div class="ph-t"><h1>عهد ${esc(cName(id))}</h1><span class="count">${list.length} تسليم</span></div>${dAddBtn('delivAdd',id,'تسجيل تسليم عهدة')}</header>`;
+    if (!list.length) return head+`<div class="panel empty"><b>لا توجد عهد مسلّمة لهذا المركز بعد.</b>${S.canEdit?'سجّل ما سُلّم للمركز بزر «تسجيل تسليم عهدة».':''}</div>`;
+    return head+dTable(['التاريخ','الصنف / العهدة','الكمية','المستلم','ملاحظة','السند',...(S.canEdit?['']:[])], list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td class="nm">${esc(r.item||'')}</td><td>${r.qty?esc(r.qty):DASH}</td><td>${r.rec?esc(r.rec):DASH}</td><td>${r.note?esc(r.note):DASH}</td><td>${fileBtn('deliv',r,'عرض')}</td>${S.canEdit?rowActs('deliv',r):''}</tr>`).join(''));
+  }
+  const st=cStaff(id);
+  const head=`${back}<header class="ph"><div class="ph-t"><h1>التشكيل الإداري — ${esc(cName(id))}</h1><span class="count">${st.length} فرد</span></div></header>`;
+  if (!st.length) return head+`<div class="panel empty"><b>لا يوجد أفراد مسجلون في هذا المركز.</b></div>`;
+  return head+dTable(['م','الرتبة','الاسم','الرقم العسكري','التخصص','الوردية','المعاملات والملفات'], st.map((p,i)=>{ const n=(S.cptx||[]).filter(r=>r.c===id&&r.p===p.id).length;
+    return `<tr><td>${i+1}</td><td>${esc(p.rank||'')}</td><td class="nm">${esc(p.name||'')}</td><td>${p.num?`<bdi>${esc(p.num)}</bdi>`:DASH}</td><td>${p.spec?esc(p.spec):DASH}</td><td>${p.shift?esc(p.shift):DASH}</td><td><button type="button" class="link" data-act="dOpenP" data-id="${esc(id+'|'+p.id)}" data-i="dcenters">${n?n+' سجل':'فتح'} ${ICON.arrow}</button></td></tr>`; }).join(''));
+}
+function viewDPerson(key){
+  const [cid,pid]=String(key).split('|'); const p=cStaff(cid).find(x=>x.id===pid)||{name:'—'};
+  const fromAll=S.dpFrom==='dpfiles';
+  const back=`<nav class="crumbs"><button type="button" data-act="nav" data-id="${fromAll?'dpfiles':'dcenters'}">${fromAll?'ملفات الأفراد':'المراكز'}</button><span>/</span>${fromAll?'':`<button type="button" data-act="dOpenC" data-id="${esc(cid)}">${esc(cName(cid))}</button><span>/</span>`}<span>${esc(p.name||'')}</span></nav>`;
+  if (!S.cload) return back+loading();
+  const list=(S.cptx||[]).filter(r=>r.c===cid&&r.p===pid).sort((a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0)));
+  const info=`<dl class="panel info" style="margin:0 0 16px"><div><dt>الاسم</dt><dd>${esc(p.name||'—')}</dd></div><div><dt>الرتبة</dt><dd>${esc(p.rank||'—')}</dd></div><div><dt>الرقم العسكري</dt><dd>${p.num?`<bdi>${esc(p.num)}</bdi>`:'—'}</dd></div><div><dt>المركز</dt><dd>${esc(cName(cid))}</dd></div><div><dt>التخصص</dt><dd>${esc(p.spec||'—')}</dd></div></dl>`;
+  const head=`${back}<header class="ph"><div class="ph-t"><h1>ملف ${esc(p.name||'')}</h1><span class="count">${list.length} سجل</span></div>${dAddBtn('cptxAdd',key,'إضافة معاملة أو ملف')}</header>`;
+  const tbl = list.length ? dTable(['التاريخ','النوع','العنوان','ملاحظة','المرفق',...(S.canEdit?['']:[])], list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td>${r.kind==='file'?'ملف / مستند':'معاملة'}</td><td class="nm">${esc(r.title||'')}</td><td>${r.note?esc(r.note):DASH}</td><td>${fileBtn('cptx',r,'عرض')}</td>${S.canEdit?rowActs('cptx',r):''}</tr>`).join('')) : `<div class="panel empty"><b>لا توجد معاملات أو ملفات لهذا الفرد بعد.</b></div>`;
+  return head+info+tbl;
+}
+function viewDPfiles(){
+  const head=`<header class="ph"><div class="ph-t"><h1>ملفات الأفراد</h1><span class="count">حسب المركز</span></div></header>`;
+  if (!S.cload) return head+loading();
+  const q=norm(S.dpq||'');
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث</span>${ICON.search}<input id="dpq" type="search" placeholder="ابحث بالاسم أو الرقم العسكري" value="${esc(S.dpq||'')}"></label></div>`;
+  const secs=DCENTERS.map(c=>{ const st=cStaff(c.id).filter(p=>!q||norm([p.name,p.rank,p.num].join(' ')).includes(q)); if(!st.length) return '';
+    return `<section class="dsec"><h2>${esc(c.name)} <small style="color:var(--muted);font-weight:600">(${st.length})</small></h2>${dTable(['الرتبة','الاسم','الرقم العسكري','السجلات'], st.map(p=>{ const n=(S.cptx||[]).filter(r=>r.c===c.id&&r.p===p.id).length;
+      return `<tr><td>${esc(p.rank||'')}</td><td class="nm">${esc(p.name||'')}</td><td>${p.num?`<bdi>${esc(p.num)}</bdi>`:DASH}</td><td><button type="button" class="link" data-act="dOpenP" data-id="${esc(c.id+'|'+p.id)}" data-i="dpfiles">${n?n+' سجل':'فتح الملف'} ${ICON.arrow}</button></td></tr>`; }).join(''))}</section>`; }).join('');
+  return head+tools+(secs||`<div class="panel empty"><b>لا توجد نتائج.</b></div>`);
+}
+const vLast = (cid, vid) => (S.vact||[]).filter(r=>r.c===cid&&r.v===vid).sort((a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0)));
+function viewDFleet(){
+  const head=`<header class="ph"><div class="ph-t"><h1>آليات حائل</h1><span class="count">الجاهزية والأعطال والإجراءات حسب المركز</span></div></header>`;
+  if (!S.cload) return head+loading();
+  const f=S.dff||'all', all=DCENTERS.flatMap(c=>cVeh(c.id).map(v=>({c,v})));
+  const cnt=k=>all.filter(o=>k==='all'||stOf(o.v)===k||(k==='bad'&&['down','maint'].includes(stOf(o.v)))).length;
+  const chip=(k,l)=>`<button type="button" class="fchip${f===k?' on':''}" data-act="dFleetF" data-id="${k}" aria-pressed="${f===k}">${esc(l)} <b>${cnt(k)}</b></button>`;
+  const tools=`<div class="fchips" role="group" aria-label="تصفية" style="margin-bottom:14px">${chip('all','الكل')}${chip('ready','جاهزة')}${chip('bad','معطلة / صيانة')}${chip('away','مدعومة')}</div>`;
+  const secs=DCENTERS.map(c=>{ const vs=cVeh(c.id).filter(v=>f==='all'||stOf(v)===f||(f==='bad'&&['down','maint'].includes(stOf(v)))); if(!vs.length) return '';
+    return `<section class="dsec"><h2>${esc(c.name)} <small style="color:var(--muted);font-weight:600">(${vs.length})</small></h2>${dTable(['الآلية','الجاهزية','نوع العطل','آخر إجراء متخذ','المستند',''], vs.map(v=>{ const st=stOf(v), acts=vLast(c.id,v.id), a=acts[0];
+      return `<tr><td class="nm">${esc(v.name||'')}${v.plate?`<div class="hper">${esc(v.plate)}</div>`:''}</td><td><span class="stpill ${st==='ready'?'hs-ok':st==='away'?'hs-sup':st==='none'?'':'hs-bad'}"><i aria-hidden="true"></i>${esc(STATUS[st])}</span></td><td>${(a&&a.fault)||v.statusNote?esc((a&&a.fault)||v.statusNote):DASH}</td><td>${a?`${esc(a.text)}<div class="hper">${esc(a.date||'')}</div>`:DASH}</td><td>${a?fileBtn('vact',a,'عرض'):DASH}</td><td><button type="button" class="link" data-act="dOpenV" data-id="${esc(c.id+'|'+v.id)}">${acts.length?acts.length+' إجراء':'الإجراءات'} ${ICON.arrow}</button></td></tr>`; }).join(''))}</section>`; }).join('');
+  return head+tools+(secs||`<div class="panel empty"><b>لا توجد آليات بهذا التصنيف.</b></div>`);
+}
+function viewDVeh(key){
+  const [cid,vid]=String(key).split('|'); const v=cVeh(cid).find(x=>x.id===vid)||{name:'—'}, st=stOf(v);
+  const back=`<nav class="crumbs"><button type="button" data-act="nav" data-id="dfleet">آليات حائل</button><span>/</span><span>${esc(cName(cid))}</span><span>/</span><span>${esc(v.name||'')}</span></nav>`;
+  if (!S.cload) return back+loading();
+  const list=vLast(cid,vid);
+  const info=`<dl class="panel info" style="margin:0 0 16px"><div><dt>الآلية</dt><dd>${esc(v.name||'—')}</dd></div><div><dt>اللوحة</dt><dd>${esc(v.plate||'—')}</dd></div><div><dt>المركز</dt><dd>${esc(cName(cid))}</dd></div><div><dt>الجاهزية</dt><dd>${esc(STATUS[st])}</dd></div><div><dt>ملاحظة المركز</dt><dd>${esc(v.statusNote||'—')}</dd></div></dl>`;
+  const head=`${back}<header class="ph"><div class="ph-t"><h1>إجراءات ${esc(v.name||'')}</h1><span class="count">${list.length} إجراء</span></div>${dAddBtn('vactAdd',key,'إضافة إجراء')}</header>`;
+  const tbl=list.length?dTable(['التاريخ','نوع العطل','الإجراء المتخذ','المستند',...(S.canEdit?['']:[])], list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td>${r.fault?esc(r.fault):DASH}</td><td>${esc(r.text||'')}</td><td>${fileBtn('vact',r,'عرض')}</td>${S.canEdit?rowActs('vact',r):''}</tr>`).join('')):`<div class="panel empty"><b>لا توجد إجراءات مسجلة لهذه الآلية.</b></div>`;
+  return head+info+tbl;
+}
+const dSave = async (col, base, x) => { const rec=Object.assign({}, base, hStrip(x), {at:Date.now()}); delete rec.file; if (x.file) Object.assign(rec, await storeLibFile(x.file, col+'-'+uid())); else Object.assign(rec,{file:null, db:null, fileName:''}); await S.db.collection(col).doc().set(rec); };
 function viewAdvisor(){
   const edit=advEdit(), sect=S.advSect||'', all=(S.guide||[]).slice().sort(advSort), duty=all.filter(advDuty), admin=all.filter(x=>!advDuty(x));
   const back=`<div style="margin-bottom:10px"><button type="button" class="link" data-act="advSect" data-id="">${ICON.arrow} المستشار</button></div>`;
@@ -2339,7 +2453,15 @@ const cnFields = (r, kind) => { if (r.qstat) return qFields(r, kind); const k=r.
   {id:'note',label:'ملاحظة (اختياري)',value:r.note,placeholder:'مثال: حسب توجيه العمليات لمهمة حريق'},
   {id:'file',label:(r.file||r.db)?'استبدال المرفق (اختياري)':'مرفق السند (اختياري)',type:'file',accept:LIB_ACCEPT}
 ]; };
-const HCOLS = {pdocs:{fields:r=>pdFields(r),title:'المستند'}, letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
+const DCOL_ATT = {id:'file',label:'المستند (اختياري)',type:'file',accept:LIB_ACCEPT};
+const delivFields = r => [[{id:'item',label:'الصنف / العهدة',value:r.item,required:true,placeholder:'مثال: خرطوم 2.5 بوصة'},{id:'qty',label:'الكمية',value:r.qty,placeholder:'مثال: 10'}],
+  [{id:'date',label:'تاريخ التسليم',value:r.date||hijri(),required:true},{id:'rec',label:'المستلم (اختياري)',value:r.rec,placeholder:'مثال: رقيب / فهد الشمري'}],
+  {id:'note',label:'ملاحظة (اختياري)',type:'textarea',value:r.note}];
+const cptxFields = r => [[{id:'kind',label:'النوع',type:'select',value:r.kind||'tx',options:[['tx','معاملة'],['file','ملف / مستند']]},{id:'date',label:'التاريخ',value:r.date||hijri(),required:true}],
+  {id:'title',label:'العنوان',value:r.title,required:true,placeholder:'مثال: طلب إجازة اعتيادية'}, {id:'note',label:'ملاحظة (اختياري)',type:'textarea',value:r.note}];
+const vactFields = r => [{id:'text',label:'الإجراء المتخذ',type:'textarea',value:r.text,required:true,placeholder:'مثال: رُفع خطاب للصيانة برقم …'},
+  [{id:'date',label:'التاريخ',value:r.date||hijri(),required:true},{id:'fault',label:'نوع العطل (اختياري)',value:r.fault,placeholder:'مثال: عطل كهربائي'}]];
+const HCOLS = {deliv:{fields:delivFields,title:'التسليم'}, cptx:{fields:cptxFields,title:'السجل'}, vact:{fields:vactFields,title:'الإجراء'}, pdocs:{fields:r=>pdFields(r),title:'المستند'}, letters:{fields:r=>letFields(r),title:'الخطاب'}, consum:{fields:r=>cnFields(r),title:'الحركة'}, ptx:{fields:r=>ptxFields(r),title:'المعاملة'}, absences:{fields:absFields,title:'السجل'}, rewards:{fields:rewFields,title:'المكافأة'}, missions:{fields:m=>misFields(m),title:'المهمة'}};
 const hRec = (col, id) => (S[col]||[]).find(r=>r.id===id);
 async function hStoreFile(x, ref, old){
   if (!x.file) return {};
@@ -2360,9 +2482,9 @@ const pdFields = r => [
   {id:'file',label:(r.file||r.db)?'استبدال المرفق (اختياري)':'المرفق (اختياري)',type:'file',accept:LIB_ACCEPT}];
 function viewPFiles(){
   const all=(S.staff||[]).slice().sort((a,b)=>String(a.shift||'').localeCompare(String(b.shift||''))||((a.order||0)-(b.order||0)));
-  const head=`<header class="ph"><div class="ph-t"><h1>ملفات الأفراد</h1><span class="count">${esc(arD(all.length))} ملف</span></div></header>`;
+  const head=`<header class="ph"><div class="ph-t"><h1>ملفات الأفراد</h1><span class="count">${esc(arD(all.length))} ملف</span></div>${DEPT&&S.canEdit?`<button type="button" class="btn primary" data-act="hAdd" data-id="1">${ICON.plus}إضافة فرد</button>`:''}</header>`;
   if (!S.loadedH) return head+loading();
-  if (!all.length) return head+`<div class="panel empty"><b>لا يوجد أفراد بعد.</b>أضف الأفراد من «الورديات والتكميل» وسيُنشأ لكل فرد ملف هنا.</div>`;
+  if (!all.length) return head+`<div class="panel empty"><b>لا يوجد أفراد بعد.</b>${DEPT?'أضف العاملين في الشعبة بزر «إضافة فرد».':'أضف الأفراد من «الورديات والتكميل» وسيُنشأ لكل فرد ملف هنا.'}</div>`;
   const q=norm(S.pfq), list=all.filter(p=>!q||norm([p.name,p.rank,p.num,p.spec].join(' ')).includes(q));
   const n = id => pdocsOf(id).length + (S.absences||[]).filter(r=>r.p===id).length + (S.rewards||[]).filter(r=>r.p===id).length;
   const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الأفراد</span>${ICON.search}<input id="pfq" type="search" placeholder="ابحث بالاسم أو الرقم العسكري أو الرتبة" value="${esc(S.pfq||'')}"></label></div>`;
@@ -2479,6 +2601,15 @@ const ACT = {
       await S.db.doc('settings/ccmaps').set(Object.assign({}, S.ccmaps||{}, {[k]:x.url, updated:Date.now()})); toast('حُفظ الرابط'); }}); },
   closeModal: closeModal,
   nav: id => { go(id); if (id==='audit') auditLoad(); },
+  dOpenC: id => go('dcenter', id),
+  dOpenP: (id, from) => { S.dpFrom=from||'dcenters'; go('dperson', id); },
+  dOpenV: id => go('dveh', id),
+  dFleetF: k => { S.dff=k; render(); },
+  delivAdd: c => openForm({title:'تسليم عهدة — '+cName(c), submit:'حفظ', fields:delivFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('deliv', {c, cN:cName(c)}, x); toast('سُجّل التسليم'); }}),
+  cptxAdd: key => { const [c,p]=String(key).split('|'), pr=cStaff(c).find(o=>o.id===p)||{};
+    openForm({title:'إضافة معاملة أو ملف — '+(pr.name||''), submit:'حفظ', fields:cptxFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('cptx', {c, p, pN:[pr.rank,pr.name].filter(Boolean).join(' / ')}, x); toast('حُفظ السجل'); }}); },
+  vactAdd: key => { const [c,v]=String(key).split('|'), vr=cVeh(c).find(o=>o.id===v)||{};
+    openForm({title:'إجراء — '+(vr.name||''), submit:'حفظ', fields:vactFields({}).concat([DCOL_ATT]), onSubmit: async x => { await dSave('vact', {c, v, vN:vr.name||''}, x); toast('حُفظ الإجراء'); }}); },
   auditDay: () => { const el=$('#au_day'); if (el&&el.value){ S.auditDay=el.value; auditLoad(); } },
   auditReload: () => auditLoad(),
   navGrp: k => { const b=$('#navg-'+k), g=$('#navb-'+k); if(!b||!g) return; const open=b.getAttribute('aria-expanded')!=='true'; b.setAttribute('aria-expanded',open); g.classList.toggle('closed',!open); navSave(); },
@@ -2819,6 +2950,7 @@ document.addEventListener('input', e => {
   else if (e.target.dataset && e.target.dataset.lib){ S.lib[e.target.dataset.lib][e.target.dataset.f]=e.target.value; render(); }
   else if (e.target.id==='wq'){ S.wq=e.target.value; render(); }
 });
+document.addEventListener('input', e => { if (e.target && e.target.id==='dpq'){ S.dpq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#dpq'); if(el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(_){} } } });
 document.addEventListener('change', e => { if (e.target && e.target.id==='au_day' && e.target.value){ S.auditDay=e.target.value; auditLoad(); } });
 document.addEventListener('change', async e => {
   const el=e.target, key=el.dataset && el.dataset.up; if (!key) return;
@@ -2876,6 +3008,7 @@ const use = n => (window.claude && window.claude.use) ? window.claude.use(n).cat
   db.collection('forms').onSnapshot(s => { S.forms=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedFm=true; render(); }, fail);
   db.collection('circulars').onSnapshot(s => { S.circulars=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedCirc=true; render(); }, () => { S.loadedCirc=true; render(); });
   db.collection('guide').onSnapshot(s => { S.guide=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedAdv=true; render(); }, () => { S.loadedAdv=true; render(); });
+  if (DEPT){ for (const c of ['deliv','cptx','vact']) db.collection(c).onSnapshot(s => { S[c]=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, () => {}); loadCenters(); }
   db.collection('pdocs').onSnapshot(s => { S.pdocs=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('incoming').onSnapshot(s => { S.incoming=s.docs.map(d=>Object.assign({id:d.id}, d.data())); render(); }, fail);
   db.collection('sites').onSnapshot(s => { S.sites=s.docs.map(d=>Object.assign({id:d.id}, d.data())); S.loadedSt=true; render(); }, fail);
