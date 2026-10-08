@@ -46,7 +46,7 @@ UNITS.isnad = { name: 'قسم الدعم والإسناد', desc: 'أرشيف ا
 // جهات إضافية: إدارة العمليات (شعبة التحقيق، الشؤون الإدارية) وإدارة السلامة (الدوريات والتراخيص في الشمال والجنوب)
 // لا تظهر في لوحة المدير (ليست جهات آليات)
 const EXTRA = [
-  ['invest', 'شعبة التحقيق'],
+  ['supply', 'شعبة التموين'],
   ['admaff', 'إدارة الشؤون الإدارية'],
   ['techaff', 'شعبة الشؤون الفنية'],
   ['hrdiv', 'شعبة الموارد البشرية'],
@@ -58,6 +58,10 @@ const EXTRA = [
 for (const [id, name] of EXTRA) {
   UNITS[id] = { name, desc: 'أرشيف الجهة', dbDir: `data/units/${id}/db`, web: `units/${id}/`, names: centerNames(name), noMgr: true };
 }
+// شعب بقوائم خاصة (dept): تُخفى قوائم القالب كلها إلا ما يخصها، وتظهر لها أقسامها (المراكز، آليات حائل، سندات العهد…)
+const ALLNAV = ['dash', 'tasks', 'vehicles', 'equip', 'warehouses', 'consum', 'circ', 'staff', 'pfiles', 'tx', 'forms', 'returns', 'faults', 'profiles', 'advisor', 'sites', 'bounds'];
+const DEPT = { supply: ['supply', ['warehouses', 'circ', 'pfiles', 'returns']], admaff: ['admin', []], techaff: ['tech', ['pfiles', 'tx']] };
+for (const [id, [dept, show]] of Object.entries(DEPT)) Object.assign(UNITS[id], { dept, hide: ALLNAV.filter((k) => !show.includes(k)) });
 const unitDb = (u) => path.join(ROOT, UNITS[u].dbDir);
 // بيانات مشتركة تظهر في كل الجهات (نماذج ومحاضر)، وملفات Word الخاصة بها في data/shared/db/files
 const SHARED_DB = path.join(ROOT, 'data', 'shared', 'db');
@@ -106,7 +110,7 @@ function pageHtml(unit, config) {
     html = html.split(from).join(to);
   };
   patch("const blob = id => id ? '/_blob/' + encodeURIComponent(id) : '';", "const blob = id => id ? window.ISNAD.blob(id) : '';");
-  const cfg = Object.assign(repo(), config, { unit, unitName: u.name, dbDir: u.dbDir, web: u.web, units: Object.entries(UNITS).map(([id, x]) => ({ id, name: x.name })) });
+  const cfg = Object.assign(repo(), config, { unit, unitName: u.name, dbDir: u.dbDir, web: u.web, units: Object.entries(UNITS).map(([id, x]) => ({ id, name: x.name })), dept: u.dept || '', centers: CENTERS.map(([id, name]) => ({ id, name, web: UNITS[id].web })).concat([{ id: 'isnad', name: UNITS.isnad.name, web: '' }]) });
   // ?v= بصمة الشيم: يجبر المتصفح على تحميل النسخة الجديدة بعد كل تحديث بدل نسخته المخزّنة
   const ver = crypto.createHash('sha1').update(fs.readFileSync(path.join(SITE_DIR, 'shim.js'))).digest('hex').slice(0, 10);
   patch('<script>\n(function(){', `<script>window.ISNAD_CONFIG=${JSON.stringify(cfg)};</script>\n<script src="shim.js?v=${ver}"></script>\n<script>\n(function(){`);
