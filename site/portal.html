@@ -74,6 +74,7 @@ a{color:var(--green);text-decoration:none}
 .hero h1{margin:0;font-size:50px;line-height:1.25;font-weight:700;color:#fff;letter-spacing:-.01em;text-wrap:balance}
 .hero.sub h1{font-size:42px;line-height:1.3}
 .hero p{margin:0;font-size:18px;color:#C5D8CF;max-width:620px}
+.h1sub{margin-top:-8px;font-size:24px;font-weight:600;color:#E3CF9C}
 .hero.sub p{font-size:17px}
 .crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:#A9C2B6;flex-wrap:wrap}
 .crumb a{color:#E3CF9C;font-weight:600}
@@ -138,8 +139,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
 .ph .big.gold{background:var(--gold)}
 .ph .big.gt{background:var(--gold-t);color:var(--gold);width:64px;height:64px;border-radius:18px}
 .ph h2{margin:0;font-size:22px;font-weight:700;line-height:1.4}
-.ph .kick{font-size:13px;font-weight:600;color:var(--gold)}
-.ph .kick + h2{font-size:26px}
+.ph .big.gt + .tx h2{font-size:26px}
 .auth{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--bg);border-radius:999px;padding:5px 11px;white-space:nowrap}
 .auth.on{color:var(--ok);background:var(--ok-t)}
 .auth i{width:7px;height:7px;border-radius:50%;background:currentColor}
@@ -172,7 +172,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
   .wrap{padding-inline:16px}
   .hd .org b{font-size:14.5px}.hd .date{display:none}.olbl{display:none}.obtn{padding:0 13px}
   .hero{padding-block:32px 104px}.hero.sub{padding-block:28px 96px}
-  .hero h1{font-size:30px}.hero.sub h1{font-size:28px}.hero p,.hero.sub p{font-size:15px}
+  .h1sub{font-size:18px;margin-top:-6px}.hero h1{font-size:30px}.hero.sub h1{font-size:28px}.hero p,.hero.sub p{font-size:15px}
   .hero .wm{width:180px;height:180px;left:-30px}
   .sbox{padding:6px}.sbox button{padding:0 14px}
   main.body,.hero.sub + main.body{margin-top:-64px;gap:28px;padding-bottom:40px}
@@ -183,7 +183,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
   .adm .pts{display:none}
   .cta{height:48px;font-size:15px}
   .ph{padding:18px 20px}.row{padding:16px 20px}.blk{padding:18px 20px}.pfoot{padding:16px 20px 20px}
-  .ph h2{font-size:19px}.ph .kick + h2{font-size:21px}
+  .ph h2{font-size:19px}.ph .big.gt + .tx h2{font-size:21px}
   .units{grid-template-columns:1fr 1fr}.uc{padding:10px;gap:10px}.uc .tile{display:none}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
@@ -194,14 +194,14 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
 <header class="hd">
   <div class="wrap">
     <span class="logo" id="logo"></span>
-    <div class="org"><b>المديرية العامة للدفاع المدني</b><small>منطقة حائل</small></div>
+    <div class="org"><b>الإدارة العامة للدفاع المدني</b><small>منطقة حائل</small></div>
     <span class="sp"></span>
     <span class="date" id="date"></span>
     <button type="button" class="obtn" id="out" aria-label="تسجيل الخروج من جميع الجهات" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17-5-5 5-5"/><path d="M5 12h12"/></svg><span class="olbl">تسجيل الخروج من جميع الجهات</span></button>
   </div>
 </header>
 <div id="view"></div>
-<footer class="ft"><div class="wrap"><span>المديرية العامة للدفاع المدني — منطقة حائل</span><span>بوابة الإدارات والأقسام</span></div></footer>
+<footer class="ft"><div class="wrap"><span>الإدارة العامة للدفاع المدني — منطقة حائل</span><span>بوابة الإدارات والأقسام</span></div></footer>
 
 <script>/*CONFIG*/</script>
 <script>
@@ -247,11 +247,13 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
   const SOUTH = ['sharaf', 'sinaiya', 'dairi', 'jabal'], NORTH = ['balad', 'muntazah', 'aziziya', 'aja'], OUTER = ['rawda', 'jubba', 'khatta'];
   const SPEC = ['hazmat', 'isnad', 'control'], ADMIN = ['supply', 'admaff', 'techaff', 'hrdiv'];
   const OPS = [...SOUTH, ...NORTH, ...OUTER, ...SPEC, ...ADMIN].filter((i) => byId[i]);
-  const SF = { sfn: { name: 'قسم السلامة شمال', kick: 'القطاع الشمالي', dir: P.up }, sfs: { name: 'قسم السلامة جنوب', kick: 'القطاع الجنوبي', dir: P.down } };
+  const SF = { sfn: { name: 'قسم السلامة شمال', dir: P.up }, sfs: { name: 'قسم السلامة جنوب', dir: P.down } };
   const SFP = { pat: { name: 'قسم الدوريات', sub: 'الكشف الميداني على المنشآت', ic: P.truck, pages: [['rounds', 'الجولات التفتيشية', 'المنشآت وتصنيفها، وسجل الجولات بالصور', P.clip], ['sfstat', 'الإحصائيات', 'الجولات والمخالفات وما تم تلافيه في قسم الدوريات', P.chart], ['pfiles', 'ملفات أفراد قسم الدوريات', 'بيانات الأفراد ومستنداتهم', P.user]] },
     lic: { name: 'قسم التراخيص', sub: 'ملف لكل منشأة ووضعها', ic: P.doc, gold: true, pages: [['lfac', 'المنشآت والتراخيص', 'السجل والمستندات والمخالفات، ووضع المنشأة', P.bldg], ['sfstat', 'إحصائيات الشعبة', 'قسم الدوريات وقسم التراخيص معًا', P.chart], ['pfiles', 'ملفات أفراد القسم', 'بيانات الأفراد ومستنداتهم', P.user]] } };
   const sfIds = Object.keys(SF).flatMap((k) => ['pat', 'lic'].map((s) => k + s)).filter((i) => byId[i]);
-  const DASH = cfg.manager ? [['manager.html', cfg.manager.name, 'جاهزية المراكز وإحصائيات السلامة'], ['ops.html', 'لوحة مدير إدارة العمليات', 'نفس اللوحة برمز إدارة العمليات']] : [];
+  const DASH_OPS = cfg.manager ? [['manager.html', cfg.manager.name, 'جاهزية المراكز وإحصائيات السلامة'], ['ops.html', 'لوحة مدير إدارة العمليات', 'جاهزية المراكز والأقسام']] : [];
+  const DASH_SAF = cfg.manager ? [['safety.html', 'لوحة مدير إدارة السلامة', 'إحصائيات السلامة فقط: الجولات والمنشآت والمخالفات']] : [];
+  const DASH = [...DASH_OPS, ...DASH_SAF];
 
   // ---------- البحث: الجهات وصفحات أقسام السلامة ولوحات القيادة والإدارات ----------
   const norm = (s) => String(s || '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[ًٌٍَُِّْـ]/g, '').toLowerCase().trim();
@@ -287,7 +289,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
   const blk = (title, ids) => { const c = ids.filter((i) => byId[i]); return c.length ? `<div class="blk"><h3>${esc(title)}<span class="n">${c.length}</span></h3><div class="units">${c.map(uc).join('')}</div></div>` : ''; };
 
   const VIEWS = {
-    '': () => hero(`<span class="pill-g">البوابة الموحدة</span><h1>بوابة الإدارات والأقسام</h1><p>الوصول إلى صفحات الإدارات والمراكز والأقسام من مكان واحد. يطلب كل قسم بيانات الدخول الخاصة به.</p>${searchBox()}`)
+    '': () => hero(`<h1>البوابة الموحدة</h1><span class="h1sub">بوابة الإدارات والأقسام</span><p>الوصول إلى صفحات الإدارات والمراكز والأقسام من مكان واحد. يطلب كل قسم بيانات الدخول الخاصة به.</p>${searchBox()}`)
       + `<main class="body wrap"><div class="grid2">
         <a class="adm" href="#ops"><div class="band"><span class="disc">${sv(P.flame, 44, 1.6)}</span><span class="badge">${OPS.length} جهة</span></div>
           <div class="in"><div><h2>إدارة العمليات</h2><p>المراكز والأقسام المتخصصة والإدارية، ولوحات القيادة.</p></div>
@@ -301,7 +303,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
 
     ops: () => hero(`${crumb([['البوابة', '#'], ['إدارة العمليات']])}<h1>إدارة العمليات</h1><p>المراكز والأقسام ولوحات القيادة. لكل جهة دخولها الخاص.</p>${searchBox()}`, true)
       + `<main class="body wrap">
-        ${DASH.length ? `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div>` : ''}
+        ${DASH_OPS.length ? `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH_OPS.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div>` : ''}
         <section class="panel"><div class="ph"><span class="big">${sv(P.home, 26)}</span><div class="tx"><h2>المراكز</h2><small>${[...SOUTH, ...NORTH, ...OUTER].filter((i) => byId[i]).length} مركزًا</small></div></div>${blk('مراكز شعبة الجنوب', SOUTH)}${blk('مراكز شعبة الشمال', NORTH)}${blk('المراكز الخارجية', OUTER)}</section>
         <div class="grid2">
           <section class="panel"><div class="ph"><span class="big">${sv(P.flame, 26)}</span><div class="tx"><h2>الأقسام المتخصصة</h2></div></div>${grid(SPEC)}</section>
@@ -309,13 +311,13 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
         </div></main>`,
 
     safety: () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة']])}<h1>إدارة السلامة</h1><p>اختر القسم. في كل قسم: قسم الدوريات وقسم التراخيص، ولكل واحد منهما دخوله الخاص.</p>`, true)
-      + `<main class="body wrap"><div class="grid2">${Object.entries(SF).map(([k, b]) => `<section class="panel"><div class="ph" style="background:var(--surface)"><span class="big gt">${sv(b.dir, 30, 2)}</span><div class="tx"><span class="kick">${esc(b.kick)}</span><h2>${esc(b.name)}</h2></div></div>
+      + `<main class="body wrap">${DASH_SAF.length ? `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH_SAF.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div>` : ''}<div class="grid2">${Object.entries(SF).map(([k, b]) => `<section class="panel"><div class="ph" style="background:var(--surface)"><span class="big gt">${sv(b.dir, 30, 2)}</span><div class="tx"><h2>${esc(b.name)}</h2></div></div>
         ${Object.entries(SFP).filter(([s]) => byId[k + s]).map(([s, d]) => row('#' + k, d.name, d.pages.map((p) => p[1].replace(/ أفراد.*/, ' الأفراد')).join(' · '), d.ic)).join('')}
         <div class="pfoot"><a class="cta" href="#${k}">الدخول إلى ${esc(b.name)}${ARROW}</a></div></section>`).join('')}</div></main>`,
   };
   Object.keys(SF).forEach((k) => {
     const b = SF[k];
-    VIEWS[k] = () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة', '#safety'], [b.name]])}<div class="trow"><h1>${esc(b.name)}</h1><span class="pill-g">${esc(b.kick)}</span></div><p>اختر الصفحة، وتفتح لك مباشرة بعد إدخال بيانات دخول القسم.</p>`, true)
+    VIEWS[k] = () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة', '#safety'], [b.name]])}<h1>${esc(b.name)}</h1><p>اختر الصفحة، وتفتح لك مباشرة بعد إدخال بيانات دخول القسم.</p>`, true)
       + `<main class="body wrap"><div class="grid2">${Object.entries(SFP).filter(([s]) => byId[k + s]).map(([s, d]) => `<section class="panel"><div class="ph"><span class="big${d.gold ? ' gold' : ''}">${sv(d.ic, 26)}</span><div class="tx"><h2>${esc(d.name)}</h2><small>${esc(d.sub)}</small></div>${authChip(k + s)}</div>
         ${d.pages.map(([v, t, sub, ic]) => row(k + s + '.html#' + v, t, sub, ic, d.gold)).join('')}</section>`).join('')}</div></main>`;
   });
