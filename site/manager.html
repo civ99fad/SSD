@@ -6,7 +6,7 @@
 <title>لوحة مدير الإدارة العامة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 <style>
 :root{
   color-scheme:light;
@@ -39,12 +39,12 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg)}
-body{font-family:'Tajawal',"Segoe UI",Tahoma,system-ui,sans-serif;color:var(--text);line-height:1.55;font-size:15px}
+body{font-family:'IBM Plex Sans Arabic',"Segoe UI",Tahoma,system-ui,sans-serif;color:var(--text);line-height:1.55;font-size:15px}
 button,input{font:inherit;color:inherit}
 [hidden]{display:none!important}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 bdi{unicode-bidi:isolate}
-.band{background:#B42318;color:#fff;text-align:center;font-size:13px;font-weight:800;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+.band{background:#082E23;color:#A9C2B6;text-align:center;font-size:12px;font-weight:500;padding:6px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
 
 /* بوابة الدخول */
 .gate{min-height:calc(100vh - 36px);display:flex;align-items:center;justify-content:center;padding:32px 16px;background:var(--brand)}
@@ -66,7 +66,14 @@ bdi{unicode-bidi:isolate}
 .back{margin-top:14px;font-size:13px;font-weight:700;color:var(--accent);text-decoration:none}
 
 /* اللوحة */
-.top{background:var(--brand);color:#fff;padding:18px 16px 60px}
+.top{background:linear-gradient(160deg,#0B4A37 0%,#083527 100%);color:#fff;padding:18px 16px 60px;position:relative;overflow:hidden}
+.top::before{content:"";position:absolute;left:-100px;top:-220px;width:520px;height:520px;border-radius:50%;border:1px solid rgba(255,255,255,.07);pointer-events:none}
+.top-in,.hhero{position:relative}
+body.home .top{padding-bottom:124px}
+body.home main{margin-top:-84px}
+.hhero{max-width:1240px;margin:0 auto;padding:30px 0 0;display:flex;flex-direction:column;gap:8px}
+.hhero h2{margin:0;font-size:40px;line-height:1.3;font-weight:700;color:#fff}
+.hhero p{margin:0;font-size:17px;color:#C5D8CF}
 .top-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .top .logo{width:56px;height:56px;margin:0;flex-shrink:0}
 .top .logo img{width:48px;height:48px}
@@ -76,7 +83,7 @@ bdi{unicode-bidi:isolate}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin-inline-start:auto}
 .acts .btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#fff}
 .acts .btn:hover{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.4)}
-main{max-width:1240px;margin:-44px auto 0;padding:0 16px 48px;display:flex;flex-direction:column;gap:18px}
+main{max-width:1240px;margin:-44px auto 0;padding:0 16px 48px;display:flex;flex-direction:column;gap:18px;position:relative;z-index:1}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px}
 .sh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px}
 .sh h2{margin:0;font-size:18px;font-weight:800}
@@ -190,17 +197,32 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 .cerr{color:var(--bad);font-weight:700;font-size:13.5px}
 @media (max-width:640px){ .cform{grid-template-columns:1fr} }
 
-/* شاشة الاختيار وأقسام اللوحة */
-.choose{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.chs{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:10px;background:var(--surface);border:2px solid var(--edge);border-radius:20px;box-shadow:var(--shadow);padding:24px 22px;min-height:220px;transition:transform .15s,box-shadow .15s}
-.chs:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(16,24,40,.12)}
-.chs:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-.chs .ic{width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.chs b{font-size:21px;font-weight:800}
-.chs small{color:var(--muted);font-size:14px}
-.chs .nums{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
-.chs .nums span{font-size:13px;font-weight:700;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px 11px}
-.chs .go{font-weight:800;color:var(--accent);font-size:14px}
+/* شاشة الاختيار (التصميم المعتمد) */
+.doors{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:28px;align-items:stretch}
+.door{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 48px -28px rgba(8,53,39,.28);padding:30px;display:flex;flex-direction:column;gap:24px;color:var(--text);transition:transform .2s ease,box-shadow .2s ease}
+.door:hover{transform:translateY(-3px);box-shadow:0 32px 56px -28px rgba(8,53,39,.35)}
+.door:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.dh{display:flex;align-items:flex-start;gap:16px}
+.dh .ic{width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.door.s .dh .ic{background:#F5EEDF;color:#8A6A2A}
+.dh .tx{display:flex;flex-direction:column;flex:1;min-width:0}
+.dh b{font-size:24px;font-weight:700;line-height:1.4}
+.dh small{font-size:14.5px;color:var(--muted)}
+.dh .big{display:flex;flex-direction:column;align-items:flex-end;white-space:nowrap}
+.dh .big strong{font-size:36px;font-weight:700;line-height:1.1;color:var(--accent)}
+.door.s .dh .big strong{color:#8A6A2A}
+.dh .big span{font-size:12.5px;color:var(--muted)}
+.dbody{display:flex;flex-direction:column;gap:14px;padding-top:20px;border-top:1px solid var(--line)}
+.gbar{display:grid;grid-template-columns:140px 1fr 52px;align-items:center;gap:14px;font-size:14.5px}
+.gbar .t{height:8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.gbar .t i{display:block;height:100%;border-radius:999px}
+.gbar .p{font-weight:600;text-align:left}
+.strow{display:grid;grid-template-columns:1.5fr repeat(3,minmax(0,1fr));gap:12px;align-items:center;font-size:15px;padding:10px 0;border-top:1px solid var(--line)}
+.strow.h{font-size:12.5px;color:var(--muted);font-weight:600;border-top:0;padding-top:0}
+.strow b{font-weight:600}
+.dcta{margin-top:auto;display:flex;align-items:center;justify-content:space-between;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:15.5px;padding:0 20px;height:52px;border-radius:12px}
+.door.s .dcta{background:#10201A;color:#fff}
+@media (max-width:700px){.hhero h2{font-size:28px}.hhero p{font-size:15px}body.home .top{padding-bottom:96px}body.home main{margin-top:-64px}.door{padding:22px}.dh{flex-wrap:wrap}.dh b{font-size:20px}.dh .big{flex-basis:100%;flex-direction:row;align-items:baseline;gap:8px;padding-inline-start:72px}.dh .big strong{font-size:28px}.gbar{grid-template-columns:104px 1fr 44px;font-size:14px}.strow{grid-template-columns:1.8fr .8fr .9fr .9fr;font-size:14px;gap:8px}}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface);border:2px solid var(--edge);border-radius:14px;padding:8px;box-shadow:var(--shadow)}
 .tabs .chip{font-size:14px;padding:7px 14px}
 .vtitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -254,6 +276,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
         <button type="button" class="btn" data-act="logout">خروج</button>
       </div>
     </div>
+    <div class="hhero" id="hhero" hidden><h2>ماذا تريد أن تراجع اليوم؟</h2><p id="hsub"></p></div>
   </header>
   <main id="main"><div class="panel loading">جارٍ جمع بيانات الجهات…</div></main>
 </div>
@@ -425,6 +448,8 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   // أعلى اللوحة: زر «الرئيسية» خارج شاشة الاختيار، وأزرار المراكز (الإحصائية الربعية ونسخ الملخص) في قسم المراكز فقط
   function syncTop() {
     $('homeBtn').hidden = !S.mode && !S.circ;
+    const home = !S.mode && !S.circ; document.body.classList.toggle('home', home); $('hhero').hidden = !home;
+    $('hsub').textContent = hijri() + ' · ملخص سريع لكل قسم، واضغط للدخول إلى التفاصيل.';
     document.querySelectorAll('[data-only]').forEach((b) => (b.hidden = S.mode !== b.dataset.only || !!S.circ));
     const d = dutyDay(), k = dutyShift(d);
     $('meta').innerHTML = `<span>${esc(hijri())}</span>${S.mode === 'safety' ? '<span><b>إحصائيات السلامة</b></span>' : `<span>الوردية المناوبة: <b>${SHN[k].replace('الوردية ', '')}</b> (٩ ص ← ٩ ص)</span>`}<span>آخر تحديث: ${esc(timeStr(loadedAt))}</span>`;
@@ -490,13 +515,24 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     centers: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>',
   };
   function homeView() {
-    const t = totals(), T = sfTotal(0);
-    $('main').innerHTML = `<div class="choose">
-      <button type="button" class="chs" data-act="mode" data-v="safety"><span class="ic">${ICS.safety}</span><b>إحصائيات السلامة</b><small>شعبة الشمال وشعبة الجنوب: الجولات التفتيشية، والمنشآت والتراخيص، والمخالفات وما تم تلافيه.</small>
-        <span class="nums"><span>المنشآت ${arD(T.pfac + T.lfac)}</span><span>الجولات ${arD(T.R)}</span><span>مخالفات لم تُتلافَ ${arD(T.pv + T.lv - T.pf - T.lf)}</span></span><span class="go">دخول ←</span></button>
-      <button type="button" class="chs" data-act="mode" data-v="centers"><span class="ic">${ICS.centers}</span><b>المراكز وإحصائياتها</b><small>جاهزية المراكز والأقسام: الآليات والوايتات والقوة المناوبة والتنبيهات، وإحصائية الربع.</small>
-        <span class="nums"><span>الجاهزية ${t.pct == null ? '—' : esc(pctFmt(t.pct))}</span><span>الجهات ${arD(R.length)}</span><span>آليات غير جاهزة ${arD(t.c.down + t.c.maint)}</span></span><span class="go">دخول ←</span></button>
-    </div><p class="foot">اختر القسم الذي تريد الاطلاع عليه، ويمكنك الرجوع لهذه الشاشة من زر «الرئيسية» أعلى اللوحة.</p>`;
+    const t = totals(), T = sfTotal(0), V = T.pv + T.lv, F = T.pf + T.lf;
+    // جاهزية كل مجموعة من المراكز (الجاهزة من المقيّمة: جاهزة + متعطلة + صيانة)
+    const bars = GROUPS.map(([g, ids]) => { const L = R.filter((x) => ids.includes(x.u.id)); const r = L.reduce((s, x) => s + x.c.ready, 0), n = L.reduce((s, x) => s + x.rated, 0); return [g, n ? r / n : null]; });
+    const col = (v) => (v == null ? 'transparent' : v >= 0.8 ? 'var(--ok)' : v >= 0.5 ? 'var(--mid)' : 'var(--bad)');
+    const bar = ([g, v]) => `<div class="gbar"><span>${esc(g)}</span><span class="t"><i style="width:${v == null ? 0 : Math.round(v * 100)}%;background:${col(v)}"></i></span><span class="p">${v == null ? '—' : esc(pctFmt(v))}</span></div>`;
+    const sfRow = (b) => { const x = sfCalc(b, 0), open = x.pv + x.lv - x.pf - x.lf; return `<div class="strow"><b>${esc(b.name)}</b><span>${arD(x.R)}</span><span>${arD(x.pv + x.lv)}</span><span>${open ? `<span class="badge lv-bad">${arD(open)}</span>` : '<span class="badge lv-ok">لا يوجد</span>'}</span></div>`; };
+    $('main').innerHTML = `<div class="doors">
+      <button type="button" class="door" data-act="mode" data-v="centers">
+        <span class="dh"><span class="ic">${ICS.centers}</span><span class="tx"><b>المراكز وإحصائياتها</b><small>جاهزية الآليات والوايتات والقوة المناوبة</small></span><span class="big"><strong>${t.pct == null ? '—' : esc(pctFmt(t.pct))}</strong><span>الجاهزية الإجمالية</span></span></span>
+        <span class="dbody">${bars.map(bar).join('')}</span>
+        <span class="dcta">فتح المراكز وإحصائياتها <span aria-hidden="true">←</span></span>
+      </button>
+      <button type="button" class="door s" data-act="mode" data-v="safety">
+        <span class="dh"><span class="ic">${ICS.safety}</span><span class="tx"><b>إحصائيات السلامة</b><small>الجولات والمنشآت والمخالفات</small></span><span class="big"><strong>${V ? esc(pctFmt(F / V)) : '—'}</strong><span>نسبة تلافي المخالفات</span></span></span>
+        <span class="dbody" style="gap:0"><span class="strow h"><span>القسم</span><span>الجولات</span><span>المخالفات</span><span>لم تُتلافَ</span></span>${SF.map(sfRow).join('') || '<span class="none">لا توجد بيانات بعد.</span>'}</span>
+        <span class="dcta">فتح إحصائيات السلامة <span aria-hidden="true">←</span></span>
+      </button>
+    </div>`;
   }
 
   /* ---------- إحصائيات السلامة: أقسام الدوريات والتراخيص في الشعبتين (من آخر نسخة منشورة لكل قسم) ---------- */
