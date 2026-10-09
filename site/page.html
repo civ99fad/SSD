@@ -2,7 +2,7 @@
 <title>أرشيف قسم الدعم والإسناد</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 <style>
 :root{
   --bg:#E8EEEB; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#5E8F79;--edge:#1F5A43; --line-2:#A9C4B7;
@@ -43,7 +43,7 @@
 }
 *{box-sizing:border-box}
 html,body{background:var(--bg)}
-body{margin:0;font-family:'Tajawal',"Segoe UI",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.55;color:var(--text);direction:rtl}
+body{margin:0;font-family:'IBM Plex Sans Arabic',"Segoe UI",Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.55;color:var(--text);direction:rtl}
 button,input,select,textarea{font:inherit;color:inherit}
 h1,h2,h3{margin:0;text-wrap:balance}
 [hidden]{display:none!important}
@@ -651,15 +651,39 @@ html.u-patrol .dpt:not(.d-patrol),html.u-lic .dpt:not(.d-lic),html.u-supply .dpt
 }
 
 /* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
-@media not all and (prefers-color-scheme: dark){ :root:not([data-theme="dark"]) th{background:#D9E8E0!important;color:#0E3D2C!important;font-weight:800!important} }
-:root[data-theme="light"] th{background:#D9E8E0!important;color:#0E3D2C!important;font-weight:800!important}
+@media not all and (prefers-color-scheme: dark){ :root:not([data-theme="dark"]) th{background:#F1F5F2!important;color:#0B4A37!important;font-weight:600!important} }
+:root[data-theme="light"] th{background:#F1F5F2!important;color:#0B4A37!important;font-weight:600!important}
 @media not all and (prefers-color-scheme: dark){ :root:not([data-theme="dark"]) .ph h1,:root:not([data-theme="dark"]) .sh h2{color:#0E3D2C} }
 :root[data-theme="light"] .ph h1,:root[data-theme="light"] .sh h2{color:#0E3D2C}
 .file-t small,.vmeta,.rnote,.muted,.count{font-weight:600}
-.panel,.kpi,.vcard{border:2px solid var(--edge)!important}
-.panel table th{border-bottom:1.5px solid var(--edge)}
+.panel,.kpi,.vcard{border:1px solid var(--edge)!important;box-shadow:var(--shadow-card)}
+.panel table th{border-bottom:1px solid var(--edge)}
 .panel table td,.panel table th{border-color:var(--line-2)}
 .drow{border-bottom-color:var(--line)}
+
+/* ---------- التصميم المعتمد (Claude Design): ألوان هادئة وحواف ناعمة وظلال خفيفة، والقائمة الجانبية بأخضر رسمي متدرج ---------- */
+:root{
+  --bg:#F6F8F6; --surface-2:#FBFCFB; --line:#D5DED9; --edge:#D3DDD7; --line-2:#EEF2EF;
+  --muted:#5C6B64; --faint:#6B7872; --text:#10201A;
+  --accent:#0F6B4F; --accent-hover:#0B4A37; --accent-soft:#E9F2EE; --chip:#EEF3F0;
+  --shadow:0 24px 48px -28px rgba(8,53,39,.30); --shadow-card:0 14px 32px -24px rgba(8,53,39,.30);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0E1513; --line:#33463E; --edge:#2C3B35; --line-2:#22302A; --shadow-card:0 14px 32px -24px rgba(0,0,0,.6); } }
+:root[data-theme="dark"]{ --bg:#0E1513; --line:#33463E; --edge:#2C3B35; --line-2:#22302A; --shadow-card:0 14px 32px -24px rgba(0,0,0,.6); }
+.side{background:linear-gradient(170deg,#0B4A37 0%,#083527 100%)}
+.nav button{font-weight:500;border-radius:10px}
+.nav button[aria-current="page"]{background:rgba(255,255,255,.12);font-weight:600;border-inline-start-color:#E3CF9C}
+.welcome{background:linear-gradient(160deg,#0B4A37 0%,#083527 100%)}
+.wcard{border-radius:24px}
+.panel{border-radius:18px}
+.kpi{border-radius:18px}
+.btn{border-radius:10px;font-weight:600;border-width:1px}
+.btn.primary{box-shadow:none}
+.ph h1{font-weight:700;letter-spacing:-.01em}
+.fchip{border-width:1px;font-weight:600}
+.dcard{border-width:1px;border-radius:16px;box-shadow:var(--shadow-card)}
+.mbox{border-radius:20px}
+th{font-weight:600}
 </style>
 
 <div id="welcome" class="welcome" hidden>
