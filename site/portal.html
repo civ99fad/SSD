@@ -6,161 +6,202 @@
 <title>بوابة الإدارة العامة للدفاع المدني</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 <style>
+/* التصميم المعتمد (Claude Design): رأس أبيض، ثم مساحة خضراء رسمية بالشعار الباهت، وتحتها بطاقات بيضاء تتداخل معها؛ الذهبي لإدارة السلامة فقط */
 :root{
   color-scheme:light;
-  --bg:#0E3D2C; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#5E8F79;--edge:#1F5A43;
-  --text:#0B1612; --muted:#2C3A33; --faint:#4A5852;
-  --accent:#1F7A56; --accent-hover:#17694A; --on-accent:#FFFFFF; --accent-soft:#E4F1EA;
-  --danger:#B42318; --danger-bg:#FDECEA; --shadow:0 30px 60px rgba(0,0,0,.35);
+  --bg:#F6F8F6; --surface:#FFFFFF; --surface-2:#FBFCFB; --ink:#10201A; --muted:#5C6B64; --faint:#6B7872;
+  --line:#E4EAE6; --line-2:#D5DED9; --soft-line:#EEF2EF;
+  --green:#0F6B4F; --green-d:#0B4A37; --green-t:#E9F2EE;
+  --gold:#8A6A2A; --gold-t:#F5EEDF; --gold-l:#E3CF9C;
+  --cta2:#10201A; --cta2-ink:#FFFFFF; --cls:#082E23;
+  --ok:#0F6B4F; --ok-t:#E3F1EA;
+  --shadow:0 24px 48px -28px rgba(8,53,39,.28);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     color-scheme:dark;
-    --bg:#0A2A1F; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
-    --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
-    --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
-    --danger:#F97066; --danger-bg:#3A1714;
+    --bg:#0E1513; --surface:#151D1A; --surface-2:#19231F; --ink:#E6ECE9; --muted:#A3B0AA; --faint:#8C9A93;
+    --line:#26332E; --line-2:#33463E; --soft-line:#22302A;
+    --green:#3FA27C; --green-d:#7CC4A6; --green-t:#16352A;
+    --gold:#D4B26A; --gold-t:#33291A;
+    --cta2:#E6ECE9; --cta2-ink:#0E1513; --ok:#45A980; --ok-t:#16352A;
+    --shadow:0 24px 48px -28px rgba(0,0,0,.6);
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#0A2A1F; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
-  --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
-  --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
-  --danger:#F97066; --danger-bg:#3A1714;
+  --bg:#0E1513; --surface:#151D1A; --surface-2:#19231F; --ink:#E6ECE9; --muted:#A3B0AA; --faint:#8C9A93;
+  --line:#26332E; --line-2:#33463E; --soft-line:#22302A;
+  --green:#3FA27C; --green-d:#7CC4A6; --green-t:#16352A;
+  --gold:#D4B26A; --gold-t:#33291A;
+  --cta2:#E6ECE9; --cta2-ink:#0E1513; --ok:#45A980; --ok-t:#16352A;
+  --shadow:0 24px 48px -28px rgba(0,0,0,.6);
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg)}
-body{font-family:'Tajawal',"Segoe UI",Tahoma,system-ui,sans-serif;color:var(--text);line-height:1.55;font-size:15px}
+html,body{margin:0;background:var(--bg)}
+body{font-family:'IBM Plex Sans Arabic',Tahoma,"Segoe UI",system-ui,sans-serif;color:var(--ink);line-height:1.6;font-size:15px}
 button,input{font:inherit;color:inherit}
+a{color:var(--green);text-decoration:none}
 [hidden]{display:none!important}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:72px 16px 48px;position:relative;overflow:hidden}
-.page::before{content:"";position:absolute;inset:0;background:radial-gradient(560px 560px at 85% 12%,rgba(255,255,255,.06),transparent 70%),radial-gradient(480px 480px at 8% 92%,rgba(255,255,255,.05),transparent 70%);pointer-events:none}
-.band{position:absolute;top:0;left:0;right:0;background:#B42318;color:#fff;text-align:center;font-size:13px;font-weight:800;padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));z-index:1}
-.card{position:relative;width:100%;max-width:440px;background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:40px 32px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
-.card.wide{max-width:980px}
-.logo{width:92px;height:92px;border-radius:50%;background:#fff;border:1px solid #E6ECE9;display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden}
-.logo img{width:80px;height:80px;object-fit:contain}
-h1{margin:0;font-size:24px;font-weight:800;text-wrap:balance}
-.org{font-size:17px;font-weight:700;color:var(--accent);margin-top:2px}
-.sub{color:var(--muted);font-size:14px;margin-top:4px}
-.fld{width:100%;margin-top:22px;text-align:start}
-.fld label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
-.fld input{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);font-size:15px;outline:none}
-.fld input:focus{border-color:var(--accent)}
-.err{display:none;margin-top:8px;color:var(--danger);font-size:13.5px;font-weight:600}
-.btn{width:100%;margin-top:14px;padding:14px;border-radius:10px;border:0;background:var(--accent);color:var(--on-accent);font-size:16px;font-weight:700;cursor:pointer;min-height:48px}
-.btn:hover{background:var(--accent-hover)}
-.btn[disabled]{opacity:.6;cursor:progress}
-.foot{margin-top:22px;font-size:12px;color:var(--faint)}
-.units{width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));grid-auto-rows:1fr;gap:12px;margin-top:22px}
-.unit{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:start;padding:16px 18px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);min-height:118px;transition:border-color .15s,box-shadow .15s,transform .15s}
-.unit:hover{border-color:var(--accent);box-shadow:0 10px 26px rgba(14,61,44,.14);transform:translateY(-2px)}
-.unit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.unit .ic{width:40px;height:40px;flex-shrink:0;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.unit b{font-size:17px;font-weight:800}
-.unit small{font-size:13px;color:var(--muted)}
-.unit .go{margin-top:auto;font-size:13px;font-weight:700;color:var(--accent)}
-.mgr{box-sizing:border-box;width:100%;display:flex;align-items:center;gap:14px;margin-top:22px;padding:16px 18px;border-radius:14px;background:var(--accent);color:var(--on-accent);text-decoration:none;text-align:start;transition:background .15s,transform .15s,box-shadow .15s}
-.mgr:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 10px 26px rgba(14,61,44,.2)}
-.mgr:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.mgr .ic{width:46px;height:46px;flex-shrink:0;border-radius:12px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
-.mgr .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.mgr b{font-size:18px;font-weight:800}
-.mgr small{font-size:13px;opacity:.85}
-.mgr .go{font-size:13px;font-weight:700;white-space:nowrap}
-.big{font-size:28px;font-weight:900;line-height:1.35}
-.sect>.gbar{padding:18px 20px;border-width:2px;background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
-.sect>.gbar b{font-size:20px;font-weight:900}
-.sect>.gbar small{color:var(--on-accent);opacity:.85}
-.sect>.gbar .ic{background:rgba(255,255,255,.16)}
-.sect>.gbar .chev{color:var(--on-accent)}
-.sect>.gbody{display:flex;flex-direction:column;gap:12px}
-.sect>.gbody[hidden]{display:none}
-.sect .mgr{margin-top:0}
-.admins{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
-.adm{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:start;padding:26px 24px;border-radius:18px;background:var(--accent);color:var(--on-accent);min-height:190px;transition:transform .15s,box-shadow .15s}
-.adm:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(14,61,44,.28);background:var(--accent-hover)}
-.adm:focus-visible{outline:3px solid var(--edge);outline-offset:3px}
-.adm .ic{width:56px;height:56px;border-radius:15px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center}
-.adm b{font-size:22px;font-weight:900}.adm small{font-size:13.5px;opacity:.9;line-height:1.7}
-.adm .go{margin-top:auto;display:flex;align-items:center;gap:4px;font-weight:800;font-size:14px}
-.vhead{width:100%;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:20px;padding-bottom:14px;border-bottom:1.5px solid var(--line);text-align:start}
-.vhead .back{font-weight:800;font-size:14px;color:var(--accent);text-decoration:none;white-space:nowrap}
-.vhead .back:hover{text-decoration:underline}
-.vt{flex:1;min-width:180px}.vt h2{margin:0;font-size:22px;font-weight:900}.vt small{color:var(--muted);font-size:13px}
-.srch{flex:0 1 260px}.srch input{width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);outline:none}
-.srch input:focus{border-color:var(--accent)}
-.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-#vbody{width:100%;text-align:start}
-.blk{margin-top:22px}.blk h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:16px;font-weight:900;color:var(--text)}
-.blk .cnt{font-size:12px;font-weight:800;background:var(--accent-soft);color:var(--accent);padding:1px 9px;border-radius:999px}
-.subh{margin:12px 0 8px;font-size:13px;font-weight:800;color:var(--muted)}
-.ucs{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
-.uc{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);transition:border-color .15s,box-shadow .15s,transform .15s}
-.uc:hover{border-color:var(--accent);box-shadow:0 8px 20px rgba(14,61,44,.12);transform:translateY(-1px)}
-.uc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.uc .ic{width:34px;height:34px;flex-shrink:0;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
-.uc .ic svg{width:19px;height:19px}
-.uc b{flex:1;min-width:0;font-size:14.5px;font-weight:800;line-height:1.4}
-.uc .arw,.dsh .arw{color:var(--accent);display:flex;flex-shrink:0}
-.dashes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.dsh{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:var(--accent);color:var(--on-accent)}
-.dsh:hover{background:var(--accent-hover)}
-.dsh .ic{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.dsh .tx{flex:1;min-width:0;display:flex;flex-direction:column}.dsh b{font-size:15px;font-weight:800}.dsh small{font-size:12.5px;opacity:.85}
-.dsh .arw{color:var(--on-accent)}
-.none{color:var(--muted);margin-top:18px}
-@media (max-width:640px){.admins,.dashes{grid-template-columns:1fr}.adm{min-height:0}.srch{flex-basis:100%}.ucs{grid-template-columns:1fr 1fr;gap:8px}.uc{padding:10px;gap:8px}.uc .ic{width:30px;height:30px}.uc .arw{display:none}.uc b{font-size:13.5px}.card.wide{padding:28px 16px}.big{font-size:24px}}
-.lbl{width:100%;margin-top:20px;text-align:start;font-size:13px;font-weight:800;color:var(--muted)}
-.lbl + .units{margin-top:8px}
-.out{all:unset;cursor:pointer;margin-top:18px;font-size:13px;font-weight:700;color:var(--muted)}
-.out:hover{color:var(--accent);text-decoration:underline}
+:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:32px}
+
+.cls{background:var(--cls);color:#A9C2B6;font-size:12px;text-align:center;padding:6px 16px;padding-top:calc(6px + env(safe-area-inset-top,0px))}
+.hd{background:var(--surface);border-bottom:1px solid var(--line)}
+.hd .wrap{display:flex;align-items:center;gap:14px;padding-block:14px;flex-wrap:wrap}
+.hd .logo{width:50px;height:50px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hd .logo img{width:50px;height:50px;object-fit:contain}
+.hd .org{display:flex;flex-direction:column}
+.hd .org b{font-size:16px;font-weight:700;line-height:1.4}
+.hd .org small{font-size:13px;color:var(--muted)}
+.hd .sp{flex:1}
+.hd .date{font-size:13.5px;color:var(--muted)}
+.obtn{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink);padding:0 16px;min-height:44px;border:1px solid var(--line-2);border-radius:10px;background:transparent;cursor:pointer}
+.obtn:hover{border-color:var(--green);color:var(--green)}
+
+.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#0B4A37 0%,#083527 100%);padding-block:64px 150px}
+.hero.sub{padding-block:44px 128px}
+.hero .ring{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.07);pointer-events:none}
+.hero .r1{left:-120px;top:-160px;width:560px;height:560px}
+.hero .r2{left:-40px;top:-80px;width:400px;height:400px}
+.hero .wm{position:absolute;left:40px;top:20px;width:300px;height:300px;object-fit:contain;opacity:.1;filter:grayscale(1) invert(1);mix-blend-mode:screen;pointer-events:none} /* الشعار بخلفية بيضاء: يُعكس ويُدمج فتختفي الخلفية ويبقى رسمه باهتاً */
+.hero.sub .wm{width:230px;height:230px;top:10px;left:60px}
+.hero .wrap{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.pill-g{font-size:13px;font-weight:600;color:#E3CF9C;border:1px solid rgba(227,207,156,.35);border-radius:999px;padding:4px 14px}
+.hero h1{margin:0;font-size:50px;line-height:1.25;font-weight:700;color:#fff;letter-spacing:-.01em;text-wrap:balance}
+.hero.sub h1{font-size:42px;line-height:1.3}
+.hero p{margin:0;font-size:18px;color:#C5D8CF;max-width:620px}
+.hero.sub p{font-size:17px}
+.crumb{display:flex;align-items:center;gap:8px;font-size:14px;color:#A9C2B6;flex-wrap:wrap}
+.crumb a{color:#E3CF9C;font-weight:600}
+.trow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+
+.search{position:relative;width:100%;max-width:640px;margin-top:10px}
+.sbox{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:8px;box-shadow:0 18px 40px -18px rgba(0,0,0,.45)}
+.sbox svg{margin-right:10px;flex-shrink:0}
+.sbox input{flex:1;min-width:0;border:0;outline:0;font-size:16px;color:#10201A;background:transparent;height:44px}
+.sbox input::placeholder{color:#7A8781}
+.sbox button{background:#0F6B4F;color:#fff;font-weight:600;font-size:15px;padding:0 22px;height:46px;border:0;border-radius:10px;cursor:pointer}
+.sbox button:hover{background:#0B4A37}
+.sres{position:absolute;inset-inline:0;top:calc(100% + 8px);z-index:5;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:0 24px 48px -20px rgba(0,0,0,.35);padding:6px;list-style:none;margin:0;max-height:380px;overflow:auto}
+.sres a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:var(--ink)}
+.sres a:hover,.sres a.on{background:var(--green-t)}
+.sres b{font-weight:600;font-size:15px}
+.sres small{display:block;color:var(--muted);font-size:12.5px}
+.sres .none{padding:12px;color:var(--muted);font-size:14px}
+
+main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;flex-direction:column;gap:44px}
+.hero.sub + main.body{margin-top:-84px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:28px;align-items:start}
+
+/* بطاقة الإدارة */
+.adm{background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;display:flex;flex-direction:column;color:var(--ink);box-shadow:var(--shadow);transition:transform .2s ease,box-shadow .2s ease}
+.adm:hover{transform:translateY(-3px);box-shadow:0 32px 56px -28px rgba(8,53,39,.35)}
+.adm .band{position:relative;height:150px;display:flex;align-items:center;padding:0 32px;background:var(--green-t);background-image:repeating-linear-gradient(135deg,rgba(11,74,55,.05) 0 2px,transparent 2px 14px)}
+.adm.gold .band{background-color:var(--gold-t);background-image:repeating-linear-gradient(135deg,rgba(156,122,53,.07) 0 2px,transparent 2px 14px)}
+.adm .disc{width:92px;height:92px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--green-d);box-shadow:0 10px 24px -10px rgba(8,53,39,.35)}
+.adm.gold .disc{color:var(--gold)}
+.adm .badge{position:absolute;left:28px;top:24px;font-size:13px;font-weight:600;color:var(--green-d);background:var(--surface);border-radius:999px;padding:4px 12px}
+.adm.gold .badge{color:var(--gold)}
+.adm .in{padding:28px 32px 32px;display:flex;flex-direction:column;gap:18px;flex:1}
+.adm h2{margin:0;font-size:28px;font-weight:700;line-height:1.35}
+.adm p{margin:4px 0 0;color:var(--muted);font-size:15.5px}
+.adm .pts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;padding-top:18px;border-top:1px solid var(--soft-line)}
+.adm .pts span{display:flex;align-items:center;gap:10px;font-size:14.5px}
+.adm .pts i{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.adm.gold .pts i{background:var(--gold)}
+.cta{margin-top:auto;display:flex;align-items:center;justify-content:space-between;background:var(--green);color:#fff;font-weight:600;font-size:15.5px;padding:0 20px;height:52px;border-radius:12px}
+.cta.dark{background:var(--cta2);color:var(--cta2-ink)}
+
+/* أقسام */
+.sect{display:flex;flex-direction:column;gap:16px}
+.sh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sh h2{margin:0;font-size:20px;font-weight:700}
+.sh span{font-size:14px;color:var(--muted)}
+.qa{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;color:var(--ink)}
+.qa:hover{border-color:var(--green)}
+.tile{width:48px;height:48px;border-radius:14px;background:var(--green-t);color:var(--green-d);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tile.gold{background:var(--gold-t);color:var(--gold)}
+.tile.sm{width:46px;height:46px;border-radius:13px}
+.tx{display:flex;flex-direction:column;flex:1;min-width:0}
+.tx b{font-weight:600;font-size:16px}
+.tx small{font-size:13.5px;color:var(--muted)}
+.chev{color:var(--faint);flex-shrink:0}
+
+/* لوحة بيضاء بصفوف */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.ph{display:flex;align-items:center;gap:16px;padding:26px 28px;background:var(--surface-2);border-bottom:1px solid var(--soft-line)}
+.ph .big{width:56px;height:56px;border-radius:16px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ph .big.gold{background:var(--gold)}
+.ph .big.gt{background:var(--gold-t);color:var(--gold);width:64px;height:64px;border-radius:18px}
+.ph h2{margin:0;font-size:22px;font-weight:700;line-height:1.4}
+.ph .kick{font-size:13px;font-weight:600;color:var(--gold)}
+.ph .kick + h2{font-size:26px}
+.auth{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--bg);border-radius:999px;padding:5px 11px;white-space:nowrap}
+.auth.on{color:var(--ok);background:var(--ok-t)}
+.auth i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.row{display:flex;align-items:center;gap:16px;padding:20px 28px;border-top:1px solid var(--soft-line);color:var(--ink)}
+.row:first-of-type{border-top:0}
+.ph + .row{border-top:0}
+.row:hover{background:var(--surface-2)}
+.row .go{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.row:hover .go{background:var(--green);border-color:var(--green);color:#fff}
+.pfoot{padding:20px 28px 28px;border-top:1px solid var(--soft-line)}
+
+/* جهات إدارة العمليات */
+.blk{padding:22px 28px 26px;border-top:1px solid var(--soft-line)}
+.blk:first-of-type{border-top:0}
+.blk h3{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
+.blk h3 .n{font-size:12px;background:var(--bg);border-radius:999px;padding:0 9px;color:var(--muted)}
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.uc{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;color:var(--ink);background:var(--surface)}
+.uc:hover{border-color:var(--green);background:var(--surface-2)}
+.uc .tile{width:40px;height:40px;border-radius:11px}
+.uc b{font-weight:600;font-size:15px;line-height:1.4}
+.uc .st{font-size:12px;color:var(--ok);font-weight:600;display:flex;align-items:center;gap:5px}
+.uc .st i{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.ft{border-top:1px solid var(--line);background:var(--surface)}
+.ft .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));font-size:13px;color:var(--faint)}
+.none{color:var(--muted)}
+
+@media (max-width:700px){
+  .wrap{padding-inline:16px}
+  .hd .org b{font-size:14.5px}.hd .date{display:none}.olbl{display:none}.obtn{padding:0 13px}
+  .hero{padding-block:32px 104px}.hero.sub{padding-block:28px 96px}
+  .hero h1{font-size:30px}.hero.sub h1{font-size:28px}.hero p,.hero.sub p{font-size:15px}
+  .hero .wm{width:180px;height:180px;left:-30px}
+  .sbox{padding:6px}.sbox button{padding:0 14px}
+  main.body,.hero.sub + main.body{margin-top:-64px;gap:28px;padding-bottom:40px}
+  .grid2{gap:18px}
+  .adm .band{height:104px;padding:0 20px}.adm .disc{width:68px;height:68px}.adm .disc svg{width:32px;height:32px}
+  .adm .badge{left:16px;top:16px;font-size:12px}
+  .adm .in{padding:18px 20px 20px;gap:14px}.adm h2{font-size:22px}.adm p{font-size:14px}
+  .adm .pts{display:none}
+  .cta{height:48px;font-size:15px}
+  .ph{padding:18px 20px}.row{padding:16px 20px}.blk{padding:18px 20px}.pfoot{padding:16px 20px 20px}
+  .ph h2{font-size:19px}.ph .kick + h2{font-size:21px}
+  .units{grid-template-columns:1fr 1fr}.uc{padding:10px;gap:10px}.uc .tile{display:none}
+}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
-
-/* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
-.unit{border:2px solid var(--edge)!important;background:var(--surface)!important}
-.unit:hover{border-color:var(--accent)!important}
-
-/* الشُّعب: خانات منبثقة تُفتح بالضغط وتظهر تحتها المراكز */
-.tree{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:8px}
-.tree>.units{margin-top:0}
-a.gbar{text-decoration:none}
-.grp{width:100%}
-.gbar{all:unset;box-sizing:border-box;text-align:start;cursor:pointer;width:100%;display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:14px;border:2px solid var(--edge);background:var(--surface);color:var(--text);transition:border-color .15s,box-shadow .15s}
-.gbar:hover{border-color:var(--accent);box-shadow:0 8px 22px rgba(14,61,44,.14)}
-.gbar:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.gbar .ic{width:40px;height:40px;flex-shrink:0;border-radius:11px;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center}
-.gbar .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.gbar b{font-size:17px;font-weight:800}
-.gbar small{font-size:13px;color:var(--muted)}
-.gbar .go{flex-shrink:0;font-size:13px;font-weight:700;color:var(--accent)}
-.gbar .chev{flex-shrink:0;transition:transform .2s;color:var(--accent)}
-.gbar[aria-expanded="true"] .chev{transform:rotate(180deg)}
-.gbar[aria-expanded="true"]{border-color:var(--accent);border-end-start-radius:0;border-end-end-radius:0}
-.gbody{border:2px solid var(--accent);border-top:0;border-radius:0 0 14px 14px;padding:14px;background:var(--surface-2)}
-.gbody[hidden]{display:none}
-.gbody .units{margin-top:0}
-.unit.soon{cursor:default;border-style:dashed!important;opacity:.8}
-.unit.soon:hover{transform:none;box-shadow:none;border-color:var(--edge)!important}
-.unit .soonb{margin-top:auto;font-size:12.5px;font-weight:700;color:var(--muted)}
 </style>
 </head>
 <body>
-<main class="page">
-  <div class="band">سرّي — محظور التداول — مقصور استخدامه على منسوبي الدفاع المدني</div>
-
-  <section class="card wide" id="choose">
-    <div class="logo" id="logo2"></div>
-    <h1 class="big">بوابة الإدارة العامة للدفاع المدني في حائل</h1>
-    <div class="sub">اختر الإدارة ثم الجهة</div>
-    <div class="tree" id="units" aria-label="الجهات"></div>
-    <button type="button" class="out" id="out" hidden>تسجيل الخروج من جميع الجهات</button>
-  </section>
-</main>
+<div class="cls">سرّي — محظور التداول — مقصور استخدامه على منسوبي الدفاع المدني</div>
+<header class="hd">
+  <div class="wrap">
+    <span class="logo" id="logo"></span>
+    <div class="org"><b>المديرية العامة للدفاع المدني</b><small>منطقة حائل</small></div>
+    <span class="sp"></span>
+    <span class="date" id="date"></span>
+    <button type="button" class="obtn" id="out" aria-label="تسجيل الخروج من جميع الجهات" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17-5-5 5-5"/><path d="M5 12h12"/></svg><span class="olbl">تسجيل الخروج من جميع الجهات</span></button>
+  </div>
+</header>
+<div id="view"></div>
+<footer class="ft"><div class="wrap"><span>المديرية العامة للدفاع المدني — منطقة حائل</span><span>بوابة الإدارات والأقسام</span></div></footer>
 
 <script>/*CONFIG*/</script>
 <script>
@@ -170,99 +211,136 @@ a.gbar{text-decoration:none}
   const esc = (s) => String(s || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const ss = {
     get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
-    set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} },
     del: (k) => { try { sessionStorage.removeItem(k); } catch (e) {} },
   };
-  const shield = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0E3D2C" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/></svg>';
-  const logo = cfg.logo ? `<img src="${esc(cfg.logo)}" alt="شعار الدفاع المدني">` : shield;
-  $('logo2').innerHTML = logo;
-  const icons = {
-    isnad: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>',
-    control: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/><path d="M19.5 21a4 4 0 0 1-4 2H13"/></svg>',
-    other: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>',
+  if (cfg.logo) $('logo').innerHTML = `<img src="${esc(cfg.logo)}" alt="شعار الدفاع المدني">`;
+  // التاريخ الهجري بالأرقام الإنجليزية: السنة يسار ثم الشهر ثم اليوم يمين
+  const hijri = () => { try { const o = {}; new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Riyadh' }).formatToParts(new Date()).forEach((p) => (o[p.type] = p.value)); return o.year + '/' + o.month + '/' + o.day; } catch (e) { return ''; } };
+  try { $('date').textContent = new Intl.DateTimeFormat('ar-SA', { weekday: 'long', timeZone: 'Asia/Riyadh' }).format(new Date()) + ' ' + hijri(); } catch (e) { $('date').textContent = hijri(); }
+
+  // ---------- الأيقونات ----------
+  const sv = (d, w = 22, sw = 1.8) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const P = {
+    flame: '<path d="M12 2.5c2.2 3.2 6.2 5.4 6.2 10.3a6.2 6.2 0 0 1-12.4 0c0-3.1 2-5.2 3.2-6.3 0 2 1 3.3 2.2 3.3 0-3.1 0-5.3.8-7.3Z"/>',
+    shield: '<path d="M12 2.5 4.5 5.3v5.9c0 4.8 3.2 8.4 7.5 9.3 4.3-.9 7.5-4.5 7.5-9.3V5.3L12 2.5Z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/>',
+    chart: '<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/>',
+    truck: '<rect x="1.5" y="7" width="14" height="10.5" rx="1.5"/><path d="M15.5 10h3.2l3 3v4.5h-6.2z"/><circle cx="6" cy="19" r="1.8"/><circle cx="17.5" cy="19" r="1.8"/>',
+    doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14.5 2 2 4-4"/>',
+    clip: '<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 14 2 2 4-4"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+    bldg: '<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 10h6"/><path d="M9 14h6"/>',
+    home: '<path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>',
+    head: '<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/>',
+    box: '<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>',
+    up: '<path d="M12 20V4"/><path d="m5 11 7-7 7 7"/>',
+    down: '<path d="M12 4v16"/><path d="m5 13 7 7 7-7"/>',
+    lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
   };
-  // الهيكل: شعبة الجنوب، شعبة الشمال، مركز المواد الخطرة، قسم الدعم والإسناد، ثم المراكز الخارجية (بلا صفحات بعد)
+  const ARROW = sv('<path d="M19 12H5"/><path d="m11 6-6 6 6 6"/>', 20, 2.2);
+  const CHEV = sv('<path d="m15 18-6-6 6-6"/>', 16, 2.2);
+  const SRCH = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7A8781" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
+  const UIC = { isnad: P.truck, control: P.head, hazmat: P.flame, supply: P.box, admaff: P.bldg, techaff: P.truck, hrdiv: P.user };
+
+  // ---------- الهيكل ----------
   const byId = {}; (cfg.units || []).forEach((u) => (byId[u.id] = u));
-  const card = (u) => `<a class="unit" href="${esc(u.id)}.html"><span class="ic">${icons[u.id] || icons.other}</span><b>${esc(u.name)}</b><span class="go">دخول ←</span></a>`;
-  const soon = (n) => `<div class="unit soon" aria-disabled="true"><span class="ic">${icons.other}</span><b>${esc(n)}</b><span class="soonb">قريباً</span></div>`;
-  const CHEV = '<svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
-  const FOLD = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
-  const group = (id, title, sub, inner) => `<div class="grp"><button type="button" class="gbar" data-g="${id}" aria-expanded="false" aria-controls="gb-${id}"><span class="ic">${FOLD}</span><span class="tx"><b>${esc(title)}</b><small>${esc(sub)}</small></span>${CHEV}</button><div class="gbody" id="gb-${id}" hidden><nav class="units" aria-label="${esc(title)}">${inner}</nav></div></div>`;
-  const pick = (ids) => ids.filter((i) => byId[i]).map((i) => card(byId[i])).join('');
-  const south = ['sharaf', 'sinaiya', 'dairi', 'jabal'], north = ['balad', 'muntazah', 'aziziya', 'aja'];
-  // ---------- تنقّل بمستويين: الإدارات ← صفحة الإدارة (أقسام مرتبة + بحث) ----------
-  const ARW = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>';
-  const IC = {
-    chart: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>',
-    ops: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2c2 3 6 5 6 10a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-3 0-5 1-7Z"/></svg>',
-    safety: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>',
-    doc: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
-  };
-  const uc = (id, label) => byId[id] ? `<a class="uc" href="${esc(id)}.html" data-q="${esc(label || byId[id].name)}"><span class="ic">${icons[id] || (id.length > 5 && /^sf/.test(id) ? IC.doc : icons.other)}</span><b>${esc(label || byId[id].name)}</b><span class="arw">${ARW}</span></a>` : '';
-  const block = (title, cards) => { const n = (cards.match(/class="uc"/g) || []).length; return n ? `<section class="blk"><h3>${esc(title)}<span class="cnt">${n}</span></h3><div class="ucs">${cards}</div></section>` : ''; };
-  const sub = (title, cards) => cards ? `<div class="subh">${esc(title)}</div><div class="ucs">${cards}</div>` : '';
-  const many = (ids) => ids.map((i) => uc(i)).join('');
-  const lk = (href, label, ic) => `<a class="uc" href="${esc(href)}" data-q="${esc(label)}"><span class="ic">${ic || IC.doc}</span><b>${esc(label)}</b><span class="arw">${ARW}</span></a>`;
-  const SFN = { sfn: 'قسم السلامة شمال', sfs: 'قسم السلامة جنوب' };
-  const sfView = (k) => (byId[k + 'pat'] ? block('قسم الدوريات', lk(k + 'pat.html#rounds', 'الجولات التفتيشية') + lk(k + 'pat.html#sfstat', 'الإحصائيات', IC.chart) + lk(k + 'pat.html#pfiles', 'ملفات أفراد قسم الدوريات')) : '')
-    + (byId[k + 'lic'] ? block('قسم التراخيص', lk(k + 'lic.html#lfac', 'المنشآت والتراخيص') + lk(k + 'lic.html#sfstat', 'إحصائيات الشعبة', IC.chart) + lk(k + 'lic.html#pfiles', 'ملفات أفراد القسم')) : '');
+  const signed = (id) => ss.get('isnad-auth-' + id) === '1';
+  const SOUTH = ['sharaf', 'sinaiya', 'dairi', 'jabal'], NORTH = ['balad', 'muntazah', 'aziziya', 'aja'], OUTER = ['rawda', 'jubba', 'khatta'];
+  const SPEC = ['hazmat', 'isnad', 'control'], ADMIN = ['supply', 'admaff', 'techaff', 'hrdiv'];
+  const OPS = [...SOUTH, ...NORTH, ...OUTER, ...SPEC, ...ADMIN].filter((i) => byId[i]);
+  const SF = { sfn: { name: 'قسم السلامة شمال', kick: 'القطاع الشمالي', dir: P.up }, sfs: { name: 'قسم السلامة جنوب', kick: 'القطاع الجنوبي', dir: P.down } };
+  const SFP = { pat: { name: 'قسم الدوريات', sub: 'الكشف الميداني على المنشآت', ic: P.truck, pages: [['rounds', 'الجولات التفتيشية', 'المنشآت وتصنيفها، وسجل الجولات بالصور', P.clip], ['sfstat', 'الإحصائيات', 'الجولات والمخالفات وما تم تلافيه في قسم الدوريات', P.chart], ['pfiles', 'ملفات أفراد قسم الدوريات', 'بيانات الأفراد ومستنداتهم', P.user]] },
+    lic: { name: 'قسم التراخيص', sub: 'ملف لكل منشأة ووضعها', ic: P.doc, gold: true, pages: [['lfac', 'المنشآت والتراخيص', 'السجل والمستندات والمخالفات، ووضع المنشأة', P.bldg], ['sfstat', 'إحصائيات الشعبة', 'قسم الدوريات وقسم التراخيص معًا', P.chart], ['pfiles', 'ملفات أفراد القسم', 'بيانات الأفراد ومستنداتهم', P.user]] } };
+  const sfIds = Object.keys(SF).flatMap((k) => ['pat', 'lic'].map((s) => k + s)).filter((i) => byId[i]);
+  const DASH = cfg.manager ? [['manager.html', cfg.manager.name, 'جاهزية المراكز وإحصائيات السلامة'], ['ops.html', 'لوحة مدير إدارة العمليات', 'نفس اللوحة برمز إدارة العمليات']] : [];
+
+  // ---------- البحث: الجهات وصفحات أقسام السلامة ولوحات القيادة والإدارات ----------
+  const norm = (s) => String(s || '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[ًٌٍَُِّْـ]/g, '').toLowerCase().trim();
+  const groupOf = (id) => (SOUTH.includes(id) ? 'مراكز شعبة الجنوب' : NORTH.includes(id) ? 'مراكز شعبة الشمال' : OUTER.includes(id) ? 'المراكز الخارجية' : SPEC.includes(id) ? 'الأقسام المتخصصة' : 'الأقسام الإدارية');
+  const INDEX = [
+    { t: 'إدارة العمليات', s: 'المراكز والأقسام ولوحات القيادة', h: '#ops', ic: P.flame },
+    { t: 'إدارة السلامة', s: 'قسم السلامة شمال وجنوب', h: '#safety', ic: P.shield, gold: true },
+    ...Object.entries(SF).map(([k, b]) => ({ t: b.name, s: 'إدارة السلامة', h: '#' + k, ic: b.dir, gold: true })),
+    ...DASH.map(([h, t, s]) => ({ t, s, h, ic: P.chart })),
+    ...OPS.map((id) => ({ t: byId[id].name, s: groupOf(id), h: id + '.html', ic: UIC[id] || P.home })),
+    ...Object.entries(SF).flatMap(([k, b]) => Object.entries(SFP).filter(([s]) => byId[k + s]).flatMap(([s, d]) => [{ t: d.name, s: b.name, h: k + s + '.html', ic: d.ic, gold: true }, ...d.pages.map(([v, t, , ic]) => ({ t, s: d.name + ' — ' + b.name, h: k + s + '.html#' + v, ic, gold: true }))])),
+  ];
+  const search = (q) => { const w = norm(q).split(/\s+/).filter(Boolean); if (!w.length) return []; return INDEX.filter((x) => { const hay = norm(x.t + ' ' + x.s); return w.every((t) => hay.includes(t)); }).slice(0, 8); };
+  const searchBox = () => `<div class="search" role="search"><form class="sbox" id="sform"><span aria-hidden="true">${SRCH}</span><label class="vh" for="q">بحث</label><input id="q" type="search" placeholder="ابحث عن مركز أو قسم أو صفحة، مثل: الجولات شمال" autocomplete="off" aria-controls="sres"><button type="submit">بحث</button></form><ul class="sres" id="sres" hidden></ul></div>`;
+  function wireSearch() {
+    const q = $('q'), box = $('sres'); if (!q) return; let sel = 0, res = [];
+    const paint = () => { if (!q.value.trim()) { box.hidden = true; return; } box.hidden = false; box.innerHTML = res.length ? res.map((x, i) => `<li><a href="${esc(x.h)}" class="${i === sel ? 'on' : ''}"><span class="tile sm${x.gold ? ' gold' : ''}" style="width:38px;height:38px;border-radius:10px">${sv(x.ic, 18)}</span><span class="tx"><b>${esc(x.t)}</b><small>${esc(x.s)}</small></span></a></li>`).join('') : '<li class="none">لا توجد نتائج مطابقة.</li>'; };
+    q.addEventListener('input', () => { res = search(q.value); sel = 0; paint(); });
+    q.addEventListener('keydown', (e) => { if (e.key === 'ArrowDown' && res.length) { e.preventDefault(); sel = (sel + 1) % res.length; paint(); } else if (e.key === 'ArrowUp' && res.length) { e.preventDefault(); sel = (sel - 1 + res.length) % res.length; paint(); } else if (e.key === 'Escape') { box.hidden = true; } });
+    $('sform').addEventListener('submit', (e) => { e.preventDefault(); res = search(q.value); if (res[0]) location.href = res[sel] ? res[sel].h : res[0].h; else paint(); });
+    document.addEventListener('click', (e) => { if (!e.target.closest('.search')) box.hidden = true; });
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === '/' && !/input|textarea/i.test((document.activeElement || {}).tagName || '') && $('q')) { e.preventDefault(); $('q').focus(); } });
+
+  // ---------- أجزاء الصفحة ----------
+  const hero = (inner, sub) => `<section class="hero${sub ? ' sub' : ''}"><span class="ring r1"></span><span class="ring r2"></span>${cfg.logo ? `<img class="wm" src="${esc(cfg.logo)}" alt="">` : ''}<div class="wrap">${inner}</div></section>`;
+  const crumb = (items) => `<nav class="crumb" aria-label="المسار">${items.map(([t, h]) => (h ? `<a href="${h}">${esc(t)}</a>` : `<span>${esc(t)}</span>`)).join('<span>/</span>')}</nav>`;
+  const authChip = (id) => (signed(id) ? '<span class="auth on"><i></i>مسجّل الدخول</span>' : `<span class="auth">${sv(P.lock, 13, 2.2)}دخول مستقل</span>`);
+  const qa = (h, t, s, ic) => `<a class="qa" href="${esc(h)}"><span class="tile">${sv(ic)}</span><span class="tx"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="chev">${CHEV}</span></a>`;
+  const row = (h, t, s, ic, gold) => `<a class="row" href="${esc(h)}"><span class="tile sm${gold ? ' gold' : ''}">${sv(ic)}</span><span class="tx"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="go">${CHEV}</span></a>`;
+  const uc = (id) => (byId[id] ? `<a class="uc" href="${esc(id)}.html"><span class="tile">${sv(UIC[id] || P.home, 20)}</span><span class="tx"><b>${esc(byId[id].name)}</b>${signed(id) ? '<span class="st"><i></i>مسجّل الدخول</span>' : ''}</span><span class="chev">${CHEV}</span></a>` : '');
+  const grid = (ids) => `<div class="blk"><div class="units">${ids.map(uc).join('')}</div></div>`;
+  const blk = (title, ids) => { const c = ids.filter((i) => byId[i]); return c.length ? `<div class="blk"><h3>${esc(title)}<span class="n">${c.length}</span></h3><div class="units">${c.map(uc).join('')}</div></div>` : ''; };
+
   const VIEWS = {
-    ops: () => {
-      const dash = cfg.manager ? `<section class="blk"><h3>لوحات القيادة</h3><div class="dashes">
-        <a class="dsh" href="manager.html"><span class="ic">${IC.chart}</span><span class="tx"><b>${esc(cfg.manager.name)}</b><small>جاهزية كل المراكز والأقسام</small></span><span class="arw">${ARW}</span></a>
-        <a class="dsh" href="ops.html"><span class="ic">${IC.chart}</span><span class="tx"><b>لوحة مدير إدارة العمليات</b><small>جاهزية كل المراكز والأقسام</small></span><span class="arw">${ARW}</span></a></div></section>` : '';
-      const centers = `<section class="blk"><h3>المراكز<span class="cnt">${[...south, ...north, 'rawda', 'jubba', 'khatta'].filter((i) => byId[i]).length}</span></h3>${sub('شعبة الجنوب', many(south))}${sub('شعبة الشمال', many(north))}${sub('المراكز الخارجية', many(['rawda', 'jubba', 'khatta']))}</section>`;
-      return dash + centers + block('الأقسام المتخصصة', many(['hazmat', 'isnad', 'control'])) + block('الأقسام الإدارية', many(['supply', 'admaff', 'techaff', 'hrdiv']));
-    },
-    // إدارة السلامة: قسم السلامة شمال وجنوب، وبداخل كل منهما قسم الدوريات وقسم التراخيص بقوائمهما (كل قسم بدخوله)
-    safety: () => `<section class="blk"><div class="ucs">${['sfn', 'sfs'].map((k) => lk('#' + k, SFN[k], IC.safety)).join('')}</div></section>`,
-    sfn: () => sfView('sfn'),
-    sfs: () => sfView('sfs'),
+    '': () => hero(`<span class="pill-g">البوابة الموحدة</span><h1>بوابة الإدارات والأقسام</h1><p>الوصول إلى صفحات الإدارات والمراكز والأقسام من مكان واحد. يطلب كل قسم بيانات الدخول الخاصة به.</p>${searchBox()}`)
+      + `<main class="body wrap"><div class="grid2">
+        <a class="adm" href="#ops"><div class="band"><span class="disc">${sv(P.flame, 44, 1.6)}</span><span class="badge">${OPS.length} جهة</span></div>
+          <div class="in"><div><h2>إدارة العمليات</h2><p>المراكز والأقسام المتخصصة والإدارية، ولوحات القيادة.</p></div>
+          <div class="pts"><span><i></i>مراكز شعبة الجنوب</span><span><i></i>مراكز شعبة الشمال</span><span><i></i>المراكز الخارجية</span><span><i></i>الأقسام المتخصصة والإدارية</span></div>
+          <span class="cta">الدخول إلى إدارة العمليات${ARROW}</span></div></a>
+        <a class="adm gold" href="#safety"><div class="band"><span class="disc">${sv(P.shield, 44, 1.6)}</span><span class="badge">${sfIds.length} أقسام</span></div>
+          <div class="in"><div><h2>إدارة السلامة</h2><p>الجولات التفتيشية على المنشآت، والتراخيص، والمخالفات.</p></div>
+          <div class="pts"><span><i></i>قسم السلامة شمال</span><span><i></i>قسم السلامة جنوب</span><span><i></i>قسم الدوريات</span><span><i></i>قسم التراخيص</span></div>
+          <span class="cta dark">الدخول إلى إدارة السلامة${ARROW}</span></div></a>
+      </div>${DASH.length ? `<section class="sect"><div class="sh"><h2>لوحات القيادة</h2><span>ملخص الجاهزية والإحصائيات لمدراء الإدارات</span></div><div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div></section>` : ''}</main>`,
+
+    ops: () => hero(`${crumb([['البوابة', '#'], ['إدارة العمليات']])}<h1>إدارة العمليات</h1><p>المراكز والأقسام ولوحات القيادة. لكل جهة دخولها الخاص.</p>${searchBox()}`, true)
+      + `<main class="body wrap">
+        ${DASH.length ? `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div>` : ''}
+        <section class="panel"><div class="ph"><span class="big">${sv(P.home, 26)}</span><div class="tx"><h2>المراكز</h2><small>${[...SOUTH, ...NORTH, ...OUTER].filter((i) => byId[i]).length} مركزًا</small></div></div>${blk('مراكز شعبة الجنوب', SOUTH)}${blk('مراكز شعبة الشمال', NORTH)}${blk('المراكز الخارجية', OUTER)}</section>
+        <div class="grid2">
+          <section class="panel"><div class="ph"><span class="big">${sv(P.flame, 26)}</span><div class="tx"><h2>الأقسام المتخصصة</h2></div></div>${grid(SPEC)}</section>
+          <section class="panel"><div class="ph"><span class="big">${sv(P.bldg, 26)}</span><div class="tx"><h2>الأقسام الإدارية</h2></div></div>${grid(ADMIN)}</section>
+        </div></main>`,
+
+    safety: () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة']])}<h1>إدارة السلامة</h1><p>اختر القسم. في كل قسم: قسم الدوريات وقسم التراخيص، ولكل واحد منهما دخوله الخاص.</p>`, true)
+      + `<main class="body wrap"><div class="grid2">${Object.entries(SF).map(([k, b]) => `<section class="panel"><div class="ph" style="background:var(--surface)"><span class="big gt">${sv(b.dir, 30, 2)}</span><div class="tx"><span class="kick">${esc(b.kick)}</span><h2>${esc(b.name)}</h2></div></div>
+        ${Object.entries(SFP).filter(([s]) => byId[k + s]).map(([s, d]) => row('#' + k, d.name, d.pages.map((p) => p[1].replace(/ أفراد.*/, ' الأفراد')).join(' · '), d.ic)).join('')}
+        <div class="pfoot"><a class="cta" href="#${k}">الدخول إلى ${esc(b.name)}${ARROW}</a></div></section>`).join('')}</div></main>`,
   };
-  const TITLES = { ops: ['إدارة العمليات', 'المراكز والأقسام ولوحات القيادة'], safety: ['إدارة السلامة', 'قسم السلامة شمال · قسم السلامة جنوب'], sfn: ['قسم السلامة شمال', 'قسم الدوريات · قسم التراخيص'], sfs: ['قسم السلامة جنوب', 'قسم الدوريات · قسم التراخيص'] };
-  const PARENT = { sfn: ['#safety', 'إدارة السلامة'], sfs: ['#safety', 'إدارة السلامة'] };
-  const home = () => `<div class="admins">
-      <a class="adm" href="#ops"><span class="ic">${IC.ops}</span><b>إدارة العمليات</b><small>11 مركزًا · 3 أقسام متخصصة · 4 أقسام إدارية · لوحات القيادة</small><span class="go">فتح ${ARW}</span></a>
-      <a class="adm" href="#safety"><span class="ic">${IC.safety}</span><b>إدارة السلامة</b><small>قسم السلامة شمال · قسم السلامة جنوب</small><span class="go">فتح ${ARW}</span></a>
-    </div>`;
+  Object.keys(SF).forEach((k) => {
+    const b = SF[k];
+    VIEWS[k] = () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة', '#safety'], [b.name]])}<div class="trow"><h1>${esc(b.name)}</h1><span class="pill-g">${esc(b.kick)}</span></div><p>اختر الصفحة، وتفتح لك مباشرة بعد إدخال بيانات دخول القسم.</p>`, true)
+      + `<main class="body wrap"><div class="grid2">${Object.entries(SFP).filter(([s]) => byId[k + s]).map(([s, d]) => `<section class="panel"><div class="ph"><span class="big${d.gold ? ' gold' : ''}">${sv(d.ic, 26)}</span><div class="tx"><h2>${esc(d.name)}</h2><small>${esc(d.sub)}</small></div>${authChip(k + s)}</div>
+        ${d.pages.map(([v, t, sub, ic]) => row(k + s + '.html#' + v, t, sub, ic, d.gold)).join('')}</section>`).join('')}</div></main>`;
+  });
+
   const draw = () => {
     const v = (location.hash || '').slice(1);
-    if (!VIEWS[v]) { $('units').innerHTML = home(); return; }
-    $('units').innerHTML = `<div class="vhead"><a class="back" href="${(PARENT[v] || ['#'])[0]}">→ ${(PARENT[v] || [0, 'الإدارات'])[1]}</a><div class="vt"><h2>${TITLES[v][0]}</h2><small>${TITLES[v][1]}</small></div>
-      <label class="srch"><span class="vh">بحث</span><input id="uq" type="search" placeholder="ابحث عن مركز أو قسم…" autocomplete="off"></label></div><div id="vbody">${VIEWS[v]()}</div><p class="none" id="nores" hidden>لا توجد نتائج مطابقة.</p>`;
-    const q = $('uq');
-    q.addEventListener('input', () => {
-      const t = q.value.trim().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه');
-      let shown = 0;
-      document.querySelectorAll('#vbody .uc, #vbody .dsh').forEach((a) => { const ok = !t || (a.dataset.q || a.textContent).replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').includes(t); a.hidden = !ok; if (ok) shown++; });
-      document.querySelectorAll('#vbody .ucs, #vbody .dashes').forEach((g) => { g.hidden = ![...g.children].some((c) => !c.hidden); const h = g.previousElementSibling; if (h && h.classList.contains('subh')) h.hidden = g.hidden; });
-      document.querySelectorAll('#vbody .blk').forEach((b) => { b.hidden = !b.querySelector('.uc:not([hidden]), .dsh:not([hidden])'); });
-      $('nores').hidden = shown > 0;
-    });
+    $('view').innerHTML = (VIEWS[v] || VIEWS[''])();
+    wireSearch();
   };
   window.addEventListener('hashchange', () => { draw(); window.scrollTo(0, 0); });
   draw();
 
-
-  // البوابة بلا كلمة مرور؛ كل جهة تطلب كلمتها عند دخولها. زر الخروج يظهر إن كانت أي جهة مفتوحة
+  // البوابة بلا كلمة مرور؛ كل جهة تطلب بيانات دخولها. زر الخروج يظهر إن كانت أي جهة مفتوحة
   const authKeys = () => {
     const out = [];
-    try {
-      for (let i = 0; i < sessionStorage.length; i++) if (/^isnad-auth-/.test(sessionStorage.key(i))) out.push(sessionStorage.key(i));
-    } catch (e) {}
+    try { for (let i = 0; i < sessionStorage.length; i++) if (/^isnad-auth-/.test(sessionStorage.key(i))) out.push(sessionStorage.key(i)); } catch (e) {}
     return out;
   };
-  function show() {
-    $('out').hidden = !authKeys().length;
-  }
-
+  const show = () => { $('out').hidden = !authKeys().length; };
   $('out').addEventListener('click', () => {
     authKeys().forEach(ss.del);
     ss.del('isnad-entered');
     if (cfg.mode === 'server') fetch('logout', { method: 'POST' });
-    show();
+    show(); draw();
   });
-
   show();
 })();
 </script>
