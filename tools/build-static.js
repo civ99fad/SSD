@@ -28,6 +28,7 @@ fs.writeFileSync(path.join(OUT, 'index.html'), guard(site.portalHtml({ mode: 'st
 fs.copyFileSync(path.join(site.SITE_DIR, 'shim.js'), path.join(OUT, 'shim.js'));
 fs.writeFileSync(path.join(OUT, 'manager.html'), guard(site.managerHtml({ mode: 'static', hash: site.passwordHash(site.password(site.MANAGER.id)) })));
 fs.writeFileSync(path.join(OUT, 'ops.html'), guard(site.managerHtml({ mode: 'static', hash: site.passwordHash(site.password(site.MANAGER.id)), title: 'لوحة مدير إدارة العمليات' })));
+fs.writeFileSync(path.join(OUT, 'safety.html'), guard(site.managerHtml({ mode: 'static', hash: site.passwordHash(site.password(site.MANAGER.id)), title: 'لوحة مدير إدارة السلامة', only: 'safety' })));
 
 const report = [];
 for (const [unit, u] of Object.entries(site.UNITS)) {

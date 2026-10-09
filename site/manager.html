@@ -239,7 +239,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   <form class="gcard" id="gform">
     <div class="logo" data-logo></div>
     <h1>لوحة مدير الإدارة العامة</h1>
-    <div class="sub">جاهزية المراكز والأقسام في صفحة واحدة</div>
+    <div class="sub" id="gsub">جاهزية المراكز والأقسام في صفحة واحدة</div>
     <div class="fld" id="usrf" hidden>
       <label for="usr">اسم المستخدم</label>
       <input id="usr" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="اسم المستخدم">
@@ -376,7 +376,10 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 
   /* ---------- جلب البيانات ---------- */
   let R = [], loadedAt = 0, busy = false;
-  const S = { sort: ls.get('isnad-mgr-sort') || 'order', show: ls.get('isnad-mgr-show') || 'all' };
+  // لوحة مدير إدارة السلامة (safety.html): نفس اللوحة مقصورة على إحصائيات السلامة
+  const ONLY = cfg.only || '';
+  const S = { sort: ls.get('isnad-mgr-sort') || 'order', show: ls.get('isnad-mgr-show') || 'all', mode: ONLY };
+  if (ONLY === 'safety') $('gsub').textContent = 'إحصائيات السلامة في صفحة واحدة';
   async function load() {
     if (busy) return; busy = true;
     const sfP = loadSafety().catch(() => {});
@@ -447,7 +450,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 
   // أعلى اللوحة: زر «الرئيسية» خارج شاشة الاختيار، وأزرار المراكز (الإحصائية الربعية ونسخ الملخص) في قسم المراكز فقط
   function syncTop() {
-    $('homeBtn').hidden = !S.mode && !S.circ;
+    $('homeBtn').hidden = ONLY ? !S.circ : !S.mode && !S.circ;
     const home = !S.mode && !S.circ; document.body.classList.toggle('home', home); $('hhero').hidden = !home;
     $('hsub').textContent = hijri() + ' · ملخص سريع لكل قسم، واضغط للدخول إلى التفاصيل.';
     document.querySelectorAll('[data-only]').forEach((b) => (b.hidden = S.mode !== b.dataset.only || !!S.circ));
@@ -583,7 +586,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
       <div class="kpi"><span class="kt">تراخيص منتهية</span><span class="kv ${T.exp ? 'c-bad' : ''}">${arD(T.exp)}</span><span class="kd">المستندات المرفوعة ${arD(T.docs)}</span></div>
     </section>`;
     const row = (n, x, cls) => `<tr${cls ? ` class="${cls}"` : ''}><td class="n">${esc(n)}</td><td>${arD(x.pfac)}</td><td>${arD(x.R)}</td><td>${arD(x.pv)}</td><td>${arD(x.pf)}</td><td>${esc(pc(x.pf, x.pv))}</td><td>${arD(x.lfac)}</td><td>${arD(x.lc.ready)}</td><td>${arD(x.lc.proc)}</td><td>${arD(x.lc.docs)}</td><td>${arD(x.lv)}</td><td>${arD(x.lf)}</td><td>${arD(x.exp)}</td></tr>`;
-    const table = `<section class="panel" aria-label="مقارنة الشعبتين"><div class="sh"><h2>مقارنة الشعبتين</h2></div><div class="tw"><table>
+    const table = `<section class="panel" aria-label="مقارنة القسمين"><div class="sh"><h2>مقارنة القسمين</h2></div><div class="tw"><table>
       <thead><tr><th rowspan="2">الشعبة</th><th colspan="5">قسم الدوريات</th><th colspan="7">قسم التراخيص</th></tr><tr><th>المنشآت</th><th>الجولات</th><th>المخالفات</th><th>تم تلافيها</th><th>النسبة</th><th>المنشآت</th><th>جاهزة</th><th>تحت الإجراء</th><th>متطلب مستندات</th><th>المخالفات</th><th>تم تلافيها</th><th>تراخيص منتهية</th></tr></thead>
       <tbody>${X.map((x) => row(x.b.name, x)).join('')}${X.length > 1 ? row('الإجمالي', T, 'tot') : ''}</tbody></table></div></section>`;
     const dl = (L) => `<dl class="ustats">${L.map(([k, v, c]) => `<div><dt>${esc(k)}</dt><dd class="${c || ''}">${v}</dd></div>`).join('')}</dl>`;
@@ -623,7 +626,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
     else if (a === 'copySum') copy(sumText());
     else if (a === 'copyDown') copy(downText());
     else if (a === 'circ') { S.qv = false; openCirc(); }
-    else if (a === 'home') { S.mode = ''; S.circ = false; S.qv = false; render(); window.scrollTo(0, 0); }
+    else if (a === 'home') { S.mode = ONLY; S.circ = false; S.qv = false; render(); window.scrollTo(0, 0); }
     else if (a === 'mode') { S.mode = b.dataset.v; S.circ = false; S.qv = false; render(); window.scrollTo(0, 0); }
     else if (a === 'ctab') { S.ctab = b.dataset.v; render(); }
     else if (a === 'sYear') { S.sy = +b.dataset.v || 0; render(); }
