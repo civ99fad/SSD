@@ -48,6 +48,8 @@ if (fs.existsSync(shared)) fs.cpSync(shared, path.join(OUT, 'shared', 'db', 'fil
 const files = site.blobFiles();
 for (const f of files) fs.copyFileSync(path.join(site.BLOBS_DIR, f), path.join(OUT, 'blobs', f));
 fs.cpSync(path.join(site.SITE_DIR, 'pwa'), path.join(OUT, 'pwa'), { recursive: true });
+// ملفات مرجعية ثابتة (مثل كتيب المواد الخطرة) تُفتح من داخل الصفحات
+if (fs.existsSync(path.join(site.SITE_DIR, 'docs'))) fs.cpSync(path.join(site.SITE_DIR, 'docs'), path.join(OUT, 'docs'), { recursive: true });
 fs.copyFileSync(path.join(site.SITE_DIR, 'pwa', 'manifest.webmanifest'), path.join(OUT, 'manifest.webmanifest'));
 fs.copyFileSync(path.join(site.SITE_DIR, 'pwa', 'sw.js'), path.join(OUT, 'sw.js'));
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
