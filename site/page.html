@@ -937,6 +937,106 @@ th{background:var(--surface-2);border-bottom:1px solid var(--line)}
 .pname:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .duty .dcases .pname{font-weight:700}
 body:has(.modal:not([hidden])) .sitever{display:none}
+/* ---------- مركز التدخل في المواد الخطرة: دليل العلامات التحذيرية والتعرف بالكاميرا ---------- */
+html:not(.u-hz) .hzc{display:none!important}
+.hzsubt{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.8;max-width:760px}
+.hzsearch{max-width:none;flex:none}
+.hzgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.hzcard{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;transition:transform .15s,box-shadow .15s,border-color .15s}
+.hzcard:hover{transform:translateY(-2px);box-shadow:0 18px 36px -24px rgba(7,53,39,.45)}
+.hzcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hzcard.on{border:2px solid var(--accent);box-shadow:0 18px 36px -24px rgba(15,107,79,.6)}
+.hzcard svg{width:96px;height:96px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.15));margin-bottom:4px}
+.hzcard small{font-size:12px;color:var(--muted);font-weight:600}
+.hzcard b{font-size:14.5px;line-height:1.5}
+.hzdivs{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+.hzdivs i{font-style:normal;font-size:11px;background:var(--chip);border-radius:8px;padding:1px 7px;color:var(--muted);font-weight:600}
+.hzdet{background:var(--surface);border:1px solid var(--line);border-radius:22px;overflow:hidden;scroll-margin-top:16px}
+.hzdh{display:flex;gap:22px;align-items:center;padding:22px 26px;background:linear-gradient(135deg,var(--accent-soft),var(--surface) 65%);border-bottom:1px solid var(--line-2)}
+.hzbig{width:140px;height:140px;flex:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.18))}
+.hzn{font-size:13px;font-weight:700;color:var(--accent)}
+.hzdh h2{font-size:26px;margin:2px 0 6px}
+.hzdh p{margin:0;line-height:1.9;max-width:780px}
+.hztags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hztags span{font-size:12.5px;font-weight:600;border-radius:14px;padding:4px 12px;background:var(--accent-soft);color:var(--accent);line-height:1.7}
+.hztags span.r{background:var(--gold-bg);color:var(--gold)}
+.hzsubs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;padding:18px 26px 0}
+.hzsub{display:flex;gap:12px;align-items:center;border:1px solid var(--line-2);border-radius:14px;padding:10px 12px}
+.hzsub svg{width:58px;height:58px;flex:none}
+.hzsub b{display:block;font-size:14px}.hzsub small{color:var(--muted);font-size:12.5px;line-height:1.7}
+.hzsecs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:18px 26px 26px}
+.hzsec{border:1px solid var(--line-2);border-radius:16px;padding:16px;background:var(--surface-2)}
+.hzsec h3{font-size:15px;display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.hzsec h3 i{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-style:normal;font-size:15px}
+.hzsec h3 i.r{background:var(--danger-bg);color:var(--danger)}.hzsec h3 i.g{background:var(--accent-soft);color:var(--accent)}.hzsec h3 i.y{background:var(--gold-bg);color:var(--gold)}
+.hzsec ul{margin:0;padding-inline-start:18px;line-height:1.95;font-size:13.5px}
+.hzppe{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:8px 18px;align-items:center;background:linear-gradient(135deg,#0B4A37,#0F6B4F);color:#fff;border:0}
+.hzppe h3{color:#E3CF9C}.hzppe ul{color:#D8E6DF}
+.hzlv{display:flex;gap:8px}
+.hzlv span{width:54px;height:62px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#A9C6B9}
+.hzlv span small{font-size:10.5px;font-weight:500;color:inherit}
+.hzlv span.on{background:#E3CF9C;color:#0B4A37}
+.hzlvt{grid-column:1/-1;margin:0;font-size:12.5px;color:#BFD6CB}
+.hzkeys{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}
+.hzkp{padding:18px 20px}.hzkp h3{font-size:16px;margin:0 0 10px}
+.hzcode{display:flex;border-radius:12px;overflow:hidden;width:max-content;margin:4px 0 12px;font-weight:800;font-size:20px;direction:ltr}
+.hzcode span{padding:7px 22px}
+.hzkrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;font-size:12.5px;line-height:1.7}
+.hzkrow.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.hzkrow div{border-radius:12px;padding:8px 10px;background:var(--surface-2)}
+.hzkrow b{display:block}
+.hzkrow .r{background:var(--danger-bg)}.hzkrow .y{background:var(--gold-bg)}.hzkrow .g{background:var(--ok-bg)}.hzkrow .o{background:#FDEBD8}
+.hzstar{margin:10px 0 0;font-size:12.5px;color:var(--muted)}
+.hznote{margin:0;font-size:12px;color:var(--faint);line-height:1.8}
+.hzun{all:unset;box-sizing:border-box;cursor:pointer;display:flex;gap:16px;align-items:center;padding:14px 18px;background:var(--surface);border:2px solid var(--accent);border-radius:18px}
+.hzun>svg,.hzunres>svg{width:72px;height:72px;flex:none}
+.hzun small,.hzunres small{display:block;color:var(--muted);font-size:12.5px}.hzun b,.hzunres b{display:block;font-size:18px}.hzun span,.hzunres span{font-size:13px;color:var(--accent);font-weight:600}
+/* التعرف بالكاميرا */
+.hzpick{padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.hzbtns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hzbig2{min-height:64px;font-size:16px;border-radius:16px;cursor:pointer;position:relative}
+.hztip{margin:0;font-size:13px;color:var(--muted);line-height:1.8}
+.hzman{border-top:1px solid var(--line-2);padding-top:12px}
+.hzman label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
+.hzman div{display:flex;gap:8px;max-width:360px}
+.hzman input{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--line);padding:0 14px;font-size:17px;font-weight:700;letter-spacing:2px;background:var(--surface);text-align:center}
+.hzres{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:20px;padding:18px;align-items:start}
+.hzprev img{width:100%;border-radius:14px;display:block;max-height:340px;object-fit:contain;background:var(--surface-2)}
+.hzwait{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:200px;text-align:center}
+.hzwait small{color:var(--muted)}
+.hzspin{width:38px;height:38px;border-radius:50%;border:4px solid var(--accent-soft);border-top-color:var(--accent);animation:hzsp 1s linear infinite}
+@keyframes hzsp{to{transform:rotate(360deg)}}
+.hzout{display:flex;flex-direction:column;gap:12px}
+.hzbest{display:flex;gap:16px;align-items:center;padding:14px;border-radius:16px;background:var(--accent-soft)}
+.hzbest>svg{width:110px;height:110px;flex:none}
+.hzbest small{display:block;color:var(--accent);font-weight:700;font-size:12.5px}
+.hzbest b{display:block;font-size:19px;margin:2px 0}
+.hzbest span{display:block;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.hzunres{display:flex;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:16px}
+.hzunres.none span{color:var(--gold)}
+.hzalt{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.hzalt>small{width:100%;color:var(--muted);font-size:12.5px}
+.hzaltb{all:unset;cursor:pointer;display:flex;gap:8px;align-items:center;padding:6px 10px;border:1px solid var(--line);border-radius:12px;font-size:12.5px;color:var(--muted)}
+.hzaltb>svg{width:40px;height:40px}.hzaltb b{display:block;color:var(--text);font-size:13px}.hzaltb em{font-style:normal;font-weight:700;color:var(--accent)}
+.hzaltb:focus-visible{outline:2px solid var(--accent)}
+.hztxt summary{cursor:pointer;font-size:12.5px;color:var(--muted)}
+.hztxt code{display:block;margin-top:6px;font-size:12px;background:var(--surface-2);padding:8px;border-radius:8px;white-space:pre-wrap;word-break:break-word}
+.hzwarn{margin:0;font-size:12.5px;color:var(--danger);font-weight:600;line-height:1.7}
+@media (max-width:1000px){ .hzsecs{grid-template-columns:1fr} .hzkeys{grid-template-columns:1fr} }
+@media (max-width:640px){
+  .hzdet{scroll-margin-top:96px}
+  .hzgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .hzcard svg{width:78px;height:78px}
+  .hzdh{flex-direction:column;align-items:flex-start;padding:18px}
+  .hzbig{width:110px;height:110px}
+  .hzdh h2{font-size:22px}
+  .hzsubs,.hzsecs{padding-inline:14px}
+  .hzppe{grid-template-columns:1fr}
+  .hzkrow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hzbtns{grid-template-columns:1fr}
+  .hzres{grid-template-columns:1fr}
+  .hzbest{flex-direction:column;align-items:flex-start}
+}
 </style>
 
 <div id="welcome" class="welcome" hidden>
@@ -996,6 +1096,17 @@ body:has(.modal:not([hidden])) .sitever{display:none}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="m3 6 1.5 1.5L7 5"/><path d="m3 12 1.5 1.5L7 11"/><path d="m3 18 1.5 1.5L7 17"/></svg>
         <span>قائمة المهام</span>
       </button>
+      <button type="button" class="navh navt hzc" data-act="navGrp" data-id="hz" id="navg-hz" aria-expanded="true" aria-controls="navb-hz"><span>المواد الخطرة</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div class="navg hzc" id="navb-hz">
+      <button type="button" class="hzc" data-act="nav" data-id="hzGuide" id="nav-hzGuide">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 22 12 12 22 2 12z"/><path d="M12 8v5M12 16h.01"/></svg>
+        <span>دليل العلامات التحذيرية</span>
+      </button>
+      <button type="button" class="hzc" data-act="nav" data-id="hzScan" id="nav-hzScan">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>
+        <span>التعرف على العلامة بالكاميرا</span>
+      </button>
+      </div>
       <button type="button" class="navh navt" data-act="navGrp" data-id="fleet" id="navg-fleet" aria-expanded="true" aria-controls="navb-fleet"><span>الآليات والتجهيزات</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
       <div class="navg" id="navb-fleet">
       <button type="button" data-act="nav" data-id="vehicles" id="nav-vehicles">
@@ -1383,8 +1494,8 @@ function paint(html){
 function render(){
   $('#welcome').hidden = S.entered; $('#shell').hidden = !S.entered;
   if (!S.entered){ renderGateSum(); return; }
-  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : (v.name==='dcenters'||v.name==='dcenter'||(v.name==='dperson'&&S.dpFrom!=='dpfiles')) ? 'dcenters' : (v.name==='dpfiles'||v.name==='dperson') ? 'dpfiles' : (v.name==='dfleet'||v.name==='dveh') ? 'dfleet' : (v.name==='rounds'||v.name==='pfac') ? 'rounds' : (v.name==='lfac'||v.name==='lfile') ? 'lfac' : v.name==='sfstat' ? 'sfstat' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
-  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','rounds','lfac','sfstat','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
+  const v=S.view, sect = v.name==='dash' ? 'dash' : v.name==='tasks' ? 'tasks' : v.name==='bounds' ? 'bounds' : v.name==='sites' ? 'sites' : v.name==='forms' ? 'forms' : (v.name==='vehicle'||v.name==='vehicles') ? 'vehicles' : (v.name==='fault'||v.name==='faults') ? 'faults' : v.name==='staff' ? 'staff' : (v.name==='pfiles'||v.name==='pfile') ? 'pfiles' : v.name==='advisor' ? 'advisor' : v.name==='audit' ? 'audit' : (v.name==='dcenters'||v.name==='dcenter'||(v.name==='dperson'&&S.dpFrom!=='dpfiles')) ? 'dcenters' : (v.name==='dpfiles'||v.name==='dperson') ? 'dpfiles' : (v.name==='dfleet'||v.name==='dveh') ? 'dfleet' : (v.name==='rounds'||v.name==='pfac') ? 'rounds' : (v.name==='lfac'||v.name==='lfile') ? 'lfac' : v.name==='sfstat' ? 'sfstat' : v.name==='circ' ? 'circ' : v.name==='tx' ? 'tx' : v.name==='consum' ? 'consum' : v.name==='equip' ? 'equip' : ['officials','agencies','mapHyd','mapNcm','mapZones','hzGuide','hzScan'].includes(v.name) ? v.name : LIBS[v.name] ? v.name : v.name==='ltype' ? 'profiles' : 'warehouses';
+  for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','rounds','lfac','sfstat','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones','hzGuide','hzScan']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
     if (!DEPT && S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات المنسوبين: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
@@ -1430,6 +1541,8 @@ function render(){
   else if (v.name==='officials') paint(gSearchBar()+viewOfficials());
   else if (v.name==='agencies') paint(gSearchBar()+viewAgencies());
   else if (CCMAPS[v.name]) paint(gSearchBar()+viewCcMap(v.name));
+  else if (v.name==='hzGuide') paint(viewHzGuide());
+  else if (v.name==='hzScan') paint(viewHzScan());
 }
 /* أقسام القائمة الجانبية القابلة للطي: تُحفظ حالتها في المتصفح، ويُفتح القسم تلقائياً إن كانت الصفحة الحالية فيه */
 function navSave(){ try{ const o={}; document.querySelectorAll('.navt').forEach(b=>o[b.dataset.id]=b.getAttribute('aria-expanded')==='true'); localStorage.setItem('isnad-navg', JSON.stringify(o)); }catch(e){} }
@@ -3490,6 +3603,273 @@ document.addEventListener('change', async e => {
     }
   } catch(x){ toast(errMsg(x)); }
 });
+/* ---------- مركز التدخل في المواد الخطرة: دليل العلامات التحذيرية والتعرف على العلامة بالكاميرا ----------
+   المحتوى من كتيب «استراتيجيات وقيادة عمليات التدخل في حوادث المواد الخطرة» (معهد الدفاع المدني)،
+   وما يخص البدلة ومسافات العزل وأرقام الأمم المتحدة مُكمّل من دليل الاستجابة للطوارئ (ERG) */
+const HZ = ((window.ISNAD_CONFIG||{}).unit)==='hazmat'; if (HZ) document.documentElement.classList.add('u-hz');
+// رسم العلامة (معيّن) بألوانها الرسمية
+function hzPlac(code, cls){
+  const P = {
+    '1':['#F58220','#F58220','#111','boom','EXPLOSIVES','1'], '1.4':['#F58220','#F58220','#111','n14','EXPLOSIVES','1'], '1.5':['#F58220','#F58220','#111','n15','BLASTING AGENTS','1'], '1.6':['#F58220','#F58220','#111','n16','EXPLOSIVES','1'],
+    '2.1':['#E4202A','#E4202A','#fff','fire','FLAMMABLE GAS','2'], '2.2':['#1E9A48','#1E9A48','#fff','cyl','NON-FLAMMABLE GAS','2'], 'O2':['#FFD400','#FFD400','#111','ox','OXYGEN','2'], '2.3':['#fff','#fff','#111','skull','INHALATION HAZARD','2'],
+    '3':['#E4202A','#E4202A','#fff','fire','FLAMMABLE','3'],
+    '4.1':['stripe','stripe','#111','fire','FLAMMABLE SOLID','4'], '4.2':['#fff','#E4202A','#111','fire','SPONTANEOUSLY COMBUSTIBLE','4'], '4.3':['#1F5FB4','#1F5FB4','#fff','fire','DANGEROUS WHEN WET','4'],
+    '5.1':['#FFD400','#FFD400','#111','ox','OXIDIZER','5.1'], '5.2':['#E4202A','#FFD400','#111','fire','ORGANIC PEROXIDE','5.2'],
+    '6.1':['#fff','#fff','#111','skull','TOXIC','6'], '6.2':['#fff','#fff','#111','bio','INFECTIOUS SUBSTANCE','6'],
+    '7':['#FFD400','#fff','#111','rad','RADIOACTIVE','7'], '8':['#fff','#111','#fff','cor','CORROSIVE','8'], '9':['bars','#fff','#111','','','9'] };
+  if (code==='MP') return `<svg class="${cls||''}" viewBox="0 0 100 100" role="img" aria-label="ملوثات بحرية"><path d="M50 8 95 88H5z" fill="#fff" stroke="#111" stroke-width="5" stroke-linejoin="round"/><path d="M33 52c8-9 22-9 30 0-8 9-22 9-30 0zm30 0 9-7v14z" fill="#111"/><path d="M34 40l34 26M68 40 34 66" stroke="#111" stroke-width="3"/><text x="50" y="82" text-anchor="middle" font-size="8.5" font-weight="800" font-family="Arial">MARINE POLLUTANT</text></svg>`;
+  if (code==='HOT') return `<svg class="${cls||''}" viewBox="0 0 100 100" role="img" aria-label="مواد ساخنة"><path d="M50 3 97 50 50 97 3 50z" fill="#fff" stroke="#111" stroke-width="5" stroke-linejoin="round"/><text x="50" y="58" text-anchor="middle" font-size="22" font-weight="900" font-family="Arial">HOT</text></svg>`;
+  const p=P[code]||P['9'], [top,bot,fg,sym,lbl,num]=p, id='hzc'+String(code).replace('.','_')+Math.random().toString(36).slice(2,6);
+  const flame=c=>`<path transform="translate(33 12) scale(.34)" d="M50 2c8 14 22 20 19 38 7-6 9-13 8-19 10 10 13 22 9 34-5 13-18 21-36 21S19 68 15 55C11 43 16 31 25 24c0 8 3 13 9 16-4-16 4-29 16-38z" fill="${c}"/>`;
+  const S = {
+    boom:`<g transform="translate(50 30)" fill="${fg}"><circle r="5"/><path d="M0-17 3.5-6 14-12 7.5-2.5 18 1 7 4 12 13 2.5 7-1 18-3 7-13 12-7 2-17-2-6.5-4.5-12-13-2.5-6z"/></g>`,
+    n14:`<text x="50" y="40" text-anchor="middle" font-size="22" font-weight="900" font-family="Arial" fill="${fg}">1.4</text>`,
+    n15:`<text x="50" y="40" text-anchor="middle" font-size="22" font-weight="900" font-family="Arial" fill="${fg}">1.5</text>`,
+    n16:`<text x="50" y="40" text-anchor="middle" font-size="22" font-weight="900" font-family="Arial" fill="${fg}">1.6</text>`,
+    fire:flame(fg),
+    cyl:`<g transform="rotate(-28 50 32)" fill="${fg}"><rect x="31" y="27" width="34" height="10" rx="5"/><rect x="65" y="29.5" width="6" height="5" rx="1"/></g>`,
+    ox:`<path transform="translate(37 9) scale(.26)" d="M50 2c8 14 22 20 19 38 7-6 9-13 8-19 10 10 13 22 9 34-5 13-18 21-36 21S19 68 15 55C11 43 16 31 25 24c0 8 3 13 9 16-4-16 4-29 16-38z" fill="${fg}"/><circle cx="50" cy="38" r="6.5" fill="none" stroke="${fg}" stroke-width="2.6"/>`,
+    skull:`<g fill="${fg}"><ellipse cx="50" cy="26" rx="9" ry="8.5"/><rect x="45" y="31" width="10" height="6" rx="1.5"/><path d="M36 34 64 46M64 34 36 46" stroke="${fg}" stroke-width="3.4" stroke-linecap="round"/></g><circle cx="46.5" cy="26" r="2.4" fill="#fff"/><circle cx="53.5" cy="26" r="2.4" fill="#fff"/>`,
+    bio:`<g fill="none" stroke="${fg}" stroke-width="2.6"><circle cx="50" cy="22" r="7"/><circle cx="43" cy="34" r="7"/><circle cx="57" cy="34" r="7"/></g><circle cx="50" cy="30" r="3" fill="${fg}"/>`,
+    rad:`<g transform="translate(50 30)" fill="${fg}"><circle r="3.2"/><path d="M0-5 5-13A15 15 0 0 0-5-13z" transform="rotate(0)"/><path d="M0-5 5-13A15 15 0 0 0-5-13z" transform="rotate(120)"/><path d="M0-5 5-13A15 15 0 0 0-5-13z" transform="rotate(240)"/></g>`,
+    cor:`<g fill="#111"><path d="M30 17l7 4-5 9-7-4zM58 15l7 4-5 9-7-4z"/><circle cx="32" cy="36" r="1.8"/><circle cx="60" cy="34" r="1.8"/><rect x="26" y="41" width="14" height="4" rx="1"/><path d="M54 45c4-3 12-3 16 0" stroke="#111" stroke-width="3" fill="none"/></g>`,
+  };
+  const bg = top==='stripe' ? `<rect width="100" height="100" fill="#fff"/>${[...Array(9)].map((_,i)=>`<rect x="${6+i*10}" width="5" height="100" fill="#E4202A"/>`).join('')}`
+    : top==='bars' ? `<rect width="100" height="100" fill="#fff"/>${[...Array(7)].map((_,i)=>`<rect x="${26+i*7}" width="3.6" height="50" fill="#111"/>`).join('')}`
+    : `<rect width="100" height="100" fill="${bot}"/><rect width="100" height="50" fill="${top}"/>`;
+  const L = lbl.length>14 ? lbl.split(' ').reduce((a,w)=>{ const l=a[a.length-1]; if (l && (l+' '+w).length<=13) a[a.length-1]=l+' '+w; else a.push(w); return a; },[]) : [lbl];
+  const lc = (top==='stripe') ? '#111' : (code==='8' ? '#fff' : fg), fs = L.length>1 ? 7 : (lbl.length>10?7.6:9.5);
+  const txt = L.map((l,i)=>`<text x="50" y="${(code==='8'?62:58)+i*8.5-(L.length-1)*2}" text-anchor="middle" font-size="${fs}" font-weight="800" font-family="Arial" fill="${lc}"${top==='stripe'?' paint-order="stroke" stroke="#fff" stroke-width="2.4"':''}>${l}</text>`).join('');
+  const nc = (code==='4.2'||code==='8') ? '#fff' : fg;
+  return `<svg class="${cls||''}" viewBox="0 0 100 100" role="img" aria-label="علامة ${esc(code)}"><defs><clipPath id="${id}"><path d="M50 3 97 50 50 97 3 50z"/></clipPath></defs><g clip-path="url(#${id})">${bg}</g><path d="M50 3 97 50 50 97 3 50z" fill="none" stroke="#222" stroke-width="1.4"/><path d="M50 8.5 91.5 50 50 91.5 8.5 50z" fill="none" stroke="${top==='#fff'&&bot==='#111'?'#111':(fg==='#fff'?'#fff':'#111')}" stroke-width="1.1"/>${S[sym]||''}${txt}<text x="50" y="88" text-anchor="middle" font-size="12" font-weight="900" font-family="Arial" fill="${nc}">${num}</text></svg>`;
+}
+const HZC = [
+ {k:'1', n:'المرتبة 1', t:'المتفجرات', p:'1', color:'برتقالي', kw:'متفجرات انفجار ذخائر العاب نارية بارود tnt explosive blasting',
+  d:'مركبات أو خلائط كيميائية سريعة الاشتعال أو الاحتراق بمؤثر خارجي كالصدم أو الاحتكاك أو الحرارة أو اللهب أو الضغط، فتتولد عنها كميات هائلة من الغازات مع حرارة وضوء وصوت.',
+  ex:'نترات البوتاسيوم (الملح الصخري)، الكبريت، الديناميت، TNT، نترات الأمونيوم، الذخائر والألعاب النارية',
+  dv:[['1','1.1','خطر انفجار واسع النطاق — مثل TNT والبارود الأسود'],['1','1.2','خطر قذف شديد — مثل الذخائر العسكرية'],['1','1.3','خطر حريق وقذف دون انفجار واسع — بعض الألعاب النارية'],['1.4','1.4','خطر حريق أو قذف محدود — الذخيرة المضيئة وحبال التفجير'],['1.5','1.5','مواد غير حساسة مع خطر انفجار واسع — نترات الأمونيوم'],['1.6','1.6','مواد غير حساسة على الإطلاق — أغلب الألعاب النارية']],
+  hz:['موجة ضغط مرتفع تهتك الرئتين أو تقذف الإنسان لمسافات بعيدة','تطاير الشظايا والأجسام بسرعة عالية','حروق قد تؤدي للوفاة أو إصابات جسيمة','اشتعال الحرائق في الموقع وتدمير المنشآت'],
+  fi:['إذا وصلت النار للحمولة: لا تكافح الحريق، أخلِ المنطقة واتركها تحترق','إذا لم تصل النار للحمولة: إطفاء بكميات كبيرة من الماء من أبعد مسافة','عدم تحريك الحمولة أو الاقتراب منها بعد تعرضها للحرارة','إبعاد مصادر الإشعال ومنع الصدم والاحتكاك'],
+  is:['عزل أولي 500 م في كل الاتجاهات للانسكاب أو التسرب','عند تعرض شاحنة أو صهريج للنار: عزل وإخلاء 1600 م','الاقتراب بعكس اتجاه الريح ومن مكان مرتفع'],
+  pp:{l:'D',t:['ملابس الإطفاء الواقية (الهيكلية) مع جهاز التنفس الذاتي SCBA','الأولوية للإخلاء والابتعاد؛ الملابس لا تحمي من موجة الانفجار']}},
+ {k:'2', n:'المرتبة 2', t:'الغازات', p:'2.1', color:'أحمر / أخضر / أبيض', kw:'غاز غازات اسطوانة بروبان هيدروجين اكسجين نيتروجين كلور امونيا gas oxygen inhalation',
+  d:'مواد في الحالة الغازية تُنقل مضغوطة أو مسالة في أسطوانات وصهاريج، وتنقسم حسب الخطورة إلى ملتهبة وغير ملتهبة وسامة.',
+  ex:'الهيدروجين، الأسيتيلين، البروبان، ثاني أكسيد الكربون، الأكسجين، النيتروجين، سيانيد الهيدروجين، الفوسجين، الكلور',
+  dv:[['2.1','2.1','غازات ملتهبة تحترق عند خلطها بالهواء — الهيدروجين والأسيتيلين والبروبان'],['2.2','2.2','غازات غير قابلة للاحتراق وغير سامة قد تساعد على الاشتعال — ثاني أكسيد الكربون والأكسجين والنيتروجين'],['O2','2.2','الأكسجين: غير ملتهب لكنه يزيد شدة الاشتعال بقوة'],['2.3','2.3','غازات سامة بالاستنشاق — سيانيد الهيدروجين والفوسجين والكلور']],
+  hz:['انفجار الأسطوانات والصهاريج عند تسخينها (كرة نارية)','الغاز المسال يتمدد بسرعة ويطرد الأكسجين فيسبب الاختناق','الغازات السامة تسبب الوفاة بالاستنشاق حتى بتركيز قليل','ملامسة الغاز المسال تسبب حروق التجمد'],
+  fi:['لا تطفئ لهب الغاز المتسرب إلا إذا أمكن إيقاف التسرب','تبريد الأسطوانات والصهاريج بالماء من أبعد مسافة','ضباب الماء لتشتيت الأبخرة وخفضها، دون توجيه الماء لمصدر التسرب','إغلاق صمامات التحكم البعيدة إن أمكن بأمان'],
+  is:['عزل أولي 100 م للغازات الملتهبة وغير الملتهبة','الغازات السامة: حسب جدول مسافات العزل (القسم الأخضر في الدليل)','عند تعرض صهريج للنار: عزل وإخلاء 1600 م'],
+  pp:{l:'A',t:['للغازات السامة (2.3): بدلة كيميائية مغلقة بالكامل مستوى A مع جهاز تنفس SCBA','للغازات الملتهبة وغير الملتهبة: ملابس الإطفاء الواقية مع SCBA']}},
+ {k:'3', n:'المرتبة 3', t:'السوائل القابلة للاشتعال', p:'3', color:'أحمر', kw:'سوائل قابلة للاشتعال بنزين جازولين ديزل كيروسين وقود اسيتون تولوين flammable fuel gasoline combustible',
+  d:'سوائل تشتعل بسهولة في الظروف العادية للنقل أو تساعد على الاشتعال، وأبخرتها غالباً أثقل من الهواء فتنتشر على الأرض وتصل لمصادر الإشعال البعيدة.',
+  ex:'التولوين، الجازولين (بنزين السيارات)، الديزل، زيت الوقود، الأسيتون (UN 1090)',
+  dv:[['3','3.1','سوائل ملتهبة تشتعل بسهولة في كل ظروف النقل — التولوين والجازولين'],['3','3.2','سوائل قابلة للاشتعال تلقائياً أو تطلق غازات ملتهبة إذا تفاعلت مع الماء']],
+  hz:['اشتعال سريع بالحرارة أو الشرر أو اللهب','الأبخرة قد تكوّن خليطاً متفجراً مع الهواء','انفجار الحاويات عند تسخينها (كرة نارية)','تلوث المجاري والمياه وخطر اشتعالها'],
+  fi:['الرغوة المقاومة للكحول أو الرغوة العادية (رمز 3 / 3ₐ في الدليل الشخصي)','إبعاد مصادر الإشعال وتبريد الحاويات بالماء من بعيد','إخماد الأبخرة بالرغوة وإقامة الحواجز والسدود','الامتصاص بالمواد الماصّة المتوافقة'],
+  is:['الاقتراب بعكس اتجاه الريح ومن مكان مرتفع','عزل أولي 50 م للانسكاب على الأقل','عند تعرض صهريج للنار: عزل وإخلاء 800 م في كل الاتجاهات'],
+  pp:{l:'B',t:['ملابس الإطفاء الواقية (الهيكلية) مع جهاز التنفس الذاتي SCBA للحرائق','في الانسكاب الكبير دون حريق: بدلة مقاومة للكيماويات مع جهاز تنفس']}},
+ {k:'4', n:'المرتبة 4', t:'المواد الصلبة القابلة للاشتعال', p:'4.1', color:'أحمر مخطط / أبيض وأحمر / أزرق', kw:'مواد صلبة قابلة للاشتعال كبريت مغنيسيوم فسفور صوديوم كربيد ماء wet solid spontaneously',
+  d:'مواد صلبة تحترق بسهولة أو تشتعل ذاتياً أو تطلق غازات ملتهبة عند تلامسها مع الماء.',
+  ex:'الكبريت، المغنيسيوم، الفسفور الأبيض، الصوديوم، كربيد الكالسيوم',
+  dv:[['4.1','4.1','مواد صلبة قابلة للاشتعال بالاحتكاك — الكبريت والمغنيسيوم'],['4.2','4.2','مواد قابلة للاحتراق التلقائي عند ملامسة الهواء — الفسفور الأبيض'],['4.3','4.3','مواد خطرة عند البلل: تطلق غازات ملتهبة مع الماء — الصوديوم']],
+  hz:['اشتعال سريع وصعوبة إطفاء حرائق المعادن','الاشتعال الذاتي عند التعرض للهواء (4.2)','إطلاق غازات ملتهبة أو سامة عند ملامسة الماء (4.3)','إعادة الاشتعال بعد الإطفاء'],
+  fi:['4.3: لا تستخدم الماء ولا الرغوة — مادة كيميائية جافة أو رمل جاف (رمز 4)','4.1 و4.2: كميات كبيرة من الماء أو الرمل حسب المادة','تغطية المادة المنسكبة بالرمل الجاف أو التراب','إبعاد مصادر الإشعال ومنع وصول الماء للمادة (4.3)'],
+  is:['عزل أولي 50 م للانسكاب على الأقل','عند تعرض صهريج للنار: عزل 800 م','الانسكاب في الماء (4.3): حسب جدول مسافات العزل'],
+  pp:{l:'B',t:['ملابس الإطفاء الواقية مع جهاز التنفس SCBA','للمواد التي تطلق غازات سامة مع الماء: بدلة مقاومة للكيماويات']}},
+ {k:'5', n:'المرتبة 5', t:'المؤكسدة والبيروكسيدات العضوية', p:'5.1', color:'أصفر / أحمر وأصفر', kw:'مؤكسدة اكسدة بيروكسيد نترات امونيوم هيبوكلوريت oxidizer peroxide',
+  d:'مواد تعطي الأكسجين بسهولة فتساعد على اشتعال المواد الأخرى، أو مواد عضوية تحتوي على بنية (–O–O–) ينتج عنها تفاعلات شديدة وانفجارات عند تلامسها مع مواد أخرى.',
+  ex:'نترات الأمونيوم، هيبوكلوريت الكالسيوم، بيروكسيد الهيدروجين، البيروكسيدات العضوية',
+  dv:[['5.1','5.1','المواد المؤكسدة: تزيد شدة الحريق عند ملامستها مواد قابلة للاشتعال'],['5.2','5.2','البيروكسيدات العضوية: حساسة للحرارة والصدم وقد تنفجر']],
+  hz:['تسريع الحريق وزيادة شدته بشكل كبير','الانفجار عند التسخين أو التلوث أو الصدم','تفاعل عنيف مع الوقود والمواد العضوية','إطلاق غازات سامة أو مهيجة عند الاحتراق'],
+  fi:['كميات كبيرة من الماء (غمر) من أبعد مسافة','عدم استخدام الرغوة أو ثاني أكسيد الكربون أو المواد الجافة على المؤكسدات','إبعاد المواد القابلة للاشتعال (خشب، ورق، زيوت) عن المادة المنسكبة','5.2: تبريد الحاويات من بعيد وعدم الاقتراب منها'],
+  is:['عزل أولي 50 م للانسكاب (100 م للمرتبة 5.2)','عند تعرض صهريج للنار: عزل وإخلاء 800 م'],
+  pp:{l:'B',t:['ملابس الإطفاء الواقية مع جهاز التنفس SCBA','للانسكاب دون حريق: بدلة مقاومة للكيماويات']}},
+ {k:'6', n:'المرتبة 6', t:'المواد السامة والمعدية', p:'6.1', color:'أبيض', kw:'سامة سم معدية بيولوجية سيانيد مبيدات toxic poison infectious biohazard',
+  d:'مواد ينتج عنها ضرر بليغ بتفاعلها الكيميائي مع مكونات الجسم بعد دخولها بالاستنشاق أو الابتلاع أو امتصاص الجلد، أو مواد تحتوي كائنات حية دقيقة تسبب الأمراض.',
+  ex:'سيانيد الصوديوم، المبيدات الحشرية، المواد المعدية (البكتيريا والفيروسات) والنفايات الطبية',
+  dv:[['6.1','6.1','المواد السامة: تسبب الوفاة أو أذى خطير بالابتلاع أو الاستنشاق أو ملامسة الجلد'],['6.2','6.2','المواد المسببة للعدوى: كائنات دقيقة تسبب أمراضاً مثل الجمرة الخبيثة']],
+  hz:['التسمم الحاد بالتعرض القصير أو المزمن بالتعرض الطويل','الوفاة بالاستنشاق أو الابتلاع أو امتصاص الجلد','انتقال العدوى للمستجيبين والجمهور (6.2)','تلوث المياه والتربة'],
+  fi:['منع جريان مياه الإطفاء الملوثة للمجاري والمياه','الإطفاء حسب المادة المحترقة مع تجنب استنشاق الدخان','6.2: عدم لمس المادة، وتغطيتها بنسيج مبلل بمطهر','تطهير المستجيبين والمعدات قبل الخروج من المنطقة الدافئة'],
+  is:['عزل أولي 50 م للانسكاب (25 م للمواد المعدية)','المواد السامة بالاستنشاق: حسب جدول مسافات العزل','عند تعرض صهريج للنار: عزل 800 م'],
+  pp:{l:'A',t:['بدلة كيميائية مغلقة (مستوى A أو B حسب سمية المادة) مع جهاز التنفس SCBA','للمواد المعدية: بدلة حماية بيولوجية وقفازات وواقي وجه']}},
+ {k:'7', n:'المرتبة 7', t:'المواد المشعة', p:'7', color:'أصفر وأبيض', kw:'مشعة اشعاع اشعة نووية radioactive radiation',
+  d:'مواد ينتج عنها انطلاق طاقة على شكل جسيمات أو موجات (ألفا وبيتا وجاما)، وتوجد في المستشفيات والمراكز الطبية ومراكز الأبحاث. تُصنّف إلى منخفضة ومتوسطة وشديدة الإشعاع.',
+  ex:'المصادر المشعة الطبية والصناعية، أجهزة القياس الإشعاعي، النظائر المشعة',
+  dv:[['7','I','المستوى الأول: مواد منخفضة الإشعاع'],['7','II','المستوى الثاني: مواد متوسطة الإشعاع'],['7','III','المستوى الثالث: مواد شديدة الإشعاع']],
+  hz:['أشعة جاما تخترق الأجسام ولا يوقفها إلا الرصاص أو الخرسانة','دخول المواد المشعة للجسم (ألفا) يتلف الأعضاء الداخلية','تلوث الأرض والهواء والمعدات','آثار صحية مؤجلة حسب الجرعة'],
+  fi:['التحكم بثلاثة عوامل: الزمن (أقل مدة)، المسافة (أبعد ما يمكن)، الحواجز (الدروع الواقية)','عدم استخدام المياه في إطفاء حرائق المواد المشعة عندما تكون منطقة الحادث ملوثة','الرصد الإشعاعي المستمر وقياس الجرعات بالدوزيميتر','الاتصال بالمختصين والجهة المرخصة للحصول على بيانات المصدر'],
+  is:['عزل أولي 25 م على الأقل في كل الاتجاهات','الاقتراب من نقطة تقع عكس اتجاه الريح','عدم السماح بخروج أي شخص أو مركبة من المنطقة قبل التأكد من خلوها من التلوث'],
+  pp:{l:'B',t:['ملابس الوقاية الفردية نوع NBC مع جهاز تنفس أو كمامات واقية','أقلام قياس الجرعة الشخصية (الدوزيميتر) وأجهزة الرصد الإشعاعي']}},
+ {k:'8', n:'المرتبة 8', t:'المواد الآكلة (الحارقة)', p:'8', color:'أبيض وأسود', kw:'اكلة حارقة احماض حمض قلويات كبريتيك هيدروكلوريك صودا كاوية بطاريات corrosive acid',
+  d:'مواد تتسبب عند اتصالها بالخلايا الحية في تآكلها وتدميرها، ويتدرج أثرها من احمرار والتهاب الجلد إلى تآكل الأنسجة والعضلات والعظام، وتمتد أضرارها لوسائل النقل والمعادن.',
+  ex:'الأحماض (الكبريتيك والهيدروكلوريك والنيتريك) والقلويات (الصودا الكاوية)',
+  dv:[['8','أحماض','حمض الكبريتيك (UN 1830) وحمض الهيدروكلوريك وحمض النيتريك'],['8','قلويات','هيدروكسيد الصوديوم (الصودا الكاوية) والأمونيا المحلولة']],
+  hz:['حروق كيميائية شديدة للجلد والعيون','تلف الجهاز التنفسي باستنشاق الأبخرة','تفاعل مع المعادن يطلق غاز الهيدروجين الملتهب','تفاعل عنيف مع الماء لبعض الأحماض المركزة'],
+  fi:['عدم توجيه الماء مباشرة على الحمض المركز','مادة كيميائية جافة أو ضباب الماء حسب المادة','احتواء الانسكاب بالتراب أو الرمل ومنع دخوله المجاري','التحييد والتخفيف بإشراف المختصين'],
+  is:['عزل أولي 50 م للانسكاب على الأقل','للمواد التي تطلق أبخرة سامة: حسب جدول مسافات العزل','عند تعرض صهريج للنار: عزل 800 م'],
+  pp:{l:'B',t:['بدلة مقاومة للأحماض والكيماويات مع جهاز التنفس SCBA (حروف X-W-R-P)','قفازات وأحذية مقاومة للكيماويات وواقي وجه']}},
+ {k:'9', n:'المرتبة 9', t:'مواد خطرة متنوعة', p:'9', color:'أبيض بخطوط سوداء', kw:'متنوعة ضارة بالبيئة بطاريات ليثيوم ساخنة ملوثات بحرية miscellaneous environment hot marine',
+  d:'مواد تمثل لدى نقلها خطراً غير مشمول بالمراتب الأخرى، مثل المواد الضارة والمواد الضارة بالبيئة البحرية والمواد ذات الحرارة المرتفعة.',
+  ex:'المواد الخطرة بيئياً، بطاريات الليثيوم، السوائل الساخنة، الحبيبات البوليمرية',
+  dv:[['MP','بحرية','ملوثات بحرية: تظهر على حاويات المواد المصنفة كملوثات بحرية'],['HOT','ساخنة','مواد ذات حرارة مرتفعة: توضع على كل جوانب الحاوية']],
+  hz:['أضرار للبيئة والمياه','حروق من المواد الساخنة','اشتعال بطاريات الليثيوم وانبعاث غازات سامة'],
+  fi:['الإطفاء حسب المادة الفعلية المنقولة','منع وصول المادة للمياه والمجاري','تبريد الحاويات الساخنة من بعيد'],
+  is:['عزل أولي 25 م للانسكاب على الأقل','عند تعرض صهريج للنار: عزل 800 م'],
+  pp:{l:'D',t:['ملابس الإطفاء الواقية مع جهاز التنفس حسب المادة','قفازات ونظارات سلامة على الأقل']}},
+];
+// أرقام الأمم المتحدة الشائعة (من دليل الاستجابة للطوارئ ERG): الرقم ← [اسم المادة، المرتبة، رقم المرشد]
+const HZUN = {
+ '1001':['أسيتيلين','2.1',116],'1005':['أمونيا لامائية','2.3',125],'1006':['أرجون مضغوط','2.2',121],'1011':['بيوتان','2.1',115],'1013':['ثاني أكسيد الكربون','2.2',120],
+ '1017':['كلور','2.3',124],'1046':['هيليوم مضغوط','2.2',121],'1049':['هيدروجين مضغوط','2.1',115],'1050':['كلوريد الهيدروجين اللامائي','2.3',125],'1051':['سيانيد الهيدروجين','6.1',117],
+ '1053':['كبريتيد الهيدروجين','2.3',117],'1066':['نيتروجين مضغوط','2.2',121],'1072':['أكسجين مضغوط','2.2',122],'1073':['أكسجين مسال مبرّد','2.2',122],'1075':['غازات بترول مسالة (LPG)','2.1',115],
+ '1076':['فوسجين','2.3',125],'1077':['بروبيلين','2.1',115],'1079':['ثاني أكسيد الكبريت','2.3',125],'1090':['أسيتون','3',127],'1114':['بنزين (بنزول)','3',130],
+ '1170':['إيثانول','3',127],'1202':['ديزل / زيت الغاز','3',128],'1203':['جازولين (بنزين السيارات)','3',128],'1223':['كيروسين','3',128],'1230':['ميثانول','3',131],
+ '1263':['دهانات','3',128],'1267':['نفط خام','3',128],'1268':['مقطرات بترولية','3',128],'1294':['تولوين','3',130],'1307':['زايلين','3',130],
+ '1350':['كبريت','4.1',133],'1361':['فحم','4.2',133],'1381':['فسفور أبيض','4.2',136],'1402':['كربيد الكالسيوم','4.3',138],'1428':['صوديوم','4.3',138],
+ '1689':['سيانيد الصوديوم','6.1',157],'1719':['سائل قلوي كاوٍ','8',154],'1748':['هيبوكلوريت الكالسيوم','5.1',140],'1760':['سائل أكّال','8',154],'1789':['حمض الهيدروكلوريك','8',157],
+ '1791':['محلول هيبوكلوريت','8',154],'1805':['حمض الفوسفوريك','8',154],'1823':['هيدروكسيد الصوديوم الصلب','8',154],'1824':['محلول هيدروكسيد الصوديوم','8',154],'1830':['حمض الكبريتيك','8',137],
+ '1831':['حمض الكبريتيك المدخن','8',137],'1863':['وقود الطائرات','3',128],'1869':['مغنيسيوم','4.1',138],'1942':['نترات الأمونيوم','5.1',140],'1965':['خليط غازات هيدروكربونية مسالة','2.1',115],
+ '1971':['غاز طبيعي مضغوط (ميثان)','2.1',115],'1972':['غاز طبيعي مسال','2.1',115],'1978':['بروبان','2.1',115],'1993':['سائل قابل للاشتعال (غير محدد)','3',128],'2014':['محلول بيروكسيد الهيدروجين','5.1',140],
+ '2015':['بيروكسيد الهيدروجين المركّز','5.1',143],'2031':['حمض النيتريك','8',157],'2672':['محلول الأمونيا','8',154],'2789':['حمض الخليك الثلجي','8',132],'2794':['بطاريات رطبة حمضية','8',154],
+ '2810':['سائل سام عضوي (غير محدد)','6.1',153],'2814':['مادة معدية تؤثر على الإنسان','6.2',158],'2908':['مواد مشعة — عبوة فارغة','7',161],'2910':['مواد مشعة — طرد مستثنى','7',161],'2915':['مواد مشعة — طرد من النوع A','7',163],
+ '3077':['مادة خطرة بيئياً صلبة','9',171],'3082':['مادة خطرة بيئياً سائلة','9',171],'3257':['سائل ساخن','9',128],'3480':['بطاريات ليثيوم أيون','9',147],'0333':['ألعاب نارية','1',112],'0336':['ألعاب نارية','1',114],
+};
+const hzCls = div => HZC.find(c=>c.k===String(div).split('.')[0]) || null;
+const HZLV = {A:'بدلة مغلقة بالكامل محكمة ضد الغازات + جهاز تنفس SCBA', B:'بدلة مقاومة لرذاذ الكيماويات + جهاز تنفس SCBA', C:'بدلة مقاومة لرذاذ الكيماويات + كمامة بفلتر', D:'ملابس العمل / الإطفاء الاعتيادية'};
+function hzDetail(c){
+  const sec=(cls,ic,t,arr)=>`<div class="hzsec"><h3><i class="${cls}" aria-hidden="true">${ic}</i>${t}</h3><ul>${arr.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  return `<section class="hzdet" id="hzdet" aria-label="${esc(c.n+' — '+c.t)}">
+    <div class="hzdh">${hzPlac(c.p,'hzbig')}<div><div class="hzn">${esc(c.n)}</div><h2>${esc(c.t)}</h2><p>${esc(c.d)}</p><div class="hztags"><span class="r">لون العلامة: ${esc(c.color)}</span><span>أمثلة: ${esc(c.ex)}</span></div></div></div>
+    <div class="hzsubs">${c.dv.map(v=>`<div class="hzsub">${hzPlac(v[0])}<div><b>${/^\d/.test(v[1])?'القسم '+esc(v[1]):esc(v[1])}</b><small>${esc(v[2])}</small></div></div>`).join('')}</div>
+    <div class="hzsecs">${sec('r','!','المخاطر المحتملة',c.hz)}${sec('g','✓','طرق المكافحة',c.fi)}${sec('y','⇲','العزل والإخلاء',c.is)}
+      <div class="hzsec hzppe"><div><h3>البدلة المناسبة</h3><ul>${c.pp.t.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+        <div class="hzlv" role="list" aria-label="مستوى الحماية">${['A','B','C','D'].map(l=>`<span role="listitem" class="${l===c.pp.l?'on':''}" title="${esc(HZLV[l])}"><small>مستوى</small>${l}</span>`).join('')}</div>
+        <p class="hzlvt">المستوى ${c.pp.l}: ${esc(HZLV[c.pp.l])}</p></div></div>
+  </section>`;
+}
+function viewHzGuide(){
+  const q=norm(S.hzq||''), sel=S.hzSel||'';
+  const list=HZC.filter(c=>!q || norm([c.n,c.t,c.d,c.ex,c.kw,c.k,...c.dv.map(v=>v[1]+' '+v[2])].join(' ')).includes(q));
+  const un = /^\d{4}$/.test(DIG(S.hzq||'').trim()) ? HZUN[DIG(S.hzq).trim()] : null;
+  const head=`<header class="ph"><div><h1>دليل العلامات التحذيرية</h1><p class="hzsubt">المراتب التسع للمواد الخطرة (نظام الأمم المتحدة / DOT): الشعار، الشرح، التصنيف، المخاطر، المكافحة، والبدلة المناسبة.</p></div><button type="button" class="btn primary" data-act="nav" data-id="hzScan">${HZCAM}تعرّف على علامة بالكاميرا</button></header>`;
+  const tools=`<label class="search hzsearch"><span class="vh">بحث في العلامات</span>${ICON.search}<input id="hzq" type="search" placeholder="ابحث باسم المادة أو المرتبة أو رقم الأمم المتحدة (مثال: غاز، سام، 1203)" value="${esc(S.hzq||'')}" autocomplete="off"></label>`;
+  const unBox = un ? `<button type="button" class="panel hzun" data-act="hzOpen" data-id="${esc(un[1].split('.')[0])}">${hzPlac(un[1]==='2.2'&&/أكسجين/.test(un[0])?'O2':un[1])}<div><small>رقم الأمم المتحدة ${esc(DIG(S.hzq).trim())}</small><b>${esc(un[0])}</b><span>المرتبة ${esc(un[1])} · رقم المرشد في دليل الاستجابة ${un[2]}</span></div></button>` : '';
+  const grid = list.length ? `<div class="hzgrid">${list.map(c=>`<button type="button" class="hzcard${sel===c.k?' on':''}" data-act="hzOpen" data-id="${c.k}" aria-pressed="${sel===c.k}">${hzPlac(c.p)}<small>${esc(c.n)}</small><b>${esc(c.t)}</b><span class="hzdivs">${c.dv.map(v=>`<i>${esc(v[1])}</i>`).join('')}</span></button>`).join('')}</div>` : (un?'':`<div class="panel empty"><b>لا توجد علامة مطابقة.</b>جرّب كلمة أخرى مثل «غاز» أو «حمض» أو رقم المرتبة.</div>`);
+  const cur=HZC.find(c=>c.k===sel);
+  const keys=`<div class="hzkeys"><section class="panel hzkp"><h3>اقرأ رمز الطوارئ على الملصق (الدليل الشخصي)</h3><div class="hzcode" aria-hidden="true"><span style="background:#E5484D;color:#fff">4</span><span style="background:#F5D04C">W</span><span style="background:#2E9E5B;color:#fff">E</span><span style="background:#F59E42">—</span></div>
+      <div class="hzkrow"><div class="r"><b>الأحمر: الإطفاء</b>1 رشاشات مياه · 2 ضباب · 3 رغوة · 4 مادة جافة فقط</div><div class="y"><b>الأصفر: الوقاية</b>Z,Y,T,S جهاز تنفس + ملابس حريق · X,W,R,P جهاز تنفس + ملابس كيماويات</div><div class="g"><b>الأخضر: الإخلاء</b>E احتمال إخلاء، وإبعاد غير الضروريين 250 م</div><div class="o"><b>البني: الحذر</b>V تفاعل عنيف أو انفجار محتمل</div></div></section>
+    <section class="panel hzkp"><h3>حروف معدات الوقاية الشخصية (أسفل بعض العلامات)</h3><div class="hzkrow two"><div><b>A – D</b>نظارات، قفازات، لبس طويل، واقي وجه</div><div><b>E – J</b>مع كمامة للغبار أو البخار</div><div><b>K</b>قفازات وجهاز تنفس ولبس وحذاء واقٍ</div><div><b>L – Z</b>يوصى بجهاز الوقاية الشخصية</div></div><p class="hzstar">علامة ( * ) على الملصق تعني أن المادة مسرطنة أو شديدة الخطورة عند التعرض المزمن.</p></section></div>`;
+  return head+tools+unBox+grid+(cur?hzDetail(cur):'')+keys+`<p class="hznote">المصدر: كتيب «استراتيجيات وقيادة عمليات التدخل في حوادث المواد الخطرة» — معهد الدفاع المدني، وما يخص البدلة ومسافات العزل وأرقام الأمم المتحدة مُكمّل من دليل الاستجابة للطوارئ (ERG) ويُراجع من المختصين. الدليل للاسترشاد ولا يغني عن تقييم الموقف في الميدان.</p>`;
+}
+const HZCAM='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>';
+/* التعرف على العلامة من صورة: يحلل ألوان العلامة ويقرأ النص والأرقام عليها (OCR داخل المتصفح)، ثم يرتّب المراتب المحتملة */
+function viewHzScan(){
+  const R=S.hzScan||{};
+  const head=`<header class="ph"><div><h1>التعرّف على العلامة بالكاميرا</h1><p class="hzsubt">صوّر العلامة التحذيرية (على الشاحنة أو الحاوية) أو اخترها من الاستديو، وسيظهر لك نوعها وتصنيفها وطريقة التعامل معها.</p></div><button type="button" class="btn" data-act="nav" data-id="hzGuide">دليل العلامات</button></header>`;
+  const pick=`<section class="panel hzpick"><div class="hzbtns"><label class="btn primary hzbig2">${HZCAM}تصوير بالكاميرا<input type="file" accept="image/*" capture="environment" id="hzcam" class="vh"></label><label class="btn hzbig2"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/></svg>اختيار من الاستديو<input type="file" accept="image/*" id="hzgal" class="vh"></label></div>
+    <p class="hztip">للحصول على أفضل نتيجة: قرّب الصورة على العلامة نفسها، وصوّرها من الأمام بإضاءة جيدة، وابقَ على مسافة آمنة بعكس اتجاه الريح.</p>
+    <div class="hzman"><label for="hzun">أو اكتب رقم الأمم المتحدة المكتوب على اللوحة البرتقالية أو العلامة</label><div><input id="hzun" inputmode="numeric" maxlength="4" placeholder="مثال: 1203" value="${esc(R.manual||'')}" dir="ltr"><button type="button" class="btn" data-act="hzUn">بحث</button></div></div></section>`;
+  let body='';
+  if (R.busy) body=`<section class="panel hzres"><div class="hzprev">${R.img?`<img src="${R.img}" alt="الصورة المختارة">`:''}</div><div class="hzwait"><span class="hzspin" aria-hidden="true"></span><b>${esc(R.busy)}</b><small>أول مرة قد تستغرق وقتاً أطول لتحميل أداة قراءة النص.</small></div></section>`;
+  else if (R.err) body=`<section class="panel hzres"><div class="hzprev">${R.img?`<img src="${R.img}" alt="">`:''}</div><div class="empty"><b>${esc(R.err)}</b></div></section>`;
+  else if (R.res){
+    const r=R.res, top=r.cands[0];
+    const un=r.un?`<div class="hzunres">${hzPlac(r.un[1]==='2.2'&&/أكسجين/.test(r.un[0])?'O2':r.un[1])}<div><small>رقم الأمم المتحدة ${esc(r.unNo)}</small><b>${esc(r.un[0])}</b><span>المرتبة ${esc(r.un[1])} · رقم المرشد في دليل الاستجابة ${r.un[2]}</span></div></div>`:(r.unNo?`<div class="hzunres none"><div><small>رقم الأمم المتحدة ${esc(r.unNo)}</small><b>الرقم غير موجود في قائمة المواد الشائعة</b><span>راجع الصفحات الصفراء في دليل الاستجابة للطوارئ (ERG)</span></div></div>`:'');
+    body=`<section class="panel hzres"><div class="hzprev">${R.img?`<img src="${R.img}" alt="الصورة المختارة">`:''}</div><div class="hzout">
+      ${top?`<div class="hzbest">${hzPlac(top.p)}<div><small>الأقرب: ${top.conf>=70?'تطابق عالٍ':top.conf>=33?'تطابق متوسط':'تطابق ضعيف'} (${arD(top.conf)}٪)</small><b>${esc(top.c.n+' — '+top.name)}</b><span>${esc(top.why.join(' · '))}</span><button type="button" class="btn primary sm" data-act="hzOpen" data-id="${top.c.k}">عرض التفاصيل والتعامل ${ICON.arrow}</button></div></div>`:`<div class="empty"><b>لم أتعرف على العلامة بوضوح.</b>قرّب الصورة على العلامة وأعد التصوير، أو اكتب رقم الأمم المتحدة.</div>`}
+      ${un}
+      ${r.cands.length>1?`<div class="hzalt"><small>احتمالات أخرى</small>${r.cands.slice(1,3).map(x=>`<button type="button" class="hzaltb" data-act="hzOpen" data-id="${x.c.k}">${hzPlac(x.p)}<span>${esc(x.c.n)}<b>${esc(x.name)}</b></span><em>${arD(x.conf)}٪</em></button>`).join('')}</div>`:''}
+      ${r.text?`<details class="hztxt"><summary>النص المقروء من الصورة</summary><code dir="ltr">${esc(r.text)}</code></details>`:''}
+      <p class="hzwarn">التعرّف آلي تقريبي: تأكد بمطابقة العلامة مع الدليل قبل اتخاذ القرار، وتعامل مع أي مادة مجهولة على أنها شديدة الخطورة.</p></div></section>`;
+    if (top) body+=hzDetail(top.c);
+  }
+  return head+pick+body;
+}
+// تحليل الألوان: يحدد منطقة العلامة في الصورة ثم يحسب نسب ألوانها
+const HZCOL=['red','orange','yellow','green','blue','white','black'];
+function hzPix(r,g,b){ r/=255; g/=255; b/=255; const mx=Math.max(r,g,b), mn=Math.min(r,g,b), l=(mx+mn)/2, dd=mx-mn, s=dd===0?0:(l>.5?dd/(2-mx-mn):dd/(mx+mn));
+  if (l>.78 && s<.28) return 'white'; if (l<.18) return 'black'; if (s<.35 || dd<.18) return '';
+  let h = mx===r ? ((g-b)/dd)%6 : mx===g ? (b-r)/dd+2 : (r-g)/dd+4; h=(h*60+360)%360;
+  return h<15||h>=335 ? 'red' : h<40 ? 'orange' : h<72 ? 'yellow' : h<170 ? 'green' : h<260 ? 'blue' : 'red'; }
+function hzRegion(cv){
+  const w=cv.width, h=cv.height, d=cv.getContext('2d').getImageData(0,0,w,h).data, st=3, cols=new Array(w).fill(0), rows=new Array(h).fill(0); let tot=0;
+  // المنطقة الملوّنة أولاً (العلامات الملونة)، وإن قلّت فالمنطقة البيضاء (العلامات البيضاء)
+  const cw=new Array(w).fill(0), rw=new Array(h).fill(0); let tw=0, all=0;
+  for (let y=0;y<h;y+=st) for (let x=0;x<w;x+=st){ const i=(y*w+x)*4, c=hzPix(d[i],d[i+1],d[i+2]); all++; if (c && c!=='black' && c!=='white'){ cols[x]++; rows[y]++; tot++; } else if (c==='white'){ cw[x]++; rw[y]++; tw++; } }
+  if (tot < all*.03){ for (let i=0;i<w;i++) cols[i]=cw[i]; for (let i=0;i<h;i++) rows[i]=rw[i]; tot=tw; }
+  const lim=(arr,f)=>{ const th=Math.max(1,Math.max(...arr)*f); let a=0,b=arr.length-1; while(a<b && arr[a]<th) a++; while(b>a && arr[b]<th) b--; return [a,b]; };
+  let [x0,x1]=lim(cols,.18), [y0,y1]=lim(rows,.18);
+  if (x1-x0 < w*.12 || y1-y0 < h*.12 || !tot){ x0=Math.floor(w*.1); x1=Math.floor(w*.9); y0=Math.floor(h*.1); y1=Math.floor(h*.9); }
+  const px=Math.round((x1-x0)*.04), py=Math.round((y1-y0)*.04); x0=Math.max(0,x0-px); y0=Math.max(0,y0-py); x1=Math.min(w-1,x1+px); y1=Math.min(h-1,y1+py);
+  const cnt={}; HZCOL.forEach(k=>cnt[k]=0); let n=0;
+  for (let y=y0;y<=y1;y+=2) for (let x=x0;x<=x1;x+=2){ const i=(y*w+x)*4, c=hzPix(d[i],d[i+1],d[i+2]); if (c){ cnt[c]++; n++; } }
+  HZCOL.forEach(k=>cnt[k]=n?cnt[k]/n:0);
+  return {box:[x0,y0,x1-x0+1,y1-y0+1], col:cnt};
+}
+// الملامح اللونية المتوقعة لكل علامة
+const HZPROF={'1':{orange:.85,black:.1},'2.1':{red:.8,white:.15},'2.2':{green:.8,white:.15},'O2':{yellow:.85,black:.1},'2.3':{white:.82,black:.15},'3':{red:.8,white:.15},
+  '4.1':{red:.45,white:.5},'4.2':{white:.45,red:.45,black:.1},'4.3':{blue:.8,white:.15},'5.1':{yellow:.85,black:.1},'5.2':{red:.45,yellow:.45,black:.05},
+  '6.1':{white:.82,black:.15},'6.2':{white:.82,black:.15},'7':{yellow:.45,white:.45,black:.1},'8':{white:.45,black:.5},'9':{white:.7,black:.3},'MP':{white:.8,black:.2},'HOT':{white:.8,black:.2}};
+const HZCN={red:'أحمر',orange:'برتقالي',yellow:'أصفر',green:'أخضر',blue:'أزرق',white:'أبيض',black:'أسود'};
+function hzScore(col, text){
+  const T=' '+String(text||'').toUpperCase().replace(/[^A-Z0-9.\s]/g,' ').replace(/\s+/g,' ')+' ', toks=T.trim().split(' ').filter(Boolean);
+  const nums=(T.match(/\b\d{4}\b/g)||[]), unNo=nums.find(x=>HZUN[x])||nums.find(x=>+x>=1000&&+x<=3600)||'';
+  // تطابق تقريبي للكلمة: يقبل القراءة الناقصة مثل CORROSIV أو XPLOSIVES
+  const has = k => { if (k.includes(' ')) return k.split(' ').every(has); if (T.includes(' '+k+' ')) return true; if (k.length<5) return false;
+    return toks.some(t=>t.length>=5 && (k.startsWith(t) && t.length>=k.length*.6 || t.startsWith(k.slice(0,-2)) || (t.length>=k.length-2 && k.includes(t.slice(1))) || k.slice(1).includes(t) && t.length>=k.length*.65)); };
+  const C=[['1','المتفجرات',['EXPLOSIVES','BLASTING AGENTS','EXPLOSIVE']],['2.1','غاز ملتهب',['FLAMMABLE GAS']],['2.2','غاز غير ملتهب',['NON FLAMMABLE','NONFLAMMABLE','COMPRESSED GAS']],['O2','الأكسجين',['OXYGEN']],['2.3','غاز سام بالاستنشاق',['INHALATION','POISON GAS']],
+    ['3','سائل قابل للاشتعال',['FLAMMABLE','GASOLINE','FUEL OIL','COMBUSTIBLE','DIESEL']],['4.1','مادة صلبة قابلة للاشتعال',['FLAMMABLE SOLID']],['4.2','قابلة للاحتراق التلقائي',['SPONTANEOUSLY']],['4.3','خطرة عند البلل',['DANGEROUS WHEN WET','DANGEROUS']],
+    ['5.1','مادة مؤكسدة',['OXIDIZER','OXIDIZING']],['5.2','بيروكسيد عضوي',['ORGANIC PEROXIDE','PEROXIDE']],['6.1','مادة سامة',['TOXIC','POISON']],['6.2','مادة معدية',['INFECTIOUS']],
+    ['7','مادة مشعة',['RADIOACTIVE']],['8','مادة آكلة',['CORROSIVE']],['9','مواد خطرة متنوعة',[]],['MP','ملوثات بحرية',['MARINE POLLUTANT','POLLUTANT']],['HOT','مواد ساخنة',['HOT']]];
+  const digits=toks.filter(t=>/^[1-9](\.\d)?$/.test(t)).map(t=>t[0]);
+  const out=C.map(([p,name,kws])=>{ let s=0; const why=[]; const main=p==='O2'?'2':/^(MP|HOT)$/.test(p)?'9':p.split('.')[0];
+    const kw=kws.find(has); if (kw){ s+=55+Math.min(10,kw.length/2); why.push('النص: '+kw); }
+    if (!kw && main==='2' && /\bGAS\b/.test(T)){ s+=30; why.push('النص: GAS'); }
+    if (!kw && p==='2.2' && toks.some(t=>/^NON.?F/.test(t))){ s+=55; why.push('النص: NON-FLAMMABLE'); }
+    const pr=HZPROF[p]; let dist=0; HZCOL.forEach(k=>dist+=Math.abs((pr[k]||0)-(col[k]||0))); const cs=Math.max(0,(1-dist/1.4))*52;
+    if (cs>10){ s+=cs; const top=HZCOL.filter(k=>(pr[k]||0)>=.4 && col[k]>.2); if (top.length) why.push('اللون: '+top.map(k=>HZCN[k]).join(' و')); }
+    if (digits.includes(main)){ s+=14; why.push('رقم المرتبة: '+main); }
+    if (unNo && HZUN[unNo] && HZUN[unNo][1].split('.')[0]===main){ s+=40; why.push('رقم الأمم المتحدة '+unNo); }
+    return {p, name, c:hzCls(main), s, why}; }).filter(x=>x.c);
+  const pen=(re,ps,v)=>{ if (re.test(T)) out.forEach(x=>{ if (ps.includes(x.p)) x.s-=v; }); };
+  pen(/FLAMMABLE GAS/,['3','4.1'],45); pen(/FLAMMABLE SOLID|SPONTANEOUS/,['3','2.1'],45); pen(/NON.?FLAMMABLE|\bNON.?F/,['2.1','3','4.1'],60); pen(/WHEN WET/,['3','2.1'],40);
+  if (/OXYGEN/.test(T)) out.forEach(x=>{ if (x.p==='5.1') x.s-=30; }); else out.forEach(x=>{ if (x.p==='O2') x.s-=12; });
+  if (!/HOT|POLLUTANT|MARINE/.test(T)) out.forEach(x=>{ if (x.p==='MP'||x.p==='HOT') x.s-=25; });
+  out.sort((a,b)=>b.s-a.s);
+  const cands=out.filter(x=>x.s>20).slice(0,4).map(x=>({...x, conf:Math.max(10,Math.min(97,Math.round(x.s)))}));
+  return {cands, unNo, un:unNo?HZUN[unNo]||null:null};
+}
+let hzOcr=null;
+function hzLoadOcr(){
+  if (!hzOcr) hzOcr=(async()=>{ await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');
+    return window.Tesseract.createWorker('eng',1,{workerPath:'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js', corePath:'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1', langPath:'https://cdn.jsdelivr.net/npm/@tesseract.js-data/eng@1.0.0/4.0.0_best_int'}); })().catch(e=>{ hzOcr=null; throw e; });
+  return hzOcr;
+}
+async function hzAnalyze(file){
+  const url=URL.createObjectURL(file); S.hzScan={img:url, busy:'جارٍ تحليل الصورة…'}; if (S.view.name==='hzScan') render();
+  try {
+    const im=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+    const k=Math.min(1, 1200/Math.max(im.width,im.height)), cv=document.createElement('canvas'); cv.width=Math.round(im.width*k); cv.height=Math.round(im.height*k);
+    cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);
+    const R=hzRegion(cv), [bx,by,bw,bh]=R.box, z=Math.min(3, 1100/Math.max(bw,bh));
+    const crop=(inv)=>{ const c=document.createElement('canvas'); c.width=Math.round(bw*z); c.height=Math.round(bh*z); const x=c.getContext('2d'); x.filter='grayscale(1) contrast(1.6)'+(inv?' invert(1)':''); x.drawImage(cv,bx,by,bw,bh,0,0,c.width,c.height); return c; };
+    let text='';
+    try { S.hzScan.busy='جارٍ قراءة النص والأرقام على العلامة…'; if (S.view.name==='hzScan') render(); const w=await hzLoadOcr();
+      for (const c of [crop(false), crop(true), cv]){ const r=await w.recognize(c); text+=' '+((r&&r.data&&r.data.text)||''); } } catch(e){}
+    const res=hzScore(R.col,text); res.text=text.trim().replace(/\s+/g,' ').slice(0,300);
+    S.hzScan={img:url, res};
+  } catch(e){ S.hzScan={img:url, err:'تعذّر قراءة الصورة. جرّب صورة أخرى.'}; }
+  if (S.view.name==='hzScan') render();
+}
+document.addEventListener('change', e=>{ const el=e.target; if (!el || (el.id!=='hzcam' && el.id!=='hzgal')) return; const f=el.files&&el.files[0]; el.value=''; if (f) hzAnalyze(f); });
+document.addEventListener('input', e=>{ if (e.target && e.target.id==='hzq'){ S.hzq=e.target.value; const pos=e.target.selectionStart; render(); const el=$('#hzq'); if (el){ el.focus(); try{ el.setSelectionRange(pos,pos); }catch(x){} } } });
+document.addEventListener('keydown', e=>{ if (e.target && e.target.id==='hzun' && e.key==='Enter'){ e.preventDefault(); ACT.hzUn(); } });
+Object.assign(ACT, {
+  hzOpen: k => { const was=S.view.name; S.hzSel = (S.hzSel===k && was==='hzGuide') ? '' : k; if (was!=='hzGuide'){ S.view={name:'hzGuide'}; S.hzq=''; } render(); setTimeout(()=>{ const d=$('#hzdet'); if (d) d.scrollIntoView({behavior:'smooth',block:'start'}); },30); },
+  hzUn: () => { const v=DIG(($('#hzun')||{}).value||'').trim(); if (!/^\d{4}$/.test(v)) return toast('اكتب رقم الأمم المتحدة من 4 أرقام'); const u=HZUN[v]; const c=u?hzCls(u[1]):null;
+    S.hzScan={manual:v, res:{cands:c?[{p:u[1]==='2.2'&&/أكسجين/.test(u[0])?'O2':u[1], name:u[0], c, conf:97, why:['رقم الأمم المتحدة '+v]}]:[], unNo:v, un:u||null, text:''}}; render(); },
+});
+
 navInit();
 window.addEventListener('hashchange', () => { const h=(location.hash||'').slice(1); if (HOK.includes(h)) go(h); });
 $('#enter').addEventListener('click', () => { S.entered=true; store.set('isnad-entered','1'); render(); });
