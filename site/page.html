@@ -779,6 +779,138 @@ th{font-size:12.5px;letter-spacing:.01em}
 .fchip.on:hover{color:var(--on-accent)}
 @media (prefers-reduced-motion: reduce){.modal,.mbox,.toast,.navg{animation:none!important}}
 .nav button:focus-visible,.navt:focus-visible{box-shadow:0 0 0 2px #E3CF9C!important}
+
+/* ---------- التصميم الاحترافي (2026/10): قائمة جانبية بمربعات أيقونات وشارات، شريط وردية كبير، مؤشرات بأيقونات، بطاقات أوضح، وشريط تبويب سفلي للجوال كتطبيق ---------- */
+:root{--g1:#13805F;--g2:#0B4A37;--g3:#073527;--gold-l:#E3CF9C}
+/* القائمة الجانبية */
+@media (min-width:861px){ .shell{grid-template-columns:272px minmax(0,1fr)} .side{padding:22px 16px;gap:18px} }
+.side{background:linear-gradient(180deg,#0B4A37 0%,#073527 70%,#052A1F 100%);isolation:isolate}
+.sidewm{position:fixed;right:-70px;bottom:-60px;width:280px;height:280px;object-fit:contain;opacity:.07;filter:grayscale(1) invert(1);mix-blend-mode:screen;pointer-events:none;z-index:-1}
+.brand{gap:12px;padding:4px 4px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.brand-mark{width:48px;height:48px;border-radius:14px;padding:4px;box-shadow:0 0 0 3px rgba(227,207,156,.35)}
+.brand b{font-size:16px;font-weight:700}
+.brand small{color:var(--gold-l);font-size:12px}
+.nav{gap:3px}
+.nav button{padding:7px 9px;gap:11px;border-radius:12px;border-inline-start:0;color:#CFE0D8;font-size:14px;font-weight:500;position:relative;transition:background .15s,color .15s}
+.nav button>svg{box-sizing:content-box;padding:7px;border-radius:10px;background:rgba(255,255,255,.06);color:#A9C6B9;opacity:1;width:17px;height:17px}
+.nav button:hover{background:rgba(255,255,255,.07)}
+.nav button[aria-current="page"]{background:#fff;color:#0B4A37;font-weight:700;box-shadow:0 10px 24px -10px rgba(0,0,0,.5)}
+.nav button[aria-current="page"]>svg{background:#0F6B4F;color:var(--gold-l)}
+.nav button[aria-current="page"]::before{content:"";position:absolute;inset-inline-start:-16px;top:10px;bottom:10px;width:4px;border-radius:0 4px 4px 0;background:var(--gold-l)}
+.nav .navbadge{min-width:22px;height:22px;font-size:11.5px;box-shadow:0 0 0 2px rgba(7,53,39,.6)}
+.navt{color:var(--gold-l)!important;opacity:.9;font-size:11.5px!important;font-weight:700!important;padding:12px 8px 4px!important}
+.navt:hover{background:transparent!important;opacity:1}
+.navg{border-inline-start:0;margin-inline-start:0;padding-inline-start:0}
+.side-foot{border-top-color:rgba(255,255,255,.08)}
+.logout{border-radius:12px}
+.main{padding-inline:36px}
+@media (max-width:860px){ .main{padding-inline:16px} }
+.wrap{max-width:1240px}
+/* البحث والعناوين */
+.gsearch input{min-height:50px;border-radius:16px;border:1px solid var(--line);box-shadow:0 1px 2px rgba(16,32,26,.04),0 10px 24px -22px rgba(7,53,39,.45)}
+.ph h1{font-size:30px;color:var(--text)}
+.dsub{color:var(--accent);font-weight:600}
+/* شريط الوردية */
+.dhero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(220px,300px);gap:28px;align-items:center;padding:26px 30px;border-radius:24px;color:#fff;background:radial-gradient(120% 140% at 100% 0%,#13805F 0%,#0B4A37 55%,#073527 100%);box-shadow:0 24px 50px -28px rgba(7,53,39,.7)}
+.dhero::before{content:"";position:absolute;left:-60px;top:-90px;width:320px;height:320px;border-radius:50%;border:1px solid rgba(227,207,156,.18);box-shadow:0 0 0 40px rgba(227,207,156,.04),0 0 0 80px rgba(227,207,156,.03);pointer-events:none}
+.dhero>*{position:relative;min-width:0}
+.dh-lbl{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--gold-l);background:rgba(227,207,156,.12);padding:5px 12px;border-radius:20px}
+.dh-lbl i{width:8px;height:8px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 4px rgba(74,222,128,.25)}
+.dhero h2{font-size:30px;font-weight:700;margin:10px 0 4px;color:#fff}
+.dhero p{margin:0;color:#BFD6CB;font-size:13.5px}
+.dh-st{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.dh-st button{all:unset;cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:9px 16px;min-width:84px;transition:background .15s}
+.dh-st button:hover{background:rgba(255,255,255,.14)}
+.dh-st button:focus-visible,.dh-nx:focus-visible{outline:2px solid var(--gold-l);outline-offset:2px}
+.dh-st small{display:block;color:#A9C6B9;font-size:12px}
+.dh-st b{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.dh-st button.bad b{color:#FFB4AB}
+.dh-r{position:relative;width:128px;height:128px}
+.dh-rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dh-rv b{font-size:26px;font-weight:700;line-height:1.1}
+.dh-rv small{font-size:12px;color:#BFD6CB}
+.dh-n{display:flex;flex-direction:column;gap:10px}
+.dh-cd{font-size:13.5px;color:#D8E6DF}
+.dh-cd b{color:var(--gold-l);font-size:18px;margin:0 2px;font-variant-numeric:tabular-nums}
+.dh-nx{all:unset;cursor:pointer;display:block;background:rgba(255,255,255,.96);color:#10201A;border-radius:16px;padding:12px 16px;border-inline-start:4px solid var(--gold-l)}
+.dh-nx small{display:block;font-size:12px;color:#5C6B64}
+.dh-nx b{display:block;font-size:17px;color:#0B4A37;margin:2px 0}
+.dh-nx span{font-size:12.5px;color:#8A6A2A;font-weight:600}
+/* المؤشرات */
+.kpi{position:relative;padding:18px 20px 18px;border-radius:20px;box-shadow:0 1px 2px rgba(16,32,26,.04),0 12px 28px -24px rgba(7,53,39,.4)}
+.kic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;margin-bottom:8px}
+.kic.g{background:#E7F1EC;color:#0F6B4F}.kic.b{background:#E8F0FB;color:#1D5FA8}.kic.a{background:#F7EFDB;color:#8A6A2A}.kic.r{background:var(--danger-bg);color:var(--danger)}
+.kpi .kv{font-size:30px;font-weight:700}
+.kv.bad{color:var(--danger)}
+.kpi .kbar{height:6px;border-radius:6px;margin:6px 0 2px}.kpi .kbar i{border-radius:6px;background:linear-gradient(90deg,#13805F,#0F6B4F)}
+/* اللوحات والقوائم */
+.panel{border-radius:20px;box-shadow:0 1px 2px rgba(16,32,26,.04)}
+.fu h2,.halerts h2,.sh h2{color:var(--text)}
+.furow{border-radius:12px;padding-inline:8px;margin-inline:-8px;width:calc(100% + 16px)}
+.furow:hover{background:var(--surface-2)}
+.furow .fuc bdi{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:7px;padding:2px 7px;font-size:12px}
+.stpill{height:28px;padding:0 12px}
+/* بطاقات الآليات */
+.grid{gap:18px}
+.vcard{border-radius:20px;box-shadow:0 1px 2px rgba(16,32,26,.04),0 18px 36px -30px rgba(7,53,39,.5)}
+.vthumb{height:172px;background:repeating-linear-gradient(135deg,var(--surface-2) 0 8px,var(--accent-soft) 8px 16px);color:#8FB3A3}
+.vthumb:has(img)::after{content:"";position:absolute;inset:auto 0 0 0;height:56px;background:linear-gradient(0deg,rgba(7,53,39,.5),transparent);pointer-events:none}
+.stpill.onimg{top:12px;right:12px;background:rgba(255,255,255,.95);box-shadow:0 6px 16px -6px rgba(0,0,0,.35)}
+.vbody{padding:16px;gap:10px;flex:1}
+.vname{font-size:16px;font-weight:700}
+.plate{border-radius:8px;padding:3px 10px;border:1px solid var(--line);background:var(--surface-2);color:var(--text)}
+.vfoot{margin-top:auto;padding-top:10px;border-top:1px solid var(--line-2)}
+/* التبويبات وأزرار التصفية: شكل مقسّم */
+.htabs{border-bottom:0;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:5px;gap:4px}
+.htab{border-bottom:0!important;margin:0;padding:9px 16px;border-radius:11px}
+.htab.on{background:var(--accent-soft);color:var(--g2)}
+.htab.on b{background:var(--accent);color:#fff}
+.vtog{background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.vtog button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);box-shadow:none}
+.fchip{border-radius:12px}
+/* الجداول */
+th{background:var(--surface-2);border-bottom:1px solid var(--line)}
+.panel>table:first-child thead th:first-child,.panel[style*="overflow-x"]>table thead th:first-child{border-start-start-radius:20px}
+.panel>table:first-child thead th:last-child,.panel[style*="overflow-x"]>table thead th:last-child{border-start-end-radius:20px}
+/* الوضع الداكن */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .kic.g{background:#16352A;color:#6CC49D} :root:not([data-theme="light"]) .kic.b{background:#16233F;color:#9DBBFF} :root:not([data-theme="light"]) .kic.a{background:#3A2F14;color:#E2BA5E} :root:not([data-theme="light"]) .htab.on{color:var(--accent)} }
+:root[data-theme="dark"] .kic.g{background:#16352A;color:#6CC49D} :root[data-theme="dark"] .kic.b{background:#16233F;color:#9DBBFF} :root[data-theme="dark"] .kic.a{background:#3A2F14;color:#E2BA5E} :root[data-theme="dark"] .htab.on{color:var(--accent)}
+@media (max-width:1100px) and (min-width:861px){ .dhero{grid-template-columns:minmax(0,1fr) auto} .dh-n{grid-column:1/-1;flex-direction:row;align-items:center;flex-wrap:wrap} }
+
+/* الجوال: رأس أخضر مختصر وشريط تبويب سفلي ثابت (مثل التطبيقات) */
+@media (max-width:860px){
+  .sidewm{display:none}
+  .sitever{bottom:calc(74px + env(safe-area-inset-bottom,0px))!important}
+  .side .isnad-home{width:40px;height:40px;padding:0;margin:0;border-radius:12px;flex:none}
+  .side .isnad-home span{display:none}
+  .side{flex-wrap:nowrap;padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px));top:0;background:linear-gradient(160deg,#13805F,#0B4A37 60%,#073527);border-radius:0 0 20px 20px;box-shadow:0 10px 24px -16px rgba(7,53,39,.6)}
+  .brand{border:0;padding:0;flex:1;min-width:0}
+  .brand-mark{width:40px;height:40px;border-radius:12px;box-shadow:0 0 0 2px rgba(227,207,156,.4)}
+  .brand>div{min-width:0;flex:1}
+  .brand b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .side-foot .logout{background:rgba(255,255,255,.12);padding:9px 11px}
+  .side-foot .logout span{display:none}
+  .nav{position:fixed;bottom:0;left:0;right:0;z-index:40;order:0;width:auto;background:var(--surface);border-top:1px solid var(--line);border-radius:22px 22px 0 0;box-shadow:0 -12px 30px -20px rgba(7,53,39,.4);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));gap:2px;flex-wrap:nowrap;scroll-snap-type:x proximity}
+  .nav button{flex:0 0 auto;min-width:72px;max-width:96px;flex-direction:column;gap:3px;padding:6px 4px;border:0!important;border-radius:12px;color:var(--faint);font-size:11px;font-weight:600;white-space:normal;line-height:1.25;text-align:center;scroll-snap-align:center}
+  .nav button>span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .nav button>svg{padding:5px 14px;border-radius:14px;background:transparent;color:inherit}
+  .nav button:hover{background:transparent}
+  .nav button[aria-current="page"]{background:transparent;color:var(--accent);box-shadow:none;font-weight:700}
+  .nav button[aria-current="page"]>svg{background:var(--accent-soft);color:var(--accent)}
+  .nav button[aria-current="page"]::before{display:none}
+  .nav .navbadge{position:absolute;top:2px;inset-inline-start:calc(50% + 6px);margin:0;min-width:18px;height:18px;font-size:10.5px;box-shadow:0 0 0 2px var(--surface)}
+  .main{padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .dhero{grid-template-columns:minmax(0,1fr) auto;gap:14px;padding:20px;border-radius:22px}
+  .dhero h2{font-size:24px}
+  .dh-r{width:96px;height:96px}.dh-r .dring{width:96px;height:96px}.dh-rv b{font-size:20px}
+  .dh-n{grid-column:1/-1}
+  .dh-st button{flex:1;min-width:0;padding:8px 10px}
+  .kpi{padding:14px;border-radius:18px}.kpi .kv{font-size:24px}.kic{width:38px;height:38px;border-radius:12px}
+  .ph h1{font-size:24px}
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .dh-nx{background:#151D1A;color:#E6ECE9} :root:not([data-theme="light"]) .dh-nx b{color:#6CC49D} }
+:root[data-theme="dark"] .dh-nx{background:#151D1A;color:#E6ECE9} :root[data-theme="dark"] .dh-nx b{color:#6CC49D}
 </style>
 
 <div id="welcome" class="welcome" hidden>
@@ -796,6 +928,7 @@ th{font-size:12.5px;letter-spacing:.01em}
 
 <div id="shell" class="shell" hidden>
   <aside class="side">
+    <img class="sidewm" id="sidewm" alt="" aria-hidden="true" hidden>
     <div class="brand">
       <a class="brand-mark" id="blogo" href="index.html" title="القائمة الرئيسية" aria-label="القائمة الرئيسية"></a>
       <div><b>قسم الدعم والإسناد</b><small>الدفاع المدني</small></div>
@@ -1204,6 +1337,7 @@ async function openDocxViewer(ref, title){
 function renderBrand(){
   const id=S.settings.logo;
   const img = id ? `<img src="${blob(id)}" alt="شعار الدفاع المدني">` : ICON.shield(24);
+  const wm=$('#sidewm'); if (wm){ if (id){ wm.src=blob(id); wm.hidden=false; } else wm.hidden=true; }
   $('#blogo').innerHTML=img; $('#wlogo').innerHTML = id ? `<img src="${blob(id)}" alt="شعار الدفاع المدني">` : ICON.shield(44);
 }
 function renderWho(){
@@ -1311,11 +1445,26 @@ function viewDash(){
   const size=k?cfg.shifts[k]||0:0, pres=k?shiftPres(k, dayKey(off)):0, miss=Math.max(0,size-pres);
   const c=stCounts(), rated=c.ready+c.down+c.maint, pct=rated?c.ready/rated:null;
   const trainAway=S.vehicles.filter(v=>stOf(v)==='away').length;
-  const tiles=`<section class="kpis" aria-label="مؤشرات اليوم">
-    <button type="button" class="kpi main" data-act="nav" data-id="staff"><span class="kt">الوردية المناوبة</span><span class="kv">${k?SHN[k].replace('الوردية ',''):'—'}</span><span class="kd">${CTRL?(k?esc(ctTime(k)+' · '+ctGrpN(k)):'حدّد المجموعة المناوبة من «تعديل القوة والورديات»'):`٩ ص ${esc(dutyDateStr(d))} ← ٩ ص ${esc(dutyDateStr(d+1))}`}</span></button>
-    <button type="button" class="kpi" data-act="nav" data-id="staff"><span class="kt">قوة الوردية</span><span class="kv">${arD(pres)} <small>من ${arD(size)}</small></span><span class="kbar"><i style="width:${size?Math.min(100,pres/size*100).toFixed(0):0}%"></i></span>${miss?`<span class="kd bad">نقص ${arD(miss)}</span>`:'<span class="kd">مكتملة</span>'}</button>
-    <button type="button" class="kpi" data-act="dashVeh" data-id="ready"><span class="kt">جاهزية الآليات</span><span class="kv ok">${pct==null?'—':esc(pctFmt(pct))}</span><span class="kd">${arD(c.ready)} جاهزة من ${arD(rated)} لدينا</span></button>
-    ${CENTER?`<button type="button" class="kpi" data-act="dashVeh" data-id="incoming"><span class="kt">دعم وارد</span><span class="kv away">${arD(incAll().length)}</span>`:`<button type="button" class="kpi" data-act="dashVeh" data-id="away"><span class="kt">آليات مدعومة لجهات أخرى</span><span class="kv away">${arD(trainAway)}</span>`}<span class="kd">متعطلة ${arD(c.down)} · صيانة ${arD(c.maint)}</span></button>
+  // شريط الوردية المناوبة: الاسم والوقت ودائرة اكتمال القوة والمتبقي على التسليم والوردية القادمة
+  const KI={staff:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.6"/><path d="M16.5 14.6c2.6.1 4.4 1.8 5 4.9"/>',truck:'<rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/>',alert:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',share:'<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>'};
+  const ki=(n,c)=>`<span class="kic ${c}" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${KI[n]}</svg></span>`;
+  const nk=k?(CTRL?ctNow(Date.now()+8*36e5):dutyShift(d+1)):'';
+  const nPres=nk?shiftPres(nk, dayKey(CTRL?0:off+1)):0, nSize=nk?cfg.shifts[nk]||0:0;
+  const left=CTRL?8*36e5-((Date.now()+3*36e5)%(8*36e5)):((d+1)*864e5+DUTY_H*36e5-DUTY_TZ_MS)-Date.now();
+  const lh=Math.max(0,Math.floor(left/36e5)), lm=Math.max(0,Math.floor(left%36e5/6e4));
+  const R=52, C=2*Math.PI*R, fr=size?Math.min(1,pres/size):0;
+  const ring=`<svg class="dring" width="128" height="128" viewBox="0 0 128 128" aria-hidden="true"><circle cx="64" cy="64" r="${R}" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="12"/><circle cx="64" cy="64" r="${R}" fill="none" stroke="${miss?'#F2B8B5':'#E3CF9C'}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${(C*fr).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 64 64)"/></svg>`;
+  const hero = k ? `<section class="dhero" aria-label="الوردية المناوبة">
+    <div class="dh-l"><span class="dh-lbl"><i></i>الوردية المناوبة الآن</span><h2>${SHN[k]}</h2><p>${CTRL?esc(ctTime(k)+' · '+ctGrpN(k)):`من ٩:٠٠ ص ${esc(dutyDateStr(d))} إلى ٩:٠٠ ص ${esc(dutyDateStr(d+1))}`}</p>
+      <div class="dh-st"><button type="button" data-act="nav" data-id="staff"><small>قوة الوردية</small><b>${arD(size)}</b></button><button type="button" data-act="nav" data-id="staff"><small>الموجود</small><b>${arD(pres)}</b></button><button type="button" data-act="nav" data-id="staff"${miss?' class="bad"':''}><small>النقص</small><b>${arD(miss)}</b></button></div></div>
+    <div class="dh-r">${ring}<span class="dh-rv"><b>${arD(pres)}/${arD(size)}</b><small>${miss?'نقص '+arD(miss):'مكتملة'}</small></span></div>
+    <div class="dh-n"><span class="dh-cd">التسليم بعد <b>${arD(lh)}:${arD(String(lm).padStart(2,'0'))}</b> ساعة</span>${nk?`<button type="button" class="dh-nx" data-act="nav" data-id="staff"><small>الوردية القادمة</small><b>${SHN[nk]}</b><span>المتوقع حضوره ${arD(nPres)} من ${arD(nSize)}</span></button>`:''}</div>
+  </section>` : `<section class="dhero"><div class="dh-l"><span class="dh-lbl"><i></i>الوردية المناوبة</span><h2>—</h2><p>${CTRL?'حدّد المجموعة المناوبة من «تعديل القوة والورديات»':''}</p></div></section>`;
+  const tiles=hero+`<section class="kpis" aria-label="مؤشرات اليوم">
+    <button type="button" class="kpi" data-act="nav" data-id="staff">${ki('staff','a')}<span class="kt">قوة الوردية</span><span class="kv">${arD(pres)} <small>من ${arD(size)}</small></span><span class="kbar"><i style="width:${size?Math.min(100,pres/size*100).toFixed(0):0}%"></i></span>${miss?`<span class="kd bad">نقص ${arD(miss)}</span>`:'<span class="kd">مكتملة</span>'}</button>
+    <button type="button" class="kpi" data-act="dashVeh" data-id="ready">${ki('truck','g')}<span class="kt">جاهزية الآليات</span><span class="kv ok">${pct==null?'—':esc(pctFmt(pct))}</span><span class="kbar"><i style="width:${pct==null?0:Math.round(pct*100)}%"></i></span><span class="kd">${arD(c.ready)} جاهزة من ${arD(rated)} لدينا</span></button>
+    <button type="button" class="kpi" data-act="dashVeh" data-id="notready">${ki('alert','r')}<span class="kt">آليات غير جاهزة</span><span class="kv${c.down+c.maint?' bad':''}">${arD(c.down+c.maint)}</span><span class="kd">متعطلة ${arD(c.down)} · صيانة ${arD(c.maint)}</span></button>
+    ${CENTER?`<button type="button" class="kpi" data-act="dashVeh" data-id="incoming">${ki('share','b')}<span class="kt">دعم وارد</span><span class="kv away">${arD(incAll().length)}</span>`:`<button type="button" class="kpi" data-act="dashVeh" data-id="away">${ki('share','b')}<span class="kt">آليات مدعومة لجهات أخرى</span><span class="kv away">${arD(trainAway)}</span>`}<span class="kd">${CENTER?'آليات داعمة من جهات أخرى':'لدى جهات أخرى حالياً'}</span></button>
   </section>`;
   const ord={down:0,maint:1,away:2};
   const L=sortedVehicles().filter(v=>stOf(v) in ord).sort((a,b)=>ord[stOf(a)]-ord[stOf(b)]);
