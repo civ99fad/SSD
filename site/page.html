@@ -2274,7 +2274,9 @@ const HCLS = {present:'hs-ok', absent:'hs-bad', lateP:'hs-mid', lateN:'hs-bad', 
 const hStOf = p => HST[p.status] ? p.status : 'present';
 const dayKey = n => { try { return HFN ? hkey(HFN.format(new Date(Date.now()+n*864e5))) : 0; } catch(e){ return 0; } };
 const dayStr = n => { try { return HFN ? HFN.format(new Date(Date.now()+n*864e5)).replace(/[\u200f\s]/g,'').replace(/هـ?$/,'')+'هـ' : ''; } catch(e){ return ''; } };
-function effSt(p, dk){ const s=hStOf(p); if (s==='present' || !dk) return s; const f=p.from?hkey(p.from):0, t=p.to?hkey(p.to):0;
+// حالات اليوم الواحد (غياب، تأخير، استئذان، دعم وردية) بلا تاريخ نهاية تنتهي تلقائياً بعد يومها ويعود الفرد «موجود»
+const ONEDAY = ['absent','lateP','lateN','excuse','support'];
+function effSt(p, dk){ const s=hStOf(p); if (s==='present' || !dk) return s; const f=p.from?hkey(p.from):0, t=p.to?hkey(p.to):(ONEDAY.includes(s)?f:0);
   if (f && dk<f) return 'present'; if (t && dk>t) return 'present'; return s; }
 const effNow = p => effSt(p, dayKey(0));
 const subName = p => { const q=p.sub&&getP(p.sub); return q?pLabel(q):(p.subN||''); };
@@ -2290,8 +2292,8 @@ function staffAlerts(){
   const out=[], st=S.staff||[], cfg=hCfg(), d0=dayKey(0); if (!d0) return out;
   const pl = p => (p.rank?p.rank+' / ':'')+(p.name||'فرد');
   st.forEach(p=>{ const s=hStOf(p); if (s==='present') return;
-    const f=p.from?hkey(p.from):0, t=p.to?hkey(p.to):0;
-    if (t && d0>t) out.push({lvl:'end', id:p.id, text:`انتهت ${HST[s]} ${pl(p)} بتاريخ ${p.to} — احتُسب «موجود» في النسبة.`});
+    const f=p.from?hkey(p.from):0, t=p.to?hkey(p.to):(ONEDAY.includes(s)?f:0);
+    if (t && d0>t) out.push({lvl:'end', id:p.id, text:`انتهت ${HST[s]} ${pl(p)} بتاريخ ${p.to||p.from} — احتُسب «موجود» في النسبة.`});
     else if (f && f>=d0){ let n=-1; for (let i=0;i<=7;i++){ if (dayKey(i)===f){ n=i; break; } }
       if (n>=0) out.push({lvl:'soon', id:p.id, text:`${n===0?'تبدأ اليوم':n===1?'تبدأ غداً':'تبدأ بعد '+arD(n)+' أيام'} ${HST[s]} ${pl(p)} (${p.from}${p.to?' إلى '+p.to:''}).`}); }
     else if (t && t>=d0 && t===dayKey(1)) out.push({lvl:'info', id:p.id, text:`تنتهي ${HST[s]} ${pl(p)} غداً (${p.to}).`});
