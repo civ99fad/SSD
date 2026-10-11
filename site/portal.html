@@ -187,6 +187,33 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
   .units{grid-template-columns:1fr 1fr}.uc{padding:10px;gap:10px}.uc .tile{display:none}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* تحسينات: حركة خفيفة وحلقات تركيز وحدود أنعم (نفس العناصر) */
+.hero{overflow:visible}.hero .deco{position:absolute;inset:0;overflow:hidden;pointer-events:none} /* نتائج البحث لا تُقص أسفل المساحة الخضراء */
+.sbox input:focus-visible{box-shadow:none!important}
+.sbox input::-webkit-search-cancel-button{filter:grayscale(1);opacity:.6}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(15,107,79,.22)!important;border-radius:10px}
+::selection{background:rgba(15,107,79,.18)}
+.hero h1{letter-spacing:-.015em}
+.sbox{transition:box-shadow .2s}
+.sbox:focus-within{box-shadow:0 0 0 4px rgba(227,207,156,.35),0 18px 40px -18px rgba(0,0,0,.45)}
+.sbox button{transition:background .15s,transform .12s}.sbox button:active{transform:scale(.97)}
+.sres{animation:srIn .16s cubic-bezier(.2,.7,.2,1);transform-origin:top}
+@keyframes srIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.sres a{transition:background .12s}
+.adm .cta svg,.qa .chev,.uc .chev{transition:transform .2s cubic-bezier(.2,.7,.2,1)}
+.adm:hover .cta svg{transform:translateX(-4px)}
+.qa,.uc{transition:border-color .15s,box-shadow .2s,transform .2s cubic-bezier(.2,.7,.2,1)}
+.qa:hover,.uc:hover{transform:translateY(-2px);box-shadow:0 16px 32px -22px rgba(8,53,39,.45)}
+.qa:hover .chev,.uc:hover .chev{transform:translateX(-3px);color:var(--green)}
+.row{transition:background .15s}
+.row .go{transition:background .15s,border-color .15s,color .15s,transform .2s}
+.row:hover .go{transform:translateX(-3px)}
+.panel{box-shadow:0 1px 2px rgba(16,32,26,.04),var(--shadow)}
+.obtn{transition:border-color .15s,color .15s}
+.ph .big{box-shadow:0 8px 18px -10px rgba(8,53,39,.55)}
+@media (prefers-reduced-motion: reduce){.sres{animation:none}}
 </style>
 </head>
 <body>
@@ -279,7 +306,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
   document.addEventListener('keydown', (e) => { if (e.key === '/' && !/input|textarea/i.test((document.activeElement || {}).tagName || '') && $('q')) { e.preventDefault(); $('q').focus(); } });
 
   // ---------- أجزاء الصفحة ----------
-  const hero = (inner, sub) => `<section class="hero${sub ? ' sub' : ''}"><span class="ring r1"></span><span class="ring r2"></span>${cfg.logo ? `<img class="wm" src="${esc(cfg.logo)}" alt="">` : ''}<div class="wrap">${inner}</div></section>`;
+  const hero = (inner, sub) => `<section class="hero${sub ? ' sub' : ''}"><span class="deco" aria-hidden="true"><span class="ring r1"></span><span class="ring r2"></span>${cfg.logo ? `<img class="wm" src="${esc(cfg.logo)}" alt="">` : ''}</span><div class="wrap">${inner}</div></section>`;
   const crumb = (items) => `<nav class="crumb" aria-label="المسار">${items.map(([t, h]) => (h ? `<a href="${h}">${esc(t)}</a>` : `<span>${esc(t)}</span>`)).join('<span>/</span>')}</nav>`;
   const authChip = (id) => (signed(id) ? '<span class="auth on"><i></i>مسجّل الدخول</span>' : `<span class="auth">${sv(P.lock, 13, 2.2)}دخول مستقل</span>`);
   const qa = (h, t, s, ic) => `<a class="qa" href="${esc(h)}"><span class="tile">${sv(ic)}</span><span class="tx"><b>${esc(t)}</b><small>${esc(s)}</small></span><span class="chev">${CHEV}</span></a>`;

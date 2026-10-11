@@ -691,6 +691,94 @@ html.u-patrol .dpt:not(.d-patrol),html.u-lic .dpt:not(.d-lic),html.u-supply .dpt
 .dcard{border-width:1px;border-radius:16px;box-shadow:var(--shadow-card)}
 .mbox{border-radius:20px}
 th{font-weight:600}
+
+/* ---------- تحسينات التصميم: خط وحدود وحقول ونوافذ منبثقة وحركة خفيفة (نفس العناصر والعبارات) ---------- */
+:root{ --ring:0 0 0 3px rgba(15,107,79,.18); --r-sm:10px; --r-md:12px; --r-lg:18px; --ease:cubic-bezier(.2,.7,.2,1) }
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+h1,h2,h3{letter-spacing:-.005em}
+.ph h1{font-size:28px}
+::selection{background:rgba(15,107,79,.18)}
+*{scrollbar-width:thin;scrollbar-color:rgba(16,32,26,.22) transparent}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:rgba(16,32,26,.2);border-radius:10px;border:3px solid transparent;background-clip:content-box}
+:focus-visible{outline:none;box-shadow:var(--ring)!important;border-radius:8px}
+
+/* الأزرار */
+.btn{min-height:42px;border-radius:var(--r-md);transition:background .15s,border-color .15s,box-shadow .15s,transform .12s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{box-shadow:0 6px 16px -8px rgba(15,107,79,.55)}
+.btn.primary:hover{color:var(--on-accent);transform:translateY(-1px);box-shadow:0 10px 20px -10px rgba(15,107,79,.6)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn.danger:hover{color:var(--danger)}
+.icon-btn{border-radius:var(--r-sm);transition:background .15s,color .15s}
+
+/* الحقول */
+.fld{gap:7px;margin-bottom:16px}
+.fld label{font-size:13px;font-weight:600;color:var(--text)}
+.fld input,.fld select,.fld textarea{border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);min-height:46px;padding:11px 14px;transition:border-color .15s,box-shadow .15s;box-shadow:inset 0 1px 2px rgba(16,32,26,.04)}
+.fld input:hover,.fld select:hover,.fld textarea:hover{border-color:#B9C8C0}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--accent);box-shadow:var(--ring)}
+.fld input::placeholder,.fld textarea::placeholder{color:#9AA7A1}
+.fld select{appearance:none;-webkit-appearance:none;padding-left:40px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235C6B64' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center}
+.fld small{line-height:1.6}
+.row2{gap:14px}
+.search input,.gsearch input{border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 2px rgba(16,32,26,.04);transition:border-color .15s,box-shadow .15s}
+.search input:focus,.gsearch input:focus{border-color:var(--accent);box-shadow:var(--ring)}
+
+/* النوافذ المنبثقة: خلفية ضبابية، رأس ثابت بزر إغلاق، وأزرار ثابتة أسفل النافذة */
+.modal{background:rgba(8,28,20,.42);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:mFade .18s ease}
+.mbox{border-radius:22px;box-shadow:0 40px 80px -24px rgba(8,28,20,.45),0 0 0 1px rgba(16,32,26,.06);animation:mPop .22s var(--ease)}
+.mbox:not(.viewer):not(.lb){padding:0 26px 0;display:block}
+.mbox:not(.viewer):not(.lb)>h2{position:sticky;top:0;z-index:2;margin:0 -26px 18px;padding:22px 26px 16px 64px;background:var(--surface);border-bottom:1px solid var(--line-2);font-size:19px;font-weight:700}
+.mbox:not(.viewer):not(.lb) .mact{position:sticky;bottom:0;z-index:2;margin:6px -26px 0;padding:14px 26px 18px;background:var(--surface);border-top:1px solid var(--line-2)}
+.mbox:not(.viewer):not(.lb)>p:last-child,.mbox:not(.viewer):not(.lb)>form:last-child{margin-bottom:0}
+.mclose{position:sticky;top:16px;float:left;z-index:3;margin:16px -10px 0 0;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s,color .15s}
+.mclose:hover{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.mbox.viewer .mclose,.mbox.lb .mclose{display:none}
+@keyframes mFade{from{opacity:0}to{opacity:1}}
+@keyframes mPop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes mSheet{from{transform:translateY(100%)}to{transform:none}}
+@media (max-width:600px){
+  .modal:has(.mbox:not(.viewer):not(.lb)){align-items:flex-end;padding:0}
+  .mbox:not(.viewer):not(.lb){max-width:none;border-radius:24px 24px 0 0;max-height:92vh;animation:mSheet .26s var(--ease);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .mbox:not(.viewer):not(.lb)>h2{padding-top:26px}
+  .mbox:not(.viewer):not(.lb)>h2::before{content:"";position:absolute;top:9px;left:50%;transform:translateX(-50%);width:42px;height:5px;border-radius:9px;background:var(--line)}
+  .mbox:not(.viewer):not(.lb) .row2{grid-template-columns:1fr}
+  .mbox:not(.viewer):not(.lb) .mact .btn{flex:1}
+}
+
+/* التنبيه السريع */
+.toast{border-radius:14px;padding:12px 20px;box-shadow:0 18px 40px -12px rgba(8,28,20,.45);animation:tUp .25s var(--ease)}
+@keyframes tUp{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* القائمة الجانبية: انبثاق القوائم الفرعية بحركة ناعمة */
+.nav button{transition:background .15s,color .15s}
+.nav button svg{opacity:.85}
+.nav button[aria-current="page"] svg{opacity:1;color:#E3CF9C}
+.navt{padding:9px 14px!important;color:#9FB8AC;font-size:12.5px;font-weight:600;letter-spacing:.01em}
+.navt:hover{background:rgba(255,255,255,.06)}
+.navt .chev{opacity:.7}
+.navg{border-inline-start-color:rgba(255,255,255,.1)}
+.navg:not(.closed){animation:navIn .2s var(--ease)}
+@keyframes navIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* البطاقات والجداول والشارات */
+.panel{border-radius:var(--r-lg)}
+.panel[style*="overflow-x"]{overflow:hidden}
+.panel table tbody tr{transition:background .12s}
+.panel table tbody tr:hover{background:#F7FAF8}
+th{font-size:12.5px;letter-spacing:.01em}
+.kpi,.dcard,.wcardx{transition:transform .18s var(--ease),box-shadow .18s}
+.kpi:hover,.dcard:hover,.wcardx:hover{transform:translateY(-2px);box-shadow:0 18px 36px -22px rgba(8,53,39,.38)}
+.stpill{font-weight:600;box-shadow:inset 0 0 0 1px rgba(16,32,26,.06)}
+.htabs{border-bottom-width:1px}
+.htab{font-weight:600;border-bottom-width:2.5px;margin-bottom:-1px;transition:color .15s}
+.htab.on{font-weight:700}
+.fchip{transition:background .15s,border-color .15s,color .15s,box-shadow .15s}
+.fchip:hover{border-color:var(--accent);color:var(--accent)}
+.fchip.on{box-shadow:0 6px 14px -8px rgba(15,107,79,.6)}
+.fchip.on:hover{color:var(--on-accent)}
+@media (prefers-reduced-motion: reduce){.modal,.mbox,.toast,.navg{animation:none!important}}
+.nav button:focus-visible,.navt:focus-visible{box-shadow:0 0 0 2px #E3CF9C!important}
 </style>
 
 <div id="welcome" class="welcome" hidden>
@@ -949,8 +1037,9 @@ async function saveW(id, patch){ await wref(id).update(Object.assign({updated:Da
 let lastFocus = null;
 function openModal(html, cls){
   lastFocus = document.activeElement;
-  const m=$('#modal'); m.innerHTML=`<div class="mbox ${cls||''}" role="dialog" aria-modal="true" aria-labelledby="mt">${html}</div>`; m.hidden=false;
-  const f = m.querySelector('input,select,textarea,button.primary,button'); if (f) f.focus();
+  const x = cls==='viewer'||cls==='lb' ? '' : `<button type="button" class="mclose" data-act="closeModal" aria-label="إغلاق"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>`;
+  const m=$('#modal'); m.innerHTML=`<div class="mbox ${cls||''}" role="dialog" aria-modal="true" aria-labelledby="mt">${x}${html}</div>`; m.hidden=false;
+  const f = m.querySelector('input,select,textarea,button.primary:not(.mclose),button:not(.mclose)'); if (f) f.focus();
 }
 function closeModal(){ S.lb=null; const m=$('#modal'); m.hidden=true; m.innerHTML=''; if(lastFocus && document.contains(lastFocus)) lastFocus.focus(); }
 function showPhoto(vid, key, idx, list){
