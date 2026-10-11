@@ -919,6 +919,12 @@ th{background:var(--surface-2);border-bottom:1px solid var(--line)}
   .side .navt .chev{opacity:.9}
   .side .navg{padding-inline-start:10px;margin-top:2px}
   .side .navg button{font-size:13.5px}
+  /* البنود الرئيسية التي ليس تحتها فروع (لوحة اليوم، المستشار، حدود المركز…) بنفس شكل عناوين الأقسام الذهبية */
+  .side .nav>button:not(.navt),html.u-supply .side #navb-fleet>button{font-size:13.5px;font-weight:700;color:#EBDDB5;background:rgba(227,207,156,.09);border:1px solid rgba(227,207,156,.16);margin-top:6px;padding:6px 8px}
+  .side .nav>button:not(.navt)>svg,html.u-supply .side #navb-fleet>button>svg{background:rgba(227,207,156,.14);color:#EBDDB5}
+  .side .nav>button:not(.navt):hover,html.u-supply .side #navb-fleet>button:hover{background:rgba(227,207,156,.15)}
+  .side .nav>button[aria-current="page"],html.u-supply .side #navb-fleet>button[aria-current="page"]{background:#fff;color:#0B4A37;border-color:#fff}
+  .side .nav>button[aria-current="page"]>svg,html.u-supply .side #navb-fleet>button[aria-current="page"]>svg{background:#0F6B4F;color:#E3CF9C}
 }
 /* النوافذ المنبثقة: خلفية بلون هوية الموقع (أخضر داكن) بدل الشفاف، وإطار واضح للنافذة */
 .modal{background:rgba(7,53,39,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
