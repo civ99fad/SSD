@@ -289,7 +289,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
   const blk = (title, ids) => { const c = ids.filter((i) => byId[i]); return c.length ? `<div class="blk"><h3>${esc(title)}<span class="n">${c.length}</span></h3><div class="units">${c.map(uc).join('')}</div></div>` : ''; };
 
   const VIEWS = {
-    '': () => hero(`<h1>البوابة الموحدة</h1><span class="h1sub">بوابة الإدارات والأقسام</span><p>الوصول إلى صفحات الإدارات والمراكز والأقسام من مكان واحد. يطلب كل قسم بيانات الدخول الخاصة به.</p>${searchBox()}`)
+    '': () => hero(`<h1>البوابة الموحدة</h1><span class="h1sub">بوابة الإدارات والأقسام</span><p>الوصول إلى صفحات الإدارات والمراكز والأقسام من مكان واحد.</p>${searchBox()}`)
       + `<main class="body wrap"><div class="grid2">
         <a class="adm" href="#ops"><div class="band"><span class="disc">${sv(P.flame, 44, 1.6)}</span><span class="badge">${OPS.length} جهة</span></div>
           <div class="in"><div><h2>إدارة العمليات</h2><p>المراكز والأقسام المتخصصة والإدارية، ولوحات القيادة.</p></div>
