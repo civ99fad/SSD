@@ -966,7 +966,7 @@ body:has(.modal:not([hidden])) .sitever{display:none}
       </button>
       <button type="button" class="dpt d-admin" data-act="nav" data-id="dpfiles" id="nav-dpfiles">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        <span>ملفات الأفراد</span>
+        <span>ملفات المنسوبين</span>
       </button>
       <button type="button" class="dpt d-tech" data-act="nav" data-id="dfleet" id="nav-dfleet">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="7" width="15" height="11" rx="1.5"/><path d="M16 10h3l3 3v5h-6z"/><circle cx="6" cy="19.5" r="1.8"/><circle cx="17.5" cy="19.5" r="1.8"/></svg>
@@ -1027,7 +1027,7 @@ body:has(.modal:not([hidden])) .sitever{display:none}
       </button>
       <button type="button" data-act="nav" data-id="pfiles" id="nav-pfiles">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="2.2"/><path d="M8.5 18c.5-1.8 1.8-2.8 3.5-2.8s3 1 3.5 2.8"/></svg>
-        <span>ملفات الأفراد</span>
+        <span>ملفات المنسوبين</span>
       </button>
       <button type="button" data-act="nav" data-id="tx" id="nav-tx">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>
@@ -1109,12 +1109,12 @@ body:has(.modal:not([hidden])) .sitever{display:none}
 // مركز التحكم والتوجيه: أقسام خاصة به (أرقام المسؤولين، الجهات المساندة، الخرائط)
 if (((window.ISNAD_CONFIG||{}).unit||'isnad')==='isnad') document.documentElement.classList.add('u-iso');
 const DEPT = (window.ISNAD_CONFIG||{}).dept||''; if (DEPT) document.documentElement.classList.add('u-'+DEPT);
-// أقسام السلامة: الجولات التفتيشية (الدوريات) أو المنشآت والتراخيص، ثم ملفات الأفراد، ثم إحصائيات الشعبة
+// أقسام السلامة: الجولات التفتيشية (الدوريات) أو المنشآت والتراخيص، ثم ملفات المنسوبين، ثم إحصائيات الشعبة
 if (DEPT==='patrol'||DEPT==='lic'){ const nv=document.querySelector('.nav'), P=DEPT==='patrol';
-  // قائمة منبثقة باسم القسم تحتها: الجولات/المنشآت، ثم الإحصائيات، ثم ملفات أفراد القسم
+  // قائمة منبثقة باسم القسم تحتها: الجولات/المنشآت، ثم الإحصائيات، ثم ملفات منسوبي القسم
   const lab=(id,t)=>{ const b=document.getElementById(id), sp=b&&b.querySelector('span'); if (sp) sp.textContent=t; return b; };
   if (nv){ nv.insertAdjacentHTML('afterbegin', `<button type="button" class="navh navt" data-act="navGrp" data-id="sf" id="navg-sf" aria-expanded="true" aria-controls="navb-sf"><span>${P?'قسم الدوريات':'قسم التراخيص'}</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="navg" id="navb-sf"></div>`);
-    const g=document.getElementById('navb-sf'); [P?lab('nav-rounds','الجولات التفتيشية'):lab('nav-lfac','المنشآت والتراخيص'), lab('nav-sfstat',P?'الإحصائيات':'إحصائيات الشعبة'), lab('nav-pfiles',P?'ملفات أفراد قسم الدوريات':'ملفات أفراد القسم')].forEach(b=>{ if (b) g.appendChild(b); }); } }
+    const g=document.getElementById('navb-sf'); [P?lab('nav-rounds','الجولات التفتيشية'):lab('nav-lfac','المنشآت والتراخيص'), lab('nav-sfstat',P?'الإحصائيات':'إحصائيات الشعبة'), lab('nav-pfiles',P?'ملفات منسوبي قسم الدوريات':'ملفات منسوبي القسم')].forEach(b=>{ if (b) g.appendChild(b); }); } }
 // فتح قائمة محددة من رابط البوابة (مثل sfnpat.html#rounds)
 const H0 = (location.hash||'').slice(1), HOK = DEPT==='patrol'?['rounds','sfstat','pfiles']:DEPT==='lic'?['lfac','sfstat','pfiles']:[];
 const CTRL = ((window.ISNAD_CONFIG||{}).unit)==='control'; if (CTRL){ document.documentElement.classList.add('u-ctrl'); const nv=document.querySelector('.nav'); // المكتبة التعليمية ثم المستشار في آخر القائمة
@@ -1387,7 +1387,7 @@ function render(){
   for (const k of ['dash','tasks','bounds','sites','forms','vehicles','warehouses','equip','profiles','returns','faults','staff','pfiles','advisor','audit','dcenters','dpfiles','dfleet','handover','rounds','lfac','sfstat','circ','tx','consum','officials','agencies','mapHyd','mapNcm','mapZones']){ const b=$('#nav-'+k); if (!b) continue; if (k===sect && !(S.gq||'').trim()) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); }
   { const nt=$('#nav-tasks'); if (nt){ let bd=nt.querySelector('.navbadge'); const n=S.loadedTk?(S.tasks||[]).filter(t=>tkSt(t)==='late').length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nt.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' مهام متأخرة'); } else if (bd) bd.remove(); } }
   { const nb=$('#nav-staff'); if (nb){ let bd=nb.querySelector('.navbadge'); const n=S.loadedH&&S.hrsLoaded?staffAlerts().length:0; if (n){ if(!bd){ bd=document.createElement('span'); bd.className='navbadge'; nb.appendChild(bd);} bd.textContent=n; bd.setAttribute('aria-label',n+' تنبيهات'); } else if (bd) bd.remove(); }
-    if (!DEPT && S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات الأفراد: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
+    if (!DEPT && S.loadedH && S.hrsLoaded && !S.alertToasted){ S.alertToasted=true; const a=staffAlerts(); if (a.length) setTimeout(()=>toast('تنبيهات المنسوبين: '+a.length+' — افتح «الورديات والتكميل»'),600); } }
   circBadge();
   if (S.loadedCirc && !S.circToasted){ S.circToasted=true; const n=circNew().length; if (n) setTimeout(()=>toast(n===1?'وصل تعميم جديد من مدير الإدارة العامة / مدير إدارة العمليات — افتح «التعاميم»':'وصلت '+n+' تعاميم جديدة من الإدارة — افتح «التعاميم»'),900); }
   if (v.name==='circ' && S.loadedCirc && circNew().length){ if (S.circSeenAt==null) S.circSeenAt=circSeen(); circMarkSeen(); setTimeout(circBadge,0); }
@@ -1451,7 +1451,7 @@ function viewSearch(raw){
   const vs=S.loadedV ? sortedVehicles().filter(v=>(pq.length>=2 && (plateKey(v.plate).includes(pq)||plateKey(v.code).includes(pq))) || norm([v.name,v.plate,v.make,v.model,v.code,enj(v.statusNote),v.statusAction,...incFor(v.id).map(incLabel)].join(' ')).includes(q)) : [];
   if (vs.length) out.push(`<section class="sec srch"><div class="sh"><h2>الآليات</h2><span class="muted">${esc(vCount(vs.length))}</span></div><div class="panel fu">${vs.slice(0,40).map(v=>`<button type="button" class="furow" data-act="openVehicle" data-id="${esc(v.id)}"><span class="fuc"><bdi dir="ltr">${esc(v.code||'—')}</bdi></span><span class="fun">${esc(v.name||'آلية')}${v.plate?`<small>${esc(v.plate)}</small>`:''}</span>${stPill(v)}</button>`).join('')}</div></section>`);
   const ps=(S.staff||[]).filter(p=>norm([p.rank,p.name,p.num,p.spec].join(' ')).includes(q)||DIG(p.num||'').includes(DIG(raw.trim())));
-  if (ps.length) out.push(`<section class="sec srch"><div class="sh"><h2>الأفراد</h2><span class="muted">${ps.length}</span></div><div class="panel fu">${ps.map(p=>`<button type="button" class="furow" data-act="nav" data-id="staff"><span class="fuc">${esc(p.num||'—')}</span><span class="fun">${esc(pLabel(p))}<small>${esc(SHN[String(p.shift||'1')])}</small></span>${hPill(p)}</button>`).join('')}</div></section>`);
+  if (ps.length) out.push(`<section class="sec srch"><div class="sh"><h2>المنسوبين</h2><span class="muted">${ps.length}</span></div><div class="panel fu">${ps.map(p=>`<button type="button" class="furow" data-act="nav" data-id="staff"><span class="fuc">${esc(p.num||'—')}</span><span class="fun">${esc(pLabel(p))}<small>${esc(SHN[String(p.shift||'1')])}</small></span>${hPill(p)}</button>`).join('')}</div></section>`);
   const eq=equipmentResults(raw); if (eq) out.push(eq);
   const tx=[...(S.letters||[]).map(r=>({r,k:'letters',t:r.subject,sub:[LDIR[ldOf(r)],r.num,r.party,r.date].filter(Boolean).join(' · '),txt:[r.subject,r.num,r.party,r.note]})),
             ...(S.ptx||[]).map(r=>({r,k:'ptx',t:pDisp(r,'p')+' — '+(r.type||''),sub:[r.details,r.date].filter(Boolean).join(' · '),txt:[pDisp(r,'p'),r.type,r.details]}))].filter(o=>norm(o.txt.join(' ')).includes(q));
@@ -2059,7 +2059,7 @@ function advFormBtns(f){
   return `<span class="advfm"><button type="button" class="btn sm" data-act="formOpen" data-id="${esc(f.id)}">${ICON.doc}${nm}</button>${f.file?`<a class="btn sm" href="${esc(blob(f.file))}" download="${esc(f.fileName||((f.title||'نموذج')+'.pdf'))}" style="text-decoration:none;color:var(--text)" aria-label="تحميل ${nm}">${ICON.dl}</a>`:''}</span>`;
 }
 // ---------- سجل التدقيق (قسم الإسناد فقط): من دخل ومن عدّل وماذا عدّل ----------
-const AUCOLL = {staff:'الأفراد والقوة',vehicles:'الآليات',equipment:'المعدات',warehouses:'المستودعات',consum:'الرغاوي والمحروقات',faults:'الأعطال',letters:'الخطابات الرسمية',ptx:'معاملات الأفراد',pdocs:'ملفات الأفراد',settings:'الإعدادات',sites:'المنشآت',absences:'الغيابات',tasks:'المهام',returns:'تقارير الرجيع',rewards:'المكافآت',missions:'المهمات',profiles:'المكتبة التعليمية',incoming:'الوارد',circulars:'التعاميم',officials:'المسؤولون',agencies:'الجهات المساندة',hr:'الورديات'};
+const AUCOLL = {staff:'المنسوبين والقوة',vehicles:'الآليات',equipment:'المعدات',warehouses:'المستودعات',consum:'الرغاوي والمحروقات',faults:'الأعطال',letters:'الخطابات الرسمية',ptx:'معاملات المنسوبين',pdocs:'ملفات المنسوبين',settings:'الإعدادات',sites:'المنشآت',absences:'الغيابات',tasks:'المهام',returns:'تقارير الرجيع',rewards:'المكافآت',missions:'المهمات',profiles:'المكتبة التعليمية',incoming:'الوارد',circulars:'التعاميم',officials:'المسؤولون',agencies:'الجهات المساندة',hr:'الورديات'};
 const AUFLD = {name:'الاسم',rank:'الرتبة',status:'الحالة',note:'الملاحظة',spec:'التخصص',shift:'الوردية',num:'الرقم',title:'العنوان',qty:'الكمية',date:'التاريخ',from:'من',to:'إلى',lic:'تصنيف الرخصة',licExp:'انتهاء الرخصة',idExp:'انتهاء الهوية',plate:'اللوحة',kind:'النوع',type:'النوع',location:'الموقع',statusNote:'ملاحظة الحالة',sub:'البديل',toShift:'الوردية المنقول إليها'};
 const auToday = () => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Riyadh'}).format(new Date());
 const auTime = t => new Date(t).toLocaleTimeString('ar-SA-u-nu-latn',{timeZone:'Asia/Riyadh',hour:'2-digit',minute:'2-digit'});
@@ -2088,7 +2088,7 @@ function viewAudit(){
   return head+who+`<h2 style="margin:14px 0 6px;font-size:16px">التعديلات (${edits.length})</h2>`+tbl+`<p class="hint" style="font-size:12.5px;color:var(--muted)">يُسجَّل ما يتم عبر رموز الجهات. تعديلات المسؤول بمفتاح GitHub مباشرة لا تظهر هنا (تجدها في سجل GitHub).</p>`;
 }
 
-/* ---------- الشعب الإدارية (التموين، الشؤون الإدارية، الشؤون الفنية): المراكز وآليات حائل وملفات أفراد المراكز ---------- */
+/* ---------- الشعب الإدارية (التموين، الشؤون الإدارية، الشؤون الفنية): المراكز وآليات حائل وملفات منسوبي المراكز ---------- */
 const DCENTERS = (window.ISNAD_CONFIG||{}).centers||[];
 S.cdata = {}; S.cload = false;
 async function loadCenters(){
@@ -2102,7 +2102,7 @@ const dAddBtn = (act, id, label) => S.canEdit ? `<button type="button" class="bt
 const dTable = (cols, rows) => `<div class="panel" style="overflow-x:auto"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
 function viewDCenters(){
   const sup = DEPT==='supply';
-  const head = `<header class="ph"><div class="ph-t"><h1>المراكز</h1><span class="count">${sup?'العهد المسلّمة لكل مركز':'التشكيل الإداري للأفراد في كل مركز'}</span></div></header>`;
+  const head = `<header class="ph"><div class="ph-t"><h1>المراكز</h1><span class="count">${sup?'العهد المسلّمة لكل مركز':'التشكيل الإداري للمنسوبين في كل مركز'}</span></div></header>`;
   if (!S.cload) return head+loading();
   return head+`<div class="dcards">${DCENTERS.map(c=>{ const n = sup ? (S.deliv||[]).filter(r=>r.c===c.id).length : cStaff(c.id).length;
     return `<button type="button" class="dcard" data-act="dOpenC" data-id="${esc(c.id)}"><b>${esc(c.name)}</b><small>${sup?`${n} تسليم`:`${n} فرد`}</small></button>`; }).join('')}</div>`;
@@ -2118,7 +2118,7 @@ function viewDCenter(id){
   }
   const st=cStaff(id);
   const head=`${back}<header class="ph"><div class="ph-t"><h1>التشكيل الإداري — ${esc(cName(id))}</h1><span class="count">${st.length} فرد</span></div></header>`;
-  if (!st.length) return head+`<div class="panel empty"><b>لا يوجد أفراد مسجلون في هذا المركز.</b></div>`;
+  if (!st.length) return head+`<div class="panel empty"><b>لا يوجد منسوبون مسجلون في هذا المركز.</b></div>`;
   // التشكيل مقسّم حسب الوردية (الأولى، الثانية، الثالثة…)، ومن بلا وردية في آخره
   const groups={}; st.forEach(p=>{ const k=SHN[String(p.shift||'')]?String(p.shift):'0'; (groups[k]=groups[k]||[]).push(p); });
   const keys=Object.keys(groups).sort((a,b)=>(a==='0')-(b==='0')||(+a)-(+b));
@@ -2128,7 +2128,7 @@ function viewDCenter(id){
 function viewDPerson(key){
   const [cid,pid]=String(key).split('|'); const p=cStaff(cid).find(x=>x.id===pid)||{name:'—'};
   const fromAll=S.dpFrom==='dpfiles';
-  const back=`<nav class="crumbs"><button type="button" data-act="nav" data-id="${fromAll?'dpfiles':'dcenters'}">${fromAll?'ملفات الأفراد':'المراكز'}</button><span>/</span>${fromAll?'':`<button type="button" data-act="dOpenC" data-id="${esc(cid)}">${esc(cName(cid))}</button><span>/</span>`}<span>${esc(p.name||'')}</span></nav>`;
+  const back=`<nav class="crumbs"><button type="button" data-act="nav" data-id="${fromAll?'dpfiles':'dcenters'}">${fromAll?'ملفات المنسوبين':'المراكز'}</button><span>/</span>${fromAll?'':`<button type="button" data-act="dOpenC" data-id="${esc(cid)}">${esc(cName(cid))}</button><span>/</span>`}<span>${esc(p.name||'')}</span></nav>`;
   if (!S.cload) return back+loading();
   const list=(S.cptx||[]).filter(r=>r.c===cid&&r.p===pid).sort((a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0)));
   const info=`<dl class="panel info" style="margin:0 0 16px"><div><dt>الاسم</dt><dd>${esc(p.name||'—')}</dd></div><div><dt>الرتبة</dt><dd>${esc(p.rank||'—')}</dd></div><div><dt>الرقم العسكري</dt><dd>${p.num?`<bdi>${esc(p.num)}</bdi>`:'—'}</dd></div><div><dt>المركز</dt><dd>${esc(cName(cid))}</dd></div><div><dt>التخصص</dt><dd>${esc(p.spec||'—')}</dd></div></dl>`;
@@ -2137,7 +2137,7 @@ function viewDPerson(key){
   return head+info+tbl;
 }
 function viewDPfiles(){
-  const head=`<header class="ph"><div class="ph-t"><h1>ملفات الأفراد</h1><span class="count">حسب المركز</span></div></header>`;
+  const head=`<header class="ph"><div class="ph-t"><h1>ملفات المنسوبين</h1><span class="count">حسب المركز</span></div></header>`;
   if (!S.cload) return head+loading();
   const q=norm(S.dpq||'');
   const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث</span>${ICON.search}<input id="dpq" type="search" placeholder="ابحث بالاسم أو الرقم العسكري" value="${esc(S.dpq||'')}"></label></div>`;
@@ -2324,7 +2324,7 @@ function viewAdvisor(){
     const head=`<header class="ph"><div class="ph-t"><h1>المستشار</h1><span class="count">دليل الإجراءات</span></div></header>
     <p class="muted" style="margin:-6px 0 16px">اختر القسم لتعرف الإجراءات المطلوبة خطوة بخطوة والمحاضر التي تُضبط فيها، وافتح المحضر مباشرة للاطلاع عليه أو تعبئته وطباعته.</p>`;
     if (!S.loadedAdv) return head+loading();
-    return head+`<div class="advtiles"><button type="button" class="advtile" data-act="advSect" data-id="admin"><span class="advti">${ICON.doc}</span><b>الإجراءات الإدارية</b><small>الغياب والتأخير والانسحاب وغيرها من حالات الأفراد</small><span class="count">${esc(arD(admin.length))} حالة</span></button>
+    return head+`<div class="advtiles"><button type="button" class="advtile" data-act="advSect" data-id="admin"><span class="advti">${ICON.doc}</span><b>الإجراءات الإدارية</b><small>الغياب والتأخير والانسحاب وغيرها من حالات المنسوبين</small><span class="count">${esc(arD(admin.length))} حالة</span></button>
       <button type="button" class="advtile" data-act="advSect" data-id="duty"><span class="advti">${typeof ICON.shield==="function"?ICON.shield(28):ICON.shield}</span><b>إجراءات ضابط الخفر والحوادث</b><small>حرائق المنازل والمركبات والمزارع والأراضي، الإنقاذ، فتح الأبواب</small><span class="count">${esc(arD(duty.filter(x=>x.cat!=='tips'&&x.cat!=='common').length))} حالة</span></button></div>`;
   }
   const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الحالات</span>${ICON.search}<input id="advq" type="search" placeholder="ابحث عن حالة، مثال: ${sect==='duty'?'حريق أو باب':'غياب أو تأخير'}" value="${esc(S.advq||'')}"></label></div>`;
@@ -2569,7 +2569,7 @@ function staffAlerts(){
     const at = j => { const dk=dayKey(off+j); return {j, pres:shiftPres(k,dk), sup:(S.staff||[]).filter(p=>effSt(p,dk)==='support' && String(p.toShift||'')===k)}; };
     const when = j => j===0 ? 'في مناوبتها الحالية' : off<0 ? `في مناوبتها اليوم (تستلم ٩:٠٠ ص ${dutyDateStr(dd+j)})` : `غداً في مناوبتها يوم ${dutyDateStr(dd+j)} (${dayStr(off+j)})`;
     const short = duties.map(at).find(x=>size-x.pres>3);
-    if (short) out.push({lvl:'shift', text:`${SHN[k]}: ${when(short.j)} ${short.j===0?'قوتها':'ستكون قوتها'} ${arD(short.pres)} من ${arD(size)}${short.sup.length?` بعد احتساب ${arD(short.sup.length)} دعم`:''} (نقص ${arD(size-short.pres)} أفراد — أكثر من ٣).`});
+    if (short) out.push({lvl:'shift', text:`${SHN[k]}: ${when(short.j)} ${short.j===0?'قوتها':'ستكون قوتها'} ${arD(short.pres)} من ${arD(size)}${short.sup.length?` بعد احتساب ${arD(short.sup.length)} دعم`:''} (نقص ${arD(size-short.pres)} منسوبين — أكثر من ٣).`});
     const next = duties.length ? at(duties[0]) : null;
     if (next && next.sup.length) out.push({lvl:'info', text:`يصل دعم إلى ${SHN[k]} ${when(next.j)}: ${next.sup.map(p=>pl(p)+' (من '+SHN[String(p.shift||'1')]+')').join('، ')} — قوتها ${arD(next.pres)} من ${arD(size)}.`}); });
   return out;
@@ -2647,7 +2647,7 @@ function personField(id,label,rec,req){
 }
 function personVal(x,id){ if (id in x){ const p=getP(x[id]); return {[id]:x[id]||'', [id+'N']:p?pLabel(p):''}; } return {[id]:'', [id+'N']:x[id+'N']||''}; }
 const pDisp = (r,id) => { const p=r[id]&&getP(r[id]); return p?pLabel(p):(r[id+'N']||'—'); };
-const HTABS = [['team','الأفراد والورديات'],['abs','الغيابات والتأخيرات'],['rew','المكافآت'],['mis','المهمات']];
+const HTABS = [['team','المنسوبين والورديات'],['abs','الغيابات والتأخيرات'],['rew','المكافآت'],['mis','المهمات']];
 const DASH = '<span class="hmut">—</span>';
 
 function viewStaff(){
@@ -2665,7 +2665,7 @@ function hSummary(){
   const away=c.leave+c.permit+c.course+c.assign+c.attach+c.mission, vac=Math.max(0,cfg.strength-st.length), base=Math.max(cfg.strength,st.length)||1;
   const pct = st.length && cfg.strength ? c.present/cfg.strength : null;
   const w = n => (n/base*100).toFixed(2)+'%';
-  const note = !st.length ? 'أضف أسماء الأفراد في خانات الورديات لتظهر النسبة.'
+  const note = !st.length ? 'أضف أسماء المنسوبين في خانات الورديات لتظهر النسبة.'
     : `النسبة = الموجود (${c.present}) ÷ قوة المركز (${cfg.strength}).${away?` خارج المركز: إجازة ${c.leave}، رخصة ${c.permit}، دورة ${c.course}، تكليف ${c.assign}، إلحاق ${c.attach}${c.mission?`، مهمة ${c.mission}`:''}.`:''}`;
   return `<section class="panel ready" aria-label="قوة المركز">
     <div class="rhead"><div><div class="rtitle">نسبة الموجود من قوة المركز</div><div class="rbig${pct==null?' none':''}">${pct==null?'—':esc(pctFmt(pct))}</div></div>
@@ -2692,7 +2692,7 @@ const fileBtn = (col, r, label) => { const has=!!(r.file||r.db), att=S.canEdit &
   const v = has ? `<button type="button" class="link" data-act="hOpen" data-id="${col}" data-i="${esc(r.id)}">${esc(label)} ${ICON.arrow}</button>` : '';
   const a = att ? `<button type="button" class="btn sm attb" data-act="hAttach" data-id="${col}" data-i="${esc(r.id)}" title="${has?'استبدال المرفق':'إرفاق مستند'}">${has?'استبدال':'📎 إرفاق'}</button>` : '';
   return (v||a) ? `<span class="attc">${v}${a}</span>` : DASH; };
-// مرفق يشترك فيه أكثر من سجل (نسخ المعاملات في ملفات الأفراد) لا يُحذف عند استبداله
+// مرفق يشترك فيه أكثر من سجل (نسخ المعاملات في ملفات المنسوبين) لا يُحذف عند استبداله
 const fileShared = r => /^ptx:/.test(r.src||'') || ['ptx','pdocs'].some(c=>(S[c]||[]).some(x=>x!==r && ((r.file && x.file===r.file) || (r.db && x.db===r.db))));
 const rowActs = (col, r, extra='') => `<td class="ra wide">${extra}<button type="button" class="icon-btn" data-act="hRecEdit" data-id="${col}" data-i="${esc(r.id)}" aria-label="تعديل">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hRecDel" data-id="${col}" data-i="${esc(r.id)}" aria-label="حذف">${ICON.del}</button></td>`;
 const byDate = (a,b)=>(hkey(b.date)-hkey(a.date))||((b.at||0)-(a.at||0));
@@ -2963,7 +2963,7 @@ async function hStoreFile(x, ref, old){
 const hStrip = x => { const o=Object.assign({},x); delete o.file; return o; };
 
 
-/* ---------- ملفات الأفراد: ملف لكل فرد فيه بياناته ومستنداته (نسخ من معاملاته ومحاضره)، وسجلات غيابه ومكافآته ومهماته ---------- */
+/* ---------- ملفات المنسوبين: ملف لكل فرد فيه بياناته ومستنداته (نسخ من معاملاته ومحاضره)، وسجلات غيابه ومكافآته ومهماته ---------- */
 const PDTYPES = ['معاملة','قرار','محضر','جزاء','شهادة / دورة','إجازة','تقييم','هوية / مستند شخصي','أخرى'];
 const pdocsOf = id => (S.pdocs||[]).filter(r=>r.p===id).sort(byDate);
 const pdFields = r => [
@@ -2973,12 +2973,12 @@ const pdFields = r => [
   {id:'file',label:(r.file||r.db)?'استبدال المرفق (اختياري)':'المرفق (اختياري)',type:'file',accept:LIB_ACCEPT}];
 function viewPFiles(){
   const all=(S.staff||[]).slice().sort((a,b)=>String(a.shift||'').localeCompare(String(b.shift||''))||((a.order||0)-(b.order||0)));
-  const head=`<header class="ph"><div class="ph-t"><h1>ملفات الأفراد</h1><span class="count">${esc(arD(all.length))} ملف</span></div>${DEPT&&S.canEdit?`<button type="button" class="btn primary" data-act="hAdd" data-id="1">${ICON.plus}إضافة فرد</button>`:''}</header>`;
+  const head=`<header class="ph"><div class="ph-t"><h1>ملفات المنسوبين</h1><span class="count">${esc(arD(all.length))} ملف</span></div>${DEPT&&S.canEdit?`<button type="button" class="btn primary" data-act="hAdd" data-id="1">${ICON.plus}إضافة فرد</button>`:''}</header>`;
   if (!S.loadedH) return head+loading();
-  if (!all.length) return head+`<div class="panel empty"><b>لا يوجد أفراد بعد.</b>${DEPT?'أضف العاملين في الشعبة بزر «إضافة فرد».':'أضف الأفراد من «الورديات والتكميل» وسيُنشأ لكل فرد ملف هنا.'}</div>`;
+  if (!all.length) return head+`<div class="panel empty"><b>لا يوجد منسوبون بعد.</b>${DEPT?'أضف العاملين في الشعبة بزر «إضافة فرد».':'أضف المنسوبين من «الورديات والتكميل» وسيُنشأ لكل فرد ملف هنا.'}</div>`;
   const q=norm(S.pfq), list=all.filter(p=>!q||norm([p.name,p.rank,p.num,p.spec].join(' ')).includes(q));
   const n = id => pdocsOf(id).length + (S.absences||[]).filter(r=>r.p===id).length + (S.rewards||[]).filter(r=>r.p===id).length;
-  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في الأفراد</span>${ICON.search}<input id="pfq" type="search" placeholder="ابحث بالاسم أو الرقم العسكري أو الرتبة" value="${esc(S.pfq||'')}"></label></div>`;
+  const tools=`<div class="toolbar"><label class="search"><span class="vh">بحث في المنسوبين</span>${ICON.search}<input id="pfq" type="search" placeholder="ابحث بالاسم أو الرقم العسكري أو الرتبة" value="${esc(S.pfq||'')}"></label></div>`;
   if (!list.length) return head+tools+`<div class="panel empty"><b>لا يوجد فرد مطابق.</b></div>`;
   return head+tools+[...SHKEYS,''].map(k=>{ const L=list.filter(p=>(SHKEYS.includes(String(p.shift))?String(p.shift):'')===k); if(!L.length) return '';
     return `<section class="sec"><div class="sh"><h2>${k?SHN[k]:'بدون وردية'}</h2><span class="muted">${esc(arD(L.length))}</span></div><div class="panel docs">${L.map(p=>{ const c=n(p.id);
@@ -2986,7 +2986,7 @@ function viewPFiles(){
 }
 function viewPFile(id){
   const p=getP(id), edit=S.canEdit;
-  const crumbs=`<nav class="crumbs" aria-label="المسار"><button type="button" data-act="nav" data-id="pfiles">ملفات الأفراد</button><span>/</span><span>${esc(p?p.name||'فرد':'غير موجود')}</span></nav>`;
+  const crumbs=`<nav class="crumbs" aria-label="المسار"><button type="button" data-act="nav" data-id="pfiles">ملفات المنسوبين</button><span>/</span><span>${esc(p?p.name||'فرد':'غير موجود')}</span></nav>`;
   if (!S.loadedH) return crumbs+loading();
   if (!p) return crumbs+`<div class="panel empty"><b>هذا الفرد غير موجود.</b>ربما حُذف من الكادر.</div>`;
   const dd = v => v?`<dd>${esc(v)}</dd>`:'<dd class="none">—</dd>';
@@ -3003,7 +3003,7 @@ function viewPFile(id){
     +tbl('المهمات',M,['التاريخ','النوع','الموقع / السبب','الحالة'],m=>`<tr><td class="hdate">${esc(m.date||'')||DASH}</td><td>${m.kind==='int'?'داخلية':'خارجية'}</td><td class="hper">${esc([m.location,m.reason].filter(Boolean).join(' — '))||DASH}</td><td>${m.done?'منتهية':'قائمة'}</td></tr>`,'لا توجد مهمات.','missions');
 }
 /* ---------- transactions (المعاملات) ---------- */
-const TXTABS = [['letters','الخطابات الرسمية'],['ptx','معاملات الأفراد']];
+const TXTABS = [['letters','الخطابات الرسمية'],['ptx','معاملات المنسوبين']];
 const TXST = {open:'قيد الإجراء', done:'منتهية'};
 const txStOf = r => r.status==='done'?'done':'open';
 const txPill = r => `<span class="stpill ${txStOf(r)==='done'?'hs-ok':'hs-mid'}"><i aria-hidden="true"></i>${TXST[txStOf(r)]}</span>`;
@@ -3024,7 +3024,7 @@ function viewTx(){
   const tools = all.length ? `<div class="toolbar"><label class="search"><span class="vh">بحث في المعاملات</span>${ICON.search}<input id="txq" type="search" placeholder="${tab==='letters'?'ابحث برقم الخطاب أو الموضوع أو الجهة':'ابحث باسم الفرد أو نوع المعاملة'}" value="${esc(S.txq||'')}"></label></div>
     <div class="fchips" role="group" aria-label="تصفية">${chip('all','الكل',all.length)}${keys.map(([k,l])=>chip(k,l,all.filter(r=>kOf(r)===k).length)).join('')}</div>` : '';
   let body;
-  if (!all.length) body=`<div class="panel empty"><b>${tab==='letters'?'لا توجد خطابات رسمية بعد.':'لا توجد معاملات أفراد بعد.'}</b>${edit?(tab==='letters'?'أضف الخطابات الواردة والصادرة برقمها وتاريخها وموضوعها ومرفقها.':'أضف معاملات الأفراد (إجازة، نقل، انتداب…) مع اسم الفرد والتاريخ والمرفق.'):''}</div>`;
+  if (!all.length) body=`<div class="panel empty"><b>${tab==='letters'?'لا توجد خطابات رسمية بعد.':'لا توجد معاملات منسوبين بعد.'}</b>${edit?(tab==='letters'?'أضف الخطابات الواردة والصادرة برقمها وتاريخها وموضوعها ومرفقها.':'أضف معاملات المنسوبين (إجازة، نقل، انتداب…) مع اسم الفرد والتاريخ والمرفق.'):''}</div>`;
   else if (!list.length) body=`<div class="panel empty"><b>لا توجد نتائج.</b>جرّب كلمة بحث أخرى أو غيّر التصفية.</div>`;
   else if (tab==='letters') body=`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>رقم الخطاب</th><th>الموضوع</th><th>الجهة</th><th>الحالة</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td><span class="stpill ${ldOf(r)==='in'?'hs-ok':'hs-in'}"><i aria-hidden="true"></i>${LDIR[ldOf(r)]}</span></td><td class="hnum">${r.num?onum(r.num):DASH}</td><td class="nm">${esc(r.subject||'')}${r.note?`<div class="hper">${esc(r.note)}</div>`:''}</td><td>${r.party?esc(r.party):DASH}</td><td>${txPill(r)}</td><td>${fileBtn('letters',r,'عرض')}</td>${edit?rowActs('letters',r):''}</tr>`).join('')}</tbody></table></div>`;
   else body=`<div class="panel" style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>الاسم</th><th>نوع المعاملة</th><th>التفاصيل</th><th>الحالة</th><th>المرفق</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${list.map(r=>`<tr><td class="hdate">${esc(r.date||'')}</td><td class="nm">${esc(pDisp(r,'p'))}</td><td class="hdate">${esc(r.type||'')}</td><td>${r.details?esc(r.details):DASH}</td><td>${txPill(r)}</td><td>${fileBtn('ptx',r,'عرض')}</td>${edit?rowActs('ptx',r):''}</tr>`).join('')}</tbody></table></div>`;
@@ -3176,7 +3176,7 @@ const ACT = {
   hAbsF: k => { S.haf=k; render(); },
   hMk: k => { S.hmk=k; render(); },
   hSet: () => { const c=hCfg(); openForm({title:'قوة المركز والورديات', fields:[
-      {id:'strength',label:'قوة المركز (عدد الأفراد)',type:'number',value:String(c.strength),required:true},
+      {id:'strength',label:'قوة المركز (عدد المنسوبين)',type:'number',value:String(c.strength),required:true},
       ...SHKEYS.map(k=>({id:'s'+k,label:'خانات '+SHN[k],type:'number',value:String(c.shifts[k]),required:true})),
       ...(CTRL?[[{id:'cgrp',label:'المجموعة المناوبة اليوم',type:'select',value:'',options:[['','بدون تغيير'+(ctAnchor()!=null?' (المحدد حالياً)':'')],['1','المجموعة الأولى (الورديات ١–٣)'],['2','المجموعة الثانية (الورديات ٤–٦)']]},{id:'cday',label:'يوم مناوبتها',type:'select',value:'1',options:[['1','اليوم الأول من اليومين'],['2','اليوم الثاني من اليومين']]}]]:[])
     ], onSubmit: async x => { const n=v=>Math.max(0,Math.round(+v||0)); const sh={}; SHKEYS.forEach(k=>{ sh[k]=n(x['s'+k]); });

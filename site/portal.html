@@ -275,8 +275,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
   const SPEC = ['hazmat', 'isnad', 'control'], ADMIN = ['supply', 'admaff', 'techaff', 'hrdiv'];
   const OPS = [...SOUTH, ...NORTH, ...OUTER, ...SPEC, ...ADMIN].filter((i) => byId[i]);
   const SF = { sfn: { name: 'قسم السلامة شمال', dir: P.up }, sfs: { name: 'قسم السلامة جنوب', dir: P.down } };
-  const SFP = { pat: { name: 'قسم الدوريات', sub: 'الكشف الميداني على المنشآت', ic: P.truck, pages: [['rounds', 'الجولات التفتيشية', 'المنشآت وتصنيفها، وسجل الجولات بالصور', P.clip], ['sfstat', 'الإحصائيات', 'الجولات والمخالفات وما تم تلافيه في قسم الدوريات', P.chart], ['pfiles', 'ملفات أفراد قسم الدوريات', 'بيانات الأفراد ومستنداتهم', P.user]] },
-    lic: { name: 'قسم التراخيص', sub: 'ملف لكل منشأة ووضعها', ic: P.doc, gold: true, pages: [['lfac', 'المنشآت والتراخيص', 'السجل والمستندات والمخالفات، ووضع المنشأة', P.bldg], ['sfstat', 'إحصائيات الشعبة', 'قسم الدوريات وقسم التراخيص معًا', P.chart], ['pfiles', 'ملفات أفراد القسم', 'بيانات الأفراد ومستنداتهم', P.user]] } };
+  const SFP = { pat: { name: 'قسم الدوريات', sub: 'الكشف الميداني على المنشآت', ic: P.truck, pages: [['rounds', 'الجولات التفتيشية', 'المنشآت وتصنيفها، وسجل الجولات بالصور', P.clip], ['sfstat', 'الإحصائيات', 'الجولات والمخالفات وما تم تلافيه في قسم الدوريات', P.chart], ['pfiles', 'ملفات منسوبي قسم الدوريات', 'بيانات المنسوبين ومستنداتهم', P.user]] },
+    lic: { name: 'قسم التراخيص', sub: 'ملف لكل منشأة ووضعها', ic: P.doc, gold: true, pages: [['lfac', 'المنشآت والتراخيص', 'السجل والمستندات والمخالفات، ووضع المنشأة', P.bldg], ['sfstat', 'إحصائيات الشعبة', 'قسم الدوريات وقسم التراخيص معًا', P.chart], ['pfiles', 'ملفات منسوبي القسم', 'بيانات المنسوبين ومستنداتهم', P.user]] } };
   const sfIds = Object.keys(SF).flatMap((k) => ['pat', 'lic'].map((s) => k + s)).filter((i) => byId[i]);
   const DASH_OPS = cfg.manager ? [['manager.html', cfg.manager.name, 'جاهزية المراكز وإحصائيات السلامة'], ['ops.html', 'لوحة مدير إدارة العمليات', 'جاهزية المراكز والأقسام']] : [];
   const DASH_SAF = cfg.manager ? [['safety.html', 'لوحة مدير إدارة السلامة', 'إحصائيات السلامة فقط: الجولات والمنشآت والمخالفات']] : [];
@@ -339,7 +339,7 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
     safety: () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة']])}<h1>إدارة السلامة</h1><p>اختر القسم. في كل قسم: قسم الدوريات وقسم التراخيص.</p>`, true)
       + `<main class="body wrap">${DASH_SAF.length ? `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH_SAF.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div>` : ''}<div class="grid2">${Object.entries(SF).map(([k, b]) => `<section class="panel"><div class="ph" style="background:var(--surface)"><span class="big gt">${sv(b.dir, 30, 2)}</span><div class="tx"><h2>${esc(b.name)}</h2></div></div>
-        ${Object.entries(SFP).filter(([s]) => byId[k + s]).map(([s, d]) => row('#' + k, d.name, d.pages.map((p) => p[1].replace(/ أفراد.*/, ' الأفراد')).join(' · '), d.ic)).join('')}
+        ${Object.entries(SFP).filter(([s]) => byId[k + s]).map(([s, d]) => row('#' + k, d.name, d.pages.map((p) => p[1].replace(/ منسوبي.*/, ' المنسوبين')).join(' · '), d.ic)).join('')}
         <div class="pfoot"><a class="cta" href="#${k}">الدخول إلى ${esc(b.name)}${ARROW}</a></div></section>`).join('')}</div></main>`,
   };
   Object.keys(SF).forEach((k) => {
