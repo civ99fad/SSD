@@ -237,7 +237,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 
 <section class="gate" id="gate" hidden>
   <form class="gcard" id="gform">
-    <div class="logo" data-logo></div>
+    <a class="logo" data-logo href="index.html" title="القائمة الرئيسية" aria-label="القائمة الرئيسية"></a>
     <h1>لوحة مدير الإدارة العامة</h1>
     <div class="sub" id="gsub">جاهزية المراكز والأقسام في صفحة واحدة</div>
     <div class="fld" id="usrf" hidden>
@@ -261,7 +261,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 <div id="app" hidden>
   <header class="top">
     <div class="top-in">
-      <div class="logo" data-logo></div>
+      <a class="logo" data-logo href="index.html" title="القائمة الرئيسية" aria-label="القائمة الرئيسية"></a>
       <div>
         <h1>لوحة مدير الإدارة العامة</h1>
         <div class="meta" id="meta"></div>
@@ -511,7 +511,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
   }
 
   /* ---------- شاشة الاختيار: إحصائيات السلامة أو المراكز وإحصائياتها ---------- */
-  const GROUPS = [['شعبة الجنوب', ['sharaf', 'sinaiya', 'dairi', 'jabal']], ['شعبة الشمال', ['balad', 'muntazah', 'aziziya', 'aja']], ['المراكز الخارجية', ['rawda', 'jubba', 'khatta']], ['الأقسام المتخصصة', ['hazmat', 'isnad', 'control']]];
+  const GROUPS = [['شعبة الجنوب', ['sharaf', 'sinaiya', 'dairi', 'jabal']], ['شعبة الشمال', ['balad', 'muntazah', 'aziziya', 'aja']], ['المراكز الخارجية', ['rawda', 'jubba', 'khatta']], ['الأقسام الميدانية المتخصصة', ['hazmat', 'isnad', 'control']]];
   const CTABS = [['sum', 'الملخص والتنبيهات'], ['cards', 'جاهزية الجهات'], ['veh', 'الآليات غير الجاهزة والدعم'], ['table', 'جدول المقارنة'], ['all', 'عرض الكل']];
   const ICS = {
     safety: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>',
