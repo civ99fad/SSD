@@ -213,7 +213,7 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 .door.s .dh .big strong{color:#8A6A2A}
 .dh .big span{font-size:12.5px;color:var(--muted)}
 .dbody{display:flex;flex-direction:column;gap:14px;padding-top:20px;border-top:1px solid var(--line)}
-.gbar{display:grid;grid-template-columns:140px 1fr 52px;align-items:center;gap:14px;font-size:14.5px}
+.gbar{display:grid;grid-template-columns:170px 1fr 52px;align-items:center;gap:14px;font-size:14.5px}
 .gbar .t{height:8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
 .gbar .t i{display:block;height:100%;border-radius:999px}
 .gbar .p{font-weight:600;text-align:left}
@@ -230,6 +230,26 @@ tr.tot td{font-weight:800;background:var(--surface-2)}
 .ghead{font-size:14px;font-weight:800;color:var(--muted);margin:14px 0 8px}
 .ghead:first-child{margin-top:0}
 @media (max-width:700px){ .choose{grid-template-columns:1fr} .chs{min-height:0} }
+
+/* تحسينات: ألوان وحدود موحّدة مع البوابة وصفحات الجهات، وحركة خفيفة */
+:root:not([data-theme="dark"]){--bg:#F6F8F6;--line:#DCE4DF;--edge:#D3DDD7;--text:#10201A;--muted:#5C6B64;--faint:#6B7872;--accent:#0F6B4F;--accent-hover:#0B4A37;--accent-soft:#E9F2EE;--surface-2:#FBFCFB;--shadow:0 16px 36px -24px rgba(8,53,39,.32)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--line:#2C3B35;--edge:#2C3B35}}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(15,107,79,.22)!important;border-radius:10px}
+.panel,.kpi,.ucard{border:1px solid var(--edge)!important;border-radius:18px;box-shadow:0 1px 2px rgba(16,32,26,.04),var(--shadow)}
+.kpi.main{border-color:transparent!important}
+.btn{border-radius:12px;font-weight:600;transition:background .15s,border-color .15s,color .15s,transform .12s}
+.btn:active{transform:scale(.98)}
+.chip{transition:background .15s,border-color .15s,color .15s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip[aria-pressed="true"]:hover{color:var(--on-accent)}
+.ucard{transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s}
+.ucard:hover{transform:translateY(-2px)}
+.door .dcta span{display:inline-block;transition:transform .2s}
+.door:hover .dcta span{transform:translateX(-4px)}
+th{font-weight:600}
+tbody tr{transition:background .12s}tbody tr:hover{background:#F7FAF8}
+.toast{border-radius:14px;box-shadow:0 18px 40px -12px rgba(8,28,20,.45)}
 </style>
 </head>
 <body>
