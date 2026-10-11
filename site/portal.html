@@ -193,7 +193,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
 <div class="cls">سرّي — محظور التداول — مقصور استخدامه على منسوبي الدفاع المدني</div>
 <header class="hd">
   <div class="wrap">
-    <span class="logo" id="logo"></span>
+    <a class="logo" id="logo" href="index.html" title="القائمة الرئيسية" aria-label="القائمة الرئيسية"></a>
     <div class="org"><b>الإدارة العامة للدفاع المدني</b><small>منطقة حائل</small></div>
     <span class="sp"></span>
     <span class="date" id="date"></span>
@@ -257,7 +257,7 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
 
   // ---------- البحث: الجهات وصفحات أقسام السلامة ولوحات القيادة والإدارات ----------
   const norm = (s) => String(s || '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/[ًٌٍَُِّْـ]/g, '').toLowerCase().trim();
-  const groupOf = (id) => (SOUTH.includes(id) ? 'مراكز شعبة الجنوب' : NORTH.includes(id) ? 'مراكز شعبة الشمال' : OUTER.includes(id) ? 'المراكز الخارجية' : SPEC.includes(id) ? 'الأقسام المتخصصة' : 'الأقسام الإدارية');
+  const groupOf = (id) => (SOUTH.includes(id) ? 'مراكز شعبة الجنوب' : NORTH.includes(id) ? 'مراكز شعبة الشمال' : OUTER.includes(id) ? 'المراكز الخارجية' : SPEC.includes(id) ? 'الأقسام الميدانية المتخصصة' : 'الأقسام الإدارية');
   const INDEX = [
     { t: 'إدارة العمليات', s: 'المراكز والأقسام ولوحات القيادة', h: '#ops', ic: P.flame },
     { t: 'إدارة السلامة', s: 'قسم السلامة شمال وجنوب', h: '#safety', ic: P.shield, gold: true },
@@ -292,8 +292,8 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
     '': () => hero(`<h1>البوابة الموحدة</h1><span class="h1sub">بوابة الإدارات والأقسام</span><p>الوصول إلى صفحات الإدارات والمراكز والأقسام من مكان واحد.</p>${searchBox()}`)
       + `<main class="body wrap"><div class="grid2">
         <a class="adm" href="#ops"><div class="band"><span class="disc">${sv(P.flame, 44, 1.6)}</span><span class="badge">${OPS.length} جهة</span></div>
-          <div class="in"><div><h2>إدارة العمليات</h2><p>المراكز والأقسام المتخصصة والإدارية، ولوحات القيادة.</p></div>
-          <div class="pts"><span><i></i>مراكز شعبة الجنوب</span><span><i></i>مراكز شعبة الشمال</span><span><i></i>المراكز الخارجية</span><span><i></i>الأقسام المتخصصة والإدارية</span></div>
+          <div class="in"><div><h2>إدارة العمليات</h2><p>المراكز والأقسام الميدانية المتخصصة والإدارية، ولوحات القيادة.</p></div>
+          <div class="pts"><span><i></i>مراكز شعبة الجنوب</span><span><i></i>مراكز شعبة الشمال</span><span><i></i>المراكز الخارجية</span><span><i></i>الأقسام الميدانية المتخصصة والإدارية</span></div>
           <span class="cta">الدخول إلى إدارة العمليات${ARROW}</span></div></a>
         <a class="adm gold" href="#safety"><div class="band"><span class="disc">${sv(P.shield, 44, 1.6)}</span><span class="badge">${sfIds.length} أقسام</span></div>
           <div class="in"><div><h2>إدارة السلامة</h2><p>الجولات التفتيشية على المنشآت، والتراخيص، والمخالفات.</p></div>
@@ -301,16 +301,16 @@ main.body{position:relative;margin-top:-96px;padding-bottom:64px;display:flex;fl
           <span class="cta dark">الدخول إلى إدارة السلامة${ARROW}</span></div></a>
       </div>${DASH.length ? `<section class="sect"><div class="sh"><h2>لوحات القيادة</h2><span>ملخص الجاهزية والإحصائيات لمدراء الإدارات</span></div><div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div></section>` : ''}</main>`,
 
-    ops: () => hero(`${crumb([['البوابة', '#'], ['إدارة العمليات']])}<h1>إدارة العمليات</h1><p>المراكز والأقسام ولوحات القيادة. لكل جهة دخولها الخاص.</p>${searchBox()}`, true)
+    ops: () => hero(`${crumb([['البوابة', '#'], ['إدارة العمليات']])}<h1>إدارة العمليات</h1><p>المراكز والأقسام ولوحات القيادة.</p>${searchBox()}`, true)
       + `<main class="body wrap">
         ${DASH_OPS.length ? `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH_OPS.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div>` : ''}
         <section class="panel"><div class="ph"><span class="big">${sv(P.home, 26)}</span><div class="tx"><h2>المراكز</h2><small>${[...SOUTH, ...NORTH, ...OUTER].filter((i) => byId[i]).length} مركزًا</small></div></div>${blk('مراكز شعبة الجنوب', SOUTH)}${blk('مراكز شعبة الشمال', NORTH)}${blk('المراكز الخارجية', OUTER)}</section>
         <div class="grid2">
-          <section class="panel"><div class="ph"><span class="big">${sv(P.flame, 26)}</span><div class="tx"><h2>الأقسام المتخصصة</h2></div></div>${grid(SPEC)}</section>
+          <section class="panel"><div class="ph"><span class="big">${sv(P.flame, 26)}</span><div class="tx"><h2>الأقسام الميدانية المتخصصة</h2></div></div>${grid(SPEC)}</section>
           <section class="panel"><div class="ph"><span class="big">${sv(P.bldg, 26)}</span><div class="tx"><h2>الأقسام الإدارية</h2></div></div>${grid(ADMIN)}</section>
         </div></main>`,
 
-    safety: () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة']])}<h1>إدارة السلامة</h1><p>اختر القسم. في كل قسم: قسم الدوريات وقسم التراخيص، ولكل واحد منهما دخوله الخاص.</p>`, true)
+    safety: () => hero(`${crumb([['البوابة', '#'], ['إدارة السلامة']])}<h1>إدارة السلامة</h1><p>اختر القسم. في كل قسم: قسم الدوريات وقسم التراخيص.</p>`, true)
       + `<main class="body wrap">${DASH_SAF.length ? `<div class="grid2" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">${DASH_SAF.map(([h, t, s]) => qa(h, t, s, P.chart)).join('')}</div>` : ''}<div class="grid2">${Object.entries(SF).map(([k, b]) => `<section class="panel"><div class="ph" style="background:var(--surface)"><span class="big gt">${sv(b.dir, 30, 2)}</span><div class="tx"><h2>${esc(b.name)}</h2></div></div>
         ${Object.entries(SFP).filter(([s]) => byId[k + s]).map(([s, d]) => row('#' + k, d.name, d.pages.map((p) => p[1].replace(/ أفراد.*/, ' الأفراد')).join(' · '), d.ic)).join('')}
         <div class="pfoot"><a class="cta" href="#${k}">الدخول إلى ${esc(b.name)}${ARROW}</a></div></section>`).join('')}</div></main>`,
