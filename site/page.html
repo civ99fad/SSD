@@ -911,6 +911,26 @@ th{background:var(--surface-2);border-bottom:1px solid var(--line)}
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .dh-nx{background:#151D1A;color:#E6ECE9} :root:not([data-theme="light"]) .dh-nx b{color:#6CC49D} }
 :root[data-theme="dark"] .dh-nx{background:#151D1A;color:#E6ECE9} :root[data-theme="dark"] .dh-nx b{color:#6CC49D}
+
+/* عناوين أقسام القائمة (الذهبية) أكبر من البنود الفرعية وبشريط بلون مختلف قليلاً */
+@media (min-width:861px){
+  .side .navt{font-size:13.5px!important;font-weight:700!important;color:#EBDDB5!important;opacity:1;padding:10px 12px!important;margin-top:10px;border-radius:12px;background:rgba(227,207,156,.09);border:1px solid rgba(227,207,156,.16)}
+  .side .navt:hover{background:rgba(227,207,156,.15)!important}
+  .side .navt .chev{opacity:.9}
+  .side .navg{padding-inline-start:10px;margin-top:2px}
+  .side .navg button{font-size:13.5px}
+}
+/* النوافذ المنبثقة: خلفية بلون هوية الموقع (أخضر داكن) بدل الشفاف، وإطار واضح للنافذة */
+.modal{background:rgba(7,53,39,.62);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+.mbox{border:1px solid var(--line);box-shadow:0 40px 80px -24px rgba(4,30,22,.6),0 0 0 4px rgba(227,207,156,.18)}
+.mbox:not(.viewer):not(.lb)>h2{border-top:4px solid var(--accent);border-radius:22px 22px 0 0}
+@media (max-width:600px){ .mbox:not(.viewer):not(.lb)>h2{border-radius:24px 24px 0 0} }
+/* اسم الفرد في الورديات: الضغط عليه يفتح ملفه */
+.pname{all:unset;cursor:pointer;font-weight:600;color:inherit;border-radius:4px}
+.pname:hover{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+.pname:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.duty .dcases .pname{font-weight:700}
+body:has(.modal:not([hidden])) .sitever{display:none}
 </style>
 
 <div id="welcome" class="welcome" hidden>
@@ -1351,7 +1371,7 @@ function renderWho(){
 function paint(html){
   const a=document.activeElement, id=a&&a.id&&$('#main').contains(a)?a.id:null;
   let sel=null; try { if(id && a.selectionStart!=null) sel=[a.selectionStart,a.selectionEnd]; } catch(e){}
-  $('#main').innerHTML=html;
+  $('#main').innerHTML=String(html).replace(/[٠-٩]{1,4}\/[٠-٩]{1,2}\/[٠-٩]{1,4}/g, m=>m.replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)));
   if (id){ const n=document.getElementById(id); if(n){ n.focus(); if(sel) try{ n.setSelectionRange(sel[0],sel[1]); }catch(e){} } }
 }
 function render(){
@@ -1612,7 +1632,7 @@ function waterStrip(){
 const incFields = x => [
   [{id:'code', label:'نداء الآلية الداعمة', value:x.code, required:true, placeholder:'مثال: 0/35'}, {id:'name', label:'نوع الآلية', value:x.name, placeholder:'مثال: وايت سكس بروبلين'}],
   [{id:'from', label:'الجهة الداعمة', value:x.from==null?ISNAD_NAME:x.from, placeholder:'مثال: '+ISNAD_NAME}, {id:'plate', label:'رقم اللوحة (اختياري)', value:x.plate}],
-  [{id:'for', label:'بديلة عن (اختياري)', type:'select', value:x.for||'', options:[['','دعم عام للمركز'],...sortedVehicles().map(v=>[v.id,[v.code,v.name].filter(Boolean).join(' — ')])]}, {id:'date', label:'تاريخ الاستلام', value:x.date==null?hnum():x.date, placeholder:'مثال: ٢٠/٤/١٤٤٨هـ'}],
+  [{id:'for', label:'بديلة عن (اختياري)', type:'select', value:x.for||'', options:[['','دعم عام للمركز'],...sortedVehicles().map(v=>[v.id,[v.code,v.name].filter(Boolean).join(' — ')])]}, {id:'date', label:'تاريخ الاستلام', value:x.date==null?hnum():x.date, placeholder:'مثال: 1448/04/20'}],
   {id:'note', label:'ملاحظات (اختياري)', type:'textarea', value:x.note}];
 function incomingPanel(edit){
   const L=incAll();
@@ -2569,7 +2589,7 @@ const curShift = () => CTRL ? ctNow() : dutyShift();
 const DUTY_H = 9, DUTY_TZ_MS = 3*36e5, DUTY_ANCHOR = Date.UTC(2026,8,29)/864e5, DUTY_ANCHOR_SHIFT = 3;
 const dutyDay = (t=Date.now()) => Math.floor((t + DUTY_TZ_MS - DUTY_H*36e5)/864e5);
 const dutyShift = (d=dutyDay()) => String((((DUTY_ANCHOR_SHIFT-1 + d - DUTY_ANCHOR) % 3) + 3) % 3 + 1);
-const dutyDateStr = d => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn',{weekday:'long',day:'numeric',month:'numeric',timeZone:'UTC'}).format(new Date(d*864e5)); } catch(e){ return ''; } };
+const dutyDateStr = d => { try { return new Intl.DateTimeFormat('ar-SA',{weekday:'long',timeZone:'UTC'}).format(new Date(d*864e5))+' '+hijri(d*864e5); } catch(e){ return hijri(d*864e5); } };
 function dutyPanel(){
   if (CTRL && !ctNow()) return `<section class="panel duty" aria-label="الوردية المناوبة"><div class="dlbl">الوردية المناوبة الآن</div><p class="rnote" style="margin:8px 0 0">حدّد المجموعة المناوبة اليوم من زر «تعديل القوة والورديات» ليُحسب تناوب الورديات الست تلقائياً (٨ ساعات لمدة يومين ثم راحة ٦٤ ساعة).</p></section>`;
   const cfg=hCfg(), d=dutyDay(), k=CTRL?ctNow():dutyShift(d), nk=CTRL?ctNow(Date.now()+8*36e5):dutyShift(d+1);
@@ -2580,7 +2600,7 @@ function dutyPanel(){
   const per = p => [p.from?'من '+p.from:'', p.to?'إلى '+p.to:''].filter(Boolean).join(' ');
   const caseLbl = p => { const e=effSt(p,dk); return e==='support' ? 'دعم '+(SHN[String(p.toShift||'')]||'وردية أخرى') : HST[e]; };
   const cnt = cases.length+vac;
-  const casesHtml = `<div class="dcases"><h3>حالات الوردية <b>${arD(cnt)}</b><span class="hper" style="font-weight:500">الرقم بجانب الاسم = رقمه بتشكيل الوردية</span></h3>${cnt?`<ul>${cases.map(p=>`<li><span class="dtno" title="رقمه بالتشكيل">${arD(own.indexOf(p)+1)}</span><span class="dn">${esc(pLabel(p))}</span>${p.num?`<span class="hper">الرقم العسكري ${esc(p.num)}</span>`:''}<span class="stpill ${HCLS[effSt(p,dk)]}"><i aria-hidden="true"></i>${esc(caseLbl(p))}</span>${effSt(p,dk)==='proxy'?`<span class="hper">البديل: <b>${esc(subName(p)||'غير محدد')}</b></span>`:''}${per(p)?`<span class="hper">${esc(per(p))}</span>`:''}${p.note?`<span class="hper">— ${esc(p.note)}</span>`:''}</li>`).join('')}${vac?`<li><span class="dn">خانات شاغرة</span><span class="stpill st-none"><i aria-hidden="true"></i>${arD(vac)}</span></li>`:''}</ul>`:'<span class="dok">لا توجد حالات — الوردية مكتملة</span>'}${supIn.length?`<ul style="margin-top:6px">${supIn.map(p=>`<li><span class="dn">${esc(pLabel(p))}</span><span class="stpill hs-sup"><i aria-hidden="true"></i>دعم من ${esc(SHN[String(p.shift||'1')])}</span></li>`).join('')}</ul>`:''}</div>`;
+  const casesHtml = `<div class="dcases"><h3>حالات الوردية <b>${arD(cnt)}</b><span class="hper" style="font-weight:500">الرقم بجانب الاسم = رقمه بتشكيل الوردية</span></h3>${cnt?`<ul>${cases.map(p=>`<li><span class="dtno" title="رقمه بالتشكيل">${arD(own.indexOf(p)+1)}</span><button type="button" class="dn pname" data-act="pfOpen" data-id="${esc(p.id)}" title="فتح ملف الفرد">${esc(pLabel(p))}</button>${p.num?`<span class="hper">الرقم العسكري ${esc(p.num)}</span>`:''}<span class="stpill ${HCLS[effSt(p,dk)]}"><i aria-hidden="true"></i>${esc(caseLbl(p))}</span>${effSt(p,dk)==='proxy'?`<span class="hper">البديل: <b>${esc(subName(p)||'غير محدد')}</b></span>`:''}${per(p)?`<span class="hper">${esc(per(p))}</span>`:''}${p.note?`<span class="hper">— ${esc(p.note)}</span>`:''}</li>`).join('')}${vac?`<li><span class="dn">خانات شاغرة</span><span class="stpill st-none"><i aria-hidden="true"></i>${arD(vac)}</span></li>`:''}</ul>`:'<span class="dok">لا توجد حالات — الوردية مكتملة</span>'}${supIn.length?`<ul style="margin-top:6px">${supIn.map(p=>`<li><span class="dn">${esc(pLabel(p))}</span><span class="stpill hs-sup"><i aria-hidden="true"></i>دعم من ${esc(SHN[String(p.shift||'1')])}</span></li>`).join('')}</ul>`:''}</div>`;
   return `<section class="panel duty" aria-label="وردية اليوم">
     <div class="dtop"><div><div class="dlbl">${CTRL?'الوردية المناوبة الآن':'الوردية المناوبة اليوم'} <span class="dlive"><i></i>على رأس العمل الآن</span></div>
       <div class="dname">${SHN[k]}</div>
@@ -2656,7 +2676,7 @@ function hTeam(){
       if (!p) return `<tr class="vac"><td class="n">${i+1}</td><td colspan="6">خانة شاغرة</td>${edit?`<td class="ra"><button type="button" class="btn sm" data-act="hAdd" data-id="${k}">${ICON.plus}إضافة</button></td>`:''}</tr>`;
       const per = hStOf(p)!=='present' && (p.from||p.to) ? `${p.from?'من '+esc(p.from):''}${p.from&&p.to?' ':''}${p.to?'إلى '+esc(p.to):''}` : '';
       const sb = hStOf(p)==='proxy' && subName(p) ? `<div>البديل: ${esc(subName(p))}</div>` : '';
-      return `<tr><td class="n">${i+1}</td><td class="hdate">${p.rank?esc(p.rank):DASH}</td><td class="nm">${esc(p.name||'فرد')}</td><td class="hnum">${p.num?esc(p.num):DASH}</td><td class="hdate">${p.spec?esc(p.spec):DASH}</td><td>${hPill(p)}</td><td class="hper">${per}${sb}${p.note?`<div>${esc(p.note)}</div>`:''}${!per&&!sb&&!p.note&&!stAttach(p)?DASH:''}${stAttach(p)}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="hEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(pLabel(p))}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(pLabel(p))}">${ICON.del}</button></td>`:''}</tr>`; }).join('');
+      return `<tr><td class="n">${i+1}</td><td class="hdate">${p.rank?esc(p.rank):DASH}</td><td class="nm"><button type="button" class="pname" data-act="pfOpen" data-id="${esc(p.id)}" title="فتح ملف الفرد">${esc(p.name||'فرد')}</button></td><td class="hnum">${p.num?esc(p.num):DASH}</td><td class="hdate">${p.spec?esc(p.spec):DASH}</td><td>${hPill(p)}</td><td class="hper">${per}${sb}${p.note?`<div>${esc(p.note)}</div>`:''}${!per&&!sb&&!p.note&&!stAttach(p)?DASH:''}${stAttach(p)}</td>${edit?`<td class="ra"><button type="button" class="icon-btn" data-act="hEdit" data-id="${esc(p.id)}" aria-label="تعديل ${esc(pLabel(p))}">${ICON.edit}</button><button type="button" class="icon-btn del" data-act="hDel" data-id="${esc(p.id)}" aria-label="حذف ${esc(pLabel(p))}">${ICON.del}</button></td>`:''}</tr>`; }).join('');
     return `<section class="sec"><div class="sh"><h2>${SHN[k]}${CTRL?` <small class="muted" style="font-weight:600;font-size:13px">${esc(ctGrpN(k)+' · '+ctTime(k))}</small>`:''}</h2>${k===curShift()?`<span class="onduty"><i></i>${CTRL?'على رأس العمل الآن':'مناوبة اليوم'}</span>`:''}<span class="muted">${pres} على رأس العمل من ${cfg.shifts[k]}${supIn?` (منهم ${supIn} دعم من وردية أخرى)`:''}</span></div>
       <div class="panel hstaff" style="overflow-x:auto"><table><thead><tr><th>م</th><th>الرتبة</th><th>الاسم</th><th>الرقم العسكري</th><th>التخصص</th><th>الحالة</th><th>الفترة / ملاحظة</th>${edit?'<th><span class="vh">إجراءات</span></th>':''}</tr></thead><tbody>${rows||`<tr class="vac"><td colspan="8">لا توجد خانات في هذه الوردية.</td></tr>`}</tbody></table></div></section>`;
   }).join('');
@@ -2747,8 +2767,8 @@ const staffFields = (p, shift) => [
   [{id:'shift',label:'الوردية',type:'select',value:String(p.shift||shift||'1'),options:SHOPTS},{id:'status',label:'الحالة',type:'select',value:hStOf(p),options:Object.entries(HST)}],
   Object.assign(personField('sub','البديل (لحالة «وكالة» فقط)',p,false),{hint:'الفرد الذي يداوم بدلًا عنه.'}),
   {id:'toShift',label:'الوردية المدعومة (لحالة «دعم وردية» فقط)',type:'select',value:String(p.toShift||''),options:[['','—'],...SHOPTS]},
-  [{id:'from',label:'من تاريخ',value:p.from,placeholder:'مثال: ١/٤/١٤٤٨هـ'},{id:'to',label:'إلى تاريخ',value:p.to,placeholder:'مثال: ١٥/٤/١٤٤٨هـ'}],
-  ...(isIsnadUnit()?[[{id:'lic',label:'تصنيف رخصة القيادة',type:'select',value:p.lic||'',options:[['','—'],...LICK.map(k=>[k,k])]},{id:'licExp',label:'انتهاء الرخصة',value:p.licExp,placeholder:'مثال: ١٤٤٩/٦/٨'}],{id:'idExp',label:'انتهاء الهوية الوطنية',value:p.idExp,placeholder:'مثال: ١٤٥٠/١٠/٢٩'}]:[]),
+  [{id:'from',label:'من تاريخ',value:p.from,placeholder:'مثال: 1448/04/01'},{id:'to',label:'إلى تاريخ',value:p.to,placeholder:'مثال: 1448/04/15'}],
+  ...(isIsnadUnit()?[[{id:'lic',label:'تصنيف رخصة القيادة',type:'select',value:p.lic||'',options:[['','—'],...LICK.map(k=>[k,k])]},{id:'licExp',label:'انتهاء الرخصة',value:p.licExp,placeholder:'مثال: 1449/06/08'}],{id:'idExp',label:'انتهاء الهوية الوطنية',value:p.idExp,placeholder:'مثال: 1450/10/29'}]:[]),
   {id:'note',label:'ملاحظة (اختياري)',value:p.note,placeholder:'مثال: دورة إطفاء متقدمة — معهد الدفاع المدني',hint:'التواريخ للغياب والإجازة والرخصة والوكالة ودعم الوردية والدورة والتكليف والإلحاق. عند «موجود» تُمسح الفترة. عند «رخصة» تُنسخ تلقائياً إلى «المكافآت».'}
 ];
 const staffClean = x => { const o=Object.assign({}, x, x.status==='present'?{from:'',to:''}:{}, x.status!=='support'?{toShift:''}:{}); return Object.assign(o, x.status==='proxy'?personVal(x,'sub'):{sub:'',subN:''}); };
@@ -3016,7 +3036,7 @@ const letFields = r => [
 const ptxFields = r => [
   personField('p','اسم الفرد',r,true),
   [{id:'type',label:'نوع المعاملة',type:'select',value:r.type||PTYPES[0],options:PTYPES.map(t=>[t,t])},{id:'date',label:'التاريخ',value:r.date||hijri(),required:true}],
-  {id:'details',label:'التفاصيل',type:'textarea',value:r.details,placeholder:'مثال: إجازة اعتيادية ١٥ يوماً من ١/٥/١٤٤٨هـ'},
+  {id:'details',label:'التفاصيل',type:'textarea',value:r.details,placeholder:'مثال: إجازة اعتيادية ١٥ يوماً من 1448/05/01'},
   {id:'status',label:'الحالة',type:'select',value:txStOf(r),options:Object.entries(TXST)},
   {id:'file',label:r.id?'استبدال المرفق (اختياري)':'المرفق (اختياري)',type:'file',accept:LIB_ACCEPT}
 ];
