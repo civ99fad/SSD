@@ -244,6 +244,13 @@ tr.nextrow td{background:var(--gold-bg)}
 .duty .dname{font-size:28px;font-weight:800;color:var(--accent);line-height:1.2;margin-top:2px}
 .duty .dtime{font-size:13.5px;color:var(--muted);margin-top:2px}
 .duty .rstats dd.bad{color:var(--danger)}
+.dnextp{padding:14px 20px;gap:8px;border-inline-start-color:var(--gold);margin-top:-6px}
+.dnextp .dname{font-size:20px;color:var(--text)}
+.dnextp .rstats dd{font-size:18px}
+.nxcases{display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);padding-top:8px}
+.nxc{font-size:12.5px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--muted)}
+.nxc b{color:var(--text);font-weight:600}
+.nxnone{font-size:12.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:8px}
 .duty .dnext{margin:0;font-size:13px;color:var(--faint);border-top:1px solid var(--line);padding-top:10px}
 .duty .dcases{border-top:1px solid var(--line);padding-top:10px}
 .duty .dcases h3{margin:0 0 6px;font-size:14.5px;font-weight:800;display:flex;align-items:center;gap:8px}
@@ -2344,6 +2351,22 @@ function dutyPanel(){
     <p class="dnext">${CTRL?`الوردية القادمة: <b>${SHN[nk]}</b> (${esc(ctTime(nk))})، ثم ${SHN[ctNow(Date.now()+16*36e5)]}.`:`الوردية القادمة: <b>${SHN[nk]}</b> — تستلم ٩:٠٠ ص ${esc(dutyDateStr(d+1))}، ثم ${SHN[dutyShift(d+2)]} ${esc(dutyDateStr(d+2))}.`}</p>
   </section>`;
 }
+// الوردية القادمة: مربع أصغر تحت الوردية المستلمة (قوتها والمتوقع حضوره وحالاتها المعروفة يوم استلامها)
+function nextPanel(){
+  if (CTRL && !ctNow()) return '';
+  const cfg=hCfg(), d=dutyDay(), nk=CTRL?ctNow(Date.now()+8*36e5):dutyShift(d+1); if (!nk) return '';
+  const off = CTRL ? 0 : ((Date.now()+DUTY_TZ_MS)/864e5 - Math.floor((Date.now()+DUTY_TZ_MS)/864e5) < DUTY_H/24 ? -1 : 0);
+  const dk=dayKey(CTRL?0:off+1), size=cfg.shifts[nk]||0, pres=shiftPres(nk, dk), miss=Math.max(0,size-pres);
+  const own=staffOf(nk), cases=own.filter(p=>effSt(p,dk)!=='present');
+  const caseLbl = p => { const e=effSt(p,dk); return e==='support' ? 'دعم '+(SHN[String(p.toShift||'')]||'وردية أخرى') : HST[e]; };
+  return `<section class="panel duty dnextp" aria-label="الوردية القادمة">
+    <div class="dtop"><div><div class="dlbl">الوردية القادمة</div>
+      <div class="dname">${SHN[nk]}</div>
+      <div class="dtime">${CTRL?esc(ctTime(nk)+' · '+ctGrpN(nk)):`تستلم ٩:٠٠ ص ${esc(dutyDateStr(d+1))}`}</div></div>
+      <dl class="rstats"><div><dt>قوة الوردية</dt><dd>${arD(size)}</dd></div><div><dt><i class="dot hd-ok"></i>المتوقع حضوره</dt><dd>${arD(pres)}</dd></div><div><dt><i class="dot hd-bad"></i>النقص</dt><dd${miss?' class="bad"':''}>${arD(miss)}</dd></div></dl></div>
+    ${cases.length?`<div class="nxcases">${cases.map(p=>`<span class="nxc"><b>${esc(pLabel(p))}</b> — ${esc(caseLbl(p)||'')}</span>`).join('')}</div>`:'<div class="nxnone">لا توجد حالات مسجلة لهذه الوردية يوم استلامها.</div>'}
+  </section>`;
+}
 const SHOPTS = SHKEYS.map(k=>[k,SHN[k]]);
 function hCfg(){ const h=S.hrs||{}, s=h.shifts||{}, n=(v,d)=>(v!=null&&v!==''&&!isNaN(+v))?+v:d;
   const sh = {}; SHKEYS.forEach(k=>{ sh[k]=n(s[k], CTRL?5:({'1':6,'2':6,'3':5})[k]); });
@@ -2368,7 +2391,7 @@ function viewStaff(){
   const cnt={team:(S.staff||[]).length, abs:(S.absences||[]).length, rew:(S.rewards||[]).length, mis:(S.missions||[]).filter(m=>!m.done).length};
   const tabs=`<div class="htabs" role="tablist" aria-label="أقسام الكادر البشري">${HTABS.map(([k,l])=>`<button type="button" role="tab" class="htab${tab===k?' on':''}" aria-selected="${tab===k}" data-act="hTab" data-id="${k}">${esc(l)}${S.loadedH&&cnt[k]?` <b>${cnt[k]}</b>`:''}</button>`).join('')}</div>`;
   if (!S.loadedH) return head+tabs+loading();
-  const body = tab==='abs'?hAbs() : tab==='rew'?hRew() : tab==='mis'?hMis() : dutyPanel()+hSummary()+hTeam();
+  const body = tab==='abs'?hAbs() : tab==='rew'?hRew() : tab==='mis'?hMis() : dutyPanel()+nextPanel()+hSummary()+hTeam();
   return head+alertsPanel()+tabs+body;
 }
 function hSummary(){
