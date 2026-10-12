@@ -1,0 +1,282 @@
+{
+ "ms01": {
+  "n": 1,
+  "name": "جامعة حائل (بنات)",
+  "url": "https://maps.app.goo.gl/omwLCtzBnCjsKRta8",
+  "note": "",
+  "at": 1790772167740
+ },
+ "ms02": {
+  "n": 2,
+  "name": "مستشفى الملك سلمان التخصصي",
+  "url": "https://maps.app.goo.gl/AdbXq8B1DJ12hKse9",
+  "note": "",
+  "at": 1790772167741
+ },
+ "ms03": {
+  "n": 3,
+  "name": "مستشفى الولادة والأطفال",
+  "url": "https://maps.app.goo.gl/2YMmqgF1vbjVp9pg9",
+  "note": "",
+  "at": 1790772167742
+ },
+ "ms04": {
+  "n": 4,
+  "name": "مستشفى سلامات",
+  "url": "https://maps.app.goo.gl/pGyHSAaERkSm8AhLA",
+  "note": "",
+  "at": 1790772167743
+ },
+ "ms05": {
+  "n": 5,
+  "name": "المستودعات الطبية",
+  "url": "https://maps.app.goo.gl/2xDVn7RYfHQnWksj6",
+  "note": "",
+  "at": 1790772167744
+ },
+ "ms06": {
+  "n": 6,
+  "name": "مركز غسيل الكلى",
+  "url": "https://maps.app.goo.gl/H6S5svxZbRDmzD5G9",
+  "note": "",
+  "at": 1790772167745
+ },
+ "ms07": {
+  "n": 7,
+  "name": "قاردن مول",
+  "url": "https://maps.app.goo.gl/zkFUXYvmDsYEfd4D8",
+  "note": "",
+  "at": 1790772167746
+ },
+ "ms08": {
+  "n": 8,
+  "name": "مكتبة جرير",
+  "url": "https://maps.app.goo.gl/2i57k8ko5Ya1z3vX8",
+  "note": "",
+  "at": 1790772167747
+ },
+ "ms09": {
+  "n": 9,
+  "name": "الهيئة العامة للإحصاء",
+  "url": "https://maps.app.goo.gl/SrzJr1dofk9ZCUJd7",
+  "note": "",
+  "at": 1790772167748
+ },
+ "ms10": {
+  "n": 10,
+  "name": "الإدارة العامة للسجون",
+  "url": "https://maps.app.goo.gl/Mm7KrUX7iTmQqQQi8",
+  "note": "",
+  "at": 1790772167749
+ },
+ "ms11": {
+  "n": 11,
+  "name": "مركز المعلومات الوطني",
+  "url": "https://maps.app.goo.gl/mZ7WyAYus7q8N6KCA",
+  "note": "",
+  "at": 1790772167750
+ },
+ "ms12": {
+  "n": 12,
+  "name": "مركز تدريب الدفاع المدني",
+  "url": "https://maps.app.goo.gl/UagTUkAJFp8p79FS7",
+  "note": "",
+  "at": 1790772167751
+ },
+ "ms13": {
+  "n": 13,
+  "name": "إدارة المياه ومختبر المياه",
+  "url": "https://maps.app.goo.gl/jgSsfEhD4rZiqAvS8",
+  "note": "",
+  "at": 1790772167752
+ },
+ "ms14": {
+  "n": 14,
+  "name": "فرع وزارة التجارة",
+  "url": "https://maps.app.goo.gl/rRQhveDTiBTfh6nw9",
+  "note": "",
+  "at": 1790772167753
+ },
+ "ms15": {
+  "n": 15,
+  "name": "مستوصف قوى الأمن",
+  "url": "https://maps.app.goo.gl/osTpSPTzEU8QWiBv5",
+  "note": "",
+  "at": 1790772167754
+ },
+ "ms16": {
+  "n": 16,
+  "name": "قسم شرطة المنتزه",
+  "url": "https://maps.app.goo.gl/JRVLSztstEoR8ZoX9",
+  "note": "",
+  "at": 1790772167755
+ },
+ "ms17": {
+  "n": 17,
+  "name": "إدارة دوريات الأمن",
+  "url": "https://maps.app.goo.gl/B61sRF32RV8ymXZt9",
+  "note": "",
+  "at": 1790772167756
+ },
+ "ms18": {
+  "n": 18,
+  "name": "فرع وزارة النقل",
+  "url": "https://maps.app.goo.gl/eS5yZfEixPLNEb6n6",
+  "note": "",
+  "at": 1790772167757
+ },
+ "ms19": {
+  "n": 19,
+  "name": "جمعية أجا النسائية الخيرية",
+  "url": "https://maps.app.goo.gl/i9QtPbJkjH5BMjat5",
+  "note": "",
+  "at": 1790772167758
+ },
+ "ms20": {
+  "n": 20,
+  "name": "الهلال الأحمر السعودي",
+  "url": "https://maps.app.goo.gl/FV2M6CzFqXNAcfLT7",
+  "note": "",
+  "at": 1790772167759
+ },
+ "ms21": {
+  "n": 21,
+  "name": "دار الملاحظة الاجتماعية",
+  "url": "https://maps.app.goo.gl/rng8ufHYsn9mMiCn9",
+  "note": "",
+  "at": 1790772167760
+ },
+ "ms22": {
+  "n": 22,
+  "name": "مستوصف الزهرة",
+  "url": "https://maps.app.goo.gl/aBR5BLwBeDdgGECK8",
+  "note": "",
+  "at": 1790772167761
+ },
+ "ms23": {
+  "n": 23,
+  "name": "مستوصف المنتزه الشرقي",
+  "url": "https://maps.app.goo.gl/gkqxPVaFKCJghEYn8",
+  "note": "",
+  "at": 1790772167762
+ },
+ "ms24": {
+  "n": 24,
+  "name": "مجمع مدرسة الخزامى (بنات)",
+  "url": "https://maps.app.goo.gl/7Ysck6FLkEnRQHNE7",
+  "note": "",
+  "at": 1790772167763
+ },
+ "ms25": {
+  "n": 25,
+  "name": "مدرسة ثانوية الفاروق",
+  "url": "https://maps.app.goo.gl/q9CMiC17JcQ8tS3Y9",
+  "note": "",
+  "at": 1790772167764
+ },
+ "ms26": {
+  "n": 26,
+  "name": "ثانوية الأمير سعود بن عبدالمحسن",
+  "url": "https://maps.app.goo.gl/Cd6chbKAkL1imWcJA",
+  "note": "",
+  "at": 1790772167765
+ },
+ "ms27": {
+  "n": 27,
+  "name": "مستوصف الريان",
+  "url": "https://maps.app.goo.gl/RtSBs4koghjtzsEf9",
+  "note": "",
+  "at": 1790772167766
+ },
+ "ms28": {
+  "n": 28,
+  "name": "مركز الدكتور ناصر الرشيد للرعاية الاجتماعية",
+  "url": "https://maps.app.goo.gl/8bzW6cJNppGzZZtKA",
+  "note": "",
+  "at": 1790772167767
+ },
+ "ms29": {
+  "n": 29,
+  "name": "فندق لافينا",
+  "url": "https://maps.app.goo.gl/Jw45u4gPL7wzZ6Lg8",
+  "note": "",
+  "at": 1790772167768
+ },
+ "ms30": {
+  "n": 30,
+  "name": "فندق الزيتون",
+  "url": "https://maps.app.goo.gl/uyLR6vmTd6uNoDKdA",
+  "note": "",
+  "at": 1790772167769
+ },
+ "ms31": {
+  "n": 31,
+  "name": "فندق رووم إن",
+  "url": "https://maps.app.goo.gl/brKs29s9wwo722Zr8",
+  "note": "",
+  "at": 1790772167770
+ },
+ "ms32": {
+  "n": 32,
+  "name": "فندق الضيافة",
+  "url": "https://maps.app.goo.gl/Jw45u4gPL7wzZ6Lg8",
+  "note": "",
+  "at": 1790772167771
+ },
+ "ms33": {
+  "n": 33,
+  "name": "مدارس الفضيلة",
+  "url": "https://maps.app.goo.gl/Y8o1Bu4EsP8n4y7fA",
+  "note": "",
+  "at": 1790772167772
+ },
+ "ms34": {
+  "n": 34,
+  "name": "الابتدائية السادسة (بنات)",
+  "url": "https://maps.app.goo.gl/vdHiUN1MyyTCVi2J6",
+  "note": "",
+  "at": 1790772167773
+ },
+ "ms35": {
+  "n": 35,
+  "name": "مدرسة الفتح",
+  "url": "https://maps.app.goo.gl/3fkjTkTdYeNnLcGL9",
+  "note": "",
+  "at": 1790772167774
+ },
+ "ms36": {
+  "n": 36,
+  "name": "النادي الأدبي",
+  "url": "https://maps.app.goo.gl/wcuMGyvuogqwER1H8",
+  "note": "",
+  "at": 1790772167775
+ },
+ "ms37": {
+  "n": 37,
+  "name": "مستوصف الصفاء",
+  "url": "https://maps.app.goo.gl/K5CdJwkUt5S1ZJ7X7",
+  "note": "",
+  "at": 1790772167776
+ },
+ "ms38": {
+  "n": 38,
+  "name": "أجا بارك",
+  "url": "https://maps.app.goo.gl/P4iWdX9wRsRV5yWZ8",
+  "note": "",
+  "at": 1790772167777
+ },
+ "ms39": {
+  "n": 39,
+  "name": "مستوصف عنايتي الطبي",
+  "url": "https://maps.app.goo.gl/qFmqySj6CW4Mh9xC9",
+  "note": "",
+  "at": 1790772167778
+ },
+ "ms40": {
+  "n": 40,
+  "name": "منتزه المغواة للاحتفالات",
+  "url": "https://maps.app.goo.gl/wD4SQsALRSqxgvxp6",
+  "note": "",
+  "at": 1790772167779
+ }
+}

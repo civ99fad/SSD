@@ -1,0 +1,188 @@
+{
+ "sh01": {
+  "code": "1/2",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ هـ م 2254",
+  "model": "2013",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773043237,
+  "updated": 1790773043237,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
+ },
+ "sh02": {
+  "code": "2/2",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "أ هـ س 2207",
+  "model": "2013",
+  "status": "down",
+  "statusNote": "عطل (منظم الوسائد الهوائية) + تهريب زيت",
+  "statusAction": "",
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-sh02-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "متعطلة بالمقر — عطل (منظم الوسائد الهوائية) + تهريب زيت",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620117,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773043238,
+  "updated": 1790773043238,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
+ },
+ "sh03": {
+  "code": "4/2",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ ن ب 3364",
+  "model": "2013",
+  "status": "maint",
+  "statusNote": "مشكلة في القير",
+  "statusAction": "تم التحويل",
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "3oaftgtpuvji",
+    "type": "status",
+    "date": "1448/04/24",
+    "title": "في الصيانة — مشكلة في القير",
+    "note": "الإجراء المتخذ: تم التحويل · الحالة السابقة: جاهزة",
+    "at": 1791184253743,
+    "by": "civ99fad"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773043239,
+  "updated": 1791184253743,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
+ },
+ "sh04": {
+  "code": "5/2",
+  "name": "وايت أكتروس",
+  "make": "مرسيدس",
+  "plate": "أ ح ط 3603",
+  "model": "2003",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-sh04",
+    "date": "1448/04/20",
+    "at": 1790839620117,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد تهريب ليات الهواء"
+   }
+  ],
+  "created": 1790773043240,
+  "updated": 1790773043240,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
+ },
+ "sh05": {
+  "code": "7/2",
+  "name": "جيب نيسان ٤ أبواب",
+  "make": "نيسان",
+  "plate": "ى أ ل 0130",
+  "model": "2010",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773043241,
+  "updated": 1790773043241,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "sh06": {
+  "code": "انهيار 1",
+  "name": "سيارة انهيارات المباني",
+  "make": "",
+  "plate": "أ ل ب 2417",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773043242,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-sh06",
+    "note": "",
+    "title": "متعطلة بالمقر — بطاريات",
+    "type": "status"
+   },
+   {
+    "id": "st-sh06-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "أصبحت جاهزة",
+    "note": "الحالة السابقة: متعطلة بالمقر",
+    "at": 1790839620117,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-sh06",
+    "date": "1448/04/20",
+    "at": 1790839620117,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: جهاز التقوير + الوسائد الهوائية معطلة"
+   }
+  ],
+  "created": 1790773043242,
+  "updated": 1790773043242
+ }
+}

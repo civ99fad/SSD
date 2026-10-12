@@ -1,0 +1,14 @@
+{
+  "name": "isnad-archive",
+  "version": "1.0.0",
+  "private": true,
+  "description": "أرشيف قسم الدعم والإسناد — الدفاع المدني",
+  "scripts": {
+    "start": "node server.js",
+    "set-password": "node tools/set-password.js",
+    "build:static": "node tools/build-static.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

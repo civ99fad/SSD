@@ -1,0 +1,240 @@
+{
+ "js01": {
+  "n": 1,
+  "name": "مركز إمارة جبه",
+  "url": "https://maps.app.goo.gl/4ELk9Wb2SwEKSFQ77?g_st=iw",
+  "note": "",
+  "at": 1790895673101
+ },
+ "js02": {
+  "n": 2,
+  "name": "مركز شرطة جبه",
+  "url": "https://maps.app.goo.gl/75peNwJFoFPFFs6G7?g_st=iw",
+  "note": "",
+  "at": 1790895673102
+ },
+ "js03": {
+  "n": 3,
+  "name": "قسم مرور جبه",
+  "url": "https://maps.app.goo.gl/gyXKkKr9dZP4vCRj6?g_st=iw",
+  "note": "",
+  "at": 1790895673103
+ },
+ "js04": {
+  "n": 4,
+  "name": "مركز صحي جبه",
+  "url": "https://maps.app.goo.gl/KW7uyUt4j7d7ntJK7?g_st=iw",
+  "note": "",
+  "at": 1790895673104
+ },
+ "js05": {
+  "n": 5,
+  "name": "مركز انطلاق دوريات أمن الطرق",
+  "url": "https://maps.app.goo.gl/5FYZRdr8XNU7gFAi6?g_st=iw",
+  "note": "",
+  "at": 1790895673105
+ },
+ "js06": {
+  "n": 6,
+  "name": "مركز الهلال الأحمر",
+  "url": "https://maps.app.goo.gl/9UEEnGiiU4oyavZi9?g_st=iw",
+  "note": "",
+  "at": 1790895673106
+ },
+ "js07": {
+  "n": 7,
+  "name": "بلدية جبه",
+  "url": "https://maps.app.goo.gl/mrzUfdv64a6PT98N8?g_st=iw",
+  "note": "",
+  "at": 1790895673107
+ },
+ "js08": {
+  "n": 8,
+  "name": "مقر دار فاطمة النسائي",
+  "url": "https://maps.app.goo.gl/WEf8o9UsLDGzVXhk9?g_st=iw",
+  "note": "",
+  "at": 1790895673108
+ },
+ "js09": {
+  "n": 9,
+  "name": "مركز هيئة جبه",
+  "url": "https://maps.app.goo.gl/n7nEKvyUJFxMaJkC6?g_st=iw",
+  "note": "",
+  "at": 1790895673109
+ },
+ "js10": {
+  "n": 10,
+  "name": "مكتب الأوقاف والدعوة والإرشاد",
+  "url": "https://maps.app.goo.gl/UceNsVQgLA32dPd6A?g_st=iw",
+  "note": "",
+  "at": 1790895673110
+ },
+ "js11": {
+  "n": 11,
+  "name": "الوحدة البيطرية",
+  "url": "https://maps.app.goo.gl/iJpQCWh67xzSC98r7?g_st=iw",
+  "note": "",
+  "at": 1790895673111
+ },
+ "js12": {
+  "n": 12,
+  "name": "جمعية التنمية الأهلية بجبة",
+  "url": "https://maps.app.goo.gl/1Dy36dt3r5xMGa4r5?g_st=iw",
+  "note": "",
+  "at": 1790895673112
+ },
+ "js13": {
+  "n": 13,
+  "name": "المركز الحضاري",
+  "url": "https://maps.app.goo.gl/hx7rYe583LBT7Fpd6?g_st=iw",
+  "note": "",
+  "at": 1790895673113
+ },
+ "js14": {
+  "n": 14,
+  "name": "صالة القوة والرشاقة",
+  "url": "https://maps.app.goo.gl/q4zVdCtu2oFm1HoR8?g_st=iw",
+  "note": "",
+  "at": 1790895673114
+ },
+ "js15": {
+  "n": 15,
+  "name": "نادي جبة الرياضي",
+  "url": "https://maps.app.goo.gl/Kjg8FhSbwPQmuUBQ6?g_st=iw",
+  "note": "",
+  "at": 1790895673115
+ },
+ "js16": {
+  "n": 16,
+  "name": "إدارة الخدمات البلدية بجبة",
+  "url": "https://maps.app.goo.gl/xURhoJCizGcpymG4A?g_st=iw",
+  "note": "",
+  "at": 1790895673116
+ },
+ "js17": {
+  "n": 17,
+  "name": "كتابة العدل بجبة",
+  "url": "https://maps.app.goo.gl/4832WAqZbBwtgcJs5?g_st=iw",
+  "note": "",
+  "at": 1790895673117
+ },
+ "js18": {
+  "n": 18,
+  "name": "البريد السعودي",
+  "url": "https://maps.app.goo.gl/sYeRND67GGhVnqWu7?g_st=iw",
+  "note": "",
+  "at": 1790895673118
+ },
+ "js19": {
+  "n": 19,
+  "name": "مصرف الراجحي بجبة",
+  "url": "https://maps.app.goo.gl/jSekZ1vvaBXNsAmx5?g_st=iw",
+  "note": "",
+  "at": 1790895673119
+ },
+ "js20": {
+  "n": 20,
+  "name": "دار زينب النسائية",
+  "url": "https://maps.app.goo.gl/SB7fV84nbndTXNYr7?g_st=iw",
+  "note": "",
+  "at": 1790895673120
+ },
+ "js21": {
+  "n": 21,
+  "name": "متحف العيادة والتراثي",
+  "url": "https://maps.app.goo.gl/8mBXJR9EMi8BAc4t6?g_st=iw",
+  "note": "",
+  "at": 1790895673121
+ },
+ "js22": {
+  "n": 22,
+  "name": "متحف قصر النايف الأثري",
+  "url": "https://maps.app.goo.gl/ZkgBF4AF4MkQy3cN6?g_st=iw",
+  "note": "",
+  "at": 1790895673122
+ },
+ "js23": {
+  "n": 23,
+  "name": "متحف ناصر الثويني بجبة",
+  "url": "https://maps.app.goo.gl/cSLiAB2GtzvUibCb8?g_st=iw",
+  "note": "",
+  "at": 1790895673123
+ },
+ "js24": {
+  "n": 24,
+  "name": "مدرسة العليم للبنين",
+  "url": "https://maps.app.goo.gl/QHCC6mH8Tqhxz5k7A?g_st=iw",
+  "note": "",
+  "at": 1790895673124
+ },
+ "js25": {
+  "n": 25,
+  "name": "مدرسة روض جبة الابتدائية",
+  "url": "https://maps.app.goo.gl/uaJdEiqQyARUvFZa9?g_st=iw",
+  "note": "",
+  "at": 1790895673125
+ },
+ "js26": {
+  "n": 26,
+  "name": "مدرسة روض جبة للبنات",
+  "url": "https://maps.app.goo.gl/aPDrM96926GXRiv57?g_st=iw",
+  "note": "",
+  "at": 1790895673126
+ },
+ "js27": {
+  "n": 27,
+  "name": "ثانوية جبة للبنين",
+  "url": "https://maps.app.goo.gl/ZxGyAtMiRuhM1Bvz9?g_st=iw",
+  "note": "",
+  "at": 1790895673127
+ },
+ "js28": {
+  "n": 28,
+  "name": "مدرسة القبلتين الابتدائية",
+  "url": "https://maps.app.goo.gl/F3xDEaGja5rDAHcH8?g_st=iw",
+  "note": "",
+  "at": 1790895673128
+ },
+ "js29": {
+  "n": 29,
+  "name": "مدرسة ابتدائية ومتوسطة تحفيظ القرآن الكريم",
+  "url": "https://maps.app.goo.gl/6i5wa7Gnz8NDChVE6?g_st=iw",
+  "note": "",
+  "at": 1790895673129
+ },
+ "js30": {
+  "n": 30,
+  "name": "متوسطة جبة للبنين",
+  "url": "https://maps.app.goo.gl/n6YBYYKaJRmQ7PSe9?g_st=iw",
+  "note": "",
+  "at": 1790895673130
+ },
+ "js31": {
+  "n": 31,
+  "name": "روضة جبة",
+  "url": "https://maps.app.goo.gl/3crz5Y5mj4sHM8XZ8?g_st=iw",
+  "note": "",
+  "at": 1790895673131
+ },
+ "js32": {
+  "n": 32,
+  "name": "مدرسة ابتدائية طارق بن زياد بجبة",
+  "url": "https://maps.app.goo.gl/zE21c9mMGmpHEdbm6?g_st=iw",
+  "note": "",
+  "at": 1790895673132
+ },
+ "js33": {
+  "n": 33,
+  "name": "مركز إمارة الرديفة",
+  "url": "https://maps.app.goo.gl/dTF9JhA4bGVzAtdw7?g_st=iw",
+  "note": "",
+  "at": 1790895673133
+ },
+ "js34": {
+  "n": 34,
+  "name": "مكتب الآثار بجبة",
+  "url": "https://maps.app.goo.gl/JHB7hV6AjNMvQyX27?g_st=iw",
+  "note": "",
+  "at": 1790895673134
+ }
+}

@@ -1,0 +1,219 @@
+{
+ "d01": {
+  "code": "1/6",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ ص م 3961",
+  "model": "2010",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388912,
+  "updated": 1790773388912,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
+ },
+ "d02": {
+  "code": "2/6",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "ب ب ق 2214",
+  "model": "2015",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388913,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-d02",
+    "note": "",
+    "title": "متعطلة بالمقر — بطارية",
+    "type": "status"
+   },
+   {
+    "id": "st-d02-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "أصبحت جاهزة",
+    "note": "الحالة السابقة: متعطلة بالمقر",
+    "at": 1790839620120,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388913,
+  "updated": 1790773388913,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
+ },
+ "d03": {
+  "code": "4/6",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ م ك 4429",
+  "model": "2012",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388914,
+  "updated": 1790773388914,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
+ },
+ "d04": {
+  "code": "5/6",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "أ أ د 9904",
+  "model": "2004",
+  "status": "maint",
+  "statusNote": "رجيع",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388915,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-d04",
+    "note": "",
+    "title": "في الصيانة — رجيع",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388915,
+  "updated": 1790773388915,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "d05": {
+  "code": "منقذ 2",
+  "name": "جيب تايوتا ٤ أبواب",
+  "make": "تويوتا",
+  "plate": "ب ع ح 3651",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-d05",
+    "date": "1448/04/20",
+    "at": 1790839620120,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: التدخل في الحوادث على الطرق السريعة وفتح الأبواب واحتباس الخواتم"
+   }
+  ],
+  "created": 1790773388916,
+  "updated": 1790773388916,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ },
+ "d06": {
+  "code": "",
+  "name": "جيب تايوتا ٤ أبواب",
+  "make": "تويوتا",
+  "plate": "ب ق ل 5984",
+  "model": "2011",
+  "status": "maint",
+  "statusNote": "رجيع",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388917,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-d06",
+    "note": "",
+    "title": "في الصيانة — رجيع",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388917,
+  "updated": 1790773388917,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ },
+ "d07": {
+  "code": "",
+  "name": "جيب باترول ٤ أبواب",
+  "make": "نيسان",
+  "plate": "أ ن ل 6436",
+  "model": "2009",
+  "status": "maint",
+  "statusNote": "انقطاع سير المكينة",
+  "statusAction": "تم التحويل",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790773388918,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-d07",
+    "note": "الإجراء المتخذ: تم التحويل",
+    "title": "في الصيانة — انقطاع سير المكينة",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773388918,
+  "updated": 1790773388918,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ }
+}

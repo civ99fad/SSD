@@ -1,0 +1,267 @@
+{
+ "m01": {
+  "code": "1/3",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ هـ س 2505",
+  "model": "2013",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-m01",
+    "date": "1448/04/20",
+    "at": 1790839620118,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: ماطور الوسائد الهوائية بالمقر + ماطور القص والفصل بالمقر + القوارب بطاريات بالصيانة + حبل السارية"
+   }
+  ],
+  "created": 1790771897726,
+  "updated": 1790771897726,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
+ },
+ "m02": {
+  "code": "2/3",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "أ و س 7255",
+  "model": "2013",
+  "status": "maint",
+  "statusNote": "عطل في العامود",
+  "statusAction": "",
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-m02-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "في الصيانة — عطل في العامود",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620118,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771897727,
+  "updated": 1790771897727,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
+ },
+ "m03": {
+  "code": "4/3",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ م ك 4426",
+  "model": "2013",
+  "status": "down",
+  "statusNote": "عطل (لم يُذكر السبب)",
+  "statusAction": "",
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-m03-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "متعطلة بالمقر — عطل (لم يُذكر السبب)",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620118,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771897728,
+  "updated": 1790771897728,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
+ },
+ "m04": {
+  "code": "5/3",
+  "name": "وايت أكتروس",
+  "make": "مرسيدس",
+  "plate": "أ ح ط 8108",
+  "model": "2004",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790771897729,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-m04",
+    "note": "",
+    "title": "في الصيانة — تهريب ماء",
+    "type": "status"
+   },
+   {
+    "id": "st-m04-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "عادت من الصيانة وهي جاهزة",
+    "note": "الحالة السابقة: في الصيانة",
+    "at": 1790839620118,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771897729,
+  "updated": 1790771897729,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
+ },
+ "m05": {
+  "code": "6/3",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "أ أ د 5485",
+  "model": "2000",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771897730,
+  "updated": 1790771897730,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "m06": {
+  "code": "7/3",
+  "name": "سيارة الغواصين ايفيكو",
+  "make": "ايفيكو",
+  "plate": "أ ع ل 3236",
+  "model": "2009",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-m06",
+    "date": "1448/04/20",
+    "at": 1790839620118,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد مفتاح مصاعد"
+   }
+  ],
+  "created": 1790771897731,
+  "updated": 1790771897731
+ },
+ "m07": {
+  "code": "8/3",
+  "name": "جيب نيسان ٤ أبواب",
+  "make": "نيسان",
+  "plate": "ب ل ط 3323",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771897732,
+  "updated": 1790771897732,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "m08": {
+  "code": "0/17",
+  "name": "جيب تويوتا شاص",
+  "make": "تويوتا",
+  "plate": "أ هـ م 0334",
+  "model": "1997",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771897733,
+  "updated": 1790771897733,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ },
+ "m09": {
+  "code": "منقذ 1",
+  "name": "جيب تويوتا ٤ أبواب",
+  "make": "تويوتا",
+  "plate": "ب ع س 4288",
+  "model": "2010",
+  "status": "maint",
+  "statusNote": "عطل (لم يُذكر السبب)",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790771897734,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-m09",
+    "note": "",
+    "title": "في الصيانة — تهريب زيت",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790771897734,
+  "updated": 1790771897734,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ }
+}

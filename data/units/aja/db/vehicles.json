@@ -1,0 +1,154 @@
+{
+ "j7-1": {
+  "code": "1/7",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ م ن 8197",
+  "model": "2012",
+  "status": "down",
+  "statusNote": "بالبطارية وكفرات",
+  "statusAction": "",
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790772821158,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-j7-1",
+    "note": "",
+    "title": "متعطلة بالمقر — بالبطارية وكفرات",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821158,
+  "updated": 1790772821158,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
+ },
+ "j7-2": {
+  "code": "2/7",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "أ هـ س 2278",
+  "model": "2013",
+  "status": "maint",
+  "statusNote": "عطل — شعبة",
+  "statusAction": "",
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790772821159,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-j7-2",
+    "note": "الإجراء المتخذ: تم التحويل",
+    "title": "في الصيانة — الكارونة",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821159,
+  "updated": 1790772821159,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
+ },
+ "j7-4": {
+  "code": "4/7",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ م ك 4463",
+  "model": "2012",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-j7-4",
+    "date": "1448/04/20",
+    "at": 1790839620120,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد عطل بسفتي"
+   }
+  ],
+  "created": 1790772821160,
+  "updated": 1790772821160,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
+ },
+ "j7-5": {
+  "code": "5/7",
+  "name": "وايت مرسيدس مع قاذف",
+  "make": "مرسيدس",
+  "plate": "د ح هـ 0225",
+  "model": "1992",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821161,
+  "updated": 1790772821161,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
+ },
+ "j7-6": {
+  "code": "6/7",
+  "name": "جيب نيسان ٤ أبواب",
+  "make": "نيسان",
+  "plate": "ي أ ل 0746",
+  "model": "2008",
+  "status": "maint",
+  "statusNote": "الرديتر",
+  "statusAction": "تم التحويل",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "at": 1790772821162,
+    "by": "",
+    "date": "1448/04/19",
+    "id": "st-j7-6",
+    "note": "الإجراء المتخذ: تم التحويل",
+    "title": "في الصيانة — الرديتر",
+    "type": "status"
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790772821162,
+  "updated": 1790772821162,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ }
+}

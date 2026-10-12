@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>لوحة مدير الإدارة العامة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --brand:#0E3D2C; --bg:#E8EEEB; --surface:#FFFFFF; --surface-2:#F7F9F8; --line:#5E8F79;--edge:#1F5A43;
+  --text:#0B1612; --muted:#2C3A33; --faint:#4A5852;
+  --accent:#1F7A56; --accent-hover:#17694A; --on-accent:#FFFFFF; --accent-soft:#E4F1EA;
+  --ok:#1F7A56; --ok-bg:#E4F1EA; --mid:#B54708; --mid-bg:#FEF0C7; --bad:#B42318; --bad-bg:#FDECEA;
+  --away:#3E5BA9; --away-bg:#E8EDFB; --none:#98A2B3; --none-bg:#F2F4F7;
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 6px 18px rgba(16,24,40,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --brand:#0A2A1F; --bg:#0F1513; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
+    --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
+    --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
+    --ok:#45A980; --ok-bg:#16352A; --mid:#F5B544; --mid-bg:#3A2A0C; --bad:#F97066; --bad-bg:#3A1714;
+    --away:#8EA6F0; --away-bg:#1C2544; --none:#7F8C86; --none-bg:#1E2724;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --brand:#0A2A1F; --bg:#0F1513; --surface:#151D1A; --surface-2:#19231F; --line:#33463E;--edge:#3E7A62;
+  --text:#E6ECE9; --muted:#A3B0AA; --faint:#7F8C86;
+  --accent:#45A980; --accent-hover:#5BBB93; --on-accent:#05130D; --accent-soft:#16352A;
+  --ok:#45A980; --ok-bg:#16352A; --mid:#F5B544; --mid-bg:#3A2A0C; --bad:#F97066; --bad-bg:#3A1714;
+  --away:#8EA6F0; --away-bg:#1C2544; --none:#7F8C86; --none-bg:#1E2724;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg)}
+body{font-family:'IBM Plex Sans Arabic',"Segoe UI",Tahoma,system-ui,sans-serif;color:var(--text);line-height:1.55;font-size:15px}
+button,input{font:inherit;color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+bdi{unicode-bidi:isolate}
+.band{background:#082E23;color:#A9C2B6;text-align:center;font-size:12px;font-weight:500;padding:6px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px))}
+
+/* بوابة الدخول */
+.gate{min-height:calc(100vh - 36px);display:flex;align-items:center;justify-content:center;padding:32px 16px;background:var(--brand)}
+.gcard{width:100%;max-width:420px;background:var(--surface);border-radius:20px;box-shadow:0 30px 60px rgba(0,0,0,.35);padding:36px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.logo{width:84px;height:84px;border-radius:50%;background:#fff;border:1px solid #E6ECE9;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px}
+.logo img{width:72px;height:72px;object-fit:contain}
+.gcard h1{margin:0;font-size:22px;font-weight:800}
+.sub{color:var(--muted);font-size:14px}
+.fld{width:100%;margin-top:20px;text-align:start}
+.fld label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.fld input{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);font-size:15px;outline:none}
+.fld input:focus{border-color:var(--accent)}
+.err{margin-top:8px;color:var(--bad);font-size:13.5px;font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;min-height:40px}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-hover);color:var(--on-accent)}
+.btn.wide{width:100%;margin-top:14px;min-height:48px;font-size:16px}
+.back{margin-top:14px;font-size:13px;font-weight:700;color:var(--accent);text-decoration:none}
+
+/* اللوحة */
+.top{background:linear-gradient(160deg,#0B4A37 0%,#083527 100%);color:#fff;padding:18px 16px 60px;position:relative;overflow:hidden}
+.top::before{content:"";position:absolute;left:-100px;top:-220px;width:520px;height:520px;border-radius:50%;border:1px solid rgba(255,255,255,.07);pointer-events:none}
+.top-in,.hhero{position:relative}
+body.home .top{padding-bottom:124px}
+body.home main{margin-top:-84px}
+.hhero{max-width:1240px;margin:0 auto;padding:30px 0 0;display:flex;flex-direction:column;gap:8px}
+.hhero h2{margin:0;font-size:40px;line-height:1.3;font-weight:700;color:#fff}
+.hhero p{margin:0;font-size:17px;color:#C5D8CF}
+.top-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top .logo{width:56px;height:56px;margin:0;flex-shrink:0}
+.top .logo img{width:48px;height:48px}
+.top h1{margin:0;font-size:24px;font-weight:800}
+.top .meta{font-size:13.5px;opacity:.85;display:flex;flex-wrap:wrap;gap:4px 14px}
+.top .meta b{font-weight:800}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-inline-start:auto}
+.acts .btn{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#fff}
+.acts .btn:hover{background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.4)}
+main{max-width:1240px;margin:-44px auto 0;padding:0 16px 48px;display:flex;flex-direction:column;gap:18px;position:relative;z-index:1}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px}
+.sh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+.sh h2{margin:0;font-size:18px;font-weight:800}
+.sh .cnt{font-size:13px;font-weight:800;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:1px 10px;color:var(--muted)}
+.sh .grow{flex:1}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi .kt{font-size:13px;font-weight:700;color:var(--muted)}
+.kpi .kv{font-size:28px;font-weight:800;line-height:1.2}
+.kpi .kv small{font-size:14px;font-weight:700;color:var(--muted)}
+.kpi .kd{font-size:12.5px;color:var(--muted)}
+.kpi.main{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.kpi.main .kt,.kpi.main .kd{color:inherit;opacity:.85}
+.c-ok{color:var(--ok)}.c-mid{color:var(--mid)}.c-bad{color:var(--bad)}.c-away{color:var(--away)}
+
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{all:unset;cursor:pointer;font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ucard{display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);text-decoration:none;color:inherit;transition:border-color .15s,box-shadow .15s,transform .15s}
+.ucard.lv-bad{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.ucard.lv-none{opacity:.72}
+.uhead{display:flex;align-items:center;gap:8px}
+.uhead b{font-size:16px;font-weight:800;flex:1;min-width:0}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.badge i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.lv-ok .badge,.badge.lv-ok{background:var(--ok-bg);color:var(--ok)}
+.lv-mid .badge,.badge.lv-mid{background:var(--mid-bg);color:var(--mid)}
+.lv-bad .badge,.badge.lv-bad{background:var(--bad-bg);color:var(--bad)}
+.lv-none .badge,.badge.lv-none{background:var(--none-bg);color:var(--none)}
+.upct{display:flex;align-items:baseline;gap:8px}
+.upct strong{font-size:30px;font-weight:800;line-height:1}
+.bar{display:flex;height:9px;border-radius:999px;overflow:hidden;background:var(--line)}
+.bar span{display:block;height:100%}
+.st-ready{background:var(--ok)}.st-down{background:var(--bad)}.st-maint{background:var(--mid)}.st-away{background:var(--away)}.st-none{background:var(--none)}
+.ustats{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:13px;margin:0}
+.ustats div{display:flex;justify-content:space-between;gap:6px;border-bottom:1px dashed var(--line);padding-bottom:3px}
+.ustats dt{color:var(--muted)}
+.ustats dd{margin:0;font-weight:800}
+.uempty{font-size:13px;color:var(--muted);padding:6px 0}
+.ugo{margin-top:auto;font-size:13px;font-weight:700;color:var(--accent)}
+
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 10px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:800;background:var(--surface-2);white-space:nowrap}
+td.n{font-weight:800;white-space:nowrap}
+tr.tot td{font-weight:800;background:var(--surface-2)}
+.minibar{display:inline-block;width:70px;height:7px;border-radius:999px;background:var(--line);overflow:hidden;vertical-align:middle;margin-inline-start:6px}
+.minibar i{display:block;height:100%}
+
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grp{margin-bottom:14px}
+.grp:last-child{margin-bottom:0}
+.grp h3{font-size:14.5px;font-weight:800;margin:0 0 6px;display:flex;gap:8px;align-items:center}
+.row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.code{font-weight:800;min-width:52px;color:var(--muted)}
+.row .grow{flex:1;min-width:0}
+.row small{display:block;color:var(--muted);font-size:12.5px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.p-down{background:var(--bad-bg);color:var(--bad)}.p-maint{background:var(--mid-bg);color:var(--mid)}.p-away{background:var(--away-bg);color:var(--away)}.p-none{background:var(--none-bg);color:var(--none)}
+.alerts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.alerts li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);font-size:14px}
+.alerts li.a-bad{background:var(--bad-bg);border-color:transparent}
+.alerts li.a-mid{background:var(--mid-bg);border-color:transparent}
+.alerts .ic{font-weight:800;flex-shrink:0}
+.none{color:var(--muted);font-size:14px;padding:6px 0}
+.loading{padding:40px;text-align:center;color:var(--muted)}
+.foot{font-size:12.5px;color:var(--faint);text-align:center}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#14201B;color:#fff;padding:10px 18px;border-radius:10px;font-weight:700;font-size:14px;z-index:9}
+@media (max-width:900px){.two{grid-template-columns:1fr}}
+@media (max-width:560px){
+  .top h1{font-size:20px}
+  .acts{margin-inline-start:0;width:100%}
+  .acts .btn{flex:1 1 auto;padding:8px 10px;font-size:13px}
+  .kpi .kv{font-size:24px}
+  .panel{padding:14px}
+}
+@media print{
+  .band,.acts,.chips,.noprint,.toast{display:none!important}
+  body,html{background:#fff}
+  .top{background:#fff;color:#000;padding:0 0 10px}
+  main{margin:0;padding:0}
+  .panel,.kpi,.ucard{box-shadow:none;break-inside:avoid}
+  .kpi.main{background:#fff;color:#000;border-color:#999}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+
+/* أطراف واضحة باللون الأخضر الغامق (تبقى ظاهرة على الشاشات الفاتحة) */
+.panel,.kpi,.ucard{border:2px solid var(--edge)!important}
+
+/* التعاميم */
+.cform{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.cform .full{grid-column:1/-1}
+.cform label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:700;color:var(--muted)}
+.cform input,.cform textarea{font:inherit;font-weight:400;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--text)}
+.cform textarea{min-height:80px;resize:vertical}
+.clist{display:flex;flex-direction:column}
+.crow{display:flex;gap:14px;align-items:flex-start;padding:14px 4px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.crow:last-child{border-bottom:0}
+.crow .ct{flex:1 1 280px;min-width:0}
+.crow b{font-size:15.5px}.crow small{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.crow p{margin:6px 0 0;font-size:14px;white-space:pre-wrap}
+.cerr{color:var(--bad);font-weight:700;font-size:13.5px}
+@media (max-width:640px){ .cform{grid-template-columns:1fr} }
+
+/* شاشة الاختيار (التصميم المعتمد) */
+.doors{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:28px;align-items:stretch}
+.door{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:0 24px 48px -28px rgba(8,53,39,.28);padding:30px;display:flex;flex-direction:column;gap:24px;color:var(--text);transition:transform .2s ease,box-shadow .2s ease}
+.door:hover{transform:translateY(-3px);box-shadow:0 32px 56px -28px rgba(8,53,39,.35)}
+.door:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.dh{display:flex;align-items:flex-start;gap:16px}
+.dh .ic{width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.door.s .dh .ic{background:#F5EEDF;color:#8A6A2A}
+.dh .tx{display:flex;flex-direction:column;flex:1;min-width:0}
+.dh b{font-size:24px;font-weight:700;line-height:1.4}
+.dh small{font-size:14.5px;color:var(--muted)}
+.dh .big{display:flex;flex-direction:column;align-items:flex-end;white-space:nowrap}
+.dh .big strong{font-size:36px;font-weight:700;line-height:1.1;color:var(--accent)}
+.door.s .dh .big strong{color:#8A6A2A}
+.dh .big span{font-size:12.5px;color:var(--muted)}
+.dbody{display:flex;flex-direction:column;gap:14px;padding-top:20px;border-top:1px solid var(--line)}
+.gbar{display:grid;grid-template-columns:170px 1fr 52px;align-items:center;gap:14px;font-size:14.5px}
+.gbar .t{height:8px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.gbar .t i{display:block;height:100%;border-radius:999px}
+.gbar .p{font-weight:600;text-align:left}
+.strow{display:grid;grid-template-columns:1.5fr repeat(3,minmax(0,1fr));gap:12px;align-items:center;font-size:15px;padding:10px 0;border-top:1px solid var(--line)}
+.strow.h{font-size:12.5px;color:var(--muted);font-weight:600;border-top:0;padding-top:0}
+.strow b{font-weight:600}
+.dcta{margin-top:auto;display:flex;align-items:center;justify-content:space-between;background:var(--accent);color:var(--on-accent);font-weight:600;font-size:15.5px;padding:0 20px;height:52px;border-radius:12px}
+.door.s .dcta{background:#10201A;color:#fff}
+@media (max-width:700px){.hhero h2{font-size:28px}.hhero p{font-size:15px}body.home .top{padding-bottom:96px}body.home main{margin-top:-64px}.door{padding:22px}.dh{flex-wrap:wrap}.dh b{font-size:20px}.dh .big{flex-basis:100%;flex-direction:row;align-items:baseline;gap:8px;padding-inline-start:72px}.dh .big strong{font-size:28px}.gbar{grid-template-columns:104px 1fr 44px;font-size:14px}.strow{grid-template-columns:1.8fr .8fr .9fr .9fr;font-size:14px;gap:8px}}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface);border:2px solid var(--edge);border-radius:14px;padding:8px;box-shadow:var(--shadow)}
+.tabs .chip{font-size:14px;padding:7px 14px}
+.vtitle{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.vtitle h2{margin:0;font-size:20px;font-weight:800}
+.ghead{font-size:14px;font-weight:800;color:var(--muted);margin:14px 0 8px}
+.ghead:first-child{margin-top:0}
+@media (max-width:700px){ .choose{grid-template-columns:1fr} .chs{min-height:0} }
+
+/* تحسينات: ألوان وحدود موحّدة مع البوابة وصفحات الجهات، وحركة خفيفة */
+:root:not([data-theme="dark"]){--bg:#F6F8F6;--line:#DCE4DF;--edge:#D3DDD7;--text:#10201A;--muted:#5C6B64;--faint:#6B7872;--accent:#0F6B4F;--accent-hover:#0B4A37;--accent-soft:#E9F2EE;--surface-2:#FBFCFB;--shadow:0 16px 36px -24px rgba(8,53,39,.32)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--line:#2C3B35;--edge:#2C3B35}}
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(15,107,79,.22)!important;border-radius:10px}
+.panel,.kpi,.ucard{border:1px solid var(--edge)!important;border-radius:18px;box-shadow:0 1px 2px rgba(16,32,26,.04),var(--shadow)}
+.kpi.main{border-color:transparent!important}
+.btn{border-radius:12px;font-weight:600;transition:background .15s,border-color .15s,color .15s,transform .12s}
+.btn:active{transform:scale(.98)}
+.chip{transition:background .15s,border-color .15s,color .15s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip[aria-pressed="true"]:hover{color:var(--on-accent)}
+.ucard{transition:transform .2s cubic-bezier(.2,.7,.2,1),box-shadow .2s}
+.ucard:hover{transform:translateY(-2px)}
+.door .dcta span{display:inline-block;transition:transform .2s}
+.door:hover .dcta span{transform:translateX(-4px)}
+th{font-weight:600}
+tbody tr{transition:background .12s}tbody tr:hover{background:#F7FAF8}
+.toast{border-radius:14px;box-shadow:0 18px 40px -12px rgba(8,28,20,.45)}
+</style>
+</head>
+<body>
+<div class="band">سرّي — محظور التداول — مقصور استخدامه على منسوبي الدفاع المدني</div>
+
+<section class="gate" id="gate" hidden>
+  <form class="gcard" id="gform">
+    <a class="logo" data-logo href="index.html" title="القائمة الرئيسية" aria-label="القائمة الرئيسية"></a>
+    <h1>لوحة مدير الإدارة العامة</h1>
+    <div class="sub" id="gsub">جاهزية المراكز والأقسام في صفحة واحدة</div>
+    <div class="fld" id="usrf" hidden>
+      <label for="usr">اسم المستخدم</label>
+      <input id="usr" type="text" autocomplete="username" autocapitalize="off" spellcheck="false" dir="ltr" placeholder="اسم المستخدم">
+    </div>
+    <div class="fld">
+      <label for="pw">كلمة المرور</label>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="أدخل كلمة مرور لوحة المدير">
+    </div>
+    <div class="fld" id="reff" hidden>
+      <label for="ref">رمز المرجع</label>
+      <input id="ref" type="password" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="رمز المرجع">
+    </div>
+    <div class="fld"><div class="err" id="perr" role="alert" hidden></div></div>
+    <button type="submit" class="btn primary wide" id="pgo">دخول</button>
+    <a class="back" href="index.html">→ الرجوع للقائمة الرئيسية</a>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <header class="top">
+    <div class="top-in">
+      <a class="logo" data-logo href="index.html" title="القائمة الرئيسية" aria-label="القائمة الرئيسية"></a>
+      <div>
+        <h1>لوحة مدير الإدارة العامة</h1>
+        <div class="meta" id="meta"></div>
+      </div>
+      <div class="acts">
+        <button type="button" class="btn" data-act="home" id="homeBtn" hidden>الرئيسية</button>
+        <button type="button" class="btn" data-act="circ" id="circBtn">التعاميم</button>
+        <button type="button" class="btn" data-act="refresh">تحديث</button>
+        <button type="button" class="btn" data-act="copySum" data-only="centers">نسخ الملخص</button>
+        <button type="button" class="btn" data-act="print">طباعة التقرير</button>
+        <a class="btn" href="index.html">القائمة الرئيسية</a>
+        <button type="button" class="btn" data-act="logout">خروج</button>
+      </div>
+    </div>
+    <div class="hhero" id="hhero" hidden><h2>ماذا تريد أن تراجع اليوم؟</h2><p id="hsub"></p></div>
+  </header>
+  <main id="main"><div class="panel loading">جارٍ جمع بيانات الجهات…</div></main>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>/*CONFIG*/</script>
+<script>
+(function () {
+  const cfg = window.ISNAD_CONFIG || {};
+  // نفس اللوحة تُنشر باسم «لوحة مدير إدارة العمليات» (ops.html) بنفس الرمز والمميزات
+  if (cfg.title) { document.title = cfg.title; document.querySelectorAll('h1').forEach((h) => { if (h.textContent.trim() === 'لوحة مدير الإدارة العامة') h.textContent = cfg.title; }); }
+  const $ = (s) => document.getElementById(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const ss = {
+    get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} },
+    del: (k) => { try { sessionStorage.removeItem(k); } catch (e) {} },
+  };
+  const ls = {
+    get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+  const AUTH = 'isnad-auth-manager';
+  const shield = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0E3D2C" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/></svg>';
+  document.querySelectorAll('[data-logo]').forEach((el) => (el.innerHTML = cfg.logo ? `<img src="${esc(cfg.logo)}" alt="شعار الدفاع المدني">` : shield));
+  let tt;
+  const toast = (m) => { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => (t.hidden = true), 2600); };
+
+  /* ---------- نفس حسابات صفحة الجهة (page.html) ---------- */
+  const arD = (n) => String(n).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d]);
+  const pctFmt = (n) => new Intl.NumberFormat('ar-SA', { style: 'percent', maximumFractionDigits: 0 }).format(n);
+  const HF = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return null; } })();
+  const HFN = (() => { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', { day: 'numeric', month: 'numeric', year: 'numeric' }); } catch (e) { return null; } })();
+  const HM = [['محرم'],['صفر'],['ربيع الأول','ربيع الاول'],['ربيع الآخر','ربيع الثاني','ربيع الاخر'],['جمادى الأولى','جمادى الاولى','جمادى الأول'],['جمادى الآخرة','جمادى الثانية','جمادى الاخرة'],['رجب'],['شعبان'],['رمضان'],['شوال'],['ذو القعدة','ذي القعدة'],['ذو الحجة','ذي الحجة']];
+  function hkey(s) {
+    if (!s) return 0;
+    const t = String(s).replace(/[٠-٩]/g, (c) => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g, (c) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
+    const n = (t.match(/\d+/g) || []).map(Number); const yi = n.findIndex((x) => x > 1300 && x < 1600); if (yi < 0) return 0;
+    const y = n[yi], rest = n.filter((_, i) => i !== yi); let m = 0, d = 0;
+    const mi = HM.findIndex((a) => a.some((nm) => t.includes(nm)));
+    if (mi >= 0) { m = mi + 1; d = rest[0] || 0; } else if (yi === 0) { m = rest[0] || 0; d = rest[1] || 0; } else { d = rest[0] || 0; m = rest[1] || 0; }
+    return y * 10000 + Math.min(m, 12) * 100 + Math.min(d, 31);
+  }
+  const dayKey = (n) => { try { return HFN ? hkey(HFN.format(new Date(Date.now() + n * 864e5))) : 0; } catch (e) { return 0; } };
+  const STATUS = { ready: 'جاهزة', down: 'متعطلة بالمقر', maint: 'في الصيانة', away: 'مدعومة لجهة أخرى', none: 'غير محددة' };
+  const stOf = (v) => (STATUS[v.status] && v.status !== 'none' ? v.status : 'none');
+  const ENJ = ['','البلد','شراف','المنتزه','الصناعية','العزيزية','الدائري','أجا','الجبل','التدخل','الخطة'];
+  const enj = (t) => String(t || '').replace(/(إنجاز|انجاز)\s*([0-9٠-٩]+)(?![0-9٠-٩]|\s*\()/g, (m, a, n) => { const k = +String(n).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)); return ENJ[k] && !String(t).includes(ENJ[k]) ? `${m} (${ENJ[k]})` : m; });
+  const HST = { present: 'موجود', absent: 'غياب', lateP: 'تأخير بإذن', lateN: 'تأخير بدون إذن', leave: 'إجازة', permit: 'رخصة', support: 'دعم وردية', proxy: 'وكالة', course: 'دورة', assign: 'تكليف', attach: 'إلحاق', mission: 'مهمة' };
+  const hStOf = (p) => (HST[p.status] ? p.status : 'present');
+  function effSt(p, dk) { const s = hStOf(p); if (s === 'present' || !dk) return s; const f = p.from ? hkey(p.from) : 0, t = p.to ? hkey(p.to) : f; if (f && dk < f) return 'present'; if (t && dk > t) return 'present'; return s; }
+  const shiftPres = (staff, k, dk) => staff.filter((p) => { const e = effSt(p, dk), own = String(p.shift || '1') === k; return (own && (e === 'present' || e === 'proxy' || e === 'lateP' || e === 'lateN')) || (e === 'support' && String(p.toShift || '') === k); }).length;
+  function hCfg(h) { h = h || {}; const s = h.shifts || {}, n = (v, d) => (v != null && v !== '' && !isNaN(+v) ? +v : d); return { strength: n(h.strength, 17), shifts: { 1: n(s['1'], 6), 2: n(s['2'], 6), 3: n(s['3'], 5), 4: n(s['4'], 0), 5: n(s['5'], 0), 6: n(s['6'], 0) }, ctAnchor: h.ctAnchor != null && h.ctAnchor !== '' && !isNaN(+h.ctAnchor) ? +h.ctAnchor : null }; }
+  // مركز التحكم والتوجيه: ٦ ورديات × ٨ ساعات، المجموعتان تتناوبان كل يومين (ctAnchor = يوم بداية المجموعة الأولى)
+  const ctNow = (hc, t = Date.now()) => { if (hc.ctAnchor == null) return null; const d = Math.floor((t + 3 * 36e5 - 8 * 36e5) / 864e5), g = ((((d - hc.ctAnchor) % 4) + 4) % 4) < 2 ? 1 : 2, h = new Date(t + 3 * 36e5).getUTCHours(), i = h >= 8 && h < 16 ? 0 : h >= 16 ? 1 : 2; return String((g - 1) * 3 + i + 1); };
+  const SHN = { 1: 'الوردية الأولى', 2: 'الوردية الثانية', 3: 'الوردية الثالثة' };
+  const DUTY_H = 9, DUTY_TZ_MS = 3 * 36e5, DUTY_ANCHOR = Date.UTC(2026, 8, 29) / 864e5, DUTY_ANCHOR_SHIFT = 3;
+  const dutyDay = (t = Date.now()) => Math.floor((t + DUTY_TZ_MS - DUTY_H * 36e5) / 864e5);
+  const dutyShift = (d = dutyDay()) => String((((DUTY_ANCHOR_SHIFT - 1 + d - DUTY_ANCHOR) % 3) + 3) % 3 + 1);
+  const dutyOff = () => ((Date.now() + DUTY_TZ_MS) / 864e5 - Math.floor((Date.now() + DUTY_TZ_MS) / 864e5) < DUTY_H / 24 ? -1 : 0);
+  const fOpen = (f) => f.status !== 'done';
+  const eqOut = (r) => r.dir === 'out' && !r.returned;
+  const isWater = (v) => /وايت/.test(v.name || '');
+  const isProp = (v) => isWater(v) && /بروبلين/.test(v.name || '');
+  const vLabel = (v) => (v.code ? v.code + ' — ' : '') + (v.name || 'آلية');
+
+  /* ---------- تحليل كل جهة ---------- */
+  function analyze(u, d) {
+    const C = (d && d.collections) || {};
+    const arr = (k) => Object.entries(C[k] || {}).map(([id, x]) => Object.assign({ id }, x));
+    // مهام الجهات داخلية لكل جهة ولا تُقرأ هنا
+    const V = arr('vehicles'), staff = arr('staff'), faults = arr('faults'), equip = arr('equipment');
+    const c = { ready: 0, down: 0, maint: 0, away: 0, none: 0 };
+    V.forEach((v) => c[stOf(v)]++);
+    const rated = c.ready + c.down + c.maint, pct = rated ? c.ready / rated : null;
+    // الوايتات الواردة دعماً من الإسناد تُحسب جاهزة لدى المركز (مع وسمها بأنها دعم)
+    const incW = arr('incoming').filter(isWater).map((v) => ({ ...v, status: 'ready', sup: true }));
+    const W = V.filter(isWater).concat(incW), P = W.filter(isProp), A = W.filter((v) => !isProp(v));
+    const rd = (L) => L.filter((v) => stOf(v) === 'ready');
+    const hc = hCfg(((C.settings || {}).hr) || {}), off = dutyOff(), dd = dutyDay();
+    const k = u.id === 'control' ? ctNow(hc) : dutyShift(dd);
+    const size = k ? hc.shifts[k] || 0 : 0, pres = k ? shiftPres(staff, k, dayKey(u.id === 'control' ? 0 : off)) : 0;
+    const empty = !V.length && !staff.length;
+    // الحالة تُحسب على جاهزية الآليات فقط (بلا تنبيهات عن الكادر)
+    const lv = empty ? 'none' : pct != null && pct < 0.5 ? 'bad' : pct != null && pct < 0.8 ? 'mid' : 'ok';
+    return {
+      u, ok: !!d, empty, lv, V, c, rated, pct,
+      water: { all: [rd(W), W], prop: [rd(P), P], aydi: [rd(A), A] }, waterSup: incW.length,
+      staffN: staff.length, size, pres,
+      faults: faults.filter(fOpen), eqOut: equip.filter(eqOut),
+      notReady: V.filter((v) => ['down', 'maint'].includes(stOf(v))).sort((a, b) => (stOf(a) === 'down' ? 0 : 1) - (stOf(b) === 'down' ? 0 : 1)),
+      away: V.filter((v) => stOf(v) === 'away'),
+      qst: arr('consum').filter((r) => r.qstat), mov: arr('consum').filter((r) => !r.qstat),
+      center: u.id !== 'isnad', inc: arr('incoming'), // المراكز تستقبل «دعم وارد» ولا تدعم غيرها
+    };
+  }
+
+  /* ---------- جلب البيانات ---------- */
+  let R = [], loadedAt = 0, busy = false;
+  // لوحة مدير إدارة السلامة (safety.html): نفس اللوحة مقصورة على إحصائيات السلامة
+  const ONLY = cfg.only || '';
+  const S = { sort: ls.get('isnad-mgr-sort') || 'order', show: ls.get('isnad-mgr-show') || 'all', mode: ONLY };
+  if (ONLY === 'safety') $('gsub').textContent = 'إحصائيات السلامة في صفحة واحدة';
+  async function load() {
+    if (busy) return; busy = true;
+    const sfP = loadSafety().catch(() => {});
+    try {
+      const res = await Promise.all((cfg.units || []).map(async (u) => {
+        try {
+          const r = await fetch((u.web || '') + 'db.json', { cache: 'no-store' });
+          if (r.status === 401) throw Object.assign(new Error('401'), { auth: true });
+          return analyze(u, r.ok ? await r.json() : null);
+        } catch (e) { if (e.auth) throw e; return analyze(u, null); }
+      }));
+      await sfP; R = res; loadedAt = Date.now(); render();
+    } catch (e) {
+      if (e.auth) { ss.del(AUTH); showGate(); }
+    } finally { busy = false; }
+  }
+
+  /* ---------- العرض ---------- */
+  const LV = { ok: 'جاهز', mid: 'يحتاج متابعة', bad: 'حرج', none: 'لا توجد بيانات بعد' };
+  const PILL = { down: 'p-down', maint: 'p-maint', away: 'p-away', none: 'p-none' };
+  const pct0 = (x) => (x.pct == null ? '—' : pctFmt(x.pct));
+  const lvColor = (x) => (x.pct == null ? '' : x.pct >= 0.8 ? 'c-ok' : x.pct >= 0.5 ? 'c-mid' : 'c-bad');
+  const bar = (c) => { const t = c.ready + c.down + c.maint + c.away + c.none; const w = (n) => (t ? ((n / t) * 100).toFixed(2) : 0) + '%'; return `<div class="bar" role="img" aria-label="جاهزة ${c.ready}، متعطلة ${c.down}، صيانة ${c.maint}، مدعومة ${c.away}">${['ready', 'down', 'maint', 'away', 'none'].map((s) => `<span class="st-${s}" style="width:${w(c[s])}"></span>`).join('')}</div>`; };
+  const shiftTxt = (x) => (x.size ? `${arD(x.pres)} من ${arD(x.size)}` : '—');
+  const hijriNum = () => { try { const o = {}; new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Riyadh' }).formatToParts(new Date()).forEach((p) => (o[p.type] = p.value)); return o.year + '/' + o.month + '/' + o.day; } catch (e) { return new Date().toLocaleDateString('en-GB'); } };
+  const hijri = () => { try { return new Intl.DateTimeFormat('ar-SA', { weekday: 'long', timeZone: 'Asia/Riyadh' }).format(new Date()) + ' ' + hijriNum(); } catch (e) { return hijriNum(); } };
+  const timeStr = (t) => new Intl.DateTimeFormat('ar-SA', { hour: 'numeric', minute: '2-digit' }).format(new Date(t));
+
+  function card(x) {
+    const u = x.u;
+    if (x.empty) return `<div class="ucard lv-none"><div class="uhead"><b>${esc(u.name)}</b><span class="badge"><i></i>${LV.none}</span></div><div class="uempty">${x.ok ? 'لم تُدخل آليات أو منسوبون في هذه الجهة حتى الآن.' : 'تعذّر تحميل بيانات الجهة.'}</div></div>`;
+    const w = x.water.all;
+    return `<div class="ucard lv-${x.lv}">
+      <div class="uhead"><b>${esc(u.name)}</b><span class="badge"><i></i>${LV[x.lv]}</span></div>
+      <div class="upct"><strong class="${lvColor(x)}">${esc(pct0(x))}</strong><span class="muted small">جاهزية الآليات · ${arD(x.c.ready)} من ${arD(x.rated)}</span></div>
+      ${bar(x.c)}
+      <dl class="ustats">
+        <div><dt>متعطلة بالمقر</dt><dd class="${x.c.down ? 'c-bad' : ''}">${arD(x.c.down)}</dd></div>
+        <div><dt>في الصيانة</dt><dd class="${x.c.maint ? 'c-mid' : ''}">${arD(x.c.maint)}</dd></div>
+        ${x.center ? `<div><dt>دعم وارد</dt><dd class="${x.inc.length ? 'c-away' : ''}">${arD(x.inc.length)}</dd></div>` : `<div><dt>مدعومة لجهات</dt><dd class="${x.c.away ? 'c-away' : ''}">${arD(x.c.away)}</dd></div>`}
+        <div><dt>الوايتات الجاهزة</dt><dd>${w[1].length ? `${arD(w[0].length)} من ${arD(w[1].length)}` : '—'}${x.waterSup ? `<small class="c-away" style="display:block;font-weight:600">منها ${arD(x.waterSup)} دعم</small>` : ''}</dd></div>
+        <div><dt>قوة الوردية</dt><dd>${shiftTxt(x)}</dd></div>
+        <div><dt>المنسوبين</dt><dd>${arD(x.staffN)}</dd></div>
+        <div><dt>أعطال المبنى</dt><dd class="${x.faults.length ? 'c-mid' : ''}">${arD(x.faults.length)}</dd></div>
+        <div><dt>معدات لم ترجع</dt><dd>${arD(x.eqOut.length)}</dd></div>
+      </dl>
+    </div>`;
+  }
+
+  function totals() {
+    const t = { c: { ready: 0, down: 0, maint: 0, away: 0, none: 0 }, size: 0, pres: 0, faults: 0, eq: 0, wr: 0, wt: 0, V: 0 };
+    R.forEach((x) => { for (const s in t.c) t.c[s] += x.c[s]; if (x.size) { t.size += x.size; t.pres += x.pres; } t.faults += x.faults.length; t.eq += x.eqOut.length; t.wr += x.water.all[0].length; t.wt += x.water.all[1].length - (x.waterSup || 0); /* وايت الدعم مُحصى أصلاً عند الإسناد */ t.V += x.V.length; });
+    t.rated = t.c.ready + t.c.down + t.c.maint; t.pct = t.rated ? t.c.ready / t.rated : null;
+    return t;
+  }
+
+  function alerts() {
+    const out = [];
+    R.forEach((x) => {
+      if (x.empty) return;
+      const n = x.u.name;
+      if (x.pct != null && x.pct < 0.5) out.push(['bad', '⚠', `${n}: جاهزية الآليات ${pctFmt(x.pct)} فقط.`]);
+      const W = x.water.all; if (W[1].length && !W[0].length) out.push(['bad', '⚠', `${n}: لا يوجد وايت جاهز (${arD(W[1].length)} وايت غير جاهز).`]);
+    });
+    const r = { bad: 0, mid: 1 };
+    return out.sort((a, b) => r[a[0]] - r[b[0]]);
+  }
+
+  // أعلى اللوحة: زر «الرئيسية» خارج شاشة الاختيار، وأزرار المراكز (الإحصائية الربعية ونسخ الملخص) في قسم المراكز فقط
+  function syncTop() {
+    $('homeBtn').hidden = ONLY ? !S.circ : !S.mode && !S.circ;
+    const home = !S.mode && !S.circ; document.body.classList.toggle('home', home); $('hhero').hidden = !home;
+    $('hsub').textContent = hijri() + ' · ملخص سريع لكل قسم، واضغط للدخول إلى التفاصيل.';
+    document.querySelectorAll('[data-only]').forEach((b) => (b.hidden = S.mode !== b.dataset.only || !!S.circ));
+    const d = dutyDay(), k = dutyShift(d);
+    $('meta').innerHTML = `<span>${esc(hijri())}</span>${S.mode === 'safety' ? '<span><b>إحصائيات السلامة</b></span>' : `<span>الوردية المناوبة: <b>${SHN[k].replace('الوردية ', '')}</b> (٩ ص ← ٩ ص)</span>`}<span>آخر تحديث: ${esc(timeStr(loadedAt))}</span>`;
+  }
+  function render() {
+    syncTop();
+    if (S.circ) return;
+    if (!S.mode) return homeView();
+    if (S.mode === 'safety') return safetyView();
+    if (S.qv) return qView();
+    const t = totals();
+    const withData = R.filter((x) => !x.empty);
+    let list = S.show === 'data' ? withData : R.slice();
+    if (S.sort === 'pct') list.sort((a, b) => (a.empty - b.empty) || ((a.pct ?? 2) - (b.pct ?? 2)));
+    if (S.sort === 'lv') { const o = { bad: 0, mid: 1, ok: 2, none: 3 }; list.sort((a, b) => o[a.lv] - o[b.lv]); }
+    const chip = (key, v, l) => `<button type="button" class="chip" data-act="${key}" data-v="${v}" aria-pressed="${S[key] === v}">${l}</button>`;
+    const lvCount = (l) => R.filter((x) => x.lv === l).length;
+
+    const kpis = `<section class="kpis" aria-label="المؤشرات العامة">
+      <div class="kpi main"><span class="kt">الجاهزية الإجمالية للآليات</span><span class="kv">${t.pct == null ? '—' : esc(pctFmt(t.pct))}</span><span class="kd">${arD(t.c.ready)} جاهزة من ${arD(t.rated)} في ${arD(withData.length)} جهات</span></div>
+      <div class="kpi"><span class="kt">حالة الجهات</span><span class="kv"><span class="c-ok">${arD(lvCount('ok'))}</span> <small>جاهز</small></span><span class="kd"><span class="c-mid">${arD(lvCount('mid'))} يحتاج متابعة</span> · <span class="c-bad">${arD(lvCount('bad'))} حرج</span></span></div>
+      <div class="kpi"><span class="kt">آليات غير جاهزة</span><span class="kv c-bad">${arD(t.c.down + t.c.maint)}</span><span class="kd">متعطلة ${arD(t.c.down)} · صيانة ${arD(t.c.maint)} · مدعومة ${arD(t.c.away)}</span></div>
+      <div class="kpi"><span class="kt">الوايتات الجاهزة</span><span class="kv">${arD(t.wr)} <small>من ${arD(t.wt)}</small></span><span class="kd">في كل الجهات</span></div>
+      <div class="kpi"><span class="kt">القوة المناوبة الآن</span><span class="kv">${arD(t.pres)} <small>من ${arD(t.size)}</small></span><span class="kd">في الورديات المناوبة</span></div>
+      <div class="kpi"><span class="kt">أعطال المباني</span><span class="kv ${t.faults ? 'c-mid' : ''}">${arD(t.faults)} <small>غير منجزة</small></span><span class="kd">معدات عند جهات ولم ترجع: ${arD(t.eq)}</span></div>
+    </section>`;
+
+    // بالترتيب الأساسي تُجمع البطاقات حسب الشعبة (كما في البوابة)
+    const grouped = () => { const used = new Set(), out = GROUPS.map(([g, ids]) => { const L = list.filter((x) => ids.includes(x.u.id)); L.forEach((x) => used.add(x)); return L.length ? `<div class="ghead">${esc(g)} <span class="cnt">${arD(L.length)}</span></div><div class="cards">${L.map(card).join('')}</div>` : ''; }).join(''); const rest = list.filter((x) => !used.has(x)); return out + (rest.length ? `<div class="ghead">أخرى</div><div class="cards">${rest.map(card).join('')}</div>` : ''); };
+    const cards = `<section class="panel" aria-label="جاهزية المراكز"><div class="sh"><h2>جاهزية المراكز والأقسام</h2><span class="cnt">${arD(R.length)}</span><span class="grow"></span>
+      <div class="chips" role="group" aria-label="الترتيب">${chip('sort', 'order', 'حسب الشعبة')}${chip('sort', 'lv', 'الأكثر حرجًا أولًا')}${chip('sort', 'pct', 'الأقل جاهزية')}</div>
+      <div class="chips" role="group" aria-label="العرض">${chip('show', 'all', 'كل الجهات')}${chip('show', 'data', 'التي فيها بيانات')}</div></div>
+      ${!list.length ? '<div class="none">لا توجد جهات فيها بيانات بعد.</div>' : S.sort === 'order' ? grouped() : `<div class="cards">${list.map(card).join('')}</div>`}</section>`;
+
+    const row = (x) => `<tr><td class="n">${esc(x.u.name)}</td><td><span class="badge lv-${x.lv}"><i></i>${LV[x.lv]}</span></td><td class="n ${lvColor(x)}">${esc(pct0(x))}${x.pct != null ? `<span class="minibar"><i class="${x.pct >= 0.8 ? 'st-ready' : x.pct >= 0.5 ? 'st-maint' : 'st-down'}" style="width:${(x.pct * 100).toFixed(0)}%"></i></span>` : ''}</td><td>${arD(x.V.length)}</td><td>${arD(x.c.ready)}</td><td>${arD(x.c.down)}</td><td>${arD(x.c.maint)}</td><td>${x.center ? (x.inc.length ? 'وارد ' + arD(x.inc.length) : '—') : arD(x.c.away)}</td><td>${x.water.all[1].length ? arD(x.water.all[0].length) + ' / ' + arD(x.water.all[1].length) : '—'}</td><td>${arD(x.staffN)}</td><td>${shiftTxt(x)}</td><td>${arD(x.faults.length)}</td></tr>`;
+    const table = `<section class="panel" aria-label="جدول المقارنة"><div class="sh"><h2>جدول المقارنة</h2></div><div class="tw"><table>
+      <thead><tr><th>الجهة</th><th>الحالة</th><th>الجاهزية</th><th>الآليات</th><th>جاهزة</th><th>متعطلة</th><th>صيانة</th><th>مدعومة / دعم وارد</th><th>الوايتات الجاهزة</th><th>المنسوبين</th><th>الوردية الآن</th><th>أعطال مبنى</th></tr></thead>
+      <tbody>${list.map(row).join('')}<tr class="tot"><td>الإجمالي</td><td></td><td>${t.pct == null ? '—' : esc(pctFmt(t.pct))}</td><td>${arD(t.V)}</td><td>${arD(t.c.ready)}</td><td>${arD(t.c.down)}</td><td>${arD(t.c.maint)}</td><td>${arD(t.c.away)}</td><td>${arD(t.wr)} / ${arD(t.wt)}</td><td>${arD(R.reduce((s, x) => s + x.staffN, 0))}</td><td>${arD(t.pres)} من ${arD(t.size)}</td><td>${arD(t.faults)}</td></tr></tbody></table></div></section>`;
+
+    const al = alerts();
+    const alertsHtml = `<section class="panel" aria-label="تنبيهات"><div class="sh"><h2>تنبيهات الجاهزية</h2><span class="cnt">${arD(al.length)}</span></div>${al.length ? `<ul class="alerts">${al.map(([l, i, s]) => `<li class="a-${l}"><span class="ic">${i}</span><span>${esc(s)}</span></li>`).join('')}</ul>` : '<div class="none">لا توجد تنبيهات — كل الجهات في وضع جيد.</div>'}</section>`;
+
+    const nr = R.filter((x) => x.notReady.length);
+    const nrHtml = `<section class="panel" aria-label="الآليات غير الجاهزة"><div class="sh"><h2>الآليات غير الجاهزة</h2><span class="cnt">${arD(t.c.down + t.c.maint)}</span><span class="grow"></span>${nr.length ? '<button type="button" class="btn noprint" data-act="copyDown">نسخ رسالة للصيانة</button>' : ''}</div>
+      ${nr.length ? nr.map((x) => `<div class="grp"><h3>${esc(x.u.name)} <span class="cnt">${arD(x.notReady.length)}</span></h3>${x.notReady.map((v) => `<div class="row"><span class="code"><bdi dir="ltr">${esc(v.code || '—')}</bdi></span><span class="grow">${esc(v.name || 'آلية')}${v.statusNote || v.statusAction ? `<small>${esc([v.statusNote ? enj(v.statusNote) : '', v.statusAction].filter(Boolean).join(' — '))}</small>` : ''}</span><span class="pill ${PILL[stOf(v)]}"><i></i>${STATUS[stOf(v)]}</span></div>`).join('')}</div>`).join('') : '<div class="none">كل الآليات جاهزة أو مدعومة.</div>'}</section>`;
+
+    const aw = R.filter((x) => x.away.length);
+    const awHtml = `<section class="panel" aria-label="تحركات الدعم"><div class="sh"><h2>تحركات الدعم بين الجهات</h2><span class="cnt">${arD(t.c.away)}</span></div>
+      ${aw.length ? aw.map((x) => `<div class="grp"><h3>من ${esc(x.u.name)}</h3>${x.away.map((v) => `<div class="row"><span class="code"><bdi dir="ltr">${esc(v.code || '—')}</bdi></span><span class="grow">${esc(v.name || 'آلية')}<small>${esc(v.statusNote ? 'إلى: ' + enj(v.statusNote) : 'الجهة غير محددة')}${v.statusAction ? ' — ' + esc(v.statusAction) : ''}</small></span><span class="pill p-away"><i></i>مدعومة</span></div>`).join('')}</div>`).join('') : '<div class="none">لا توجد آليات مدعومة لجهات أخرى الآن.</div>'}</section>`;
+
+    const tab = S.ctab || 'sum';
+    const tabs = `<nav class="tabs" aria-label="أقسام المراكز"><b style="align-self:center;margin-inline-end:6px;font-size:16px">المراكز وإحصائياتها</b>${CTABS.map(([k, l]) => `<button type="button" class="chip" data-act="ctab" data-v="${k}" aria-pressed="${tab === k}">${l}</button>`).join('')}<button type="button" class="chip" data-act="qst">إحصائية الربع (الرغاوي والمحروقات)</button></nav>`;
+    const two = `<div class="two">${nrHtml}${awHtml}</div>`;
+    const body = { sum: kpis + alertsHtml, cards, veh: two, table, all: kpis + alertsHtml + cards + two + table }[tab] || kpis + alertsHtml;
+    $('main').innerHTML = tabs + body + `<p class="foot">البيانات من آخر نسخة منشورة لكل جهة، وتتحدث تلقائيًا كل ٥ دقائق. الحالة حسب جاهزية الآليات: «حرج» = أقل من ٥٠٪، «يحتاج متابعة» = أقل من ٨٠٪.</p>`;
+  }
+
+  /* ---------- شاشة الاختيار: إحصائيات السلامة أو المراكز وإحصائياتها ---------- */
+  const GROUPS = [['شعبة الجنوب', ['sharaf', 'sinaiya', 'dairi', 'jabal']], ['شعبة الشمال', ['balad', 'muntazah', 'aziziya', 'aja']], ['المراكز الخارجية', ['rawda', 'jubba', 'khatta']], ['الأقسام الميدانية المتخصصة', ['hazmat', 'isnad', 'control']]];
+  const CTABS = [['sum', 'الملخص والتنبيهات'], ['cards', 'جاهزية الجهات'], ['veh', 'الآليات غير الجاهزة والدعم'], ['table', 'جدول المقارنة'], ['all', 'عرض الكل']];
+  const ICS = {
+    safety: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 9 4.6-.3 8-4 8-9V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>',
+    centers: '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>',
+  };
+  function homeView() {
+    const t = totals(), T = sfTotal(0), V = T.pv + T.lv, F = T.pf + T.lf;
+    // جاهزية كل مجموعة من المراكز (الجاهزة من المقيّمة: جاهزة + متعطلة + صيانة)
+    const bars = GROUPS.map(([g, ids]) => { const L = R.filter((x) => ids.includes(x.u.id)); const r = L.reduce((s, x) => s + x.c.ready, 0), n = L.reduce((s, x) => s + x.rated, 0); return [g, n ? r / n : null]; });
+    const col = (v) => (v == null ? 'transparent' : v >= 0.8 ? 'var(--ok)' : v >= 0.5 ? 'var(--mid)' : 'var(--bad)');
+    const bar = ([g, v]) => `<div class="gbar"><span>${esc(g)}</span><span class="t"><i style="width:${v == null ? 0 : Math.round(v * 100)}%;background:${col(v)}"></i></span><span class="p">${v == null ? '—' : esc(pctFmt(v))}</span></div>`;
+    const sfRow = (b) => { const x = sfCalc(b, 0), open = x.pv + x.lv - x.pf - x.lf; return `<div class="strow"><b>${esc(b.name)}</b><span>${arD(x.R)}</span><span>${arD(x.pv + x.lv)}</span><span>${open ? `<span class="badge lv-bad">${arD(open)}</span>` : '<span class="badge lv-ok">لا يوجد</span>'}</span></div>`; };
+    $('main').innerHTML = `<div class="doors">
+      <button type="button" class="door" data-act="mode" data-v="centers">
+        <span class="dh"><span class="ic">${ICS.centers}</span><span class="tx"><b>المراكز وإحصائياتها</b><small>جاهزية الآليات والوايتات والقوة المناوبة</small></span><span class="big"><strong>${t.pct == null ? '—' : esc(pctFmt(t.pct))}</strong><span>الجاهزية الإجمالية</span></span></span>
+        <span class="dbody">${bars.map(bar).join('')}</span>
+        <span class="dcta">فتح المراكز وإحصائياتها <span aria-hidden="true">←</span></span>
+      </button>
+      <button type="button" class="door s" data-act="mode" data-v="safety">
+        <span class="dh"><span class="ic">${ICS.safety}</span><span class="tx"><b>إحصائيات السلامة</b><small>الجولات والمنشآت والمخالفات</small></span><span class="big"><strong>${V ? esc(pctFmt(F / V)) : '—'}</strong><span>نسبة تلافي المخالفات</span></span></span>
+        <span class="dbody" style="gap:0"><span class="strow h"><span>القسم</span><span>الجولات</span><span>المخالفات</span><span>لم تُتلافَ</span></span>${SF.map(sfRow).join('') || '<span class="none">لا توجد بيانات بعد.</span>'}</span>
+        <span class="dcta">فتح إحصائيات السلامة <span aria-hidden="true">←</span></span>
+      </button>
+    </div>`;
+  }
+
+  /* ---------- إحصائيات السلامة: أقسام الدوريات والتراخيص في الشعبتين (من آخر نسخة منشورة لكل قسم) ---------- */
+  let SF = [];
+  const sfArr = (C, k) => Object.entries((C || {})[k] || {}).map(([id, x]) => Object.assign({ id }, x));
+  const sfN = (v) => { const x = parseInt(toLat(v), 10); return isNaN(x) || x < 0 ? 0 : x; };
+  const RISK = { low: 'منخفضة', mid: 'متوسطة', high: 'عالية' }, LST = { ready: 'جاهزة', proc: 'تحت الإجراء', docs: 'متطلب مستندات' };
+  const riskOf = (r) => (RISK[r.risk] ? r.risk : 'mid'), lstOf = (r) => (LST[r.status] ? r.status : 'proc');
+  const yrOf = (r) => Math.floor(hkey(r.date) / 10000);
+  async function loadSafety() {
+    SF = await Promise.all((cfg.safety || []).map(async (b) => {
+      const parts = await Promise.all(b.units.map(async (u) => { try { const r = await fetch((u.web || '') + 'db.json', { cache: 'no-store' }); return { u, C: r.ok ? (await r.json()).collections || {} : null }; } catch (e) { return { u, C: null }; } }));
+      const P = parts.find((x) => x.u.kind === 'patrol') || {}, L = parts.find((x) => x.u.kind === 'lic') || {};
+      return { name: b.name, miss: parts.filter((x) => !x.C).map((x) => x.u.name), pfac: sfArr(P.C, 'pfac'), rounds: sfArr(P.C, 'rounds'), lfac: sfArr(L.C, 'lfac'), lviol: sfArr(L.C, 'lviol'), ldocs: sfArr(L.C, 'ldocs') };
+    }));
+  }
+  function sfCalc(b, y) {
+    const inY = (r) => !y || yrOf(r) === y, R = b.rounds.filter(inY), V = b.lviol.filter(inY);
+    const lc = { ready: 0, proc: 0, docs: 0 }; b.lfac.forEach((f) => lc[lstOf(f)]++);
+    const risk = { low: 0, mid: 0, high: 0 }; b.pfac.forEach((f) => risk[riskOf(f)]++);
+    const today = HFN ? hkey(HFN.format(new Date())) : 0;
+    return {
+      R: R.length, pv: R.reduce((s, r) => s + sfN(r.viol), 0), pf: R.reduce((s, r) => s + Math.min(sfN(r.fixed), sfN(r.viol)), 0),
+      lv: V.length, lf: V.filter((v) => v.fixed).length, lc, risk, pfac: b.pfac.length, lfac: b.lfac.length, docs: b.ldocs.length,
+      exp: b.lfac.filter((f) => { const k = hkey(f.exp); return k && today && k < today; }).length,
+      follow: b.lfac.filter((f) => lstOf(f) !== 'ready' || b.lviol.some((v) => v.f === f.id && !v.fixed)),
+    };
+  }
+  function sfTotal(y) {
+    const T = { R: 0, pv: 0, pf: 0, lv: 0, lf: 0, exp: 0, pfac: 0, lfac: 0, docs: 0, lc: { ready: 0, proc: 0, docs: 0 }, risk: { low: 0, mid: 0, high: 0 } };
+    SF.forEach((b) => { const x = sfCalc(b, y); for (const k of ['R', 'pv', 'pf', 'lv', 'lf', 'exp', 'pfac', 'lfac', 'docs']) T[k] += x[k]; for (const k in x.lc) T.lc[k] += x.lc[k]; for (const k in x.risk) T.risk[k] += x.risk[k]; });
+    return T;
+  }
+  function safetyView() {
+    const years = [...new Set(SF.flatMap((b) => [...b.rounds, ...b.lviol].map(yrOf)).filter(Boolean))].sort((a, b) => b - a);
+    const y = S.sy && years.includes(S.sy) ? S.sy : 0;
+    const X = SF.map((b) => Object.assign({ b }, sfCalc(b, y))), T = sfTotal(y);
+    const pc = (a, b) => (b ? pctFmt(a / b) : '—');
+    const yc = years.length ? `<div class="chips" role="group" aria-label="الفترة"><button type="button" class="chip" data-act="sYear" data-v="0" aria-pressed="${!y}">كل الفترات</button>${years.map((v) => `<button type="button" class="chip" data-act="sYear" data-v="${v}" aria-pressed="${v === y}">${arD(v)}</button>`).join('')}</div>` : '';
+    const top = `<nav class="tabs" aria-label="إحصائيات السلامة"><b style="align-self:center;margin-inline-end:6px;font-size:16px">إحصائيات السلامة</b><span style="flex:1"></span>${yc}</nav>`;
+    const V = T.pv + T.lv, F = T.pf + T.lf;
+    const kpis = `<section class="kpis" aria-label="مؤشرات السلامة">
+      <div class="kpi main"><span class="kt">نسبة تلافي المخالفات</span><span class="kv">${esc(pc(F, V))}</span><span class="kd">تم تلافي ${arD(F)} من ${arD(V)} مخالفة</span></div>
+      <div class="kpi"><span class="kt">المنشآت</span><span class="kv">${arD(T.pfac + T.lfac)}</span><span class="kd">الدوريات ${arD(T.pfac)} · التراخيص ${arD(T.lfac)}</span></div>
+      <div class="kpi"><span class="kt">الجولات التفتيشية</span><span class="kv">${arD(T.R)}</span><span class="kd">مخالفات الجولات ${arD(T.pv)} · تم تلافي ${arD(T.pf)}</span></div>
+      <div class="kpi"><span class="kt">مخالفات لم تُتلافَ</span><span class="kv ${V - F ? 'c-bad' : ''}">${arD(V - F)}</span><span class="kd">الجولات ${arD(T.pv - T.pf)} · التراخيص ${arD(T.lv - T.lf)}</span></div>
+      <div class="kpi"><span class="kt">منشآت التراخيص</span><span class="kv c-ok">${arD(T.lc.ready)} <small>جاهزة</small></span><span class="kd"><span class="c-mid">تحت الإجراء ${arD(T.lc.proc)}</span> · <span class="c-bad">متطلب مستندات ${arD(T.lc.docs)}</span></span></div>
+      <div class="kpi"><span class="kt">تراخيص منتهية</span><span class="kv ${T.exp ? 'c-bad' : ''}">${arD(T.exp)}</span><span class="kd">المستندات المرفوعة ${arD(T.docs)}</span></div>
+    </section>`;
+    const row = (n, x, cls) => `<tr${cls ? ` class="${cls}"` : ''}><td class="n">${esc(n)}</td><td>${arD(x.pfac)}</td><td>${arD(x.R)}</td><td>${arD(x.pv)}</td><td>${arD(x.pf)}</td><td>${esc(pc(x.pf, x.pv))}</td><td>${arD(x.lfac)}</td><td>${arD(x.lc.ready)}</td><td>${arD(x.lc.proc)}</td><td>${arD(x.lc.docs)}</td><td>${arD(x.lv)}</td><td>${arD(x.lf)}</td><td>${arD(x.exp)}</td></tr>`;
+    const table = `<section class="panel" aria-label="مقارنة القسمين"><div class="sh"><h2>مقارنة القسمين</h2></div><div class="tw"><table>
+      <thead><tr><th rowspan="2">الشعبة</th><th colspan="5">قسم الدوريات</th><th colspan="7">قسم التراخيص</th></tr><tr><th>المنشآت</th><th>الجولات</th><th>المخالفات</th><th>تم تلافيها</th><th>النسبة</th><th>المنشآت</th><th>جاهزة</th><th>تحت الإجراء</th><th>متطلب مستندات</th><th>المخالفات</th><th>تم تلافيها</th><th>تراخيص منتهية</th></tr></thead>
+      <tbody>${X.map((x) => row(x.b.name, x)).join('')}${X.length > 1 ? row('الإجمالي', T, 'tot') : ''}</tbody></table></div></section>`;
+    const dl = (L) => `<dl class="ustats">${L.map(([k, v, c]) => `<div><dt>${esc(k)}</dt><dd class="${c || ''}">${v}</dd></div>`).join('')}</dl>`;
+    const branch = (x) => `<section class="panel" aria-label="${esc(x.b.name)}"><div class="sh"><h2>${esc(x.b.name)}</h2>${x.b.miss.length ? `<span class="small c-bad">تعذّر تحميل: ${esc(x.b.miss.join('، '))}</span>` : ''}</div>
+      <div class="grp"><h3>قسم الدوريات — الجولات التفتيشية</h3>${dl([['المنشآت', arD(x.pfac)], ['الجولات', arD(x.R)], ['المخالفات', arD(x.pv), x.pv ? 'c-bad' : ''], ['تم تلافيها', arD(x.pf), 'c-ok'], ['خطورة عالية', arD(x.risk.high), x.risk.high ? 'c-bad' : ''], ['خطورة متوسطة / منخفضة', arD(x.risk.mid) + ' / ' + arD(x.risk.low)]])}</div>
+      <div class="grp"><h3>قسم التراخيص — المنشآت</h3>${dl([['المنشآت', arD(x.lfac)], ['جاهزة', arD(x.lc.ready), 'c-ok'], ['تحت الإجراء', arD(x.lc.proc), x.lc.proc ? 'c-mid' : ''], ['متطلب مستندات', arD(x.lc.docs), x.lc.docs ? 'c-bad' : ''], ['المخالفات', arD(x.lv)], ['تم تلافيها', arD(x.lf), 'c-ok']])}</div>
+      <div class="grp"><h3>منشآت التراخيص التي تحتاج متابعة <span class="cnt">${arD(x.follow.length)}</span></h3>${x.follow.length ? x.follow.slice(0, 12).map((f) => { const ov = x.b.lviol.filter((v) => v.f === f.id && !v.fixed).length, st = lstOf(f); return `<div class="row"><span class="grow">${esc(f.name || 'منشأة')}${ov ? `<small>مخالفات قائمة: ${arD(ov)}</small>` : ''}</span><span class="pill ${st === 'docs' ? 'p-down' : st === 'proc' ? 'p-maint' : 'p-none'}"><i></i>${LST[st]}</span></div>`; }).join('') + (x.follow.length > 12 ? `<div class="none">و${arD(x.follow.length - 12)} منشأة أخرى…</div>` : '') : '<div class="none">كل المنشآت جاهزة وبلا مخالفات قائمة.</div>'}</div></section>`;
+    const empty = !T.pfac && !T.lfac && !T.R;
+    $('main').innerHTML = top + kpis + (empty ? '<section class="panel"><div class="none">لم تُدخل أقسام السلامة بياناتها بعد. تظهر هنا الجولات والمنشآت والمخالفات فور إضافتها في صفحات أقسام الدوريات والتراخيص.</div></section>' : '') + `<div class="two">${X.map(branch).join('')}</div>` + table + '<p class="foot">البيانات من آخر نسخة منشورة لكل قسم، وتتحدث تلقائيًا كل ٥ دقائق. «لم تُتلافَ» = المخالفات المسجلة ناقص ما تم تلافيه.</p>';
+  }
+
+  /* ---------- نصوص للنسخ ---------- */
+  function sumText() {
+    const t = totals(), k = dutyShift();
+    const L = [`ملخص جاهزية الجهات — ${hijri()}`, `الوردية المناوبة: ${SHN[k]}`, `الجاهزية الإجمالية للآليات: ${t.pct == null ? '—' : pctFmt(t.pct)} (${arD(t.c.ready)} من ${arD(t.rated)})`, `القوة المناوبة: ${arD(t.pres)} من ${arD(t.size)}`, ''];
+    R.filter((x) => !x.empty).forEach((x) => L.push(`• ${x.u.name}: ${pct0(x)} — جاهزة ${arD(x.c.ready)} من ${arD(x.rated)}، متعطلة ${arD(x.c.down)}، صيانة ${arD(x.c.maint)}${x.c.away ? '، مدعومة ' + arD(x.c.away) : ''} ${x.size ? ' — الوردية ' + shiftTxt(x) : ''}`));
+    const e = R.filter((x) => x.empty).map((x) => x.u.name);
+    if (e.length) L.push('', 'لم تُدخل بياناتها بعد: ' + e.join('، '));
+    return L.join('\n');
+  }
+  function downText() {
+    const L = [`الآليات غير الجاهزة — ${hijri()}`];
+    R.filter((x) => x.notReady.length).forEach((x) => { L.push('', `${x.u.name}:`); x.notReady.forEach((v, i) => L.push(`${arD(i + 1)}. ${vLabel(v)} — ${STATUS[stOf(v)]}${v.statusNote ? ' — ' + enj(v.statusNote) : ''}${v.statusAction ? ' (' + v.statusAction + ')' : ''}`)); });
+    return L.join('\n');
+  }
+  async function copy(s) {
+    try { await navigator.clipboard.writeText(s); toast('تم النسخ'); }
+    catch (e) { const a = document.createElement('textarea'); a.value = s; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); toast('تم النسخ'); } catch (x) { toast('تعذّر النسخ'); } a.remove(); }
+  }
+
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const a = b.dataset.act;
+    if (a === 'sort' || a === 'show') { S[a] = b.dataset.v; ls.set('isnad-mgr-' + a, S[a]); render(); }
+    else if (a === 'refresh') load().then(() => toast('تم التحديث'));
+    else if (a === 'print') window.print();
+    else if (a === 'copySum') copy(sumText());
+    else if (a === 'copyDown') copy(downText());
+    else if (a === 'circ') { S.qv = false; openCirc(); }
+    else if (a === 'home') { S.mode = ONLY; S.circ = false; S.qv = false; render(); window.scrollTo(0, 0); }
+    else if (a === 'mode') { S.mode = b.dataset.v; S.circ = false; S.qv = false; render(); window.scrollTo(0, 0); }
+    else if (a === 'ctab') { S.ctab = b.dataset.v; render(); }
+    else if (a === 'sYear') { S.sy = +b.dataset.v || 0; render(); }
+    else if (a === 'qst') { S.qv = true; S.circ = false; S.qq = null; qView(); }
+    else if (a === 'qBack') { S.qv = false; render(); }
+    else if (a === 'qOpen') { S.qq = +b.dataset.v || null; if (S.qq) S.qk = S.qk || 'foam'; qView(); }
+    else if (a === 'qList') { S.qq = null; qView(); }
+    else if (a === 'qKind') { S.qk = b.dataset.v; qView(); }
+    else if (a === 'qYear') { S.qy = +b.dataset.v; qView(); }
+    else if (a === 'circBack') { S.circ = false; S.qv = false; render(); }
+    // لا حذف للتعاميم من اللوحة بعد إرسالها (حفظاً للسجل الرسمي)
+    else if (a === 'logout') { ss.del(CODE); ss.del(USR); ss.del(REF); ss.del(AUTH); if (cfg.mode === 'server') fetch('logout', { method: 'POST' }); location.replace('index.html'); }
+  });
+
+
+
+  /* ---------- إحصائية المراكز والأقسام (ربع سنوية): تجمع ما يضيفه كل مركز وقسم من صفحة الرغاوي ---------- */
+  const QN = { 1: 'الربع الأول', 2: 'الربع الثاني', 3: 'الربع الثالث', 4: 'الربع الرابع' };
+  const QR = (q) => `${arD((q - 1) * 3 + 1)}/${arD(1)} – ${arD(q * 3)}/${arD(30)}`;
+  const QK = { foam: 'الرغاوي', fuel: 'المحروقات', powder: 'طفايات البودرة' };
+  const hNow = () => { const k = HFN ? hkey(HFN.format(new Date())) : 0; return { y: Math.floor(k / 10000) || 1448, m: Math.floor((k % 10000) / 100) || 1 }; };
+  const toLat = (v) => String(v == null ? '' : v).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+  const numQ = (v) => { const x = parseFloat(toLat(v).replace(/[٫,]/g, '.')); return isNaN(x) ? 0 : x; };
+  const nfQ = (n) => new Intl.NumberFormat('ar-SA', { maximumFractionDigits: 2 }).format(n);
+  const qYear = (r) => +toLat(r.year) || hNow().y;
+  const qFile = (r) => (r.file ? `blobs/${encodeURIComponent(r.file)}.${(String(r.fileName || '').split('.').pop() || 'pdf').toLowerCase().replace(/[^a-z0-9]/g, '') || 'pdf'}` : '');
+  function qView() {
+    const now = hNow(), curQ = Math.min(4, Math.ceil(now.m / 3));
+    const all = []; R.forEach((x) => (x.qst || []).forEach((r) => all.push({ u: x.u, r })));
+    // إحصائية محسوبة تلقائياً من حركات الوارد والصرف للجهة (لأي ربع لم تُضف له الجهة إحصائية يدوية لنفس النوع)
+    const DEF = { foam: ['رغوة', 'جركل'], fuel: ['ديزل', 'لتر'], powder: ['طفاية بودرة (سطل)', 'سطل'] };
+    const ymOf = (r) => { const k = hkey(r.date); return k ? { y: Math.floor(k / 10000), m: Math.floor((k % 10000) / 100) } : null; };
+    const manual = new Set(all.map((o) => `${o.u.id}|${o.r.kind || 'foam'}|${qYear(o.r)}|${+o.r.q}`));
+    R.forEach((x) => {
+      const groups = {};
+      (x.mov || []).forEach((r) => { const ym = ymOf(r); if (!ym) return; const kd = r.kind || 'foam', d = DEF[kd] || DEF.foam, item = r.item || d[0], unit = r.unit || d[1], key = `${kd}|${ym.y}|${item}|${unit}`; (groups[key] = groups[key] || { kd, y: ym.y, item, unit, rows: [] }).rows.push({ ...r, q: Math.min(4, Math.ceil(ym.m / 3)) }); });
+      Object.values(groups).forEach((g) => {
+        for (let q = 1; q <= 4; q++) {
+          if (manual.has(`${x.u.id}|${g.kd}|${g.y}|${q}`)) continue;
+          const inQ = g.rows.filter((r) => r.q === q); if (!inQ.length) continue;
+          const sum = (L, dir) => L.filter((r) => r.dir === dir).reduce((a, r) => a + numQ(r.qty), 0);
+          const cumIn = sum(g.rows.filter((r) => r.q <= q), 'in'), cumOut = sum(g.rows.filter((r) => r.q <= q), 'out');
+          all.push({ u: x.u, r: { qstat: true, calc: true, kind: g.kd, q, year: String(g.y), item: g.item, unit: g.unit, qin: sum(inQ, 'in') || '', qout: sum(inQ, 'out') || '', qbal: cumIn > 0 ? cumIn - cumOut : '', note: 'محسوبة تلقائياً من حركات الوارد والصرف' } });
+        }
+      });
+    });
+    const years = [...new Set([now.y, ...all.map((o) => qYear(o.r))])].sort((a, b) => b - a);
+    const y = S.qy && years.includes(S.qy) ? S.qy : now.y; S.qy = y;
+    const inY = all.filter((o) => qYear(o.r) === y);
+    const head = (t, back) => `<div class="panel" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px"><h2 style="margin:0;font-size:18px">${t}</h2><span style="flex:1"></span><button type="button" class="btn" data-act="${back}">→ الرجوع ${back === 'qList' ? 'للأرباع' : 'للمراكز'}</button></div>`;
+    const yearChips = years.length > 1 ? `<div class="chips" role="group" aria-label="العام">${years.map((v) => `<button type="button" class="chip" data-act="qYear" data-v="${v}" aria-pressed="${v === y}">${arD(v)}هـ</button>`).join('')}</div>` : '';
+    if (!S.qq) {
+      const cards = [1, 2, 3, 4].map((q) => {
+        const rows = inY.filter((o) => +o.r.q === q), units = new Set(rows.map((o) => o.u.id)).size;
+        return `<button type="button" class="panel qcard" data-act="qOpen" data-v="${q}" style="text-align:start;cursor:pointer;display:flex;flex-direction:column;gap:6px;font:inherit;color:inherit"><b style="font-size:16px">إحصائية المراكز والأقسام — ${QN[q]}</b><span class="muted">${QR(q)} ${arD(y)}هـ${q === curQ && y === now.y ? ' · <b>الربع الحالي</b>' : ''}</span><span class="cnt">${rows.length ? `وردت ${arD(rows.length)} إحصائية من ${arD(units)} جهة` : 'لم ترد إحصائيات بعد'}</span></button>`;
+      }).join('');
+      $('main').innerHTML = `${head('إحصائية المراكز والأقسام', 'qBack')}${yearChips}<p class="muted" style="margin:6px 0 14px">إحصائيات الرغاوي والمحروقات وطفايات البودرة لكل مركز وقسم: ما يضيفه المركز من «إضافة إحصائية (ربع سنوي)»، وإن لم يضف فتُحسب من حركات الوارد والصرف المسجلة عنده. اختر الربع لعرض ما ورد.</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">${cards}</div>`;
+      return;
+    }
+    const q = S.qq, k = S.qk || 'foam', rows = inY.filter((o) => +o.r.q === q);
+    const order = (u) => (cfg.units || []).findIndex((v) => v.id === u.id);
+    const mine = rows.filter((o) => (o.r.kind || 'foam') === k).sort((a, b) => order(a.u) - order(b.u));
+    const got = new Set(mine.map((o) => o.u.id)), missing = (cfg.units || []).filter((u) => !got.has(u.id));
+    const tabs = `<div class="chips" role="tablist" aria-label="النوع">${Object.entries(QK).map(([id, t]) => `<button type="button" class="chip" role="tab" data-act="qKind" data-v="${id}" aria-pressed="${id === k}">${t} <b>${arD(rows.filter((o) => (o.r.kind || 'foam') === id).length)}</b></button>`).join('')}</div>`;
+    const sums = {}; mine.forEach((o) => { const u = o.r.unit || ''; (sums[u] = sums[u] || { i: 0, o: 0, b: 0, nb: 0 }); sums[u].i += numQ(o.r.qin); sums[u].o += numQ(o.r.qout); if (o.r.qbal !== undefined && o.r.qbal !== '') { sums[u].b += numQ(o.r.qbal); sums[u].nb++; } });
+    const cell = (v, u) => (v !== undefined && v !== '' ? `<b>${esc(nfQ(numQ(v)))}</b> ${esc(u || '')}` : '—');
+    const tbl = mine.length ? `<div class="panel" style="overflow-x:auto"><table><thead><tr><th>الجهة</th><th>الصنف</th><th>الوارد</th><th>المصروف</th><th>الرصيد</th><th>ملاحظة</th><th>المرفق</th></tr></thead><tbody>${mine.map((o) => `<tr><td class="n">${esc(o.u.name)}</td><td>${esc(o.r.item || '—')}</td><td>${cell(o.r.qin, o.r.unit)}</td><td>${cell(o.r.qout, o.r.unit)}</td><td>${cell(o.r.qbal, o.r.unit)}</td><td>${o.r.calc ? '<span class="muted">' + esc(o.r.note) + '</span>' : esc(o.r.note || '—')}</td><td>${qFile(o.r) ? `<a href="${esc(qFile(o.r))}" target="_blank" rel="noopener">عرض</a>` : '—'}</td></tr>`).join('')}</tbody><tfoot>${Object.entries(sums).map(([u, v]) => `<tr><th>الإجمالي ${u ? '(' + esc(u) + ')' : ''}</th><th></th><th>${nfQ(v.i)}</th><th>${nfQ(v.o)}</th><th>${v.nb ? nfQ(v.b) : '—'}</th><th></th><th></th></tr>`).join('')}</tfoot></table></div>` : `<div class="panel empty"><b>لم ترد إحصائيات ${QK[k]} لـ${QN[q]} بعد.</b></div>`;
+    const miss = missing.length && mine.length ? `<p class="muted" style="margin-top:10px">لم ترد من: ${missing.map((u) => esc(u.name)).join('، ')}</p>` : '';
+    $('main').innerHTML = `${head(`إحصائية المراكز والأقسام — ${QN[q]} ${arD(y)}هـ`, 'qList')}<p class="muted" style="margin:-4px 0 10px">${QR(q)}</p>${tabs}${tbl}${miss}`;
+  }
+
+  /* ---------- التعاميم: يضيفها مدير الإدارة فتصل لجميع المراكز والأقسام (data/shared/db/circulars.json) ---------- */
+  const CODE = 'isnad-mgr-code', USR = 'isnad-mgr-usr', REF = 'isnad-mgr-ref', CPATH = 'data/shared/db/circulars.json';
+  const PROXY = (cfg.editProxy || '').replace(/\/+$/, '');
+  let circ = null, circSha = null, circErr = '';
+  const b64u = (str) => { const by = new TextEncoder().encode(str); let s = ''; for (let i = 0; i < by.length; i += 0x8000) s += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000)); return btoa(s); };
+  const ub64 = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, '')), (c) => c.charCodeAt(0)));
+  function ghWho() { const t = ls.get('isnad-gh-token'), c = ss.get(CODE); if (c && PROXY) return { proxy: true, c }; if (t) return { t }; return null; }
+  async function gh(path, opts = {}) {
+    if (window.ISNAD_MOVED && opts.method && opts.method !== 'GET') throw new Error('الموقع القديم للاطلاع فقط — استخدم civofhail.pages.dev');
+    const w = ghWho(); if (!w) throw new Error('nokey');
+    const url = w.proxy ? PROXY + '/gh' + path : 'https://api.github.com/repos/' + cfg.repo + path;
+    const headers = w.proxy ? Object.assign({ 'X-Unit': 'manager', 'X-Code': w.c }, ss.get('isnad-mgr-oldw') ? {} : { 'X-User': ss.get(USR) || '', 'X-Ref': ss.get(REF) || '' }) : { Authorization: 'Bearer ' + w.t, Accept: 'application/vnd.github+json' };
+    const r = await fetch(url, Object.assign({ cache: 'no-store' }, opts, { headers: Object.assign(headers, opts.body ? { 'Content-Type': 'application/json' } : {}) }));
+    if (r.status === 404) return null;
+    if (!r.ok) throw new Error(String(r.status));
+    return r.json();
+  }
+  const ref = () => (cfg.branch ? '?ref=' + encodeURIComponent(cfg.branch) : '');
+  async function loadCirc() {
+    circErr = '';
+    try {
+      if (ghWho()) { const f = await gh('/contents/' + CPATH + ref()); circSha = f ? f.sha : null; circ = f ? JSON.parse(ub64(f.content)) : {}; return; }
+    } catch (e) { circErr = 'تعذّر قراءة أحدث التعاميم من المستودع (' + e.message + ')، والمعروض آخر نسخة منشورة.'; }
+    try { const r = await fetch('db.json', { cache: 'no-store' }); const d = r.ok ? await r.json() : {}; circ = (d.collections || {}).circulars || {}; } catch (e) { circ = {}; }
+  }
+  const rawUrl = (x) => (x.file ? `https://raw.githubusercontent.com/${cfg.repo}/${cfg.branch}/data/blobs/${x.file}.${x.ext}` : '');
+  const EXTS = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx' };
+  async function saveCirc(mut, msg) {
+    const f = await gh('/contents/' + CPATH + ref()); const cur = f ? JSON.parse(ub64(f.content)) : {};
+    const next = mut(cur);
+    await gh('/contents/' + CPATH, { method: 'PUT', body: JSON.stringify({ message: msg, content: b64u(JSON.stringify(next, null, 1) + '\n'), sha: f ? f.sha : undefined, branch: cfg.branch || undefined }) });
+    circ = next;
+  }
+  function circView() {
+    const can = !!ghWho();
+    const list = Object.entries(circ || {}).map(([id, x]) => Object.assign({ id }, x)).sort((a, b) => (b.at || 0) - (a.at || 0));
+    const form = can ? `<section class="panel"><div class="sh"><h2>إضافة تعميم جديد</h2></div>
+      <form class="cform" id="cform">
+        <label class="full">عنوان التعميم<input name="title" required placeholder="مثال: تعميم بشأن الالتزام بأوقات الدوام"></label>
+        <label>رقم التعميم (اختياري)<input name="num" placeholder="مثال: ١٢٣٤/ص"></label>
+        <label>التاريخ<input name="date" value="${esc(hijriNum())}"></label>
+        <label class="full">نص مختصر أو ملاحظات (اختياري)<textarea name="note"></textarea></label>
+        <label class="full">المرفق (PDF أو صورة أو Word)<input name="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.docx,application/pdf,image/*"></label>
+        <div class="full" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button type="submit" class="btn primary" id="cgo">إرسال التعميم لجميع المراكز والأقسام</button><span class="cerr" id="cerr"></span></div>
+      </form></section>` : `<section class="panel"><div class="none">لإضافة التعاميم سجّل الدخول برمز لوحة المدير من جديد (الخروج ثم الدخول).</div></section>`;
+    const rows = list.length ? `<div class="clist">${list.map((x) => `<div class="crow"><div class="ct"><b>${esc(x.title || 'تعميم')}</b><small>${[x.num ? 'رقم ' + x.num : '', x.date || ''].filter(Boolean).map(esc).join(' · ')}</small>${x.note ? `<p>${esc(x.note)}</p>` : ''}</div>
+      ${x.file ? `<a class="btn" href="${esc(rawUrl(x))}" target="_blank" rel="noopener">عرض المرفق</a>` : ''}</div>`).join('')}</div>` : '<div class="none">لا توجد تعاميم بعد.</div>';
+    $('main').innerHTML = `<div class="sh"><h2>التعاميم</h2><span class="grow"></span><button type="button" class="btn" data-act="circBack">→ الرجوع للوحة</button></div>${circErr ? `<p class="cerr">${esc(circErr)}</p>` : ''}${form}<section class="panel" style="margin-top:16px"><div class="sh"><h2>التعاميم المرسلة</h2><span class="cnt">${arD(list.length)}</span></div>${rows}</section>
+      <p class="foot">يصل التعميم إلى صفحة «التعاميم» في جميع المراكز والأقسام، ويظهر لمدرائها تنبيه بوصول تعميم جديد (بعد دقيقة أو دقيقتين من الإرسال).</p>`;
+    const fm = $('cform'); if (!fm) return;
+    fm.addEventListener('submit', async (e) => {
+      e.preventDefault(); const go = $('cgo'), er = $('cerr'); er.textContent = '';
+      const fd = new FormData(fm), file = fd.get('file');
+      go.disabled = true; go.textContent = 'جارٍ الإرسال…';
+      try {
+        let att = {};
+        if (file && file.size) {
+          const ext = EXTS[file.type] || (/\.docx$/i.test(file.name) ? 'docx' : ''); if (!ext) throw new Error('نوع الملف غير مدعوم');
+          if (file.size > 20 * 1024 * 1024) throw new Error('الملف أكبر من 20 ميجابايت');
+          const id = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+          const by = new Uint8Array(await file.arrayBuffer()); let bs = ''; for (let i = 0; i < by.length; i += 0x8000) bs += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000));
+          await gh('/contents/data/blobs/' + id + '.' + ext, { method: 'PUT', body: JSON.stringify({ message: 'تعميم: رفع مرفق ' + file.name, content: btoa(bs), branch: cfg.branch || undefined }) });
+          att = { file: id, ext, fileName: file.name };
+        }
+        const cid = 'c' + Date.now().toString(36);
+        const rec = Object.assign({ title: String(fd.get('title') || '').trim(), num: String(fd.get('num') || '').trim(), date: String(fd.get('date') || '').trim(), note: String(fd.get('note') || '').trim(), at: Date.now() }, att);
+        await saveCirc((cur) => Object.assign({}, cur, { [cid]: rec }), 'تعميم جديد: ' + rec.title.slice(0, 80));
+        toast('أُرسل التعميم لجميع المراكز والأقسام'); circView();
+      } catch (x) { er.textContent = 'تعذّر الإرسال: ' + (x.message === '403' ? 'رمز لوحة المدير لا يملك صلاحية الإرسال بعد (يلزم تحديث «الحارس»).' : x.message); go.disabled = false; go.textContent = 'إرسال التعميم لجميع المراكز والأقسام'; }
+    });
+  }
+  async function openCirc() { S.circ = true; syncTop(); $('main').innerHTML = '<div class="panel loading">جارٍ تحميل التعاميم…</div>'; await loadCirc(); circView(); }
+
+  /* ---------- الدخول ---------- */
+  if (cfg.editProxy) { $('usrf').hidden = false; $('reff').hidden = false; }
+  function showGate() { $('app').hidden = true; $('gate').hidden = false; setTimeout(() => $('pw').focus(), 50); }
+  function showApp() { $('gate').hidden = true; $('app').hidden = false; load(); }
+  async function check(pw, usr, rf) {
+    // عند وجود «الحارس»: كلمة دخول اللوحة هي رمز manager فيه (لا تُكتب في الموقع العام)
+    if (cfg.editProxy) {
+      const base = cfg.editProxy.replace(/\/+$/, '');
+      ss.del('isnad-mgr-oldw');
+      try {
+        const r = await fetch(base + '/check?login=1', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw, 'X-User': usr || '', 'X-Ref': rf || '' } });
+        return r.ok;
+      } catch (x0) {
+        // نسخة الحارس المنشورة قديمة: نتحقق بالرمز وحده
+        const r = await fetch(base + '/check', { method: 'POST', cache: 'no-store', headers: { 'X-Unit': 'manager', 'X-Code': pw } });
+        if (r.ok) ss.set('isnad-mgr-oldw', '1');
+        return r.ok;
+      }
+    }
+    if (cfg.mode === 'server') {
+      const r = await fetch('api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw, unit: 'manager' }) });
+      return r.ok;
+    }
+    const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('isnad:' + pw));
+    return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('') === cfg.hash;
+  }
+  $('gform').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const cc = (v) => String(v == null ? '' : v).replace(/[٠-٩]/g, (c) => '٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g, (c) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(c)).replace(/[\u2010-\u2015\u2212\uFE63\uFF0D]/g, '-').replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF\u00A0]/g, '').trim();
+    const pw = cc($('pw').value), err = $('perr'), usr = cc($('usr').value), rf = cc($('ref').value);
+    if (cfg.editProxy && (!/^[\x21-\x7E]*$/.test(pw) || !/^[\x21-\x7E]*$/.test(usr) || !/^[\x21-\x7E]*$/.test(rf))) { err.textContent = 'اكتب البيانات بالأحرف والأرقام الإنجليزية فقط (غيّر لغة لوحة المفاتيح) وبدون مسافات.'; err.hidden = false; return; }
+    err.hidden = true;
+    if (cfg.editProxy && !usr) { err.textContent = 'الرجاء إدخال اسم المستخدم'; err.hidden = false; $('usr').focus(); return; }
+    if (cfg.editProxy && !rf) { err.textContent = 'الرجاء إدخال رمز المرجع'; err.hidden = false; $('ref').focus(); return; }
+    if (!pw) { err.textContent = 'الرجاء إدخال كلمة المرور'; err.hidden = false; return; }
+    $('pgo').disabled = true;
+    let ok = false;
+    try { ok = await check(pw, usr, rf); } catch (x) {}
+    $('pgo').disabled = false;
+    if (!ok) { err.textContent = cfg.editProxy ? 'بيانات الدخول غير صحيحة' : 'كلمة المرور غير صحيحة'; err.hidden = false; $('pw').select(); return; }
+    ss.set(AUTH, '1'); if (cfg.editProxy) { ss.set(CODE, pw); ss.set(USR, usr); ss.set(REF, rf); } $('pw').value = ''; $('ref').value = ''; showApp();
+  });
+
+  // المسؤول بمفتاح GitHub المحفوظ على جهازه (له صلاحية الكتابة على المستودع) يدخل اللوحة مباشرة
+  async function adminKey() {
+    const t = ls.get('isnad-gh-token'); if (!t || !cfg.repo) return false;
+    try { const r = await fetch('https://api.github.com/repos/' + cfg.repo, { cache: 'no-store', headers: { Authorization: 'Bearer ' + t, Accept: 'application/vnd.github+json' } }); if (!r.ok) return false; const j = await r.json(); return !!(j.permissions && j.permissions.push); } catch (e) { return false; }
+  }
+
+  // زر «إظهار/إخفاء» داخل كل خانة كلمة مرور أو رمز، ليتأكد المستخدم مما يكتبه
+  (function () {
+    const EYE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const NOEYE = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6A17.4 17.4 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+    const add = (inp) => {
+      if (inp.dataset.eye) return;
+      inp.dataset.eye = '1';
+      const w = document.createElement('span');
+      w.style.cssText = 'position:relative;display:block;width:100%';
+      inp.parentNode.insertBefore(w, inp);
+      w.appendChild(inp);
+      inp.style.paddingLeft = '44px';
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'إظهار ما كُتب');
+      b.title = 'إظهار / إخفاء';
+      b.innerHTML = EYE;
+      b.style.cssText = 'position:absolute;top:50%;transform:translateY(-50%);left:6px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:var(--muted,#555);cursor:pointer;padding:0';
+      b.addEventListener('mousedown', (e) => e.preventDefault());
+      b.addEventListener('click', () => {
+        const show = inp.type === 'password';
+        inp.type = show ? 'text' : 'password';
+        b.innerHTML = show ? NOEYE : EYE;
+        b.setAttribute('aria-label', show ? 'إخفاء ما كُتب' : 'إظهار ما كُتب');
+        inp.focus();
+      });
+      w.appendChild(b);
+    };
+    const scan = () => document.querySelectorAll('input[type="password"]').forEach(add);
+    scan();
+    new MutationObserver(scan).observe(document.documentElement, { childList: true, subtree: true });
+  })();
+
+  if (ss.get(AUTH) === '1') showApp(); else adminKey().then((ok) => { if (ok) { ss.set(AUTH, '1'); showApp(); } else showGate(); });
+  setInterval(() => { if (!document.hidden && !$('app').hidden) load(); }, 5 * 60 * 1000);
+})();
+</script>
+</body>
+</html>

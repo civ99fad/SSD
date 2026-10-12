@@ -1,0 +1,156 @@
+{
+ "ks01": {
+  "n": 1,
+  "name": "مصنع آبار حائل",
+  "url": "https://maps.app.goo.gl/j5Wsitk1p8RNJz1J9?g_st=iw",
+  "note": "",
+  "at": 1790895337640
+ },
+ "ks02": {
+  "n": 2,
+  "name": "مزارع الطخيم",
+  "url": "https://maps.app.goo.gl/VujeQiEjeUnADNBw6?g_st=iw",
+  "note": "",
+  "at": 1790895337641
+ },
+ "ks03": {
+  "n": 3,
+  "name": "محطة اليحياء",
+  "url": "https://maps.app.goo.gl/UyydaF8BKafW3FAE6?g_st=iw",
+  "note": "",
+  "at": 1790895337642
+ },
+ "ks04": {
+  "n": 4,
+  "name": "محطة بترونفود",
+  "url": "https://maps.app.goo.gl/cryS3FhaBRdEVxWb7?g_st=iw",
+  "note": "",
+  "at": 1790895337643
+ },
+ "ks05": {
+  "n": 5,
+  "name": "مركز صحي القاعد",
+  "url": "https://maps.app.goo.gl/pBg6nRfJdM6s4HTL9?g_st=iw",
+  "note": "",
+  "at": 1790895337644
+ },
+ "ks06": {
+  "n": 6,
+  "name": "مركز صحي الخطة",
+  "url": "https://maps.app.goo.gl/xBLovsuYbktnWmuA6?g_st=iw",
+  "note": "",
+  "at": 1790895337645
+ },
+ "ks07": {
+  "n": 7,
+  "name": "مركز إمارة الخطة",
+  "url": "https://maps.app.goo.gl/mvSHE1idU15XoJpP7?g_st=ic",
+  "note": "",
+  "at": 1790895337646
+ },
+ "ks08": {
+  "n": 8,
+  "name": "مركز إمارة القاعد",
+  "url": "https://maps.app.goo.gl/nRF3EhpuJYAXi3rHA?g_st=ic",
+  "note": "",
+  "at": 1790895337647
+ },
+ "ks09": {
+  "n": 9,
+  "name": "بلدية الخطة",
+  "url": "https://maps.app.goo.gl/mvSHE1idU15XoJpP7?g_st=ic",
+  "note": "",
+  "at": 1790895337648
+ },
+ "ks10": {
+  "n": 10,
+  "name": "مكتب خدمات البلدية بالقاعد",
+  "url": "https://maps.app.goo.gl/M8KKdpAm7BDesSki6?g_st=ic",
+  "note": "",
+  "at": 1790895337649
+ },
+ "ks11": {
+  "n": 11,
+  "name": "البريد السعودي بالخطة",
+  "url": "https://maps.app.goo.gl/CmqaUwbWaBJ3jaan6?g_st=ic",
+  "note": "",
+  "at": 1790895337650
+ },
+ "ks12": {
+  "n": 12,
+  "name": "البريد السعودي بالقاعد",
+  "url": "https://maps.app.goo.gl/m5iHgpXFr4sa6LRCA?g_st=ic",
+  "note": "",
+  "at": 1790895337651
+ },
+ "ks13": {
+  "n": 13,
+  "name": "ثانوية القاعد بنين",
+  "url": "https://maps.app.goo.gl/c3PqACVjzPHGowfB9?g_st=ic",
+  "note": "",
+  "at": 1790895337652
+ },
+ "ks14": {
+  "n": 14,
+  "name": "ثانوية الخطة بنين",
+  "url": "https://maps.app.goo.gl/e3BzMen7jZYcNeXJ7?g_st=ic",
+  "note": "",
+  "at": 1790895337653
+ },
+ "ks15": {
+  "n": 15,
+  "name": "ابتدائية القاعد الأولى بنين",
+  "url": "https://maps.app.goo.gl/WGz16nmdKYnBeKfb7?g_st=ic",
+  "note": "",
+  "at": 1790895337654
+ },
+ "ks16": {
+  "n": 16,
+  "name": "ثانوية القاعد بنات",
+  "url": "https://maps.app.goo.gl/HuqpowJ15z71WB9u9?g_st=ic",
+  "note": "",
+  "at": 1790895337655
+ },
+ "ks17": {
+  "n": 17,
+  "name": "متوسطة القاعد بنين",
+  "url": "https://maps.app.goo.gl/9W3UXKddQ13v9NH26?g_st=ic",
+  "note": "",
+  "at": 1790895337656
+ },
+ "ks18": {
+  "n": 18,
+  "name": "ثانوية الخطة بنات",
+  "url": "https://maps.app.goo.gl/kaD9hkRZubb2cMev8?g_st=ic",
+  "note": "",
+  "at": 1790895337657
+ },
+ "ks19": {
+  "n": 19,
+  "name": "مجمع بلسم الشمال الطبي",
+  "url": "https://maps.app.goo.gl/WzLFeJtimCvGtXG5A?g_st=ic",
+  "note": "",
+  "at": 1790895337658
+ },
+ "ks20": {
+  "n": 20,
+  "name": "محطة وقود النايف",
+  "url": "https://maps.app.goo.gl/MJ9VRydUqHpLfJQt7?g_st=ic",
+  "note": "",
+  "at": 1790895337659
+ },
+ "ks21": {
+  "n": 21,
+  "name": "محطة ياسين",
+  "url": "https://maps.app.goo.gl/R1AW1yqp2Cs3KgeU9?g_st=ic",
+  "note": "",
+  "at": 1790895337660
+ },
+ "ks22": {
+  "n": 22,
+  "name": "فرع وزارة الزراعة",
+  "url": "https://maps.app.goo.gl/NZLtQz5zh4MdccVq6?g_st=ic",
+  "note": "",
+  "at": 1790895337661
+ }
+}

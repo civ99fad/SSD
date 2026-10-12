@@ -1,0 +1,322 @@
+{
+ "k01": {
+  "code": "1/10",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "ص ي ط 0187",
+  "model": "2003",
+  "status": "down",
+  "statusNote": "بطارية",
+  "statusAction": "",
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k01",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "متعطلة بالمقر — بطارية",
+    "note": "",
+    "at": 1790895337639,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
+ },
+ "k02": {
+  "code": "2/10",
+  "name": "إطفاء مرسيدس مزدوجة",
+  "make": "مرسيدس",
+  "plate": "ب أ د 8263",
+  "model": "2015",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "0ceb4ef6f3b5946ea367d575f3aa61f2"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "0ceb4ef6f3b5946ea367d575f3aa61f2"
+  ]
+ },
+ "k03": {
+  "code": "3/10",
+  "name": "جمس إسعاف",
+  "make": "جمس",
+  "plate": "و ص ر 0290",
+  "model": "2006",
+  "status": "down",
+  "statusNote": "بطارية",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k03",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "متعطلة بالمقر — بطارية",
+    "note": "",
+    "at": 1790895337639,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639
+ },
+ "k04": {
+  "code": "4/10",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ ل ط 6589",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
+ },
+ "k05": {
+  "code": "5/10",
+  "name": "وايت أكتروس",
+  "make": "مرسيدس",
+  "plate": "ص ل أ 0190",
+  "model": "2006",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
+ },
+ "k06": {
+  "code": "6/10",
+  "name": "وايت عادي قاذف",
+  "make": "",
+  "plate": "د ح هـ 0180",
+  "model": "1988",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
+ },
+ "k07": {
+  "code": "7/10",
+  "name": "جيب تويوتا شاص",
+  "make": "تويوتا",
+  "plate": "أ ح ك 4249",
+  "model": "2007",
+  "status": "down",
+  "statusNote": "بطارية",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k07",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "متعطلة بالمقر — بطارية",
+    "note": "",
+    "at": 1790895337639,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ },
+ "k08": {
+  "code": "9/10",
+  "name": "جيب تويوتا بابين",
+  "make": "تويوتا",
+  "plate": "ل م ل 0259",
+  "model": "2003",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ },
+ "k09": {
+  "code": "10/10",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "أ أ د 9948",
+  "model": "1998",
+  "status": "maint",
+  "statusNote": "رجيع — عطل بالكهرباء وتهريب بنزين",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-k09",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "في الصيانة — رجيع — عطل بالكهرباء وتهريب بنزين",
+    "note": "",
+    "at": 1790895337639,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "k10": {
+  "code": "11/10",
+  "name": "جيب تويوتا ٤ أبواب",
+  "make": "تويوتا",
+  "plate": "ب ق م 7015",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-k10",
+    "date": "1448/04/20",
+    "at": 1790895337639,
+    "text": "جاهزة نسبياً (بطارية)"
+   }
+  ],
+  "created": 1790895337639,
+  "updated": 1790895337639,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ },
+ "kx-k7": {
+  "code": "قارب ١",
+  "name": "قارب",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "1788c4ec36905a226874554fa0fe039a"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790869174366,
+  "updated": 1790869174366,
+  "keepBlobs": [
+   "1788c4ec36905a226874554fa0fe039a"
+  ]
+ },
+ "kx-k8": {
+  "code": "منقذ 3",
+  "name": "جيب التدخل السريع",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-k8",
+    "date": "1448/04/20",
+    "at": 1790869174366,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: التدخل في الحوادث على الطرق السريعة وفتح الأبواب واحتباس الخواتم"
+   }
+  ],
+  "created": 1790869174366,
+  "updated": 1790869174366
+ }
+}

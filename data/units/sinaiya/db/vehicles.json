@@ -1,0 +1,137 @@
+{
+ "n4-1": {
+  "code": "1/4",
+  "name": "إنقاذ فورد روزنباور",
+  "make": "فورد",
+  "plate": "أ هـ س 2503",
+  "model": "2013",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "ce352972d027d557074d066777bc40f4"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773215206,
+  "updated": 1790773215206,
+  "keepBlobs": [
+   "ce352972d027d557074d066777bc40f4"
+  ]
+ },
+ "n4-2": {
+  "code": "2/4",
+  "name": "مزدوجة كوماندر",
+  "make": "كوماندر",
+  "plate": "أ و س 7277",
+  "model": "2013",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773215207,
+  "updated": 1790773215207,
+  "keepBlobs": [
+   "b7f0d960a9b68d9835614567fb585949"
+  ]
+ },
+ "n4-4": {
+  "code": "4/4",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ هـ س 6571",
+  "model": "2013",
+  "status": "maint",
+  "statusNote": "عطل (لم يُذكر السبب)",
+  "statusAction": "",
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-n4-4-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "في الصيانة — عطل (لم يُذكر السبب)",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620119,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773215208,
+  "updated": 1790773215208,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
+ },
+ "n4-5": {
+  "code": "5/4",
+  "name": "وايت أكتروس",
+  "make": "مرسيدس",
+  "plate": "أ ح ط 8106",
+  "model": "2003",
+  "status": "maint",
+  "statusNote": "عطل (لم يُذكر السبب)",
+  "statusAction": "",
+  "photos": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-n4-5-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "في الصيانة — عطل (لم يُذكر السبب)",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620119,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773215209,
+  "updated": 1790773215209,
+  "keepBlobs": [
+   "1fb201d02800c71d7414eaabe1689561"
+  ]
+ },
+ "n4-7": {
+  "code": "7/4",
+  "name": "جيب نيسان ٤ أبواب",
+  "make": "نيسان",
+  "plate": "ي ط ل 0934",
+  "model": "2008",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773215210,
+  "updated": 1790773215210,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ }
+}

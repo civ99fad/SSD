@@ -1,0 +1,280 @@
+{
+ "z01": {
+  "code": "كاشف 1",
+  "name": "شاحنة التدخل الخفيفة",
+  "make": "",
+  "plate": "أ ص هـ 5801",
+  "model": "2009",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-z01",
+    "date": "1448/04/20",
+    "at": 1790839620121,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: عربة التدخل الأولى للمواد الخطرة"
+   }
+  ],
+  "created": 1790773769938,
+  "updated": 1790773769938
+ },
+ "z02": {
+  "code": "كاشف 2",
+  "name": "شاحنة التدخل الخفيفة",
+  "make": "",
+  "plate": "أ ل ب 2597",
+  "model": "2011",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773769939,
+  "updated": 1790773769939
+ },
+ "z03": {
+  "code": "كاشف 3",
+  "name": "فورد لنقل تجهيزات المواد الخطرة",
+  "make": "فورد",
+  "plate": "ب س أ 6373",
+  "model": "2020",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-z03",
+    "date": "1448/04/20",
+    "at": 1790839620121,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: فتح الأبواب ونقل التجهيزات"
+   }
+  ],
+  "created": 1790773769940,
+  "updated": 1790773769940
+ },
+ "z04": {
+  "code": "راصد 1",
+  "name": "جمس حوض",
+  "make": "جمس",
+  "plate": "أ ر ل 4439",
+  "model": "2006",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "ad8186c0a54a58cae07a1fe117cfb1c0"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-z04",
+    "date": "1448/04/20",
+    "at": 1790839620121,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يحتوي على خيمة التطهير"
+   }
+  ],
+  "created": 1790773769941,
+  "updated": 1790773769941,
+  "keepBlobs": [
+   "ad8186c0a54a58cae07a1fe117cfb1c0"
+  ]
+ },
+ "z05": {
+  "code": "راصد 2",
+  "name": "مقطورة تطهير",
+  "make": "",
+  "plate": "",
+  "model": "",
+  "status": "down",
+  "statusNote": "عطل (لم يُذكر السبب)",
+  "statusAction": "",
+  "photos": [],
+  "contentPhotos": [],
+  "documents": [
+   {
+    "id": "st-z05-2004",
+    "type": "status",
+    "date": "1448/04/20",
+    "title": "متعطلة بالمقر — عطل (لم يُذكر السبب)",
+    "note": "الحالة السابقة: جاهزة",
+    "at": 1790839620121,
+    "by": ""
+   }
+  ],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-z05",
+    "date": "1448/04/20",
+    "at": 1790839620121,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: تحتوي على مضخة التطهير ودعم راصد 1"
+   }
+  ],
+  "created": 1790773769942,
+  "updated": 1790773769942
+ },
+ "z06": {
+  "code": "4/9",
+  "name": "وايت بروبلين",
+  "make": "",
+  "plate": "أ هـ د 1195",
+  "model": "2013",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [
+   {
+    "id": "n-rd-z06",
+    "date": "1448/04/20",
+    "at": 1790839620121,
+    "text": "جاهزية ٢٠/٤/١٤٤٨هـ: يوجد مفتاح مصاعد"
+   }
+  ],
+  "created": 1790773769943,
+  "updated": 1790773769943,
+  "keepBlobs": [
+   "b4860bf31e60472f107e675e5c91c0ca"
+  ]
+ },
+ "z07": {
+  "code": "7/9",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "أ ك ح 3261",
+  "model": "2001",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773769944,
+  "updated": 1790773769944,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "z08": {
+  "code": "8/9",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "م ن ي 0187",
+  "model": "2004",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773769945,
+  "updated": 1790773769945,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "z09": {
+  "code": "9/9",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "م ن ي 0173",
+  "model": "2004",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773769946,
+  "updated": 1790773769946,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "z10": {
+  "code": "10/9",
+  "name": "جيب نيسان بابين",
+  "make": "نيسان",
+  "plate": "و ق ب 0398",
+  "model": "2005",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773769947,
+  "updated": 1790773769947,
+  "keepBlobs": [
+   "72d978f103cbc8aa7c2efc46c8e94c52"
+  ]
+ },
+ "z11": {
+  "code": "11/9",
+  "name": "جيب تويوتا ربع",
+  "make": "تويوتا",
+  "plate": "ل م ل 0230",
+  "model": "2003",
+  "status": "ready",
+  "statusNote": "",
+  "statusAction": "",
+  "photos": [
+   "c326e04231cf74e175062d70321f07aa"
+  ],
+  "contentPhotos": [],
+  "documents": [],
+  "inventory": [],
+  "history": [],
+  "notes": [],
+  "created": 1790773769948,
+  "updated": 1790773769948,
+  "keepBlobs": [
+   "c326e04231cf74e175062d70321f07aa"
+  ]
+ }
+}
