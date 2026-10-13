@@ -515,7 +515,7 @@ td.ra{width:84px;text-align:left;white-space:nowrap;padding-block:4px}
 
 /* ---------- responsive ---------- */
 @media (max-width: 860px){
-  .shell{grid-template-columns:minmax(0,1fr)}
+  .shell{grid-template-columns:minmax(0,1fr);align-content:start} /* لا يتمدد الرأس في الصفحات القصيرة */
   .side,.main{min-width:0}
   .nav{min-width:0;max-width:100%}
   .side{position:sticky;top:env(safe-area-inset-top,0px);height:auto;z-index:20;flex-direction:row;align-items:center;flex-wrap:wrap;padding:10px 16px;gap:10px 14px}
