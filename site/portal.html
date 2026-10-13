@@ -217,7 +217,8 @@ body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 
 /* ---------- الواجهة الرئيسية (مقترح): ترحيب ونبذة تملأ الشاشة، ثم بطاقتا الإدارتين بحركة عند النزول ---------- */
 .hero.home{min-height:calc(100svh - 76px);display:flex;align-items:center;padding-block:56px 72px}
-.hero.home .wrap{gap:16px;max-width:1180px}
+.hero.home{overflow:hidden} /* الحلقات والشعار المائي لا تتجاوز عرض الشاشة في الجوال */
+.hero.home .wrap{gap:16px;max-width:1180px;width:100%;min-width:0}
 .hero.home h1{font-size:60px}
 .hero.home .h1sub{font-size:28px}
 .hero.home .wm{width:440px;height:440px;left:0;top:50%;transform:translateY(-50%);opacity:.08}
