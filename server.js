@@ -117,7 +117,7 @@ async function handle(req, res) {
       ({ password = '', unit = '' } = JSON.parse(await readBody(req)));
     } catch {}
     // كلمة مرور كل جهة: SITE_PASSWORD_<الجهة> أو units في data/settings.json (انظر tools/site.js)
-    if (!(site.UNITS[unit] || unit === site.MANAGER.id) || !safeEqual(password, site.password(unit))) {
+    if (!(site.UNITS[unit] || unit === site.MANAGER.id) || !site.password(unit) || !safeEqual(password, site.password(unit))) {
       return sendJson(res, 401, { ok: false, error: 'كلمة المرور غير صحيحة' });
     }
     const current = session(req);

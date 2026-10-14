@@ -26,13 +26,13 @@ fs.mkdirSync(path.join(OUT, 'blobs'), { recursive: true });
 
 fs.writeFileSync(path.join(OUT, 'index.html'), guard(site.portalHtml({ mode: 'static' })));
 fs.copyFileSync(path.join(site.SITE_DIR, 'shim.js'), path.join(OUT, 'shim.js'));
-fs.writeFileSync(path.join(OUT, 'manager.html'), guard(site.managerHtml({ mode: 'static', hash: site.passwordHash(site.password(site.MANAGER.id)) })));
-fs.writeFileSync(path.join(OUT, 'ops.html'), guard(site.managerHtml({ mode: 'static', hash: site.passwordHash(site.password(site.MANAGER.id)), title: 'لوحة مدير إدارة العمليات' })));
-fs.writeFileSync(path.join(OUT, 'safety.html'), guard(site.managerHtml({ mode: 'static', hash: site.passwordHash(site.password(site.MANAGER.id)), title: 'لوحة مدير إدارة السلامة', only: 'safety' })));
+fs.writeFileSync(path.join(OUT, 'manager.html'), guard(site.managerHtml({ mode: 'static', hash: site.pageHash(site.MANAGER.id) })));
+fs.writeFileSync(path.join(OUT, 'ops.html'), guard(site.managerHtml({ mode: 'static', hash: site.pageHash(site.MANAGER.id), title: 'لوحة مدير إدارة العمليات' })));
+fs.writeFileSync(path.join(OUT, 'safety.html'), guard(site.managerHtml({ mode: 'static', hash: site.pageHash(site.MANAGER.id), title: 'لوحة مدير إدارة السلامة', only: 'safety' })));
 
 const report = [];
 for (const [unit, u] of Object.entries(site.UNITS)) {
-  fs.writeFileSync(path.join(OUT, unit + '.html'), guard(site.pageHtml(unit, { mode: 'static', hash: site.passwordHash(site.password(unit)) })));
+  fs.writeFileSync(path.join(OUT, unit + '.html'), guard(site.pageHtml(unit, { mode: 'static', hash: site.pageHash(unit) })));
   const web = path.join(OUT, u.web);
   fs.mkdirSync(web, { recursive: true });
   const db = site.dbJson(unit);
