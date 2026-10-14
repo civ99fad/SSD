@@ -76,7 +76,7 @@ const SHARED_MIX = ['profiles']; // عناصر مشتركة (معرّفاتها 
 const MANAGER = { id: 'manager', name: 'لوحة مدير الإدارة العامة' };
 
 // كلمة مرور كل جهة (البوابة نفسها بلا كلمة مرور). الأولوية:
-// SITE_PASSWORD_<الجهة> ثم units.<الجهة> في data/settings.json ثم SITE_PASSWORD ثم password ثم 1234
+// SITE_PASSWORD_<الجهة> ثم units.<الجهة> في data/settings.json ثم SITE_PASSWORD ثم password (بلا قيمة افتراضية)
 function password(unit) {
   let settings = {};
   try {
@@ -84,7 +84,7 @@ function password(unit) {
   } catch {}
   const env = process.env['SITE_PASSWORD_' + String(unit || '').toUpperCase()];
   const own = (settings.units || {})[unit];
-  return String(env || own || process.env.SITE_PASSWORD || settings.password || '1234');
+  return String(env || own || process.env.SITE_PASSWORD || settings.password || '');
 }
 
 // المستودع والفرع اللذان يحفظ فيهما المسؤول تعديلاته (GitHub Actions و Render يمرّرانهما تلقائيًا)
@@ -102,7 +102,9 @@ function editProxy() {
   }
 }
 
-const passwordHash = (pw) => crypto.createHash('sha256').update('isnad:' + pw).digest('hex');
+const passwordHash = (pw) => !pw ? '' : crypto.createHash('sha256').update('isnad:' + pw).digest('hex');
+// بصمة كلمة المرور في الصفحة الثابتة: لا تُضمَّن إطلاقاً عند وجود «الحارس» (الدخول يتحقق منه الحارس)
+const pageHash = (unit) => (editProxy() ? '' : passwordHash(password(unit)));
 
 // صفحة الجهة: روابط الملفات تأتي من الشيم، والشيم يُحمّل قبل سكربت الصفحة، ونصوص القسم تُستبدل باسم الجهة
 function pageHtml(unit, config) {
@@ -177,4 +179,4 @@ function logoFile() {
 
 const blobFiles = () => fs.readdirSync(BLOBS_DIR).filter((f) => /^[0-9a-f]{32}\.[a-z0-9]+$/.test(f));
 
-module.exports = { ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, MANAGER, SHARED_DB, unitDb, password, passwordHash, pageHtml, portalHtml, managerHtml, dbJson, blobFiles, logoFile };
+module.exports = { pageHash, ROOT, SITE_DIR, DB_DIR, BLOBS_DIR, UNITS, MANAGER, SHARED_DB, unitDb, password, passwordHash, pageHtml, portalHtml, managerHtml, dbJson, blobFiles, logoFile };

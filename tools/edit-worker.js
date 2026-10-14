@@ -82,7 +82,9 @@ export default {
       }
       // رمز لوحة المدير يكتب في ملف التعاميم المشترك فقط (تصل لجميع المراكز والأقسام)
       const own = unit === 'manager' ? file === 'data/shared/db/circulars.json' && m === 'PUT' : file.startsWith(unitDir(unit)) && /\.json$/.test(file);
-      const newBlob = m === 'PUT' && !body.sha && /^data\/blobs\/[0-9a-f]{32}\.[a-z0-9]+$/.test(file);
+      const newBlob = m === 'PUT' && !body.sha && /^data\/blobs\/[0-9a-f]{32}\.(pdf|jpe?g|png|webp|gif|docx|xlsx)$/.test(file);
+      // المرفقات: نوع مسموح فقط، ومحتوى الملف يطابق امتداده (يمنع رفع صفحات html/svg تُنفَّذ من نطاق الموقع)
+      if (newBlob && !blobOk(file, body.content)) return json(415, { message: 'نوع الملف غير مسموح' });
       if (!own && !newBlob) return json(403, { message: 'هذا الرمز يسمح بالتعديل على ' + NAMES[unit] + ' فقط' });
       if (env.BRANCH) body.branch = env.BRANCH;
       isUpload = newBlob;
@@ -179,4 +181,14 @@ function same(a, b) {
   let d = x.length ^ y.length;
   for (let i = 0; i < Math.max(x.length, y.length); i++) d |= (x[i] || 0) ^ (y[i] || 0);
   return d === 0;
+}
+
+// بصمة أول بايتات الملف حسب امتداده
+function blobOk(file, b64) {
+  try {
+    const head = atob(String(b64 || '').replace(/\s+/g, '').slice(0, 24));
+    const ext = file.split('.').pop();
+    const sig = { pdf: ['%PDF'], png: ['\x89PNG'], jpg: ['\xFF\xD8\xFF'], jpeg: ['\xFF\xD8\xFF'], gif: ['GIF8'], webp: ['RIFF'], docx: ['PK\x03\x04'], xlsx: ['PK\x03\x04'] }[ext] || [];
+    return sig.some((x) => head.startsWith(x)) && (ext !== 'webp' || head.slice(8, 12) === 'WEBP');
+  } catch (e) { return false; }
 }
