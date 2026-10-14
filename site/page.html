@@ -1251,7 +1251,8 @@ const HP = (() => { try { return new Intl.DateTimeFormat('en-u-ca-islamic-umalqu
 const hijri = ts => { const d = new Date(ts || Date.now()); if (!HP) return d.toLocaleDateString('en-GB'); const o={}; HP.formatToParts(d).forEach(p=>o[p.type]=p.value); return o.year+'/'+o.month+'/'+o.day; };
 const hijriDay = () => { try { return new Intl.DateTimeFormat('ar-SA',{weekday:'long',timeZone:'Asia/Riyadh'}).format(new Date())+' '+hijri(); } catch(e){ return hijri(); } };
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
-const norm = s => String(s ?? '').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim();
+/* البحث يتجاهل الهمزات والتشكيل والشرطة (ـ): «ا ه س» يطابق «أ هـ س» */
+const norm = s => String(s ?? '').toLowerCase().replace(/[\u0640\u064B-\u065F\u0670]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ؤ/g,'و').replace(/ئ/g,'ي').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\s+/g,' ').trim();
 function plural(n, one, two, few, many){ if(n===0) return 'لا يوجد'; if(n===1) return one; if(n===2) return two; if(n<=10) return n+' '+few; return n+' '+many; }
 const vCount = n => n===0 ? 'لا توجد آليات' : plural(n,'آلية واحدة','آليتان','آليات','آلية');
 const wCount = n => n===0 ? 'لا توجد مستودعات' : plural(n,'مستودع واحد','مستودعان','مستودعات','مستودعاً');
